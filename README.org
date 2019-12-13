@@ -1,0 +1,214 @@
+dungeon-mode - synchronous and asynchronous world sharing and change resolution
+
+* SYNOPSYS
+
+An hack-and-slash style mult-player dungeon crawl blending the
+heuristics of NetHack with a combat engine inspired by Minnesota
+Dungeon (Minneapolis Dungeon, Larry's Maze, et. al.).
+
+* APPROACH 
+
+Dungeon-mode is a game engine and REPL for creating and playing
+multi-user dungeons written primarily in emacs lisp.  While  playing
+a game created with dungeon-mode doesn't necessarily require Emacs
+authoring game environments (e.g. worlds) does, as do assigning
+special powers, resolving Ghod calls, Sage encounters, and Ubic -if
+enabled- or any other or custom events with a dm-intractable property
+set to a non-nil value.  Dungeon Masters may then specify delegation
+rosters to enable cooperative oversight or otherwise enable a team to
+cooperative direct the play experience.
+
+* DESIGN
+
+Dungeon-mode works by maintaining an eventually current journal of the
+all events, interactions, and REPL results associated with a given world
+across some number of emacs instances which host the dungeon-mode REPL,
+responsible for accepting input (traditionally with keyboard and
+mouse, or via REST), resolving and brokering inputs and authorities,
+and publishing and persisting changes to the journal.
+
+** The Eventually Concurrent Journal
+
+The Journal is a log of the present state of a world in terms of a
+history from it's inception to the current moment.  It is persisted
+as a mixed set of emacs-lisp expressions and JSON data named according
+to SHA256 sum.
+
+The eventually concurrent part of our approach to journaling starts
+from Apache Cassandra and similar "NoSQL" technologies which guarantee
+that all instances of the database cluster will eventually have the
+most current data and focus on directing queries a current source for
+the specific information requested. In our case, we mean simply two
+things:
+
+  * A client is not guaranteed to receive information anytime before
+    it is expected (or eligible) to act upon it.  This could mean
+    that you don't see you have taken damage until your next swing,
+    even if you hammer refresh.  The change hasn't been persisted to
+    the journal you're reading.  Don't panic.  It will be there by the
+    time you can do anything about it.
+  * A client will eventually receive of all information to which it is
+    entitled.
+
+* Support for Web, Mobile, and other non-Emacs clients
+
+Because the constructs of the game are exposed as RESTful services
+web, mobile, and other clients are possible outside of Emacs; however,
+because the authority management system relies on trust between active
+Emacs instances (meaning servers or traditional desktop or shell
+clients), and the prior and ongoing exchange of certificates between
+them, the REPL will not accept commits from "external" clients which
+create or replace the action sequences programmed into the world
+(e.g. which would supply or trigger the generation of new code to be
+used by the REPL(s) in implementing world).
+
+Needless to say, trusted Emacs instances are under no such limitation
+and may use the full power of emacs-lisp to create whatever new
+functionality is needed to fully enhance the dungeon experience. GNU
+Emacs is recommended, especially for authoring worlds or serving as
+the primary Dungeon Master for an interactive game.
+
+* Emacs Interfaces
+
+dungeon-mode provides nine interactive modes for Emacs, each with
+different display characteristics and default key-bindings.  Generally
+the key major-modes are *battle-board* for players and *dungeon-master*
+for game creators and team Dungeon Master. 
+  * dungeon-mode, major-mode providing the REPL, an interactive
+    environment for directly interacting with the game engine and
+    working with journals.
+  * *battle-board*, major-mode to display a party of characters,
+    creatures, NPCs, etc., shows health, armor, primary weapon
+    &ct. This mode includes the ability to compose several of the
+    other interfaces creating a complete interface intended to meet
+    most player needs.
+  * baddie-board, major-mode to display opposition. Similar to
+    battle-board but includes a "fog-of-war" allowing details to be
+    masked or omitted from display.  Also available as a minor-mode
+    such that the baddie-board can be included in the battle-board to
+    give a consolidated view of party and opp.
+  * map-mode, major-mode to create and display dungeon
+    levels. map-mode is also available as a minor-mode so you can use
+    it with battle-board to provide a full, thumbnail, or positional
+    slice of the map from the same interface which displays.
+  * treasure-mode, major-mode for display of a party's undivided
+    spoils and any other unresolved events associated with treasure
+    collection.  Also available as a minor mode, such that unresolved
+    treasure and events may be listed alongside party status display.
+  * character-mode, major-mode for display of a character, NPC, etc., and
+    to display options for resolving an action. This can be used
+    within the battle-board to display the actions available to the
+    next actor and select one via an accompanying minor-mode.
+  * tables-mode, major mode for writing and associating tables, such as
+    of creatures, treasure, and dungeon levels.  This mode is also
+    available as a minor-mode enabling display of (know) baddie
+    information within battle-board mode.
+  * decent-mode, minor-mode used to display the active worlds and
+    descents for a REPL.
+  * *dungeon-master-mode*, the major-mode used to create games and
+    perform Dungeon Master actions. It is generally a superset of the
+    features provided by battle-board with additional capabilities
+    supporting multiple simultaneous games and multiple simultaneous
+    descents into each, as well as for changing game, action, and
+    event properties on the fly.
+
+* Inspiration
+
+The general approach to game mechanics is taken from Minnesota
+Dungeon (or Minneapolis Dungeon, or just "Dungeon" if you happen to be
+from there), a contemporary to early D&D featuring an extremely simple
+rule-set and a zero or near-zero cost to play.  Larry Brawmer is
+generally crediting with creating the first Dungeon. Dungeon is
+characterized by borrowing heavy from prior art (e.g. other people's
+Dungeons that you've played in) as well as Science Fiction and Fantasy
+sources.  This has the effect of requiring lore as well as ingenuity
+on the part of players, who complete with baddies, traps, and curses to
+win treasure and go up in rank.
+
+Typical requirements are a pair of six sided dice, pencils, and a pad
+of quad-ruled graph-paper.  Apocryphally, a "good" Dungeon can be
+created in one to two hours and will provide entertainment for a few weeks
+to a few months depending on how intricate the game and how determined
+the players.
+
+An interesting distinction of Dungeon is the Special Power, a unique
+intrinsic provided to each character the rules for which are
+negotiated with the Dungeon Master prior to play.  Some Dungeon
+Masters (Steven Brust) have add included the ability for special
+powers to be altered during or by play, for example as a result of
+certain events.
+
+** Implementation
+
+Dungeon-mode handles this complexity by defining a emacs-lisp function
+for each special power at the time the character is registered for
+play in a world.  Special power resolution functions may then carry
+the dm-interactive property specifying circumstances under which
+direct involvement by the Dungeon Master may be needed to resolve the
+use, attempted use, etc., of the special power.
+
+Character Name and Character Memo notwithstanding, Special Power is
+the only unique-per-character attribute supported by the vanilla game
+engine provided by this package.  All other character properties are
+either counters (Karma, Gold, ...) or are values taken from tables
+designed by the Dungeon Master (Possessions, Intrinsics, ...).
+Creators are free to build additional table or function based
+intrinsics which may depend upon or otherwise interact with each-other
+such that Ghod calls from 3rd level Wizards may be ignored while those
+from 2nd level Priests trigger Dungeon Master involvement.
+
+That said, by the versions of Dungeon which have reached the
+maintainers of this document a great number of the creatures,
+treasure, events, curses, traps and so on require a close narrative
+quite disrupting the orderly rows and columns neatly describing the
+more generic baddies and treasure.   Similarly, the Dungeon author
+typically eventually resorts to narrative or semi-narrative forms to
+describe rank tables as well as any more complex puzzles baked into
+the game.  For more common puzzles (moving pillar in the center of a
+30x30 area, anyone?) common notation conventions essentially create
+custom syntax specific, for example, to a small section of the map.
+
+This project addresses such complexity by enabling the Dungeon author
+to define the world in terms of a free-form mixture of data and
+expressions.  This may be either a sexp or a function receiving world
+and action-token and returning a journal entry.  In the case of sexp
+the expression is simply a macro run with world and action-token
+lexically defined. The journal entry returned will generally resolve
+and advance the action. Additionally it may change aspects of the
+world (e.g. permanently change the game for all current and future
+players) or the decent, party, encounter or characters (living, dead,
+or incapacitated), or to player or info sections associated with
+any of these (e.g. the manual) presently associated to the action
+token.  Such actions implicitly update these associations.
+
+* PEOPLE INTERESTED OR TO WHOM WE SHOULD MENTION THIS PROJECT
+
+** Dan Gelder <d..@..m>
+
+** Jeff Goff
+
+** Thorin Tatge
+
+** Scott Ron
+
+** David Dyer-Bennet
+
+** Michael Von Maltzan
+
+** Erik Emery
+
+** Steven Brust
+
+** Angelo Russo (PM?)
+
+** Erik Elmshauser
+
+** Corwin Brust
+
+** Brandon Goff
+
+** Jon Lincicum <l..@..t>
+
+** Frank Runyon
+
+#  LocalWords:  REPL
