@@ -181,34 +181,34 @@ or incapacitated), or to player or info sections associated with
 any of these (e.g. the manual) presently associated to the action
 token.  Such actions implicitly update these associations.
 
-* PEOPLE INTERESTED OR TO WHOM WE SHOULD MENTION THIS PROJECT
+* Engine Fundamentals
 
-** Dan Gelder <d..@..m>
+dungeon-mode is a complete game engine written in emacs lisp.  It
+provides an interactive process to interactively interrogate and
+implicitly redefine a cons cell consisting of a world, representing
+the game being played, and an action-token which is a list of
+references together composing the context of a single turn, whether of
+map-movement, character or baddie action in combat, treasure
+collection, or event or NPC encounter, although the specific referents
+generally associated with each of these may vary.
 
-** Jeff Goff
+The result of executing an expression within the game engine is to
+produce a journal entry chronicling the change.  This may include
+information returned to some or all of the players as well as
+describing more and less changes to the local or general
+environment:
 
-** Thorin Tatge
+   ((-1 -maybe-on-the-body Biff<1>) "Biff The Hunter has taken 1 damage (body 2/3)")
+   ((-1 'body-hits Biff<1>) "Biff The Hunter has lost 1 body-hit! (body 2)")
+   ((-1 'body-hits 'warriors) ;; REPL echo and *dm-messages* only!
+    ("Shhhh: Warriors start with 2 body-hits now (meanguy@10.0.0.1)"))
 
-** Scott Ron
+Returned journal entries are cons cells where car is an expression
+applied to the journal and cons are strings of text explaining what has
+occurred.  Text may be decorated with scoping and context indicators to
+provide UI hints:
 
-** David Dyer-Bennet
-
-** Michael Von Maltzan
-
-** Erik Emery
-
-** Steven Brust
-
-** Angelo Russo (PM?)
-
-** Erik Elmshauser
-
-** Corwin Brust
-
-** Brandon Goff
-
-** Jon Lincicum <l..@..t>
-
-** Frank Runyon
+   ((-1 -maybe-on-the-body Biff<1>)
+     :incapacitation-warning "Biff The Hunter has taken 1 damage (body 1/3)")
 
 #  LocalWords:  REPL
