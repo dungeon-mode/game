@@ -285,3 +285,55 @@ helps visually to distinguish decorations affect REPL behavior from
 those which assist in heuristically interpreting and presenting
 results.
 
+* Product Vision and Development Approach
+
+Our vision identifies two use cases, a primary and a secondary. Task
+priority derives from importance to the minimum learning product for
+the first use case, or both use cases or by issue vote or scrum-master
+fiat in the event of a tie.  The scrum master will be the ultimate and
+final arbiter determining import of a task with respect to the goals
+for a given scrum and for the project at large while that scrum is in
+progress.
+
+Anyone is welcome to join in the development process.  You can make
+contact by sending a pull request or a opening an issue.  We might
+also be able find one and other in #emacs on irc.freenode.net.
+
+** Primary Use Case
+#+BEGIN_QUOTE
+Provide Emacs with features for remote cooperative real-time computer
+assisted role-playing.
+#+END_QUOTE
+
+In this vision, a DM and 1-8 players use Emacs as a replacement for
+dice, pencils and paper to play Dungeon in otherwise the same way it
+has traditionally been played.  In the event tables have been input it
+provides lookup facilities otherwise it asks the DM to input updates
+to share with the players.
+
+Players connect, perhaps via VPN, to the network of the DM's host
+emacs process and launch emacs or web browsers providing previously
+shared identity tokens to authenticate and authorize.  The data
+on/from the host Emacs is always considered authoritative such that we
+can stop and resume the game without need for clients to retain state
+between sessions.
+
+** Secondary Use Case
+
+#+BEGIN_QUOTE
+Provide additional features to support fully and semi-autonomous
+computer based dungeoning.
+#+END_QUOTE
+
+In this vision, DMs may support (read: interfere with) the game
+experience as any number of people comprising any number of parties
+descend into different worlds.  The system allows definition of rules
+for "portaling" such that characters and possessions may be allowed to
+pass between worlds.  We can suspend DM Interactivity to allow Dungeon
+authors to play in their own games, responding to dm-interactable
+between descents by enhancing the automated behaviours.
+
+For this use case, in the event of a fully automated game
+accessed by external clients (e.g. Web, Mobile, etc), Emacs may act
+primarily or even exclusively as a server rather than an interface
+provider.
