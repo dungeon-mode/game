@@ -14,39 +14,45 @@ a game created with dungeon-mode doesn't necessarily require Emacs
 authoring game environments (e.g. worlds) does, as do assigning
 special powers, resolving Ghod calls, Sage encounters, and Ubic -if
 enabled- or any other or custom events with a dm-intractable property
-set to a non-nil value.  Dungeon Masters may then specify delegation
-rosters to enable cooperative oversight or otherwise enable a team to
-cooperative direct the play experience.
+set to a non-nil value.  Dungeon Masters may specify delegation
+rosters to support cooperative oversight and enable teams to direct
+the play experience.
 
 * DESIGN
 
 Dungeon-mode works by maintaining an eventually current journal of the
-all events, interactions, and REPL results associated with a given world
-across some number of emacs instances which host the dungeon-mode REPL,
-responsible for accepting input (traditionally with keyboard and
-mouse, or via REST), resolving and brokering inputs and authorities,
-and publishing and persisting changes to the journal.
+all REPL interactions and results associated with each world.  The
+REPL is responsible for accepting input (traditionally with keyboard
+and mouse, or via REST), resolving and brokering inputs and
+authorities, and publishing and persisting changes to the journal.
 
 ** The Eventually Concurrent Journal
 
 The Journal is a log of the present state of a world in terms of a
 history from it's inception to the current moment.  It is persisted
 as a mixed set of emacs-lisp expressions and JSON data named according
-to SHA256 sum.
+to SHA256 sum.  Taken as a whole, the journal entries for a world
+provide both the complete code needed to provide the world for
+interaction and a full narrative, or human-readable form of this same
+information adorned with hints regarding secrecy and importance.
 
-The eventually concurrent part of our approach to journaling starts
-from Apache Cassandra and similar "NoSQL" technologies which guarantee
-that all instances of the database cluster will eventually have the
-most current data and focus on directing queries a current source for
-the specific information requested. In our case, we mean simply two
-things:
+The eventually concurrent part of our approach to journaling takes
+inspiration from Apache Cassandra and similar "NoSQL" technologies
+which guarantee that all instances of the database cluster will
+eventually have the most current data and focus on directing queries
+to the most current source for the specific information requested.
+
+In our case we mean simply two things:
 
   * A client is not guaranteed to receive information anytime before
-    it is expected (or eligible) to act upon it.  This could mean
-    that you don't see you have taken damage until your next swing,
-    even if you hammer refresh.  The change hasn't been persisted to
-    the journal you're reading.  Don't panic.  It will be there by the
-    time you can do anything about it.
+    a character (&ct.) attached to that client will become eligible
+    to act upon it.
+
+    This could mean that you don't see you have taken damage until
+    your next swing, even if you hammer refresh.  The change hasn't
+    been persisted to the journal you're reading.  Don't panic.  It
+    will be there by the time you can do anything about it.
+
   * A client will eventually receive of all information to which it is
     entitled.
 
@@ -184,7 +190,11 @@ token.  Such actions implicitly update these associations.
 * Engine Fundamentals
 
 dungeon-mode is a complete game engine written in emacs lisp.  It
-provides an interactive process to interactively interrogate and
+provides an interactive process to redefine worlds based on an action
+token which associates entities related by a single turn of the game.
+
+Game turns 
+
 implicitly redefine a cons cell consisting of a world, representing
 the game being played, and an action-token which is a list of
 references together composing the context of a single turn, whether of
@@ -192,23 +202,54 @@ map-movement, character or baddie action in combat, treasure
 collection, or event or NPC encounter, although the specific referents
 generally associated with each of these may vary.
 
-The result of executing an expression within the game engine is to
-produce a journal entry chronicling the change.  This may include
-information returned to some or all of the players as well as
-describing more and less changes to the local or general
-environment:
+Executing an expression within the game engine produces a journal
+entry chronicling the change.  This include narrative forms of any
+information to be returned to players or Dungeon Masters, which should
+provide detailed human-readable descriptions of any changes to the
+local or general game environment:
 
-   ((-1 -maybe-on-the-body Biff<1>) "Biff The Hunter has taken 1 damage (body 2/3)")
+   ((-1 'maybe-to-body Biff<1>) "Biff The Hunter has taken 1 damage (body 2/3)")
    ((-1 'body-hits Biff<1>) "Biff The Hunter has lost 1 body-hit! (body 2)")
-   ((-1 'body-hits 'warriors) ;; REPL echo and *dm-messages* only!
-    ("Shhhh: Warriors start with 2 body-hits now (meanguy@10.0.0.1)"))
 
-Returned journal entries are cons cells where car is an expression
-applied to the journal and cons are strings of text explaining what has
-occurred.  Text may be decorated with scoping and context indicators to
-provide UI hints:
+REPL returns journal entry update statements as lists where car the
+expression applied to the journal and &rest are a mix of text and
+expressions to create the narrative text explaining what has occurred
+for players and Dungeon Masters.
 
-   ((-1 -maybe-on-the-body Biff<1>)
+Texts are optional decorated with indicators to provide UI hints (context)
+and secrecy (publication scope):
+
+
+   ((-1 'maybe-to-body Biff<1>)
      :incapacitation-warning "Biff The Hunter has taken 1 damage (body 1/3)")
 
-#  LocalWords:  REPL
+   ((-1 'body-hits '(warriors :level 1)) ;; REPL echo and *dm-messages* only!
+    :dm "Shhhh: Warriors start with 2 body-hits now (meanguy@10.0.0.1)")
+
+Input to the REPL is only slightly different from it's output in that
+the expression component may specify necessary authorities or
+otherwise establish predicates for application of the resulting
+journal entry while narrative elements may include intermixed macros
+expressed as functions and function arguments which may generate some
+or all of the text.  Narrative input to the REPL consisting of more
+than a single string of text is recursively processed until only a
+single string of text remains, which is then included in REPL
+outputs (e.g. the journal, REPL echo, **DM messages**, **Dungeon**,
+and any buffers or regions which track changes to a property
+mentioned as having been updated in the narrative.  REPL provides for
+additional decorations to support this.  Unlike those for secrecy and
+UI hinting these are not passed though in the REPL output:
+
+   ((-1 'maybe-to-body Biff<1>)
+     :incapacitation-warning "Biff The Hunter has taken 1 damage (body 1/3)")
+
+   # ((:character Biff<1> quaff-cast-use from-pocket full-heal)
+     describe-use ,actor "used" ,item-used (describe-body-hits))
+   > ((full-heal (destroy-consumed Biff<1>))
+      :full-heal "Biff The Hunter used a full-heal (body 3/3)")
+
+Note the use of the substitution operator (comma) rather than the
+keyword indicator (colon) for REPL narrative input decorations.  This
+helps visually to distinguish decorations affect REPL behavior from
+those which assist in heuristically interpreting and presenting
+results.
