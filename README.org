@@ -193,14 +193,14 @@ dungeon-mode is a complete game engine written in emacs lisp.  It
 provides an interactive process to redefine worlds based on an action
 token which associates entities related by a single turn of the game.
 
-Game turns 
-
-implicitly redefine a cons cell consisting of a world, representing
-the game being played, and an action-token which is a list of
-references together composing the context of a single turn, whether of
+Game turns represent one slice of play-time in the context of
 map-movement, character or baddie action in combat, treasure
-collection, or event or NPC encounter, although the specific referents
-generally associated with each of these may vary.
+collection, or event or NPC encounter.  While the specific references
+associated with an action-token vary based on the context, generally
+they include a character, party, decent and dungeon level and often
+also include baddies and treasure as well as npcs and events.
+
+** Engine Output
 
 Executing an expression within the game engine produces a journal
 entry chronicling the change.  This include narrative forms of any
@@ -226,6 +226,8 @@ and secrecy (publication scope):
    ((-1 'body-hits '(warriors :level 1)) ;; REPL echo and *dm-messages* only!
     :dm "Shhhh: Warriors start with 2 body-hits now (meanguy@10.0.0.1)")
 
+** Engine Input
+
 Input to the REPL is only slightly different from it's output in that
 the expression component may specify necessary authorities or
 otherwise establish predicates for application of the resulting
@@ -234,14 +236,11 @@ expressed as functions and function arguments which may generate some
 or all of the text.  Narrative input to the REPL consisting of more
 than a single string of text is recursively processed until only a
 single string of text remains, which is then included in REPL
-outputs (e.g. the journal, REPL echo, **DM messages**, **Dungeon**,
+outputs (e.g. the journal, REPL echo, **DM Messages**, **Dungeon**,
 and any buffers or regions which track changes to a property
 mentioned as having been updated in the narrative.  REPL provides for
 additional decorations to support this.  Unlike those for secrecy and
 UI hinting these are not passed though in the REPL output:
-
-   ((-1 'maybe-to-body Biff<1>)
-     :incapacitation-warning "Biff The Hunter has taken 1 damage (body 1/3)")
 
    # ((:character Biff<1> quaff-cast-use from-pocket full-heal)
      describe-use ,actor "used" ,item-used (describe-body-hits))
@@ -253,3 +252,37 @@ keyword indicator (colon) for REPL narrative input decorations.  This
 helps visually to distinguish decorations affect REPL behavior from
 those which assist in heuristically interpreting and presenting
 results.
+
+* PEOPLE INTERESTED OR TO WHOM WE SHOULD MENTION THIS PROJECT
+
+** Dan Gelder <daniel.w.gelder@gmail.com>
+
+** Jeff Goff
+
+** Thorin Tatge
+
+** Scott Ron
+
+** David Dyer-Bennet
+
+** Michael Von Maltzan
+
+** Erik Emery
+
+** Steven Brust
+
+** Angelo Russo (PM?)
+
+** Erik Elmshauser
+
+** Corwin Brust
+
+** Brandon Goff
+
+** Jon Lincicum <lincicum@comcast.net>
+
+** Frank Runyon
+
+** Marty Grider
+
+#  LocalWords:  REPL
