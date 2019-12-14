@@ -79,44 +79,67 @@ the primary Dungeon Master for an interactive game.
 dungeon-mode provides nine interactive modes for Emacs, each with
 different display characteristics and default key-bindings.  Generally
 the key major-modes are *battle-board* for players and *dungeon-master*
-for game creators and team Dungeon Master. 
-  * dungeon-mode, major-mode providing the REPL, an interactive
-    environment for directly interacting with the game engine and
-    working with journals.
-  * *battle-board*, major-mode to display a party of characters,
-    creatures, NPCs, etc., shows health, armor, primary weapon
-    &ct. This mode includes the ability to compose several of the
-    other interfaces creating a complete interface intended to meet
-    most player needs.
-  * baddie-board, major-mode to display opposition. Similar to
-    battle-board but includes a "fog-of-war" allowing details to be
-    masked or omitted from display.  Also available as a minor-mode
-    such that the baddie-board can be included in the battle-board to
-    give a consolidated view of party and opp.
-  * map-mode, major-mode to create and display dungeon
-    levels. map-mode is also available as a minor-mode so you can use
-    it with battle-board to provide a full, thumbnail, or positional
-    slice of the map from the same interface which displays.
-  * treasure-mode, major-mode for display of a party's undivided
-    spoils and any other unresolved events associated with treasure
-    collection.  Also available as a minor mode, such that unresolved
-    treasure and events may be listed alongside party status display.
-  * character-mode, major-mode for display of a character, NPC, etc., and
-    to display options for resolving an action. This can be used
-    within the battle-board to display the actions available to the
-    next actor and select one via an accompanying minor-mode.
-  * tables-mode, major mode for writing and associating tables, such as
-    of creatures, treasure, and dungeon levels.  This mode is also
-    available as a minor-mode enabling display of (know) baddie
-    information within battle-board mode.
-  * decent-mode, minor-mode used to display the active worlds and
-    descents for a REPL.
-  * *dungeon-master-mode*, the major-mode used to create games and
-    perform Dungeon Master actions. It is generally a superset of the
-    features provided by battle-board with additional capabilities
-    supporting multiple simultaneous games and multiple simultaneous
-    descents into each, as well as for changing game, action, and
-    event properties on the fly.
+for game creators and team Dungeon Master.
+
+** dungeon-mode
+
+major-mode providing the REPL, an interactive environment for directly
+interacting with the game engine and working with journals.
+
+** battle-board
+
+major-mode to display a party of characters creatures, NPCs, etc.,
+shows health, armor, primary weapon &ct. This mode includes the
+ability to compose several of the other interfaces creating a complete
+interface intended to meet most player needs.
+
+** baddie-board
+
+major-mode to display opposition. Similar to battle-board but includes
+a "fog-of-war" allowing details to be masked or omitted from display.
+Also available as a minor-mode such that the baddie-board can be
+included in the battle-board to give a consolidated view of party and
+opp.
+
+** map-mode
+
+major-mode to create and display dungeon levels. map-mode is also
+available as a minor-mode so you can use it with battle-board to
+provide a full, thumbnail, or positional slice of the map from the
+same interface which displays.
+
+** treasure-mode
+
+major-mode for display of a party's undivided spoils and any other
+unresolved events associated with treasure collection.  Also available
+as a minor mode, such that unresolved treasure and events may be
+listed alongside party status display.
+
+** character-mode
+
+major-mode for display of a character, NPC, etc., and to display
+options for resolving an action. This can be used within the
+battle-board to display the actions available to the next actor and
+select one via an accompanying minor-mode.
+
+** tables-mode
+
+Major mode for writing and associating tables, such as of creatures,
+treasure, and dungeon levels.  This mode is also available as a
+minor-mode enabling display of (know) baddie information within
+battle-board mode.
+
+** decent-mode
+
+Minor-mode used to display the active worlds and descents for a REPL.
+
+** dungeon-master-mode
+
+Major-mode used to create games and perform Dungeon Master
+actions. It is generally a superset of the features provided by
+battle-board with additional capabilities supporting multiple
+simultaneous games and multiple simultaneous descents into each, as
+well as for changing game, action, and event properties on the fly.
 
 * Inspiration
 
@@ -261,6 +284,8 @@ keyword indicator (colon) for REPL narrative input decorations.  This
 helps visually to distinguish decorations affect REPL behavior from
 those which assist in heuristically interpreting and presenting
 results.
+
+
 
 * PEOPLE INTERESTED OR TO WHOM WE SHOULD MENTION THIS PROJECT
 
