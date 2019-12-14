@@ -208,8 +208,11 @@ information to be returned to players or Dungeon Masters, which should
 provide detailed human-readable descriptions of any changes to the
 local or general game environment:
 
+#+NAME: engine-output-stample-1
+#+BEGIN_SRC emacs-lisp
    ((-1 'maybe-to-body Biff<1>) "Biff The Hunter has taken 1 damage (body 2/3)")
    ((-1 'body-hits Biff<1>) "Biff The Hunter has lost 1 body-hit! (body 2)")
+#+END_SRC
 
 REPL returns journal entry update statements as lists where car the
 expression applied to the journal and &rest are a mix of text and
@@ -220,11 +223,14 @@ Texts are optional decorated with indicators to provide UI hints (context)
 and secrecy (publication scope):
 
 
+#+NAME: engine-output-stample-2
+#+BEGIN_SRC emacs-lisp
    ((-1 'maybe-to-body Biff<1>)
      :incapacitation-warning "Biff The Hunter has taken 1 damage (body 1/3)")
 
    ((-1 'body-hits '(warriors :level 1)) ;; REPL echo and *dm-messages* only!
     :dm "Shhhh: Warriors start with 2 body-hits now (meanguy@10.0.0.1)")
+#+END_SRC
 
 ** Engine Input
 
@@ -242,10 +248,13 @@ mentioned as having been updated in the narrative.  REPL provides for
 additional decorations to support this.  Unlike those for secrecy and
 UI hinting these are not passed though in the REPL output:
 
+#+NAME: engine-input-stample-1
+#+BEGIN_SRC emacs-lisp
    # ((:character Biff<1> quaff-cast-use from-pocket full-heal)
      describe-use ,actor "used" ,item-used (describe-body-hits))
    > ((full-heal (destroy-consumed Biff<1>))
       :full-heal "Biff The Hunter used a full-heal (body 3/3)")
+#+END_SRC
 
 Note the use of the substitution operator (comma) rather than the
 keyword indicator (colon) for REPL narrative input decorations.  This
