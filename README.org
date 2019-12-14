@@ -285,38 +285,3 @@ helps visually to distinguish decorations affect REPL behavior from
 those which assist in heuristically interpreting and presenting
 results.
 
-
-
-* PEOPLE INTERESTED OR TO WHOM WE SHOULD MENTION THIS PROJECT :noexport:
-
-** Dan Gelder <daniel.w.gelder@gmail.com>
-
-** Jeff Goff
-
-** Thorin Tatge
-
-** Scott Ron
-
-** David Dyer-Bennet
-
-** Michael Von Maltzan
-
-** Erik Emery
-
-** Steven Brust
-
-** Angelo Russo (PM?)
-
-** Erik Elmshauser
-
-** Corwin Brust
-
-** Brandon Goff
-
-** Jon Lincicum <lincicum@comcast.net>
-
-** Frank Runyon
-
-** Marty Grider
-
-#  LocalWords:  REPL
