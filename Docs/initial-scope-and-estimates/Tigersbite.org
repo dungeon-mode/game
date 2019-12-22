@@ -17,6 +17,25 @@ Using the e-dice
 
 *** Maps
 
+maps are the big deal here, both in terms of development and usability.
+In order to create maps, I would like to see us develop a mapping system and create "tiles" we can drop in.
+each tile would be one or more squares, and would define map regions like:
+Corridor North/South (W/ Secret doors East, West, and both)
+Corridor East/West (W/ Secret doors North, South, and both)
+4-way corridor
+20x20 area (With fountains, or other features)
+Stairs (Up and Down) / Elevator / Ramp
+10x10 room (W/ Secret door on each side)
+20x20 room (misc secret door configurations)
+Larger rooms
+Beaches / poos / flowing water
+Special rooms (General store, Key Chamber, Balrag chamber, clappers, compulsions, etc...)
+Neutronium wall
+Neutronium Door
+
+Once we have build the map editor it's just time to input existing maps or devise new maps.  the size and shape can be set in the editor, then the tiles are installed to define the maze.
+clearly this requires a map editor which is available in DM view, but different from DM view.
+
 ** Tools
 
 *** display views
@@ -26,6 +45,7 @@ The dungeon mode needs to support multiple views for users.  Each view gives the
 **** DM
 
 DM Mode Gives the Dungeon Maser unrestricted access to the dungeon.  The DM is the creator, and therefore can see everything and has the authority to edit anything.
+DM Map view should show the part of the map the players have been in durring this decent/session, also parts they have seen in the past and parts of the map they have never seen. it must also display the current location of tha party(s) and other active entities (like being chased by a baddie they ran from)
 
 **** Player
 
