@@ -1,0 +1,64 @@
+* Tiggers's Dungeon
+
+** Data Entry
+
+*** Baddies
+
+We need to be able to create at least a list of baddies that the DM can add to the battleboard.
+Organizing this list into tables and adding a mechanisim to select/generate encounters would be nice.
+For baddies that already exist in spreadsheets or CSV format, we can easily script the data input, but each one needs to be reviewed for special situations that require special code
+New baddies will require time to develop and code.
+
+*** Treasure
+
+Treasure tables need some thought.  When an item is generated it needs a unique id to identify it and track it in the journal.
+the tables that I have developed can be directly input in the computer easily, as they are already in digital format.
+Using the e-dice 
+
+*** Maps
+
+** Tools
+
+*** display views
+
+The dungeon mode needs to support multiple views for users.  Each view gives the user different access to information and controls.
+
+**** DM
+
+DM Mode Gives the Dungeon Maser unrestricted access to the dungeon.  The DM is the creator, and therefore can see everything and has the authority to edit anything.
+
+**** Player
+
+Player mode gives the user access to control the characters they own.  They can add their characters to a party, select a party leader, view/take party treasure, read and contribute to party baddie lore.
+
+**** Party Leader
+
+Party Leader Mode is given to one player in a party and gives the player access to control party decisions.  The primary ability is to navigate the party through the dungeon, but anything that treats the party as a whole goes to the party leader.
+In a situation where the party is divided up into multiple groups, each group must elect a party leader.
+the party leader must elect a single character they control to hold the maps, baddie lore, and undivided treasure.
+
+**** Observer
+
+This mode allows users to join a party without a character, and is otherwise like player mode but will never be required to take an action.
+
+*** Battle Board
+
+A buffer that tracks the health and damage of each member of the party, and the status of any baddies
+it needs to be aware of what players know about the baddies so that it shows how damaged they are without showing total hit points unless the players have learned that information.
+this buffer will look different to users in different view modes.
+
+*** Treasure Collection
+
+When the party collects treasure (typically at the end of combat) the treasures are deposited into the group treasure buffer.
+Typically money is stored until the end of the decent, sometimes repairs are paid from the group fund before it is divided among players.
+typically money is divided evenly, but should support a mechanisim where characters can earn multiple shares to allow for more experienced characters who use more personal resources when power leveling newer characters and similar situatiuons
+Treasure items are typically distributed to a character immeadiatly, this should not be required, but items in the group treasure buffer are not available to any party member durring combat (maybe one action for the party leader character to pull it out, and one action for another character to grab it?)
+
+*** Party Known Baddie List
+
+Collecting information about the baddies you encounter is historically a big part of dungeon.
+this tool needs to allow players to record information about baddies, and share it amongst themselves.
+we should resiste the urge to automate data collection as much as the players have acces to see what dice rolls hit and miss they can record it themselves.
+When players win the "know about" roll a tthe beginning of combat complete and accurate data canb be autofilled
+This player baddie data is used by the battleboard in player view to decide what information players can see
+it should be possible for players to enter wrong information here, and the battleboard should use it if this happens.
