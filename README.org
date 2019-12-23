@@ -337,3 +337,10 @@ For this use case, in the event of a fully automated game
 accessed by external clients (e.g. Web, Mobile, etc), Emacs may act
 primarily or even exclusively as a server rather than an interface
 provider.
+* Community and Outreach
+
+We are creating a complete new game-engine writting within a text
+editor.  We'd love your input and participation!
+
+Find us on [[https://discord.gg/gar8ns][Discord]] or join #dungeon-mode on Freenet.net IRC or open an
+issue on github request commit access or make contact.
