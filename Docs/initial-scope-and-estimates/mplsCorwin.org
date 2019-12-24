@@ -197,5 +197,45 @@ Per TFM `put-image' is using an overlay added to a begin-text
 attribute of an overlay added into the text,  to contain the image.
 This means that it's prepended to -but does not obscure- the text.
 
+** TODO Manual Data Entry
+
+* Quick Notes on Data
+
+We might be able to map key dungeon concepts to Emacs Lisp grouping
+syntax if we select our abstractions carefully:
+| dm abstract | grouped by  | wut?                            |
+| table       | () list     | wrap a victual or baddie table  |
+| map         | [] vector   | map are a list of these         |
+| (me . mine) | ( . ) alist | name something for later use    |
+| anything    | '           | quote operate to include by ref |
+
+Table cells are just lists of sexp referencing or defining stuff. The
+expressions should result in a literal or a quoted expression.  If an
+expression, it is to be resolved when the action token is in scope
+(e.g. at play-time) such that the REPL can be queried for information,
+e.g. about the character acting (if any), party, etc.  The result of
+loading an individual table is a symbol containing references and
+expressions which compose one particular aspect of the game, say
+Spells e.g. treasure for wizards, which in combination with the
+definition statement for the spells table, provides enough information
+to resolve the event (notwithstanding dm-interactive and
+dm-interactable).
+
+Inside map cells go the relationships to other map-cells and features
+such as secret doors.  As discussed elsewhere these can likely be
+similar to text or overlay properties but are ultimately probably
+stored as plain data (e.g. the text description of the space, if any)
+with properties which contain any custom behaviour written for the
+map.
+
+For general use items, for example items that could appear on more
+than one treasure table, we can use a-lists to create lists.  By
+allowing an expression as both car and cadr we can potentially use
+this as the basis for key REPL statements such as update-table.
+
+Generally speaking things will resolve down to named symbols that
+identify them based on label's provided by the DM or by the REPL on
+behalf of players.  This maybe makes adding important creature
+comforts like code-completion and font-lock easier to support.
+
 #  LocalWords:  Nethack
-*** 
