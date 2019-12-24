@@ -1,0 +1,201 @@
+* Corwin's Dungeon
+
+This is my personal notes file for dungeon-mode.  Below are the
+directions for the initial sprints of the project.  The remainder of
+the document forms my contribution as toward delivering on that.
+
+#+begin_quote
+1. (Dec 22 - Jan 5th) High Level Effort Guesstimation for both
+   Interface Development and Manual Authoring.  Task lists and
+   estimates to this channel whenever and feel free to revise and
+   extend your remarks.  For extra credit, download GNU Emacs (I like
+   Emax64 26.2 or 26.3 for Windows 10) and try making your notes using
+   org mode.
+
+2. (Jan. 5th - Jan 19th) User journey and user story creation.  What
+   are the key user and system interactions?  What orders may they
+   occur in?  How may this map to our interfaces (e.g. major and minor
+   modes)?  What tasks are needed to deliver that functionality and
+   how long might all that take?  Finally, considering both of the
+   first two sprints, what items are "above the line" in the sense
+   they should be assumed to be required to complete a minimum
+   testable product.  For extra credit in sprint two make org mode
+   sort tasks based on priority (and dependencies?) and sum cost
+   (time)
+#+end_quote
+
+* SYNOPSIS
+
+My most current dungeon lives principally within a Google Docs
+spreadsheet, and should be fairly straight forward to convert to elisp
+statements.  Deeper in the document I provide some design detail from
+spreadsheet in as much as this may suggest the key files or macros or
+whatever.
+
+From a UI design perspective my focus, in terms of an initial MPTP for
+the first use-case, is getting a comfortable and familiar sense of
+graph paper and pencil, maybe high-lighter and felt-tipped markers.
+
+In the remaining sections I'll rationalize these motivations further
+as then relate to key development tasks I think could factor into an
+Minimum Play-Testable Product (MPTP).
+
+* Initial Estimations
+
+The section currently only contains information responding to sprint 1
+e.g. user interface development and the manual authoring of content.
+
+** Interface Development
+
+The remainder of the section following the table are notes and
+commentary while completed the estimations:
+
+|Tags                 |Story                           |Points  |
+|dungeon-mode         |Oversee file interactions in    |      20|
+|                     |terms of elisp expresisons.  Use|        |
+|                     |a queue and timer to insolate   |        |
+|                     |the command processing function.|        |
+|battle-board         |Draw a party in terms of        |      10|
+|                     |position and attributes. (bh...)|        |
+|baddie-board         |Display baddies as viewed by the|       5|
+|                     |party, e.g no health info       |        |
+|map-mode             |Display a map with a general    |      20|
+|                     |store, coridor, and chambers    |        |
+|                     |behind secret doors.            |        |
+|treasure-mode        |Display the treasure categories,|      10|
+|                     |undevided monies, and any       |        |
+|                     |unresolved or undistributed     |        |
+|                     |treasure.                       |        |
+|character-mode       |Display a character sheet       |      20|
+|tables-mode          |Display a sample of any of the  |      10|
+|                     |common DM tables, e.g. spells.  |        |
+|decent-mode          |add a after-command hook to     |       5|
+|                     |dungeon-mode and create a       |        |
+|                     |function to echo completed      |        |
+|                     |command and results before I/O  |        |
+|dungeon-master-mode  |Display a dired like interface  |      20|
+|                     |of buffers important to         |        |
+|                     |dungeon-mode.                   |        |
+
+Let's face-it.  The user-interface is important.  Not just to
+attracting others (whether to play, create, or contribute) but
+enjoyment of the game even for the most die-hard of us.  Okay.  Maybe
+not all.
+
+Considering Emacs as the host environment for the game engine;
+however, may force (or strongly compel) some potentially key design
+decisions up front which otherwise it might make sense to wait for the
+stability of an optimization phase to address.  This is because
+Emacs's facilities for interacting with the display manager (for such
+tasks as updating the display) are, while powerful, quite intrinsic to
+Emacs and for the most part we should probably not abstract them away.
+
+For example, Emacs's system of character properties allows a feature
+(e.g. dungeon-mode) to mark individual characters and regions within a
+buffer with additional properties that provide feature specific
+information, usually display hints.  Which installing functions there
+that will make case by case decisions about display rendering is, I
+think, normal, it would probably be a bad idea to e.g.: have an
+`dm-properties-manager' that attempts to control all of the properties
+installed across all of a given buffer as this might break core Emacs
+features and would likely also impact rendering performance
+meaningfully.
+
+*** Recommendation: Rendering non-text content
+
+In particular, a key decision along these lines is how to render out
+things like maps or the grids forming battle-boards, spellball-like
+inventory, and the rest.  Because our needs are modest by game design
+standards --if not by those of typical Emacs Lisp projects-- we have
+lots of options.
+ * ASCII art
+  * Sense of Style: nethack
+  * Most obvious pro: easy
+  * Most obvious con: seems limited
+  I suspect this could be somewhat trivial to implement using text
+   properties.  Moreover, it adds no assets to our deliverable
+   (e.g. jpg, ttf, etc. dungeon mode would require or distribute and
+   maintain).  That said it pretty much puts the visual aspects of the
+   game into a small box, at least in so far as concerns native
+   game-play within Emacs. Furthermore, if other design decisions have
+   followed from and rely on this one, it may not be easy to bolt
+   support for more sophisticated graphics display in-line onto the
+   original modes.  This concern, of course is universal to any option
+   (and to most design decisions) however it's most significant when
+   considering an alternative with clear performance, scalability, or
+   stylist limitations.
+ * Custom Fonts and Unicode
+  * Sense of Style: loadrunner
+  * Most obvious pro: easy
+  * Most obvious con: still limited, now maybe with font files to manage
+  As with the next option, the limitation here will be -given we
+   create or utilize custom font-files- the need to create those in
+   advance and distribute them with the game, provide details for
+   collecting them from third parties, etc.  That said, this is
+   probably otherwise the rough level of effort as the ASCII option.
+ * Tile packs
+  * Sense of Style: gauntlet
+  * Most obvious pro: easy way to get to pretty
+  * Most obvious con: limited given the effort required
+  This is just about as pretty as we can get to without drawing or
+   rendering at the run-time.  Here we create some number of image or
+   sprite assets, most likely authoring them in-line with the game.
+   As with the above options we are limited during game design and
+   play to the visual presentations shipped with the game
+   (notwithstanding you are presumably free to create your own).
+ * Real-time display painting
+  * Sense of Style: sheet of graph paper with felt-tip and pencil marks
+  * Most obvious pro: we control the horizontal
+  * Most obvious con: we might invent something
+  As assumed in all the solutions we use likely use text properties to
+   attach images (or ASCII art) however in this case rather than
+   static images or image regions (e.g. of sprites) these properties
+   point to functions which draw visual representations to overlay the
+   raw information in the buffer on demand.  Emacs provides native SVG
+   commands, for example, which could be used to draw the stokes of
+   the battle-board, etc., with other elements perhaps layered using
+   z-index.
+
+At the moment my leaning is toward the final option.  While it forces
+some amount of close work to the front of the project this comes with
+more advantages than disadvantages:
+ * Biggest Pros:
+  * supports all the other options, functions can just return ACII or
+    return an existing image/slice rather than drawing.
+  * only option that presents an interface people might install Emacs
+    to use.
+ * Biggest Cons:
+  * more upfront effort, at least vs ASCII or Unicode
+  * puts upfront need on chucking out elisp vs create images whereas
+    we currently have more artistic than programming skill represented
+    in the project team.
+
+Text and tile approaches all eventually back us into the corner of
+needing to know at game development time (or maybe dungeon-mode
+publication time) what display options will be possable.  Let's turn
+Emacs into a fantastic looking thick client for RPGs that embraces
+rather than tries to escape their heritage of graph-paper and
+tally-marks.
+
+Discussing these ideas we've settled on this plan for the MPTP:
+ + map-mode overlay map code with SVG strokes, shapes, et. al.
+ + battle-board and most if not all others use font-locked text
+
+I did a little poking around following the above decision and didn't
+find any obvious means to put images under text that we still want the
+user to be able to work with in the buffer.
+#+begin_src emacs-lisp
+;; put some blank lines atop and emacs lisp scrach buffer
+;; then see if you can get editable text into the circle
+(let ((svg (svg-create 400 400 :stroke-width 10)))
+       (svg-circle svg 200 200 100 :stroke-color "green")
+       (put-image (svg-image svg) 0)
+       ;;(remove-images 0 2000)
+       )
+#+end_src
+Per TFM `put-image' is using an overlay added to a begin-text
+attribute of an overlay added into the text,  to contain the image.
+This means that it's prepended to -but does not obscure- the text.
+
+#  LocalWords:  Nethack
+*** 

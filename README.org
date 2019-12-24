@@ -343,4 +343,4 @@ We are creating a complete new game-engine writting within a text
 editor.  We'd love your input and participation!
 
 Find us on [[https://discord.gg/gar8ns][Discord]] or join #dungeon-mode on Freenet.net IRC or open an
-issue on github request commit access or make contact.
+issue on github to request commit access or make contact.
