@@ -47,35 +47,105 @@ e.g. user interface development and the manual authoring of content.
 
 ** Interface Development
 
-The remainder of the section following the table are notes and
-commentary while completed the estimations:
+| Tags                | Points |
+| dungeon-mode        |     20 |
+| journal-mode        |     20 |
+| battle-board        |     10 |
+| baddie-board        |      5 |
+| map-mode            |     20 |
+| treasure-mode       |     10 |
+| character-mode      |     20 |
+| tables-mode         |     10 |
+| decent-mode         |      5 |
+| dungeon-master-mode |     20 |
 
-|Tags                 |Story                           |Points  |
-|dungeon-mode         |Oversee file interactions in    |      20|
-|                     |terms of elisp expresisons.  Use|        |
-|                     |a queue and timer to insolate   |        |
-|                     |the command processing function.|        |
-|battle-board         |Draw a party in terms of        |      10|
-|                     |position and attributes. (bh...)|        |
-|baddie-board         |Display baddies as viewed by the|       5|
-|                     |party, e.g no health info       |        |
-|map-mode             |Display a map with a general    |      20|
-|                     |store, coridor, and chambers    |        |
-|                     |behind secret doors.            |        |
-|treasure-mode        |Display the treasure categories,|      10|
-|                     |undevided monies, and any       |        |
-|                     |unresolved or undistributed     |        |
-|                     |treasure.                       |        |
-|character-mode       |Display a character sheet       |      20|
-|tables-mode          |Display a sample of any of the  |      10|
-|                     |common DM tables, e.g. spells.  |        |
-|decent-mode          |add a after-command hook to     |       5|
-|                     |dungeon-mode and create a       |        |
-|                     |function to echo completed      |        |
-|                     |command and results before I/O  |        |
-|dungeon-master-mode  |Display a dired like interface  |      20|
-|                     |of buffers important to         |        |
-|                     |dungeon-mode.                   |        |
+The remainder of the section forms initial task objective generally in
+the vein of user stories and any recommendations, analysis and notes
+which contributed..
+
+*** Task Detail
+
+**** Create dungeon-mode (20 points)
+#+begin_quote
+Oversee file interactions in terms of expression. Use a queue and
+timer to insulate the command processing function.  This package will
+not perform the file operations so this task must leap-frog or
+otherwise coordinate within initial development of 'dm-journal-mode'.
+#+end_quote
+
+**** Create dm-journal-mode (20 points)
+#+begin_quote
+Create basic file-system interaction functions, (1) create an empty
+file associated to a given symbol, (2) given a symbol return file
+content, (3) given a symbol return the index of symbols it defines,
+(4) given a symbol return the file or file part which defined it, (5)
+given an indexed symbol and new content update the file.
+#+end_quote
+
+**** Create dm-battle-board (20 points)
+#+begin_quote
+Draw a party in terms of position and attributes. (body-hits, ...)
+Provide a frame-work for font (e.g. ASCII, Unicode, ...) based
+beautification.  Make decorative content read-only.
+#+end_quote
+
+**** Create dm-baddie-board (5 points)
+#+begin_quote
+Display baddies as viewed by the party or DM, e.g maybe no or limited
+health info per party's current view.  It is fine to use hard-coded
+data if the REPL is not available.
+#+end_quote
+
+**** Create dm-map-mode (20 points)
+#+begin_quote
+Display a map with a general store, corridor, and chambers behind
+secret doors and super-impose it over the data representation. Key
+constants may be hard-coded or implemented as vars however drawing
+must occur on-demand, must replace any existing image, and must
+include calculations of scale, a sizing factor from 0-4 which may be
+hard coded to 1 (100%) for the time-being.
+#+end_quote
+
+**** Create dm-treasure-mode (10 points)
+#+begin_quote
+Display the treasure categories, including unresolved or undistributed
+treasure.  Provide functions and key-map with bindings to (1)
+increment and (2) decrement numeric counters, (3) add or (4) remove an
+item from a list column, and to (5, 6) DWIM at point category at
+point.  It is helpful but not required to select key bindings
+thoughtfully at this stage in development.
+#+end_quote
+
+**** Create dm-tables-mode (10 points)
+#+begin_quote
+Display a sample of any of the common DM tables, e.g. spells.  Use
+hard-coded data if the REPL isn't ready.  Support basic cell-wise
+cursor movement with arrow keys.  Highlight the cell under point.  It
+is not required (but helpful) to include restriction of point to
+appropriate (interactive) spaces within the buffer.
+#+end_quote
+
+**** Create dm-character-mode (20 points
+#+begin_quote
+Display a character sheet.  Implement a reasonably well considered
+UI. Provide a key-map with minimal bindings for movement between
+sections.
+#+end_quote
+
+**** dm-decent-mode (5 points)
+#+begin_quote
+Display a dired like interface of buffers important to dungeon-mode.
+#+end_quote
+
+**** dm-dungeon-master-mode (20 points)
+#+begin_quote
+Prototype composite interface two working minor modes and the REPL.
+Note, while the REPL must be at least semi-functional to complete this
+task this will also provide a POC for dm-battle-board-mode proposed
+approach.
+#+end_quote
+
+** Analysis
 
 Let's face-it.  The user-interface is important.  Not just to
 attracting others (whether to play, create, or contribute) but
@@ -198,6 +268,9 @@ attribute of an overlay added into the text,  to contain the image.
 This means that it's prepended to -but does not obscure- the text.
 
 ** TODO Manual Data Entry
+
+Create some notes on the potential approaches key tasks and respective
+LoE by early January, 2020.
 
 * Quick Notes on Data
 

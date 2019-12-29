@@ -1,0 +1,772 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2019-12-14 Sat 03:25 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>&lrm;</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="Corwin Brust" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { width: 90%; }
+  /*]]>*/-->
+</style>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2018 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="content">
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org8ff790b">1. SYNOPSYS</a></li>
+<li><a href="#org8ddc318">2. APPROACH</a></li>
+<li><a href="#orgc68e4d7">3. DESIGN</a>
+<ul>
+<li><a href="#orgcbf7c84">3.1. The Eventually Concurrent Journal</a></li>
+</ul>
+</li>
+<li><a href="#org5fdc0c3">4. Support for Web, Mobile, and other non-Emacs clients</a></li>
+<li><a href="#org1e2a1aa">5. Emacs Interfaces</a>
+<ul>
+<li><a href="#org6a7b16d">5.1. dungeon-mode</a></li>
+<li><a href="#org2729ead">5.2. battle-board</a></li>
+<li><a href="#org7903dc2">5.3. baddie-board</a></li>
+<li><a href="#org7897c8f">5.4. map-mode</a></li>
+<li><a href="#orgaf98f28">5.5. treasure-mode</a></li>
+<li><a href="#orgea7bea9">5.6. character-mode</a></li>
+<li><a href="#org7b2d4a0">5.7. tables-mode</a></li>
+<li><a href="#org81944c7">5.8. decent-mode</a></li>
+<li><a href="#org9f670f3">5.9. dungeon-master-mode</a></li>
+</ul>
+</li>
+<li><a href="#org20ed4e3">6. Inspiration</a>
+<ul>
+<li><a href="#orgb5edb11">6.1. Implementation</a></li>
+</ul>
+</li>
+<li><a href="#org1e9a3b7">7. Engine Fundamentals</a>
+<ul>
+<li><a href="#org4554a6c">7.1. Engine Output</a></li>
+<li><a href="#orgb5399df">7.2. Engine Input</a></li>
+</ul>
+</li>
+<li><a href="#org52f6627">8. Product Vision and Development Approach</a>
+<ul>
+<li><a href="#org7728108">8.1. Primary Use Case</a></li>
+<li><a href="#org4d7dbd2">8.2. Secondary Use Case</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<p>
+dungeon-mode - synchronous and asynchronous world sharing and change resolution
+</p>
+
+<div id="outline-container-org8ff790b" class="outline-2">
+<h2 id="org8ff790b"><span class="section-number-2">1</span> SYNOPSYS</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+An hack-and-slash style mult-player dungeon crawl blending the
+heuristics of NetHack with a combat engine inspired by Minnesota
+Dungeon (Minneapolis Dungeon, Larry's Maze, et. al.).
+</p>
+</div>
+</div>
+
+<div id="outline-container-org8ddc318" class="outline-2">
+<h2 id="org8ddc318"><span class="section-number-2">2</span> APPROACH</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+Dungeon-mode is a game engine and REPL for creating and playing
+multi-user dungeons written primarily in emacs lisp.  While  playing
+a game created with dungeon-mode doesn't necessarily require Emacs
+authoring game environments (e.g. worlds) does, as do assigning
+special powers, resolving Ghod calls, Sage encounters, and Ubic -if
+enabled- or any other or custom events with a dm-intractable property
+set to a non-nil value.  Dungeon Masters may specify delegation
+rosters to support cooperative oversight and enable teams to direct
+the play experience.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgc68e4d7" class="outline-2">
+<h2 id="orgc68e4d7"><span class="section-number-2">3</span> DESIGN</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+Dungeon-mode works by maintaining an eventually current journal of the
+all REPL interactions and results associated with each world.  The
+REPL is responsible for accepting input (traditionally with keyboard
+and mouse, or via REST), resolving and brokering inputs and
+authorities, and publishing and persisting changes to the journal.
+</p>
+</div>
+
+<div id="outline-container-orgcbf7c84" class="outline-3">
+<h3 id="orgcbf7c84"><span class="section-number-3">3.1</span> The Eventually Concurrent Journal</h3>
+<div class="outline-text-3" id="text-3-1">
+<p>
+The Journal is a log of the present state of a world in terms of a
+history from it's inception to the current moment.  It is persisted
+as a mixed set of emacs-lisp expressions and JSON data named according
+to SHA256 sum.  Taken as a whole, the journal entries for a world
+provide both the complete code needed to provide the world for
+interaction and a full narrative, or human-readable form of this same
+information adorned with hints regarding secrecy and importance.
+</p>
+
+<p>
+The eventually concurrent part of our approach to journaling takes
+inspiration from Apache Cassandra and similar "NoSQL" technologies
+which guarantee that all instances of the database cluster will
+eventually have the most current data and focus on directing queries
+to the most current source for the specific information requested.
+</p>
+
+<p>
+In our case we mean simply two things:
+</p>
+
+<ul class="org-ul">
+<li><p>
+A client is not guaranteed to receive information anytime before
+a character (&amp;ct.) attached to that client will become eligible
+to act upon it.
+</p>
+
+<p>
+This could mean that you don't see you have taken damage until
+your next swing, even if you hammer refresh.  The change hasn't
+been persisted to the journal you're reading.  Don't panic.  It
+will be there by the time you can do anything about it.
+</p></li>
+
+<li>A client will eventually receive of all information to which it is
+entitled.</li>
+</ul>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org5fdc0c3" class="outline-2">
+<h2 id="org5fdc0c3"><span class="section-number-2">4</span> Support for Web, Mobile, and other non-Emacs clients</h2>
+<div class="outline-text-2" id="text-4">
+<p>
+Because the constructs of the game are exposed as RESTful services
+web, mobile, and other clients are possible outside of Emacs; however,
+because the authority management system relies on trust between active
+Emacs instances (meaning servers or traditional desktop or shell
+clients), and the prior and ongoing exchange of certificates between
+them, the REPL will not accept commits from "external" clients which
+create or replace the action sequences programmed into the world
+(e.g. which would supply or trigger the generation of new code to be
+used by the REPL(s) in implementing world).
+</p>
+
+<p>
+Needless to say, trusted Emacs instances are under no such limitation
+and may use the full power of emacs-lisp to create whatever new
+functionality is needed to fully enhance the dungeon experience. GNU
+Emacs is recommended, especially for authoring worlds or serving as
+the primary Dungeon Master for an interactive game.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org1e2a1aa" class="outline-2">
+<h2 id="org1e2a1aa"><span class="section-number-2">5</span> Emacs Interfaces</h2>
+<div class="outline-text-2" id="text-5">
+<p>
+dungeon-mode provides nine interactive modes for Emacs, each with
+different display characteristics and default key-bindings.  Generally
+the key major-modes are <b>battle-board</b> for players and <b>dungeon-master</b>
+for game creators and team Dungeon Master.
+</p>
+</div>
+
+<div id="outline-container-org6a7b16d" class="outline-3">
+<h3 id="org6a7b16d"><span class="section-number-3">5.1</span> dungeon-mode</h3>
+<div class="outline-text-3" id="text-5-1">
+<p>
+major-mode providing the REPL, an interactive environment for directly
+interacting with the game engine and working with journals.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org2729ead" class="outline-3">
+<h3 id="org2729ead"><span class="section-number-3">5.2</span> battle-board</h3>
+<div class="outline-text-3" id="text-5-2">
+<p>
+major-mode to display a party of characters creatures, NPCs, etc.,
+shows health, armor, primary weapon &amp;ct. This mode includes the
+ability to compose several of the other interfaces creating a complete
+interface intended to meet most player needs.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org7903dc2" class="outline-3">
+<h3 id="org7903dc2"><span class="section-number-3">5.3</span> baddie-board</h3>
+<div class="outline-text-3" id="text-5-3">
+<p>
+major-mode to display opposition. Similar to battle-board but includes
+a "fog-of-war" allowing details to be masked or omitted from display.
+Also available as a minor-mode such that the baddie-board can be
+included in the battle-board to give a consolidated view of party and
+opp.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org7897c8f" class="outline-3">
+<h3 id="org7897c8f"><span class="section-number-3">5.4</span> map-mode</h3>
+<div class="outline-text-3" id="text-5-4">
+<p>
+major-mode to create and display dungeon levels. map-mode is also
+available as a minor-mode so you can use it with battle-board to
+provide a full, thumbnail, or positional slice of the map from the
+same interface which displays.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgaf98f28" class="outline-3">
+<h3 id="orgaf98f28"><span class="section-number-3">5.5</span> treasure-mode</h3>
+<div class="outline-text-3" id="text-5-5">
+<p>
+major-mode for display of a party's undivided spoils and any other
+unresolved events associated with treasure collection.  Also available
+as a minor mode, such that unresolved treasure and events may be
+listed alongside party status display.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgea7bea9" class="outline-3">
+<h3 id="orgea7bea9"><span class="section-number-3">5.6</span> character-mode</h3>
+<div class="outline-text-3" id="text-5-6">
+<p>
+major-mode for display of a character, NPC, etc., and to display
+options for resolving an action. This can be used within the
+battle-board to display the actions available to the next actor and
+select one via an accompanying minor-mode.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org7b2d4a0" class="outline-3">
+<h3 id="org7b2d4a0"><span class="section-number-3">5.7</span> tables-mode</h3>
+<div class="outline-text-3" id="text-5-7">
+<p>
+Major mode for writing and associating tables, such as of creatures,
+treasure, and dungeon levels.  This mode is also available as a
+minor-mode enabling display of (know) baddie information within
+battle-board mode.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org81944c7" class="outline-3">
+<h3 id="org81944c7"><span class="section-number-3">5.8</span> decent-mode</h3>
+<div class="outline-text-3" id="text-5-8">
+<p>
+Minor-mode used to display the active worlds and descents for a REPL.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org9f670f3" class="outline-3">
+<h3 id="org9f670f3"><span class="section-number-3">5.9</span> dungeon-master-mode</h3>
+<div class="outline-text-3" id="text-5-9">
+<p>
+Major-mode used to create games and perform Dungeon Master
+actions. It is generally a superset of the features provided by
+battle-board with additional capabilities supporting multiple
+simultaneous games and multiple simultaneous descents into each, as
+well as for changing game, action, and event properties on the fly.
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org20ed4e3" class="outline-2">
+<h2 id="org20ed4e3"><span class="section-number-2">6</span> Inspiration</h2>
+<div class="outline-text-2" id="text-6">
+<p>
+The general approach to game mechanics is taken from Minnesota
+Dungeon (or Minneapolis Dungeon, or just "Dungeon" if you happen to be
+from there), a contemporary to early D&amp;D featuring an extremely simple
+rule-set and a zero or near-zero cost to play.  Larry Brawmer is
+generally crediting with creating the first Dungeon. Dungeon is
+characterized by borrowing heavy from prior art (e.g. other people's
+Dungeons that you've played in) as well as Science Fiction and Fantasy
+sources.  This has the effect of requiring lore as well as ingenuity
+on the part of players, who complete with baddies, traps, and curses to
+win treasure and go up in rank.
+</p>
+
+<p>
+Typical requirements are a pair of six sided dice, pencils, and a pad
+of quad-ruled graph-paper.  Apocryphally, a "good" Dungeon can be
+created in one to two hours and will provide entertainment for a few weeks
+to a few months depending on how intricate the game and how determined
+the players.
+</p>
+
+<p>
+An interesting distinction of Dungeon is the Special Power, a unique
+intrinsic provided to each character the rules for which are
+negotiated with the Dungeon Master prior to play.  Some Dungeon
+Masters (Steven Brust) have add included the ability for special
+powers to be altered during or by play, for example as a result of
+certain events.
+</p>
+</div>
+
+<div id="outline-container-orgb5edb11" class="outline-3">
+<h3 id="orgb5edb11"><span class="section-number-3">6.1</span> Implementation</h3>
+<div class="outline-text-3" id="text-6-1">
+<p>
+Dungeon-mode handles this complexity by defining a emacs-lisp function
+for each special power at the time the character is registered for
+play in a world.  Special power resolution functions may then carry
+the dm-interactive property specifying circumstances under which
+direct involvement by the Dungeon Master may be needed to resolve the
+use, attempted use, etc., of the special power.
+</p>
+
+<p>
+Character Name and Character Memo notwithstanding, Special Power is
+the only unique-per-character attribute supported by the vanilla game
+engine provided by this package.  All other character properties are
+either counters (Karma, Gold, &#x2026;) or are values taken from tables
+designed by the Dungeon Master (Possessions, Intrinsics, &#x2026;).
+Creators are free to build additional table or function based
+intrinsics which may depend upon or otherwise interact with each-other
+such that Ghod calls from 3rd level Wizards may be ignored while those
+from 2nd level Priests trigger Dungeon Master involvement.
+</p>
+
+<p>
+That said, by the versions of Dungeon which have reached the
+maintainers of this document a great number of the creatures,
+treasure, events, curses, traps and so on require a close narrative
+quite disrupting the orderly rows and columns neatly describing the
+more generic baddies and treasure.   Similarly, the Dungeon author
+typically eventually resorts to narrative or semi-narrative forms to
+describe rank tables as well as any more complex puzzles baked into
+the game.  For more common puzzles (moving pillar in the center of a
+30x30 area, anyone?) common notation conventions essentially create
+custom syntax specific, for example, to a small section of the map.
+</p>
+
+<p>
+This project addresses such complexity by enabling the Dungeon author
+to define the world in terms of a free-form mixture of data and
+expressions.  This may be either a sexp or a function receiving world
+and action-token and returning a journal entry.  In the case of sexp
+the expression is simply a macro run with world and action-token
+lexically defined. The journal entry returned will generally resolve
+and advance the action. Additionally it may change aspects of the
+world (e.g. permanently change the game for all current and future
+players) or the decent, party, encounter or characters (living, dead,
+or incapacitated), or to player or info sections associated with
+any of these (e.g. the manual) presently associated to the action
+token.  Such actions implicitly update these associations.
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org1e9a3b7" class="outline-2">
+<h2 id="org1e9a3b7"><span class="section-number-2">7</span> Engine Fundamentals</h2>
+<div class="outline-text-2" id="text-7">
+<p>
+dungeon-mode is a complete game engine written in emacs lisp.  It
+provides an interactive process to redefine worlds based on an action
+token which associates entities related by a single turn of the game.
+</p>
+
+<p>
+Game turns represent one slice of play-time in the context of
+map-movement, character or baddie action in combat, treasure
+collection, or event or NPC encounter.  While the specific references
+associated with an action-token vary based on the context, generally
+they include a character, party, decent and dungeon level and often
+also include baddies and treasure as well as npcs and events.
+</p>
+</div>
+
+<div id="outline-container-org4554a6c" class="outline-3">
+<h3 id="org4554a6c"><span class="section-number-3">7.1</span> Engine Output</h3>
+<div class="outline-text-3" id="text-7-1">
+<p>
+Executing an expression within the game engine produces a journal
+entry chronicling the change.  This include narrative forms of any
+information to be returned to players or Dungeon Masters, which should
+provide detailed human-readable descriptions of any changes to the
+local or general game environment:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp" id="orga346a71"><span style="color: #8b0000;">(</span><span style="color: #006400;">(</span>-1 'maybe-to-body Biff&lt;1&gt;<span style="color: #006400;">)</span> <span style="color: #61CE3C;">"Biff The Hunter has taken 1 damage (body 2/3)"</span><span style="color: #8b0000;">)</span>
+<span style="color: #8b0000;">(</span><span style="color: #006400;">(</span>-1 'body-hits Biff&lt;1&gt;<span style="color: #006400;">)</span> <span style="color: #61CE3C;">"Biff The Hunter has lost 1 body-hit! (body 2)"</span><span style="color: #8b0000;">)</span>
+</pre>
+</div>
+
+<p>
+REPL returns journal entry update statements as lists where car the
+expression applied to the journal and &amp;rest are a mix of text and
+expressions to create the narrative text explaining what has occurred
+for players and Dungeon Masters.
+</p>
+
+<p>
+Texts are optional decorated with indicators to provide UI hints (context)
+and secrecy (publication scope):
+</p>
+
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp" id="orgfc21551"><span style="color: #8b0000;">(</span><span style="color: #006400;">(</span>-1 'maybe-to-body Biff&lt;1&gt;<span style="color: #006400;">)</span>
+  <span style="color: #4c83ff;">:incapacitation-warning</span> <span style="color: #61CE3C;">"Biff The Hunter has taken 1 damage (body 1/3)"</span><span style="color: #8b0000;">)</span>
+
+<span style="color: #8b0000;">(</span><span style="color: #006400;">(</span>-1 'body-hits '<span style="color: #ff1493;">(</span>warriors <span style="color: #4c83ff;">:level</span> 1<span style="color: #ff1493;">)</span><span style="color: #006400;">)</span> <span style="color: #8B8989; font-style: italic;">;; </span><span style="color: #8B8989; font-style: italic;">REPL echo and *dm-messages* only!</span>
+ <span style="color: #4c83ff;">:dm</span> <span style="color: #61CE3C;">"Shhhh: Warriors start with 2 body-hits now (meanguy@10.0.0.1)"</span><span style="color: #8b0000;">)</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgb5399df" class="outline-3">
+<h3 id="orgb5399df"><span class="section-number-3">7.2</span> Engine Input</h3>
+<div class="outline-text-3" id="text-7-2">
+<p>
+Input to the REPL is only slightly different from it's output in that
+the expression component may specify necessary authorities or
+otherwise establish predicates for application of the resulting
+journal entry while narrative elements may include intermixed macros
+expressed as functions and function arguments which may generate some
+or all of the text.  Narrative input to the REPL consisting of more
+than a single string of text is recursively processed until only a
+single string of text remains, which is then included in REPL
+outputs (e.g. the journal, REPL echo, <b><b>DM Messages</b></b>, <b><b>Dungeon</b></b>,
+and any buffers or regions which track changes to a property
+mentioned as having been updated in the narrative.  REPL provides for
+additional decorations to support this.  Unlike those for secrecy and
+UI hinting these are not passed though in the REPL output:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp" id="orgf479429"># <span style="color: #8b0000;">(</span><span style="color: #006400;">(</span><span style="color: #4c83ff;">:character</span> Biff&lt;1&gt; quaff-cast-use from-pocket full-heal<span style="color: #006400;">)</span>
+  describe-use ,actor <span style="color: #61CE3C;">"used"</span> ,item-used <span style="color: #006400;">(</span>describe-body-hits<span style="color: #006400;">)</span><span style="color: #8b0000;">)</span>
+&gt; <span style="color: #8b0000;">(</span><span style="color: #006400;">(</span>full-heal <span style="color: #ff1493;">(</span>destroy-consumed Biff&lt;1&gt;<span style="color: #ff1493;">)</span><span style="color: #006400;">)</span>
+   <span style="color: #4c83ff;">:full-heal</span> <span style="color: #61CE3C;">"Biff The Hunter used a full-heal (body 3/3)"</span><span style="color: #8b0000;">)</span>
+</pre>
+</div>
+
+<p>
+Note the use of the substitution operator (comma) rather than the
+keyword indicator (colon) for REPL narrative input decorations.  This
+helps visually to distinguish decorations affect REPL behavior from
+those which assist in heuristically interpreting and presenting
+results.
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org52f6627" class="outline-2">
+<h2 id="org52f6627"><span class="section-number-2">8</span> Product Vision and Development Approach</h2>
+<div class="outline-text-2" id="text-8">
+<p>
+We support two use cases, a primary and a secondary. Task are
+prioritized based on importance to the minimum learning product our
+supporting primary use-case, or both use cases or by scrum-master fiat
+in the event of a tie.
+</p>
+</div>
+
+<div id="outline-container-org7728108" class="outline-3">
+<h3 id="org7728108"><span class="section-number-3">8.1</span> Primary Use Case</h3>
+<div class="outline-text-3" id="text-8-1">
+<blockquote>
+<p>
+Provide Emacs with features for remote cooperative real-time computer
+assisted role-playing.
+</p>
+</blockquote>
+
+<p>
+In this vision, a DM and 1-8 players use Emacs as a replacement for
+dice, pencils and paper to play Dungeon in otherwise the same way it
+has traditionally been play.  In the event tables have been input it
+provides lookup facilities otherwise it asks the DM to input updates
+to share with the players.
+</p>
+
+<p>
+Player connect, perhaps via VPN, to the network of the DM's host emacs
+process and launch emacs or web browsers providing previously shared
+identity tokens to authenticate and authorize.  The data on/from the
+host Emacs is always considered authoritative such that we can stop
+and resume the game without need for clients to retain state between
+sessions.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org4d7dbd2" class="outline-3">
+<h3 id="org4d7dbd2"><span class="section-number-3">8.2</span> Secondary Use Case</h3>
+<div class="outline-text-3" id="text-8-2">
+<blockquote>
+<p>
+Remote single and multi-player fully and semi-autonomous computer
+based dungeoning.
+</p>
+</blockquote>
+
+<p>
+In this vision, DMs may support (read: interfere with) the game
+experience as any number of people comprising any number of parties
+descend into different worlds.  The system allows definition of rules
+for "portaling" such that characters and possessions may be allowed to
+pass between worlds.  We can suspend DM Interactivity to allow Dungeon
+authors to play in their own games, responding to dm-interactable
+between descents by enhancing the automated behaviours.
+</p>
+
+<p>
+For this use case, in the event of a fully automated game
+accessed by external clients (e.g. Web, Mobile, etc), Emacs may act
+primarily or even exclusively as a server rather than an interface
+provider.
+</p>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="author">Author: Corwin Brust</p>
+<p class="date">Created: 2019-12-14 Sat 03:25</p>
+<p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>

@@ -1,0 +1,10 @@
+Bob the builder skills and stats:
+Rank:		       1
+Body Hits:	       3
+Promiscuity:	       V
+Free Res:	       3
+May_use_MAW:	       F
+May_use_IK:	       F
+May_touch_Metal:       T
+Death_Chop:	       F
+Card:		       "This is the text you told me to write down when i drew that card"
