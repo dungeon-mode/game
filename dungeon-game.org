@@ -1,7 +1,16 @@
 #+TITLE: dungeon-game.el
 #+OPTIONS: broken-links:t num:nil H:8
 
+# logo image just floats left.  Github does a nicer job than htmlize
+# so don't work about imaage overlapping first two text blocks in the
+# HTML output; it is just for preview purposes.  Travis-ci makes the
+# real .el and github creates the key documentation for review prior
+# to download and install at which point prefer the help system.
+.
 #+HTML: <a href=https://github.com/mplscorwin/dungeon-mode/><img src="https://github.com/mplscorwin/dungeon-mode/raw/master/M-Dungeon-Logo-final.png" align="right"></a>
+
+# print a description at the top for GitHub
+# CEZB <pre /> looks cool here.
 
 #+NAME: dungeon-game-project-description
 #+BEGIN_SRC text
@@ -51,26 +60,26 @@ Turn-based gaming with GNU Emacs
 * Obtaining Project Sources
 
 The full compliment of available sources including documentation and
-licensing information may not be included.
+licensing information are not included within this file.
 
 As noted in the package source:
 
 #+name: attribution-and-source-pointer
 #+begin_src org :tangle no :padline no
-This is the main distributable packaged from dungeon-mode `dm' sources
-and intended to support quick install and boot-strapping of an Emacs
-environment for game-play or authoring.  If you are packaging your
-own game (e.g. using `dm-publish') you may remove this paragraph but
-please retain the following one or include similar pointer back to an
-authoritative dungeon-mode repository (e.g. linking to your own fork
-is fine as people can eventually find reference to all contributions
-this way).
+  This is the main distributable packaged from dungeon-mode `dm' sources
+  and intended to support quick install and boot-strapping of an Emacs
+  environment for game-play or authoring.  If you are packaging your
+  own game (e.g. using `dm-publish') you may remove this paragraph but
+  please retain the following one or include similar pointer back to an
+  authoritative dungeon-mode repository (e.g. linking to your own fork
+  is fine as people can eventually find reference to all contributions
+  this way).
 
-Complete and authoritative source materials including issue
-reporting and status as well as additional documentary and
-narrative are available from our GitHub repository, which see:
+  Complete and authoritative source materials including issue reporting
+  and status as well as additional documentary/narrative are available
+  from our GitHub repository, which see:
 
- https://gibhub.com/dungeon-mode/dm/
+   https://gibhub.com/dungeon-mode/dm/
 #+END_SRC
 
 * Contents                                                         :noexport:
@@ -83,7 +92,7 @@ narrative are available from our GitHub repository, which see:
   -  [[#other-variables][Other Variables]]
   -  [[#utilities][Utilities]]
   -  [[#functions][Functions]]
-  -  [[#class-definations][Class Definations]]
+  -  [[#class-definitions][Class Definitions]]
   -  [[#interactive-functions][Interactive Functions]]
   -  [[#minor-modes][Minor Modes]]
   -  [[#major-modes][Major Modes]]
@@ -189,7 +198,7 @@ narrative are available from our GitHub repository, which see:
 
 ** TODO Functions
 
-** TODO Class Definations
+** TODO Class Definitions
 
 #+NAME: elisp-body--class-defs
 #+BEGIN_SRC elisp
@@ -204,13 +213,23 @@ narrative are available from our GitHub repository, which see:
                        (secret :initarg :secret))
     "Personal information about you or others.")
 
-  (defclass dm-source () ((file   :initarg :file)
-			  (region :initarg :region))
+  (defclass dm-source () 
+                      ((data      :initarg :data)
+		       (narstring :initarg :narrative)
+                       (docstring :initarg :docstring))
     "Generic representation of game source.")
 
-  (defclass dm-aspect () ((alternatives :initarg :alternatives)
-                         )
+  (defclass dm-source-ref () 
+                          ((file   :initarg :working-file)
+			   (source :initarg :source)
+			   (player-buffers :initarg :buffers))
+    "Map of source and working file to players' buffers.")
+
+  (defclass dm-aspect () ((kinds :initarg :kinds)
+                          (sources :initarg :souces)
+			  (refs :initarg :refs))
     "Property set (e.g. treasure types, player character classes, etc.")
+
 #+END_SRC
 
 ** TODO Interactive Functions
