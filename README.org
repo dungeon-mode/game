@@ -1,5 +1,7 @@
 dungeon-mode - synchronous and asynchronous world sharing and change resolution
 
+#+CATEGORY: Dungeon
+
 * SYNOPSYS
 
 An hack-and-slash style mult-player dungeon crawl blending the
@@ -12,8 +14,8 @@ Requires GNU Emacs 26.3 or later, available here for most platforms:
 * APPROACH 
 
 Dungeon-mode is a game engine and REPL for creating and playing
-multi-user dungeons written primarily in emacs lisp.  While playing
-a game created with dungeon-mode doesn't necessarily require Emacs
+multi-user dungeons written primarily in emacs lisp.  While playing a
+game created with dungeon-mode doesn't necessarily require Emacs
 authoring game environments (e.g. worlds) does, as do assigning
 special powers, resolving Ghod calls, Sage encounters, and Ubic -if
 enabled- or any other or custom events with a dm-intractable property
@@ -326,44 +328,45 @@ Anyone is welcome to join in the development process.  You can make
 contact by sending a pull request or a opening an issue.  We might
 also be able find one and other in #emacs on irc.freenode.net.
 
-** Primary Use Case
-#+BEGIN_QUOTE
-Provide Emacs with features for remote cooperative real-time computer
-assisted role-playing.
-#+END_QUOTE
+** TODO Primary Use Case
 
-In this vision, a DM and 1-8 players use Emacs as a replacement for
-dice, pencils and paper to play Dungeon in otherwise the same way it
-has traditionally been played.  In the event tables have been input it
-provides lookup facilities otherwise it asks the DM to input updates
-to share with the players.
+ #+BEGIN_QUOTE
+ Provide Emacs with features for remote cooperative real-time computer
+ assisted role-playing.
+ #+END_QUOTE
 
-Players connect, perhaps via VPN, to the network of the DM's host
-emacs process and launch emacs or web browsers providing previously
-shared identity tokens to authenticate and authorize.  The data
-on/from the host Emacs is always considered authoritative such that we
-can stop and resume the game without need for clients to retain state
-between sessions.
+ In this vision, a DM and 1-8 players use Emacs as a replacement for
+ dice, pencils and paper to play Dungeon in otherwise the same way it
+ has traditionally been played.  In the event tables have been input it
+ provides lookup facilities otherwise it asks the DM to input updates
+ to share with the players.
 
-** Secondary Use Case
+ Players connect, perhaps via VPN, to the network of the DM's host
+ emacs process and launch emacs or web browsers providing previously
+ shared identity tokens to authenticate and authorize.  The data
+ on/from the host Emacs is always considered authoritative such that we
+ can stop and resume the game without need for clients to retain state
+ between sessions.
 
-#+BEGIN_QUOTE
-Provide additional features to support fully and semi-autonomous
-computer based dungeoning.
-#+END_QUOTE
+*** Secondary Use Case
 
-In this vision, DMs may support (read: interfere with) the game
-experience as any number of people comprising any number of parties
-descend into different worlds.  The system allows definition of rules
-for "portaling" such that characters and possessions may be allowed to
-pass between worlds.  We can suspend DM Interactivity to allow Dungeon
-authors to play in their own games, responding to dm-interactable
-between descents by enhancing the automated behaviours.
+ #+BEGIN_QUOTE
+ Provide additional features to support fully and semi-autonomous
+ computer based dungeoning.
+ #+END_QUOTE
 
-For this use case, in the event of a fully automated game
-accessed by external clients (e.g. Web, Mobile, etc), Emacs may act
-primarily or even exclusively as a server rather than an interface
-provider.
+ In this vision, DMs may support (read: interfere with) the game
+ experience as any number of people comprising any number of parties
+ descend into different worlds.  The system allows definition of rules
+ for "portaling" such that characters and possessions may be allowed to
+ pass between worlds.  We can suspend DM Interactivity to allow Dungeon
+ authors to play in their own games, responding to dm-interactable
+ between descents by enhancing the automated behaviours.
+
+ For this use case, in the event of a fully automated game accessed by
+ external clients (e.g. Web, Mobile, etc), Emacs may act primarily or
+ even exclusively as a server rather than an interface provider.
+
 * Community and Outreach
 
 We are creating a complete new game-engine writting within a text

@@ -1,0 +1,265 @@
+#+TITLE: dungeon-game.el
+#+OPTIONS: broken-links:t num:nil H:8
+
+#+HTML: <a href=https://github.com/mplscorwin/dungeon-mode/><img src="https://github.com/mplscorwin/dungeon-mode/raw/master/M-Dungeon-Logo-final.png" align="right"></a>
+
+#+NAME: dungeon-game-project-description
+#+BEGIN_SRC text
+Turn-based gaming with GNU Emacs
+#+END_SRC
+
+* Usage
+:PROPERTIES:
+:TOC: ignore
+:END:
+
+#+BEGIN_SRC elisp :tangle no
+  ;; to join game as a plyer
+  (dungeon-game-join "host.name" "player-secret")
+
+  ;; to host a game
+  (dungeon-game-run (dungeon-game-read "~/dm/my-game/"))
+
+  ;; edit/create, mini-buffer prompts for path, etc.
+  (dungeon-mode)
+#+END_SRC
+
+#+BEGIN_SRC elisp padline:no :exports none
+;;; dungeon-game.el --- build and play a dungeon game -*- lexical-binding: t; -*-
+
+;; Copyright (C) 2020  Corwin Brust
+
+;; Author: Corwin Brust <corwin@bru.st>
+;; Keywords: games
+
+;; This program is free software; you can redistribute it and/or modify
+;; it under the terms of the GNU General Public License as published by
+;; the Free Software Foundation, either version 3 of the License, or
+;; (at your option) any later version.
+
+;; This program is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU General Public License for more details.
+
+;; You should have received a copy of the GNU General Public License
+;; along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+;;; Commentary:
+#+end_src
+
+* Obtaining Project Sources
+
+The full compliment of available sources including documentation and
+licensing information may not be included.
+
+As noted in the package source:
+
+#+name: attribution-and-source-pointer
+#+begin_src org :tangle no :padline no
+This is the main distributable packaged from dungeon-mode `dm' sources
+and intended to support quick install and boot-strapping of an Emacs
+environment for game-play or authoring.  If you are packaging your
+own game (e.g. using `dm-publish') you may remove this paragraph but
+please retain the following one or include similar pointer back to an
+authoritative dungeon-mode repository (e.g. linking to your own fork
+is fine as people can eventually find reference to all contributions
+this way).
+
+Complete and authoritative source materials including issue
+reporting and status as well as additional documentary and
+narrative are available from our GitHub repository, which see:
+
+ https://gibhub.com/dungeon-mode/dm/
+#+END_SRC
+
+* Contents                                                         :noexport:
+:PROPERTIES:
+:TOC:    this
+:END:
+-  [[#obtaining-project-sources][Obtaining Project Sources]]
+-  [[#features][Features]]
+  -  [[#customization][Customization]]
+  -  [[#other-variables][Other Variables]]
+  -  [[#utilities][Utilities]]
+  -  [[#functions][Functions]]
+  -  [[#class-definations][Class Definations]]
+  -  [[#interactive-functions][Interactive Functions]]
+  -  [[#minor-modes][Minor Modes]]
+  -  [[#major-modes][Major Modes]]
+-  [[#additional-commentary][Additional Commentary]]
+-  [[#packaging-configuration][Packaging Configuration]]
+  -  [[#file-local-properties][File-local properties]]
+  -  [[#file-local-variables][File-local variables]]
+
+* Features
+
+#+NAME: elisp-body
+#+BEGIN_SRC elisp :exports none
+;;; Code:
+#+END_SRC
+
+** TODO Customization
+
+#+BEGIN_SRC elisp :noweb yes
+  ;;; customize
+
+  (defgroup dungeon-mode ()
+    "<<dungeon-game-project-description>>"
+    :group 'games)
+
+  (defcustom dm-base-path nil
+    "Root folder for all saved game materials."
+    :type 'string)
+
+  (defcustom dm-dungeon-master-info nil
+    "Your identity to players."
+    :type 'sexp)
+
+  (defcustom dm-player-info-alist nil
+    "Your identity as a player.
+
+  List cons cells (alist) in the form:
+    ( GAME . ( PLAYER-INFO )
+
+  Where GAME is a valid symbol name and TABLE-DEF is the
+  player-info structure as a vector (e.g. as from `dm-defplayer')
+  or a cloneable instance object with dm-player as class/super
+  or a string containg either a fully-qualified
+  file-name (e.g. \"^/\") or a file-name with a path relititive to
+  `dm-base-path' (e.g. \"^[^/]\").")
+
+    (defvar dm-pc-alist nil
+      "Global auto-complete support for `dm-player-character'.
+
+    Entries are similar to, e.g. `dm-table-alist' notwithstanding
+    references are to `dm-player-character' and `dm-defpc' vs
+    corrisponding table related interfaces mentioned.")
+#+end_src
+
+
+** TODO Other Variables
+
+#+BEGIN_SRC elisp
+  ;;; vars
+
+  (defvar dm-host-dm nil
+    "The identity of your host when playing.
+
+  Generally matches `dm-dungeon-master-info' when you are the
+  Dungon Master and contains someone else's info otherwise.")
+
+  (defvar dm-host nil "The host Emacs server.")
+
+  (defvar dm-sources-path "~/games/dungeon/sources"
+    "Local save path for source material.")
+
+  (defvar dm-notes-path "~/games/dungeon/campaigns"
+    "Local save path for player materials.
+
+  Any game notes saved localally while playing (not as the DM) are
+  by default placed in this folder.")
+
+  (defvar dm-journal-path "~/games/dungeon/campaigns"
+    "Local save path for game specific DM materials.
+
+  The game journal as well as any game specific rules or notes
+  while acting as DM are by default placed in this folder.")
+
+  (defvar dm-table-alist nil
+    "Global auto-complete support for the `dm-table' context.
+
+  Entries are in the form ( SYMBOL . TABLE-DEF ) where SYMBOL is a
+  valid symbol name and TABLE-DEF is the table structure as a
+  vector (e.g. as from `dm-deftable') or a cloneable instance
+  object with dm-table as class/super or a string containg either a
+  fully-qualified file-name (e.g. \"^/\") or a file-name with a
+  path relititive to `dm-journal-path' (e.g. \"^[^/]\").")
+
+  (defvar dm-pc-alist nil
+    "Global auto-complete support for `dm-player-character'.
+
+  Entries are similar to, e.g. `dm-table-alist' notwithstanding
+  references are to `dm-player-character' and `dm-defpc' vs
+  the corrisponding table related functions mentioned.")
+
+#+end_src
+
+** TODO Utilities
+
+** TODO Functions
+
+** TODO Class Definations
+
+#+NAME: elisp-body--class-defs
+#+BEGIN_SRC elisp
+  ;;; classes with eieio
+
+  (eval-when-compile (require 'eieio)
+                     (require 'eieio-base))
+
+  (defclass dm-player (eieio-named)
+                      ((email  :initarg :email)
+                       (host   :initarg :host)
+                       (secret :initarg :secret))
+    "Personal information about you or others.")
+
+  (defclass dm-source () ((file   :initarg :file)
+			  (region :initarg :region))
+    "Generic representation of game source.")
+
+  (defclass dm-aspect () ((alternatives :initarg :alternatives)
+                         )
+    "Property set (e.g. treasure types, player character classes, etc.")
+#+END_SRC
+
+** TODO Interactive Functions
+
+** TODO Minor Modes
+
+** TODO Major Modes
+
+* Additional Commentary
+
+Target specific forms or commentary come just before the elisp footer.
+
+# No target dependant forms yet.  Yay!
+
+#+NAME: elisp-footer
+#+BEGIN_SRC elisp :exports none :padline no
+
+(provide 'dungeon-game)
+;;; dungeon-game.el ends here
+#+END_SRC
+
+* COMMENT Packaging Configuration
+
+  Babel setup gratefully snipped from [[https://raw.githubusercontent.com/alphapapa/unpackaged.el/master/README.org][unpackaged.el]].
+
+#+BEGIN_QUOTE
+
+  I love Emacs and Org mode.  This makes it so easy to make the
+  document...alive!  And automated!  Beautiful.
+
+#+END_QUOTE
+
+** File-local properties
+
+#+PROPERTY: header-args:elisp :tangle dungeon-game.el
+#+KEYWORDS: games
+#+TAGS: { TODO(t)  INPROGRESS(p) MPTP(c) }
+#+TAGS: { Corwin(C)  Erik(E) }
+
+** File-local variables
+
+# Local Variables:
+# eval: (require 'org-make-toc)
+# eval: (unpackaged/org-export-html-with-useful-ids-mode 1)
+# before-save-hook: org-make-toc
+# after-save-hook: (lambda nil (org-babel-tangle) (org-html-export-to-html))
+# org-export-with-properties: ()
+# org-export-with-title: t
+# org-export-with-broken-links: t
+# org-id-link-to-org-use-id: nil
+# org-export-initial-scope: buffer
+# End:

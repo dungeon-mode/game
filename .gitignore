@@ -1,3 +1,11 @@
+/build/*/*.html
+*.html
+*.html~
+*.org~
+*~
+\.#*#
+*.elc
+
 
 # -*- mode: gitignore; -*-
 *~
@@ -56,3 +64,4 @@ INTEREST-LIST.*
 *.html
 *~
 #*#
+

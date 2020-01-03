@@ -32,7 +32,7 @@ as secrets revealed, yours to keep even when no characters survive.
 #+begin_src elisp
   (dm-deftable baddies ((name             string       :tag "Name")
 			(base-index       integer|sexp :tag "ix")
-			(number-appearing integer|sexp :tag "b/ab")
+			(number-appearing integer|sexp :tag "a/ix")
 			(abrest           integer|sexp :tag "b/ab")
 			(body-hits        integer|sexp :tag "bh")
 			(it-hits ((swings integer|sexp :tag "x")

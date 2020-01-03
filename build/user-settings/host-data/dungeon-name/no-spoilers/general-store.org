@@ -42,6 +42,7 @@ item groups by ascending cost.
 #+end_src
 
 ** Usage
+
  #+name usage
  #+begin_example elisp
 
@@ -66,21 +67,18 @@ item groups by ascending cost.
  #+NAME implementation
  #+begin_src elisp
 
- (def-dungeon-table-fun general-store-buy (item rcpt-c payer-c)
-   "create/incr items of rcpt-c, deduct cost from payer-c"
-   ;; do some work right here
-   )
+(dm-deftable-fun general-store-buy (item rcpt-c payer-c)
+"create/incr items of rcpt-c, deduct cost from payer-c"
+;; do some work right here
+)
 
- (general-store-sell (item has-c-or-pty payee-c-or-pty)
+ (dm-deftable-fun general-store-sell (item has-c-or-pty payee-c-or-pty)
    "Decr/remove item(s) of rcpt-c")
 
- (general-store (item)
-   "returns cost in gold if the general store has ITEM")
+ (dm-deftable-fun general-store (&optional item-or-catstr)
+   "Return the list of general store items when ITEM-OR-CATSTR.
 
- (general-store (category-string)
-   "return the general store table for CATEGORY-STRING if any")
-
- (general-store ()
-   "return the complete set of tables for the general store")
+Otherwise return cost in gold if the general store has ITEM-OR-CATSTR.
+Otherwise return nil.")
 
  #+end_src
