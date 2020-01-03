@@ -93,6 +93,7 @@ As noted in the package source:
   -  [[#utilities][Utilities]]
   -  [[#functions][Functions]]
   -  [[#class-definitions][Class Definitions]]
+      -  [[#dont-hard-code-lines-see-httpsorgmodeorgmanualadvanced-configurationhtml][don't hard-code :LINES, see: https://orgmode.org/manual/Advanced-configuration.html]]
   -  [[#interactive-functions][Interactive Functions]]
   -  [[#minor-modes][Minor Modes]]
   -  [[#major-modes][Major Modes]]
@@ -129,11 +130,11 @@ As noted in the package source:
     "Your identity as a player.
 
   List cons cells (alist) in the form:
-    ( GAME . ( PLAYER-INFO )
+    ( GAME . DM-PLAYER )
 
-  Where GAME is a valid symbol name and TABLE-DEF is the
-  player-info structure as a vector (e.g. as from `dm-defplayer')
-  or a cloneable instance object with dm-player as class/super
+  Where GAME is a valid symbol name and DM-PLAYER is the
+  player-info structure as a vector (e.g. as from (`dm-player')
+  or a cloneable instance object of class/super dm-player, or as
   or a string containg either a fully-qualified
   file-name (e.g. \"^/\") or a file-name with a path relititive to
   `dm-base-path' (e.g. \"^[^/]\").")
@@ -143,7 +144,8 @@ As noted in the package source:
 
     Entries are similar to, e.g. `dm-table-alist' notwithstanding
     references are to `dm-player-character' and `dm-defpc' vs
-    corrisponding table related interfaces mentioned.")
+    corrisponding table related interfaces mentioned."
+    :type 'alist)
 #+end_src
 
 
@@ -201,35 +203,75 @@ As noted in the package source:
 ** TODO Class Definitions
 
 #+NAME: elisp-body--class-defs
-#+BEGIN_SRC elisp
-  ;;; classes with eieio
+#+BEGIN_SRC elisp :export no
+;;; classes with eieio
+#+END_SRC
 
-  (eval-when-compile (require 'eieio)
-                     (require 'eieio-base))
+**** TODO don't hard-code :LINES, see: https://orgmode.org/manual/Advanced-configuration.html
+# #+INCLUDE: "src/classes.el" src elisp :LINES "26-88"
+# #+INCLUDE: "src/classes.el" export :LINES "26-88"
+
+# CEZB: can't get it into the tangled? new plan.
+# C-c ' then: M-x flycheck-disable-checker RET emacs-lisp-checkdoc RET
+# so we'll have to see about all that... :CEZB
+
+#+BEGIN_SRC elisp :padline yes
+  (require 'eieio)
+  (require 'eieio-base)
 
   (defclass dm-player (eieio-named)
-                      ((email  :initarg :email)
-                       (host   :initarg :host)
-                       (secret :initarg :secret))
+    ((email  :initarg :email)
+     (host   :initarg :host)
+     (secret :initarg :secret))
     "Personal information about you or others.")
 
-  (defclass dm-source () 
-                      ((data      :initarg :data)
-		       (narstring :initarg :narrative)
-                       (docstring :initarg :docstring))
+  (defclass dm-source (eieio-named)
+    ((data      :initarg :data)
+     (narstring :initarg :narrative)
+     (docstring :initarg :docstring))
     "Generic representation of game source.")
 
-  (defclass dm-source-ref () 
-                          ((file   :initarg :working-file)
-			   (source :initarg :source)
-			   (player-buffers :initarg :buffers))
+  (defclass dm-player-buffer ()
+    ((player :initarg :player)
+     (frame  :initarg :frame)
+     (window :initarg :window)
+     (buffer :initarg :buffer)
+     ;;narrow? transient-mark? either? both?
+     (region :initarg :region)
+     (buffer-file-p :initarg :savep)
+
+     (p-mode :initarg :player-mode
+	     :docstring "Control string for remote user.")
+     (mode   :initarg :mode
+	     :docstring "Remote update control string."))
+    "Represting a remote buffer.
+
+  No abstraction of remote buffer **state**, moreover MODE and
+  P-MODE establish setting when creating and sometimes updating
+  buffers but don't really work at preventing changes post-facto.")
+
+  (defclass dm-source-ref ()
+    ((file   :initarg :working-file)
+     (source :initarg :source)
+     (player-buffers :initarg :buffers))
     "Map of source and working file to players' buffers.")
 
-  (defclass dm-aspect () ((kinds :initarg :kinds)
-                          (sources :initarg :souces)
-			  (refs :initarg :refs))
-    "Property set (e.g. treasure types, player character classes, etc.")
+      (defclass dm-aspect () ((kinds :initarg :kinds)
+			      (sources :initarg :souces)
+			      (refs :initarg :refs))
+	"Property set (e.g. treasure types, player character classes, etc.")
 
+  (defclass dm-play-session ()
+    ((players :initarg :player-list)
+     (sources :initarg :game-sources)
+     (remote-buffers :initarg :remote-display-settings)
+     (refs :initarg :active-remote-source-references)
+     (action-token :initarg action-token))
+    "Represent a single play session in progress or after the fect.")
+
+  ;; (defclass dm-templateclas ()
+  ;;   (())
+  ;;   "TODO docstring for dm-templateclas.")
 #+END_SRC
 
 ** TODO Interactive Functions
@@ -245,7 +287,7 @@ Target specific forms or commentary come just before the elisp footer.
 # No target dependant forms yet.  Yay!
 
 #+NAME: elisp-footer
-#+BEGIN_SRC elisp :exports none :padline no
+#+BEGIN_SRC elisp padline:no :exports none
 
 (provide 'dungeon-game)
 ;;; dungeon-game.el ends here
@@ -281,4 +323,5 @@ Target specific forms or commentary come just before the elisp footer.
 # org-export-with-broken-links: t
 # org-id-link-to-org-use-id: nil
 # org-export-initial-scope: buffer
+# elisp-format-newline-keyword-except-list: (:initarg)
 # End:
