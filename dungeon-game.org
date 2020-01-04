@@ -93,6 +93,7 @@ As noted in the package source:
   -  [[#utilities][Utilities]]
   -  [[#functions][Functions]]
   -  [[#class-definitions][Class Definitions]]
+    -  [[#dm-source][dm-source]]
       -  [[#dont-hard-code-lines-see-httpsorgmodeorgmanualadvanced-configurationhtml][don't hard-code :LINES, see: https://orgmode.org/manual/Advanced-configuration.html]]
   -  [[#interactive-functions][Interactive Functions]]
   -  [[#minor-modes][Minor Modes]]
@@ -202,13 +203,52 @@ As noted in the package source:
 
 ** TODO Class Definitions
 
-#+NAME: elisp-body--class-defs
+#+NAME: elisp-body--defclass :export no
 #+BEGIN_SRC elisp :export no
 ;;; classes with eieio
+
+(require 'eieio)
+(require 'eieio-base)
+#+END_SRC
+
+#+NAME: elisp-body--defclass--dm-source
+
+*** dm-source
+
+    Generic representation of game source.
+
+    DATA may be at any level of abstraction.  In the context of
+    `org-mode' this could mean a cell, row, or column within a table,
+    an entire table, an hl with or without content and sub-sections,
+    or the entire document.  Instance do not retain any association to
+    their originating buffers or files -if any- which handling of is
+    generally left to modes and otherwise the general behaviors of Emacs.
+
+    DOCSTRING is documentation for the Dungeon Master to help
+    use/apply and extend the source element. DOCSTRING defaults to the
+    value or result of DATA when omitted and given DATA is a raw data
+    value, expression, or function receiving no args.
+
+    NARRATIVE is an additional doc-string suitable for display to
+    players in tool-tips and built in help. E.g. Spoiler free help.
+
+
+#+BEGIN_SRC elisp :export no
+(defclass dm-source (eieio-named)
+  ((data      :initarg :data :docstring
+	      "Raw source data.")
+   (docstring :initarg :docstring :docstring
+	      "Help or information for Dungeon Masters.")
+   (narrative :initarg :narrative :docstring
+	      "Help or information for players."))
+  "<<<[ how-to? this-hl-title ]>>>
+
+<<<[ how-to? this-hl-body-first-paragraph ]>>>")
 #+END_SRC
 
 **** TODO don't hard-code :LINES, see: https://orgmode.org/manual/Advanced-configuration.html
-# #+INCLUDE: "src/classes.el" src elisp :LINES "26-88"
+# #+header: :exports code 
+# +INCLUDE: "src/classes.el" src elisp :LINES "26-88" :tangle dungeon-game.org append
 # #+INCLUDE: "src/classes.el" export :LINES "26-88"
 
 # CEZB: can't get it into the tangled? new plan.
@@ -216,22 +256,16 @@ As noted in the package source:
 # so we'll have to see about all that... :CEZB
 
 #+BEGIN_SRC elisp :padline yes
-  (require 'eieio)
-  (require 'eieio-base)
-
   (defclass dm-player (eieio-named)
-    ((email  :initarg :email)
-     (host   :initarg :host)
-     (secret :initarg :secret))
-    "Personal information about you or others.")
+    ((host   :initarg :host :docstring
+	     "Remote host/IP and port.")
+     (secret :initarg :secret :docstring
+	     "Remote access credential."))
+    "Personal information about you or others.
 
-  (defclass dm-source (eieio-named)
-    ((data      :initarg :data)
-     (narstring :initarg :narrative)
-     (docstring :initarg :docstring))
-    "Generic representation of game source.")
+  elisp: none")
 
-  (defclass dm-player-buffer ()
+  (defclass dm-player-buffer (dm-source)
     ((player :initarg :player)
      (frame  :initarg :frame)
      (window :initarg :window)
@@ -246,28 +280,35 @@ As noted in the package source:
 	     :docstring "Remote update control string."))
     "Represting a remote buffer.
 
-  No abstraction of remote buffer **state**, moreover MODE and
-  P-MODE establish setting when creating and sometimes updating
-  buffers but don't really work at preventing changes post-facto.")
+  elisp: region buffer window frame")
 
-  (defclass dm-source-ref ()
-    ((file   :initarg :working-file)
+  (defclass dm-source-ref (dm-source)
+    ((file   :initarg :local-working-file)
      (source :initarg :source)
-     (player-buffers :initarg :buffers))
-    "Map of source and working file to players' buffers.")
+     (buffers :initarg :buffers))
+    "Map of source and working file to players' buffers.
 
-      (defclass dm-aspect () ((kinds :initarg :kinds)
-			      (sources :initarg :souces)
-			      (refs :initarg :refs))
-	"Property set (e.g. treasure types, player character classes, etc.")
+  elisp: buffer-file buffer-content")
+
+  (defclass dm-aspect (dm-source)
+    ((kinds :initarg :kinds)
+     (sources :initarg :souces))
+    "Property sets; E.g. treasure types, character races, etc.
+
+  elisp: symbol-properties with pre-set value options")
+
+  (defclass dm-unique-aspect (dm-aspect) ((refs :initarg :refs))
+    "Global property set, e.g. player characters, uniques, etc.
+
+  elisp: globally defined symbols ")
 
   (defclass dm-play-session ()
-    ((players :initarg :player-list)
-     (sources :initarg :game-sources)
-     (remote-buffers :initarg :remote-display-settings)
-     (refs :initarg :active-remote-source-references)
-     (action-token :initarg action-token))
-    "Represent a single play session in progress or after the fect.")
+    ((players :initarg :players)
+     (sources :initarg :sources)
+     (buffers :initarg :buffers)
+     (refs    :initarg :refs)
+     (action  :initarg :next-action))
+    "Represents a single play session, in progress or after the fect.")
 
   ;; (defclass dm-templateclas ()
   ;;   (())
@@ -325,3 +366,5 @@ Target specific forms or commentary come just before the elisp footer.
 # org-export-initial-scope: buffer
 # elisp-format-newline-keyword-except-list: (:initarg)
 # End:
+
+#  LocalWords:  DOCSTRING
