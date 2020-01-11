@@ -1,0 +1,99 @@
+#+TITLE: Treasure generation table
+#+PROPERTIES:
+ :Version: 0.01
+ :Author: Corwin Brust
+ :Created: 2020/01/11
+ :END:
+
+This set of tables pick a specific Relic found in treasure.  In can be
+use for normal chamber and other types of encounters (e.g. beach,
+tower, corridor).
+
+ + Calculate (base-index) as the index of the encounter after adding any
+   adjustment from the baddie, events, etc.
+ + Dungeon Master rolls 1d re-rolling and adding any six to create
+   (adjusted-index)
+ + Use the final die roll to select a Type
+ + Players roll into starting tables according the rules given
+
+** Type:
+| 1 | Armor         |
+| 2 | Shields       |
+| 3 | Items         |
+| 4 | Relic Power   |
+| 5 | Weapons       |
+| 6 | Add & Re-roll |
+
+** Armor
+
+ + Players roll 1d (re-rolling 6s) into the table according the final
+   adjusted index from the games master.  Effectively, we are
+   graduating the increase in base damage with an increased
+   possibility of the armor having additional properties ("effects").
+ + Players roll to trigger each possible effect, forms generally
+   following the Saving Throw difficulty table.
+ + See the Effects table for individual descriptions.
+
+|      ix | item                         | On    | Effect     | On  | Effect     | On  | Effect     |
+|---------+------------------------------+-------+------------+-----+------------+-----+------------|
+|    1-30 | plate, 10 + floor(ix *.25)   | Bx-Bx | Reflect/D  |     |            |     |            |
+|   31-50 | plate, 5 + floor(ix * .5)    | Bx    | Regen(1d)  |     |            |     |            |
+|   51-70 | plate, -15 + floor(ix * .5)  | D     | Regen(2d)  | Bx  | Regen(D)   |     |            |
+|   71-80 | plate, -10 + floor(ix * .5)  | Even  | Regen(2d)  | Bx  | Reflect/D  |     |            |
+|   81-90 | plate, -20 + floor(ix * .5)  | D     | Regen(3d)  | HiD | Regen(D)   | Bx  | Defect(D)  |
+|  91-100 | plate, -15 + floor(ix * .5)  | Even  | Regen(3d)  | HiD | Regen(D)   | Bx  | Reflect(D) |
+| 101-120 | plate, -30 + floor(ix * .75) | D     | Regen(DoD) | D   | Regen(D+7) | HiD | Deflect(D) |
+|    121- | plate, -40 + floor(ix * .75) | Even  | Regen(D+7) | D+7 | Deflect(D) | D   | Reflect(D) |
+
+** Shields
+
+ + Same general idea as Armor
+
+| ix | item | On | Effect | On | Effect | On | Effect |
+|----+------+----+--------+----+--------+----+--------|
+|    |      |    |        |    |        |    |        |
+
+** Items
+
+ + Players roll 1d down followed by 1d across into the first table.
+ + Asterisks mark cells which advance the player to the next table,
+   into which they must roll again in the same manner as before.
+ + The Item Descriptions table indexes items from all tables.
+ + TODO: process/legend for
+   charge/perishable/per-(decent|battle|evening) quantities or just
+   inline this with each item?
+
+** Relic Power
+
+Relic Power allows priests possessing their holy symbols to, in some
+circumstances to wit generally during combat, alter the natural roll
+of player or Games Masters dice rolls.  Generally rolls related to
+treasure are exempt from Relic Power as typically are those of NPCs.
+
+ + TODO: write indexed formula using dungeon level and DM adjusted
+   index + player 1d (re-rolling 6)
+
+** Weapons
+
+Weapon assignment is similar to armor but also graduates increased
+chance of throwable and multi-attack.
+
+ + TODO: write the relic:weapons table
+
+** Effects
+
+This section describes effects applied to armor and shields.  These
+generally operate after the battle during healing phase.
+
+| _Legend_  | Activates         | Activation Roll | Description                                             |
+|---------+-------------------+-----------------+---------------------------------------------------------|
+| Regen   | After battle      | 1d              | Regenerate 1 die armor hits after each battle.          |
+| Regen   | After battle      | 2d              | Regenerate 2 dice armor hits after each battle.         |
+| Regen   | After battle      | 3d              | Regenerate 3 dice armor hits after each battle.         |
+| Regen   | After battle      | DoD             | Regenerate die-of-dice armor hits after each battle.    |
+| Regen   | After battle      | D               | Regenerate armor hits after the battle on doubles.      |
+| Regen   | After battle      | D+7             | Regenerate armor hits after the battle on doubles or 7. |
+| Deflect | Once/combat round | D               | Deflect a magical attack each round on doubles.         |
+| Reflect | Once/combat round | D               | Reflect a magical attack each round on doubles.         |
+
+#  LocalWords:  throwable NPCs

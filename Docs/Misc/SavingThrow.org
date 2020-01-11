@@ -1,0 +1,37 @@
+#+TITLE: Saving Throws
+#+PROPERTIES:
+ :Version: 0.01
+ :Author: Corwin Brust
+ :Created: 2020/01/11
+ :END:
+
+This is a generic lookup table used for calculating difficulty as a
+single roll of two six-sided dice.  The base difficulty is the dungeon
+level unless otherwise noted (e.g. a difficulty specified for selected
+baddie would generally govern).
+
+** Difficulty
+
+| -10 | Boxcars => Boxcars       | bad     |
+|  -9 | Bx => Avoid Even         |         |
+|  -8 | Bx => Avoid D+3+5+7      |         |
+|  -7 | Bx => Avoid D+7          |         |
+|  -6 | Bx => Avoid D+3+5        |         |
+|  -5 | Bx => Avoid D            |         |
+|  -4 | Bx => Avoid LowD         |         |
+|  -3 | Bx => Avoid Sn           |         |
+|  -2 | Boxcars                  |         |
+|  -1 | High-Doubles             |         |
+|   0 | Doubles                  | even-up |
+|   1 | D+11                     |         |
+|   2 | D+9+11                   |         |
+|   3 | D+7                      |         |
+|   4 | D+7+11                   |         |
+|   5 | D+7+9+11                 |         |
+|   6 | Even                     |         |
+|   7 | Avoid D+3+5+7+11         |         |
+|   8 | Avoid D+7                |         |
+|  10 | Avoid D                  |         |
+|  11 | Avoid High Doubles       |         |
+|  12 | Avoid Boxcars            |         |
+|  13 | Avoid Boxcars => Boxcars | good    |
