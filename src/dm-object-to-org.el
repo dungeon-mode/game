@@ -21,20 +21,38 @@
 ;;; Commentary:
 
 ;;; require core
+(require 'eieio)
+(require 'subr)
 (require 'seq)
 
 ;; use format sequences to stringify objects for use with `org-mode'
 
 ;;; Code:
 
-(defvar dm-object-to-org-keyword-alist
+;;; CONSIDER:
+;;;  - use DATA cell (first slot) for alist
+;;;    ( #+NAME . ( PROPERTIES-DRAWER ))
+;;; Construct Doc:
+;;;  - format per DATA
+;;;  - SRC block for object's elisp source
+;;; Construct Obj:
+;;;  - when SRC block exists:
+;;;    * load from block
+;;;    * update from any org sources for named items given in DATA
+;;;  - when no SRC block exists:
+;;;    * prompt user for any missing info (e.g. slots, instance types,...)
+;;;  - must be able to define classes as well as instances
+
+
+
+(defvar dm-object-to-org:keyword-alist
   '((:h* dm-object-to-org--format-h*)
-    (:begin_src   "#+BEGIN_SRC")
-    (:end_src     "#+END_SRC")
-    (:begin_quote "#+BEGIN_QUOTE")
-    (:end_quote   "#+BEGIN_QUOTE")
-    (:begin_src   "|")
-    (:end_src     "|"))
+    (:begin_src   "\n#+BEGIN_SRC")
+    (:end_src     "\n#+END_SRC\n")
+    (:begin_quote "\n#+BEGIN_QUOTE")
+    (:end_quote   "\n#+END_QUOTE\n")
+    (:begin_table "\n|")
+    (:end_table   "|\n"))
   "Alist mapping keywords to org syntax.
 
 Maps a keyword representing an ORG-MODE-BLOCK to a STRING
@@ -43,13 +61,19 @@ literal (which will be converted to string) or a function which
 will receive the keyword along with the format sequence in which
 and index at which it appeared.")
 
-(defun dm-object-to-org--format-h* (kw obj seq ix)
+(defun dm-object-to-org--format-h* (kw &rest ignored)
   "Format org headline type KW as a string.
 
-OBJ, SEQ and IX are unused."
-  (let ((length (string-to-number (substring (symbol-name kw) 2))))
-    (concat (make-string (* 2 length) ?\  ) (make-string length ?*))))
-;;(dm-object-to-org--format-h* :h3 nil nil nil)
+Other inputs are IGNORED.
+
+\(fn (kw &optional obj seq ix))"
+  (ignore ignored)
+  (concat "\n"
+	  (make-string
+	   (string-to-number (substring (symbol-name kw) 2))
+	   ?*)
+	  " "))
+;;(dm-object-to-org--format-h* :h3)
 
 (defun dm-object-to-org (obj &rest seq)
   "Return string continaing org markup for OBJ.
@@ -83,28 +107,41 @@ call.
         and position into sections as a zero based index.
 
   - Any other values treated as literal and converted to
-    string as necessary."
+    string as necessary.
+
+Note, although most unrecognized keywords will be silently
+ignored, due to the implemention of :h1 and friends those
+beginning with :h won't be.  A confusing error will be throw if
+not such a keyword is found which does not appear in
+`dm-object-to-org-keyword-alist'."
   (when obj
     (apply 'concat
-     (delete
-      nil
-      (seq-map-indexed
-       (lambda (format findex)
-	 (cond ((keywordp format)
-		(let ((fmtr
-		       (cadr (assq format dm-object-to-org-keyword-alist))))
-		  (if fmtr
-		      (if (stringp fmtr)
-			  fmtr
-			(when (functionp fmtr)
-			  (funcall fmtr format obj seq findex)))
-		    (when  (string= "h" (substring (symbol-name format) 1 2))
-		      (funcall (cadr (assq ':h* dm-object-to-org-keyword-alist))
-			       format obj seq findex)))))
-	       )) seq)))
+	   (delete
+	    nil
+	    (seq-map-indexed
+	     (lambda (fmt findex)
+	       (cond ((stringp fmt) fmt)
+		     ((keywordp fmt)
+		      (let ((fmtr
+			     (cadr (assq fmt dm-object-to-org-keyword-alist))))
+			(if fmtr
+			    (if (functionp fmtr)
+				(funcall fmtr fmt obj seq findex)
+			      (format "%s" fmtr))
+			  (when  (string= "h" (substring (symbol-name fmt) 1 2))
+			    (funcall (cadr (assq ':h* dm-object-to-org-keyword-alist))
+				     fmt obj seq findex)))))
+		     ((slot-exists-p obj fmt) (format "%s" (oref obj fmt)))
+		     ((eieio-object-p fmt)
+		      (ingore "TODO: save this for when it moves into dm-persistent"))
+		     ((functionp fmt) (funcall fmt fmt obj seq findex))
+		     (t (format "%s" fmt)))) seq)))
     ))
 
-;;(dm-obj->org t :h1 :h3 :begin_src :h4)
+(dm-object-to-org (my-class) :h1 "hi" :h3 "hi back" :begin_src :h4 'my-foo)
+
+(defun my-foo (&rest args) "Docstring using ARGS." (ignore args) "Hi")
+(defclass my-class () ((foo :initform "bar" :initarg :foo)))
 
 (provide 'dm-object-to-org)
 ;;; dm-object-to-org.el ends here
