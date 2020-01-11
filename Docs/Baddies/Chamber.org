@@ -1,0 +1,72 @@
+#+TITLE: Baddies for chambers
+#+PROPERTIES:
+ :Version: 0.01
+ :Author: Erik C Elmshauser
+ :Created: 2020/01/11
+ :END:
+
+* Chamber Baddies
+
++ This table is the Main baddies table used in chambhers and "normal" encounters
++ To find the starting table use (Dungeon level) + (number of squares of chamber - 1)
+++ Therefor a 10x10 on level 1 is (1) + (1-1) = 1 and a 10x20 on level 3 is (3) + (2-1) = 4
++ half squares of chamber are half tables (start on the B table instead of the A Table)
+
++ Roll 1D6 into the starting table, 1-5 select baddie by ID, 6 reroll on the next table
+
+*** Informational note
++ Tables are divided into multiple parts for several reasons.
++ There is a variety of baddies that have a similar difficulty and can appear in the same part of the dungeon.
++ The table number is the number of treasure rolls after the battle, so we can have battles of comparable difficulty give the same ammount of treasure
++ The table letter should generally progress from less difficult to more difficult encounters, and can influence the quality of the treasure
+
+** 1A
+| Table | ID | Family   | Name        | Index | Attack 1      | Attack 2             | Special Attack | Spear | Sword | Axe | Mace | Hit Points | Experience | Notes                           |
+| 01A   |  1 | CATS     | Bobcat      |    26 | 1 on 7 for 1  | 2 on 8 for 1         |                |     8 |     8 |   8 |    7 |          2 |          2 |                                 |
+| 01A   |  2 | DOGS     | Prarie Dogs |    35 | 1 on 8 for 1  |                      |                |     7 |     7 |   7 |    7 |          3 |          3 |                                 |
+| 01A   |  3 | REPTILES | Salamander  |    10 | 1 on 9 for 1  | 1 on dbl for special | 1D fire damage |     6 |     6 |   6 |    6 |          2 |          5 |                                 |
+| 01A   |  4 | BEARS    | Sun Bears   |    26 | 2 on 10 for 1 | 1 on 8 for 2         |                |     7 |     8 |   8 |    9 |          2 |          2 |                                 |
+| 01A   |  5 | BIRDS    | Buzzard     |    29 | 1 on 8 for 1  |                      |                |    10 |     9 |   9 |    9 |          2 |          2 | Flies (can attack any position) |
+														
+** 1B
+| Table | ID | Family  | Name          | Index | Attack 1     | Attack 2             | Special Attack                 | Spear | Sword | Axe | Mace | Hit Points | Experience | Notes                 |
+| 01B   |  1 | FANTASY | Kobolds       |    35 | 1 on 9 for 1 |                      |                                |     8 |     8 |   8 |    9 |          2 |          2 |                       |
+| 01B   |  2 | COPS    | Keystone Cops |    35 | 1 on 8 for 1 | 1 on dbl for special | Cream Pie blinds for 1D rounds |     8 |     8 |   8 |    8 |          2 |          2 | cops throw cream pies |
+| 01B   |  3 | SIMEANS | Monkey        |    16 | 2 on 9 for 1 | 1 on dbl for special | steal an item from inventory   |     7 |     7 |   7 |    7 |          3 |          3 |                       |
+| 01B   |  4 | ALIENS  | Zerglings     |    18 | 2 on 8 for 1 |                      |                                |     9 |     8 |   8 |   10 |          2 |          2 |                       |
+| 01B   |  5 | DEAMONS | Floating Eye  |     1 | N/A          | N/A                  | Paralyze attacker on doubles   |     6 |     6 |   6 |    6 |          4 |         12 |                       |
+
+** 1C
++ More level 1 baddies would go here
+
+** 2A	
+| Table | ID | Family   | Name        | Index | Attack 1     | Attack 2     | Special Attack | Spear | Sword | Axe | Mace | Hit Points | Experience | Notes                           |
+| 02A   |  1 | CATS     | Lynx        |    26 | 1 on 7 for 1 | 2 on 7 for 1 |                |     8 |     8 |   8 |    7 |          3 |          3 |                                 |
+| 02A   |  2 | DOGS     | Jackels     |    35 | 1 on 8 for 2 |              |                |       |     7 |   7 |    7 |          7 |          4 | 4                               |
+| 02A   |  3 | REPTILES | Iguana      |    14 | 1 on 7 for 1 | 1 on 8 for 2 |                |     7 |     7 |   7 |    7 |          4 |          4 |                                 |
+| 02A   |  4 | BEARS    | Brown Bears |    26 | 2 on 9 for 1 | 1 on 8 for 2 |                |     8 |     9 |   9 |   10 |          4 |          4 |                                 |
+| 02A   |  5 | BIRDS    | Red Hawk    |    29 | 2            | on 8 for 1   |                |    10 |     9 |   9 |    9 |          5 |          5 | Flies (can attack any position) |
+
+** 2B	
+| Table | ID | Family  | Name                | Index | Attack 1             | Attack 2             | Special Attack                                                                                                                     | Spear | Sword | Axe | Mace | Hit Points | Experience | Notes           |
+| 02B   |  1 | FANTASY | Goblins             |    35 | 1 on 8 for 1         |                      |                                                                                                                                    |     8 |     8 |   8 |    9 |          5 |          5 |                 |
+| 02B   |  2 | COPS    | Police              |    18 | 1 on 8 for 2         | 1 on dbl for special | Glock: 10 shots do 1D damage                                                                                                       |     9 |     9 |   9 |    9 |          5 |          5 | 1 shot pr round |
+| 02B   |  3 | WERE    | Wererat             |    15 | 2 on 10 for 1*       |                      | *Bite makes you a wererat                                                                                                          |     8 |     9 |   9 |    8 |          2 |          4 |                 |
+| 02B   |  4 | ALIENS  | Alien (Face Hugger) |     1 | 1 on dbl for hug     |                      | Hug: You become incapacitated for 1d rounds (or rest of battle).  Each battle there after is a dbl chance a baby alien will emerge |    11 |    11 |  11 |   10 |          1 |         10 | *ACID*          |
+| 02B   |  5 | DEAMONS | Beholder            |     1 | 1 on dbl for special |                      | Gaze will paralyze for 1D rounds; Will Paralyze attacker on doubles                                                                |     6 |     6 |   6 |    6 |         10 |         20 |                 |
+
+** 3A
+| Table | ID | Family   | Name          | Index | Attack 1     | Attack 2             | Special Attack      | Spear | Sword | Axe | Mace | Hit Points | Experience | Notes                           |
+| 03A   |  1 | CATS     | Mountin Lion  |    16 | 1 on 7 for 2 | 2 on 7 for 2         |                     |     8 |     8 |   8 |    7 |          8 |          8 |                                 |
+| 03A   |  2 | DOGS     | Wild Dogs     |    35 | 1 on 8 for 2 |                      |                     |     8 |     9 |   9 |   10 |          6 |          6 |                                 |
+| 03A   |  3 | REPTILES | Giant Lizzard |    14 | 1 on 7 for 2 | 1 on 8 for 2         |                     |     7 |     7 |   7 |    7 |          6 |          6 |                                 |
+| 03A   |  4 | BEARS    | Black Bears   |    26 | 2 on 9 for 2 | 1 on 8 for 2         |                     |     8 |     9 |   9 |   10 |          6 |          6 |                                 |
+| 03A   |  5 | BIRDS    | Raven         |    29 | 2 on 8 for 2 | 1 on dbl for special | blind for 1D rounds |    10 |     9 |   9 |    9 |          5 |          5 | Flies (can attack any position) |
+
+** 3B														
+| Table | ID | Family  | Name            | Index | Attack 1             | Attack 2             | Special Attack                                             | Spear | Sword | Axe | Mace | Hit Points | Experience | Notes                     |
+| 03B   |  1 | FANTASY | Orcs            |    35 | 1 on 8 for 2         |                      |                                                            |     8 |     9 |   8 |    9 |          8 |          8 |                           |
+| 03B   |  2 | COPS    | Swat Team       |    26 | 2 on 8 for 2         | 1 on dbl for special | AR-15: 30 shots do 1D damage                               |    10 |    10 |  10 |   10 |          8 |          8 | 1 shot pr round           |
+| 03B   |  3 | WERE    | Werejackel      |    12 | 2 on 8 for 2*        |                      | *Bite makes you a werejackel                               |     9 |     9 |   9 |    9 |          5 |         10 |                           |
+| 03B   |  4 | ALIENS  | Giant Brain     |     1 | 1 on dbl for special |                      | Stupify ray gives brain control of character for 1D rounds |     7 |     7 |   7 |    7 |          5 |         10 |                           |
+| 03B   |  5 | DEAMONS | Freezing Sphere |     1 | 1 on dbl for special |                      | 1D Freezing Damage                                         |     7 |     7 |   7 |    7 |         10 |         20 | DoD Ice Blast when killed |
