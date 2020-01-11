@@ -9,7 +9,7 @@
 
 + This table is the Main baddies table used in chambhers and "normal" encounters
 + To find the starting table use (Dungeon level) + (number of squares of chamber - 1)
-++ Therefor a 10x10 on level 1 is (1) + (1-1) = 1 and a 10x20 on level 3 is (3) + (2-1) = 4
++ (Therefor a 10x10 on level 1 is (1) + (1-1) = 1 and a 10x20 on level 3 is (3) + (2-1) = 4)
 + half squares of chamber are half tables (start on the B table instead of the A Table)
 
 + Roll 1D6 into the starting table, 1-5 select baddie by ID, 6 reroll on the next table
