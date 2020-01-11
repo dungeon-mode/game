@@ -1,15 +1,18 @@
-## Treasure generation table
-## Version 0.01
-## Erik C Elmshauser 2020/01/10
+#+TITLE: Treasure generation table
+#+PROPERTIES:
+ :Version: 0.01
+ :Author: Erik C Elmshauser
+ :Created: 2020/01/10
+ :END:
 
-## This set of tables is designed to pick what kind of treasure the party finds for normal chamber encounters
+This set of tables is designed to pick what kind of treasure the party finds for normal chamber encounters
 
-## Players Roll 3D, 1 at a time
-## Current dungeon level is the table used for a roll of 1 on the first die
-## Second die is Down the table
-## Third die is across the table
+ + Players Roll 3D, 1 at a time
+ + Current dungeon level is the table used for a roll of 1 on the first die
+ + Second die is Down the table
+ + Third die is across the table
 
-## Key:
+** Key:
 | S  | 	Silver        |
 | G  | 	Gold          |
 | J  | 	Jewels        |
@@ -22,7 +25,7 @@
 | C  | 	Card          |
 | U  | 	Ubik          |
 
-## Table 1
+** Table 1
 |   | 	1         | 	2 | 	3 | 	4 | 	5 | 	6 |
 | 1 | 	30 Silver | 	S | 	S | 	S | 	S | 	G |
 | 2 | 	S         | 	S | 	S | 	S | 	G | 	G |
@@ -31,7 +34,7 @@
 | 5 | 	S         | 	G | 	G | 	J | 	J | 	C |
 | 6 | 	G         | 	G | 	J | 	J | 	C | 	E |
 
-## Table 2
+** Table 2
 |   | 	1         | 	2 | 	3 | 	4 | 	5 | 	6  |
 | 1 | 	30 Silver | 	S | 	S | 	G | 	G | 	J  |
 | 2 | 	S         | 	S | 	G | 	G | 	J | 	J  |
@@ -39,8 +42,8 @@
 | 4 | 	G         | 	G | 	J | 	J | 	V | 	C  |
 | 5 | 	G         | 	J | 	J | 	V | 	C | 	W  |
 | 6 | 	J         | 	J | 	V | 	C | 	R | 	Sp |
-						
-## Table 3
+
+** Table 3
 |   | 	1         | 	2 | 	3 | 	4  | 	5 | 	6  |
 | 1 | 	30 Silver | 	S | 	G | 	J  | 	J | 	V  |
 | 2 | 	S         | 	G | 	G | 	J  | 	V | 	Sp |
@@ -48,17 +51,8 @@
 | 4 | 	J         | 	J | 	V | 	Sp | 	A | 	E  |
 | 5 | 	J         | 	V | 	W | 	A  | 	E | 	C  |
 | 6 | 	V         | 	R | 	A | 	E  | 	C | 	C  |
-						
-## Table 4
-|   | 	1  | 	2 | 	3 | 	4 | 	5 | 	6  |
-| 1 | 	S  | 	S | 	G | 	G | 	J | 	V  |
-| 2 | 	S  | 	G | 	G | 	J | 	V | 	Sp |
-| 3 | 	G  | 	G | 	J | 	V | 	A | 	A  |
-| 4 | 	G  | 	J | 	V | 	W | 	A | 	C  |
-| 5 | 	Sp | 	V | 	R | 	A | 	C | 	E  |
-| 6 | 	V  | 	R | 	A | 	C | 	E | 	E  |
-						
-## Table 5
+
+** Table 4
 |   | 	1  | 	2 | 	3 | 	4 | 	5 | 	6  |
 | 1 | 	S  | 	S | 	G | 	G | 	J | 	V  |
 | 2 | 	S  | 	G | 	G | 	J | 	V | 	Sp |
@@ -67,7 +61,16 @@
 | 5 | 	Sp | 	V | 	R | 	A | 	C | 	E  |
 | 6 | 	V  | 	R | 	A | 	C | 	E | 	E  |
 
-## Table 6
+** Table 5
+|   | 	1  | 	2 | 	3 | 	4 | 	5 | 	6  |
+| 1 | 	S  | 	S | 	G | 	G | 	J | 	V  |
+| 2 | 	S  | 	G | 	G | 	J | 	V | 	Sp |
+| 3 | 	G  | 	G | 	J | 	V | 	A | 	A  |
+| 4 | 	G  | 	J | 	V | 	W | 	A | 	C  |
+| 5 | 	Sp | 	V | 	R | 	A | 	C | 	E  |
+| 6 | 	V  | 	R | 	A | 	C | 	E | 	E  |
+
+** Table 6
 |   | 	1  | 	2 | 	3  | 	4  | 	5  | 	6  |
 | 1 | 	S  | 	G | 	J  | 	V  | 	R  | 	Sp |
 | 2 | 	G  | 	J | 	V  | 	R  | 	Sp | 	C  |
@@ -75,8 +78,8 @@
 | 4 | 	V  | 	W | 	Sp | 	C  | 	C  | 	E  |
 | 5 | 	R  | 	R | 	C  | 	C  | 	E  | 	E  |
 | 6 | 	Sp | 	C | 	C  | 	E  | 	E  | 	U  |
-						
-## Table 7
+
+** Table 7
 |   | 	1  | 	2  | 	3  | 	4  | 	5 | 	6 |
 | 1 | 	G  | 	J  | 	V  | 	Sp | 	R | 	W |
 | 2 | 	J  | 	V  | 	Sp | 	R  | 	W | 	A |
@@ -84,8 +87,8 @@
 | 4 | 	W  | 	W  | 	R  | 	A  | 	C | 	C |
 | 5 | 	Sp | 	R  | 	A  | 	C  | 	E | 	E |
 | 6 | 	R  | 	A  | 	C  | 	C  | 	E | 	U |
-						
-## Table 8
+
+** Table 8
 |   | 	1  | 	2  | 	3  | 	4  | 	5 | 	6 |
 | 1 | 	G  | 	J  | 	V  | 	Sp | 	R | 	W |
 | 2 | 	J  | 	V  | 	Sp | 	R  | 	W | 	A |
@@ -93,8 +96,8 @@
 | 4 | 	W  | 	W  | 	R  | 	A  | 	C | 	C |
 | 5 | 	Sp | 	R  | 	A  | 	C  | 	E | 	E |
 | 6 | 	R  | 	A  | 	C  | 	C  | 	E | 	U |
-						
-## Table 9
+
+** Table 9
 |   | 	1  | 	2 | 	3  | 	4  | 	5  | 	6  |
 | 1 | 	J  | 	V | 	A  | 	W  | 	R  | 	Sp |
 | 2 | 	V  | 	A | 	W  | 	R  | 	Sp | 	C  |
