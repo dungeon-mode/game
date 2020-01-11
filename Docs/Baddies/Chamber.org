@@ -21,13 +21,15 @@
 + The table letter should generally progress from less difficult to more difficult encounters, and can influence the quality of the treasure
 
 ** 1A
-| Table | ID | Family   | Name        | Index | Attack 1      | Attack 2             | Special Attack | Spear | Sword | Axe | Mace | Hit Points | Experience | Notes                           |
-| 01A   |  1 | CATS     | Bobcat      |    26 | 1 on 7 for 1  | 2 on 8 for 1         |                |     8 |     8 |   8 |    7 |          2 |          2 |                                 |
-| 01A   |  2 | DOGS     | Prarie Dogs |    35 | 1 on 8 for 1  |                      |                |     7 |     7 |   7 |    7 |          3 |          3 |                                 |
-| 01A   |  3 | REPTILES | Salamander  |    10 | 1 on 9 for 1  | 1 on dbl for special | 1D fire damage |     6 |     6 |   6 |    6 |          2 |          5 |                                 |
-| 01A   |  4 | BEARS    | Sun Bears   |    26 | 2 on 10 for 1 | 1 on 8 for 2         |                |     7 |     8 |   8 |    9 |          2 |          2 |                                 |
-| 01A   |  5 | BIRDS    | Buzzard     |    29 | 1 on 8 for 1  |                      |                |    10 |     9 |   9 |    9 |          2 |          2 | Flies (can attack any position) |
-														
+| table | #  | family   | name        | index | attack        | 2                    | special        | sp | sw    | ax  | ma   | hits |  worth     | Notes                           |
+|-------+----+----------+-------------+-------+---------------+----------------------+----------------+----+-------+-----+------+----+------------+---------------------------------|
+| /     |  < |          | >           |    <> | <             |                      | >              |  < |       |     |    > |  < |          > | <>                              |
+| 01A   |  1 | CATS     | Bobcat      |    26 | 1 on 7 for 1  | 2 on 8 for 1         |                |  8 |     8 |   8 |    7 |  2 |          2 |                                 |
+| 01A   |  2 | DOGS     | Prarie Dogs |    35 | 1 on 8 for 1  |                      |                |  7 |     7 |   7 |    7 |  3 |          3 |                                 |
+| 01A   |  3 | REPTILES | Salamander  |    10 | 1 on 9 for 1  | 1 on dbl for special | 1D fire damage |  6 |     6 |   6 |    6 |  2 |          5 |                                 |
+| 01A   |  4 | BEARS    | Sun Bears   |    26 | 2 on 10 for 1 | 1 on 8 for 2         |                |  7 |     8 |   8 |    9 |  2 |          2 |                                 |
+| 01A   |  5 | BIRDS    | Buzzard     |    29 | 1 on 8 for 1  |                      |                | 10 |     9 |   9 |    9 |  2 |          2 | Flies (can attack any position) |
+
 ** 1B
 | Table | ID | Family  | Name          | Index | Attack 1     | Attack 2             | Special Attack                 | Spear | Sword | Axe | Mace | Hit Points | Experience | Notes                 |
 | 01B   |  1 | FANTASY | Kobolds       |    35 | 1 on 9 for 1 |                      |                                |     8 |     8 |   8 |    9 |          2 |          2 |                       |
