@@ -5,6 +5,8 @@
  :Created: 2020/01/11
  :END:
 
+THIS IS BADLY BROKEN :)
+
 * Common
 
 
@@ -14,7 +16,39 @@
 #+latex_header: \DeclareFontFamily{U}{dice3d}{}
 #+latex_header: \DeclareFontShape{U}{dice3d}{m}{n}{<-> s*[4] dice3d}{}
 
-# #+latex: \Pisymbol{dice3d}{102}
+# #+latex: {\usefont{U}{dice3d}{m}{n}3d 3d}
+
+
+** COMMENT setup
+#+begin_src emacs-lisp :results silent
+  (setq org-babel-latex-htlatex "htlatex")
+  (defmacro by-backend (&rest body)
+    `(case (if (boundp 'backend) (org-export-backend-name backend) nil) ,@body))
+#+end_src
+
+** test
+
+#+name: my-dice
+#+header: :file (by-backend (html "die.svg") (t 'nil))
+#+header: :imagemagick
+#+header: :results (by-backend (pdf "latex") (t "raw"))
+#+begin_src latex
+{\usefont{U}{dice3d}{m}{n}3d 3d}
+#+end_src
+
+#+RESULTS: my-dice
+{\usefont{U}{dice3d}{m}{n}3d 3d}
+
+#+begin_src latex :noweb yes
+<<my-dice()>>
+#+end_src
+
+#+RESULTS:
+#+begin_export latex
+{\usefont{U}{dice3d}{m}{n}3d 3d}
+#+end_export
+
+# #+latex:
 
 # #+latex: {\usefont{U}{dice3d}{m}{n}3d 3d}
 
@@ -38,7 +72,7 @@ header
 
 \pi
 
-Table
+* Table
 
 | Abbreviation      | Documentation                                                                              | Notes |
 |-------------------+--------------------------------------------------------------------------------------------+-------|
