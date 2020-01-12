@@ -1,0 +1,59 @@
+#+TITLE: Abbreviations
+#+PROPERTIES:
+ :Version: 0.01
+ :Author: Erik C Elmshauser
+ :Created: 2020/01/11
+ :END:
+
+* Common
+
+
+# *** comment this works
+
+#+latex_header: \usepackage{pifont}
+#+latex_header: \DeclareFontFamily{U}{dice3d}{}
+#+latex_header: \DeclareFontShape{U}{dice3d}{m}{n}{<-> s*[4] dice3d}{}
+
+# #+latex: \Pisymbol{dice3d}{102}
+
+# #+latex: {\usefont{U}{dice3d}{m}{n}3d 3d}
+
+# *** comment this doesn't
+
+# #+latex_header: \usepackage{threedice}
+
+# \die{face-6}
+
+These abbreviations are global meaning entries not providing a legend
+are referencing this table where terms intersect, or do not intersect
+with any provided legend.
+
+# #+latex_header: \usepackage{pifont}\DeclareFontFamily{U}{⟨name⟩}{}\DeclareFontShape{U}{⟨name⟩}{m}{n}{<->⟨font⟩}{}
+
+*** RAW \Pisymbol{hands}{65}
+
+header
+
+# #+latex: \Pisymbol{hands}{65}
+
+\pi
+
+Table
+
+| Abbreviation      | Documentation                                                                              | Notes |
+|-------------------+--------------------------------------------------------------------------------------------+-------|
+| 2d, 2d6, roll     | Players roll 2D6 together                                                                  |       |
+| Low Doubles, LowD | \Pisymbol{dice3d}{49} \Pisymbol{dice3d}{49} or \Pisymbol{dice3d}{50} \Pisymbol{dice3d}{50} |       |
+| High Doubles ,HiD | \Pisymbol{dice3d}{53} \Pisymbol{dice3d}{53} or \Pisymbol{dice3d}{54} \Pisymbol{dice3d}{54} |       |
+| Snakeyes, Sn      | \Pisymbol{dice3d}{49} \Pisymbol{dice3d}{49}                                                |       |
+| BoxCars, Bx, Box  | \Pisymbol{dice3d}{54} \Pisymbol{dice3d}{54}                                                |       |
+
+# \Pisymbol{dice3d}{105}
+# http://tug.ctan.org/info/symbols/comprehensive/symbols-letter.pdf
+
+* COMMENT org-mode configuration
+
+# Local Variables:
+# org-latex-inputenc-alist: (("utf8" . "utf8x"))
+# eval: (setq org-latex-default-packages-alist (cons '("mathletters" "ucs" nil) org-latex-default-packages-alist))
+# End:
