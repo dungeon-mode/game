@@ -44,18 +44,39 @@
   <!-- 10 x 10 room Secret door on the south -->
   <path fill="none" stroke="black" stroke-width="1" d="M 600 900 l 0 100 l 43 0 a 1 1 0 1 1 14 0 a 1 1 0 1 1 -14 0 m 14 0 l 43 0 l 0 -100 l -100 0" />
 
+  <!-- 10 x 10 room Secret door on the north -->
+  <path fill="none" stroke="black" stroke-width="1" d="M 800 300 l 43 0 a 1 1 0 1 1 14 0 a 1 1 0 1 1 -14 0 m 14 0 l 43 0 l 0 100 l -100 0 l 0 -100" />
+
+  <!-- 10 x 10 room Secret door on the west -->
+  <path fill="none" stroke="black" stroke-width="1" d="M 700 600 l 100 0 l 0 100 l -100 0 l 0 -43 a 1 1 0 1 1 0 -14 a 1 1 0 1 1 0 14 m 0 -14 l 0 -43" />
+
   
   <!-- 10 x 20 rooms -->
 
   
-  <!-- 10 x 20 rooms Secret door on the south -->
+  <!-- 10 x 20 room extending north-south, Secret door on the south -->
   <path fill="none" stroke="black" stroke-width="1" d="M 500 800 l 0 200 l 43 0 a 1 1 0 1 1 14 0 a 1 1 0 1 1 -14 0 m 14 0 l 43 0 l 0 -200 l -100 0" />
 
-  <!-- 10 x 20 rooms Secret door on the south -->
+  <!-- 10 x 20 room extending north-south, Secret door on the south -->
   <path fill="none" stroke="black" stroke-width="1" d="M 400 800 l 0 200 l 43 0 a 1 1 0 1 1 14 0 a 1 1 0 1 1 -14 0 m 14 0 l 43 0 l 0 -200 l -100 0" />
 
+  <!-- 10 x 20 room extending East-west, Secret door on the West -->
+  <path fill="none" stroke="black" stroke-width="1" d="M 700 400 l 200 0 l 0 100 l -200 0 l 0 -43 a 1 1 0 1 1 0 -14 a 1 1 0 1 1 0 14 m 0 -14 l 0 -43" />
+
+  <!-- 10 x 20 room extending East-west, Secret door on the West -->
+  <path fill="none" stroke="black" stroke-width="1" d="M 700 500 l 200 0 l 0 100 l -200 0 l 0 -43 a 1 1 0 1 1 0 -14 a 1 1 0 1 1 0 14 m 0 -14 l 0 -43" />
+
+  
+  <!-- 10 x 30 rooms -->
+
+  
+  <!-- 10 x 30 rooms Secret door on the north -->
+  <path fill="none" stroke="black" stroke-width="1" d="M 1100 300 l 43 0 a 1 1 0 1 1 14 0 a 1 1 0 1 1 -14 0 m 14 0 l 43 0 l 0 300 l -100 0 l 0 -300" />
+
+  
   <!-- 20 x 20 rooms -->
 
+  
   <!-- 20 x 20 room with secret doors in the northern part of the western wall and the western part of the northern wall -->
   <path fill="none" stroke="black" stroke-width="1"
 	d="M 800 700 l 0 200 l -200 0 l 0 -143 a 1 1 0 1 1 0 -14 a 1 1 0 1 1 0 14 m 0 -14 l 0 -43 l 43 0 a 1 1 0 1 1 14 0 a 1 1 0 1 1 -14 0 m 14 0 l 143 0" />
@@ -72,6 +93,10 @@
   <path fill="none" stroke="black" stroke-width="1"
 	d="M 1200 300 l 43 0 a 1 1 0 1 1 14 0 a 1 1 0 1 1 -14 0 m 14 0 l 143 0 l 0 200 l -200 0 l 0 -200" />
 
+  <!-- 20 x 20 room with secret door in the Western part of the Northern wall -->
+  <path fill="none" stroke="black" stroke-width="1"
+	d="M 900 300 l 43 0 a 1 1 0 1 1 14 0 a 1 1 0 1 1 -14 0 m 14 0 l 143 0 l 0 200 l -200 0 l 0 -200" />
+
   
   <!-- Corridor -->
 
@@ -84,9 +109,6 @@
 
   <!-- Corridor North-South -->
   <path stroke="black" fill="none" stroke-width="1" d="M 1400 400 l 0 100 m 100 -100 l 0 100" />
-  
-  <!-- Corridor North-South with secret door to the east -->
-  <path stroke="black" fill="none" stroke-width="1" d="M 100 300 l 0 100 m 100 -100 l 0 43 a 1 1 0 1 1 0 14 a 1 1 0 1 1 0 -14 m 0 14 l 0 43" />
 
   <!-- Corridor North-South with secret door to the west -->
   <path stroke="black" fill="none" stroke-width="1" d="M 1400 700 l 0 43 a 1 1 0 1 1 0 14 a 1 1 0 1 1 0 -14 m 0 14 l 0 43 m 100 -100 l 0 100" />
@@ -149,14 +171,80 @@
   <path stroke="black" fill="none" stroke-width="1" d="M 600 500 m 100 0 l 0 43 a 1 1 0 1 1 0 14 a 1 1 0 1 1 0 -14 m 0 14 l 0 43" />
 
   <!-- Corridor North, secret doors east and south -->
-  <path stroke="black" fill="none" stroke-width="1" d="M 600 600 
-						       m 100 0 
-						       l 0 43 a 1 1 0 1 1 0 14 a 1 1 0 1 1 0 -14 m 0 14 l 0 43
-						       l -43 0 a 1 1 0 1 1 -14 0 a 1 1 0 1 1 14 0 m -14 0 l -43 0
-						       l 0 -100" />
+  <path stroke="black" fill="none" stroke-width="1" d="M 600 600 m 100 0 l 0 43 a 1 1 0 1 1 0 14 a 1 1 0 1 1 0 -14 m 0 14 l 0 43 l -43 0 a 1 1 0 1 1 -14 0 a 1 1 0 1 1 14 0 m -14 0 l -43 0 l 0 -100" />
 
+  <!-- Corridor East-west with secret door to the north -->
+  <path stroke="black" fill="none" stroke-width="1" d="M 800 1000 l 43 0 a 1 1 0 1 1 14 0 a 1 1 0 1 1 -14 0 m 14 0 l 43 0 m -100 100 l 100 0" />
 
+    <!-- Corridor East-west with secret door to the north -->
+  <path stroke="black" fill="none" stroke-width="1" d="M 700 1000 l 43 0 a 1 1 0 1 1 14 0 a 1 1 0 1 1 -14 0 m 14 0 l 43 0 m -100 100 l 100 0" />
+
+    <!-- Corridor East-west with secret door to the north -->
+  <path stroke="black" fill="none" stroke-width="1" d="M 600 1000 l 43 0 a 1 1 0 1 1 14 0 a 1 1 0 1 1 -14 0 m 14 0 l 43 0 m -100 100 l 100 0" />
+
+    <!-- Corridor East-west with secret door to the north -->
+  <path stroke="black" fill="none" stroke-width="1" d="M 500 1000 l 43 0 a 1 1 0 1 1 14 0 a 1 1 0 1 1 -14 0 m 14 0 l 43 0 m -100 100 l 100 0" />
+
+    <!-- Corridor East-west with secret door to the north -->
+  <path stroke="black" fill="none" stroke-width="1" d="M 400 1000 l 43 0 a 1 1 0 1 1 14 0 a 1 1 0 1 1 -14 0 m 14 0 l 43 0 m -100 100 l 100 0" />
+
+  <!-- Corridor North-East -->
+  <path stroke="black" fill="none" stroke-width="1" d="M 300 1000 l 0 100 l 100 0" />
+
+  <!-- Corridor North-South -->
+  <path stroke="black" fill="none" stroke-width="1" d="M 300 900 l 0 100 m 100 -100 l 0 100" />
+
+  <!-- Corridor North-South -->
+  <path stroke="black" fill="none" stroke-width="1" d="M 300 800 l 0 100 m 100 -100 l 0 100" />
+
+  <!-- Corridor East-South-West -->
+  <path stroke="black" fill="none" stroke-width="1" d="M 300 700 h 100" />
+
+  <!-- Corridor East-West -->
+  <path stroke="black" fill="none" stroke-width="1" d="M 400 700 h 100 m -100 100 h 100" />
+
+  <!-- Corridor 4-way -->
+  <circle fill="none" stroke="red" stroke-width="1" cx="250" cy="750" r="50"/>
+  <text x="235" y="765" font-size="50" fill="red">4</text>
   
+  <!-- Corridor North-South -->
+  <path stroke="black" fill="none" stroke-width="1" d="M 200 600 l 0 100 m 100 -100 l 0 100" />
+
+  <!-- Corridor North-South -->
+  <path stroke="black" fill="none" stroke-width="1" d="M 200 800 l 0 100 m 100 -100 l 0 100" />
+
+  <!-- Corridor North-East-South with secret door to the west -->
+  <path stroke="black" fill="none" stroke-width="1" d="M 100 700 l 0 43 a 1 1 0 1 1 0 14 a 1 1 0 1 1 0 -14 m 0 14 l 0 43" />
+
+  <!-- Corridor North-South with secret door to the west -->
+  <path stroke="black" fill="none" stroke-width="1" d="M 100 600 l 0 43 a 1 1 0 1 1 0 14 a 1 1 0 1 1 0 -14 m 0 14 l 0 43 m 100 -100 l 0 100" />
+
+  <!-- Corridor North-South with secret door to the west -->
+  <path stroke="black" fill="none" stroke-width="1" d="M 100 500 l 0 43 a 1 1 0 1 1 0 14 a 1 1 0 1 1 0 -14 m 0 14 l 0 43 m 100 -100 l 0 100" />
+
+  <!-- Corridor North-South with secret door to the west -->
+  <path stroke="black" fill="none" stroke-width="1" d="M 100 400 l 0 43 a 1 1 0 1 1 0 14 a 1 1 0 1 1 0 -14 m 0 14 l 0 43 m 100 -100 l 0 100" />
+
+  <!-- Corridor North-South with secret door to the west -->
+  <path stroke="black" fill="none" stroke-width="1" d="M 100 300 l 0 43 a 1 1 0 1 1 0 14 a 1 1 0 1 1 0 -14 m 0 14 l 0 43 m 100 -100 l 0 100" />
+
+  <!-- Corridor North-South with secret door to the west -->
+  <path stroke="black" fill="none" stroke-width="1" d="M 100 800 l 0 43 a 1 1 0 1 1 0 14 a 1 1 0 1 1 0 -14 m 0 14 l 0 43 m 100 -100 l 0 100" />
+
+  <!-- Corridor North-South with secret door to the west -->
+  <path stroke="black" fill="none" stroke-width="1" d="M 100 900 l 0 43 a 1 1 0 1 1 0 14 a 1 1 0 1 1 0 -14 m 0 14 l 0 43 m 100 -100 l 0 100" />
+
+  <!-- Corridor North-South with secret door to the west -->
+  <path stroke="black" fill="none" stroke-width="1" d="M 100 1000 l 0 43 a 1 1 0 1 1 0 14 a 1 1 0 1 1 0 -14 m 0 14 l 0 43 m 100 -100 l 0 100" />
+
+  <!-- Corridor North-South with secret door to the west -->
+  <path stroke="black" fill="none" stroke-width="1" d="M 100 1100 l 0 43 a 1 1 0 1 1 0 14 a 1 1 0 1 1 0 -14 m 0 14 l 0 43 m 100 -100 l 0 100" />
+
+  <!-- Corridor North-South, Secret door East -->
+  <path stroke="black" fill="none" stroke-width="1" d="M 1000 1100 m 100 0 l 0 43 a 1 1 0 1 1 0 14 a 1 1 0 1 1 0 -14 m 0 14 l 0 43 m -100 v -100" />
+
+
+
   <!-- Special areas -->
 
   
@@ -171,6 +259,20 @@
   <!-- Area with exits in the northern part of the eastern wall and southern part of the western wall and a secret door in the western part of the northern wall -->
   <path fill="none" stroke="black" stroke-width="1" d="M 600 200 l 43 0 a 1 1 0 1 1 14 0 a 1 1 0 1 1 -14 0 m 14 0 l 143 0 m 0 100 l 0 100 l -200 0 m 0 -100 l 0 -100" />
   <text x="685" y="315" font-size="50" fill="red">A</text>
-  
 
+  <!-- Compulsion -->
+  <path fill="none" stroke="black" stroke-width="1" d="M 1000 1200
+						       m 100 0 h 300
+						       v 100 m 0 100 v 100
+						       h -100 h -43 a 1 1 0 1 1 -14 0 a 1 1 0 1 1 14 0 m -14 0 h -43 m -100 0 h -100
+						       m 0 -100 v -100" /> 
+  <text x="1185" y="1375" font-size="50" fill="red">C</text>
+  <text x="1040" y="1225" font-size="40" fill="red">1</text>
+  <text x="1385" y="1365" font-size="40" fill="red">2</text>
+  <text x="1240" y="1485" font-size="40" fill="red">3</text>
+  <text x="1140" y="1485" font-size="40" fill="red">4</text>
+  <text x="1000" y="1465" font-size="40" fill="red">5</text>
+  <text x="1000" y="1265" font-size="40" fill="red">6</text>
+
+ 
 </svg>
