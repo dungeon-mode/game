@@ -25,6 +25,11 @@ DOCUMENTATION provides information for Dungeon Masters and during game
 design.  NARRATIVE provides hints or other information to players via
 emacs interactive help e.g., tooltips, et. all.
 
+* Implementation
+
+This section describes and implements the inner-workings of SVG
+rendering of maps.
+
 ** Cursor Drawing using the [[https://developer.mozilla.org/en-US/docs/Web/SVG/Tutorial/Paths][SVG path element]]
 
 Dungeon uses a cursor based drawing approach similar to "Lingo"
@@ -38,10 +43,39 @@ styling elements such as secret doors (drawn in-line, currently) but
 seems a good starting point in terms of establishing a baseline for
 performance rendering on-demand from within Emacs.
 
+** Controls
+
+These variables will be available (lexically bound) during expansion
+of the SVG path macros below.  They cannot considered global because
+the data representing an individual map may be driving display into
+several different buffers which must retain their own settings
+(e.g. scale and view-box dimensions).
+
+| Control  | Setting | Documentation                           | Narrative |
+|----------+---------+-----------------------------------------+-----------|
+| scale    |     100 | Pixels per 10' game space.              |           |
+#| zoom     |       1 | Zoom, as a number between 0 and 1.      |           |
+| view-box |      16 | List of min-x, min-y, width and height. |           |
+
+#+begin_src elisp
+(defvar dm-map-scale 100 "TODO: generate this var from the table above")
+(defvar dm-map-view-box 16 "TODO: see `dm-scale' for detail.")
+#+end_src
+
 ** SVG path macros
 
 These macros support noweb syntax with ~org-babel~ to eliminate boilerplate for
 basic cursor based drawing using the [[https://css-tricks.com/svg-path-syntax-illustrated-guide/][SVG path element]].
+
+#+begin_src elisp
+    (defmacro dm-map-append-path (&rest forms)
+      "Add FORMS to the main draw path.
+
+  Specifically, append to the \"d\" attribute value for the primary
+  path that represents chambers, corridor and secret doors in map."
+  ;; TODO put some code here
+  )
+#+end_src
 
 * Features
 
@@ -54,10 +88,13 @@ SVG drawing support for map features.
    defined Feature's attributes.
  * Ignore Blank rows and hlines.
 
+Note, the UM here is map cells (e.g. "10'" in game terms) not pixels.
+Macros apply a scale factor during expansion.
+
 TODO consider other fields: version, area
 
 
 | Feature              | Plan                | Documentation | Narrative |
 |----------------------+---------------------+---------------+-----------|
-| corridor-north-south | <<PATH(v 1 m 0 1)>> |               |           |
+| corridor-north-south | <<d+=(v 1 m 0 1)>>  |               |           |
 | corridor-east-west   |                     |               |           |
