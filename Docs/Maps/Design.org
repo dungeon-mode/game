@@ -1,0 +1,63 @@
+#+TITLE: Map Design
+#+PROPERTIES:
+ :Version: 0.01
+ :Author: Corwin Brust
+ :Created: 2020/01/11
+ :END:
+
+* Overview
+
+This file provides drawing instruction sets as a
+for common map features such as corridor, secret doors, standard
+chambers and stairs.
+
+The first column provides a SYMBOL for referencing the instruction set
+in level designs.  PLAN is a mixed sequence of SVG drawing
+instructions and function which receives SYMBOL and ORIGIN and which
+returns a list of SVG drawing instructions.  ORIGIN passed to such
+functions is a cons cell containing ( X . Y ) representing the
+upper-left absolute grid position of the upper-most left-most corner
+of the smallest possible top-left justified rectangle completing
+covering the drawn region in the coordinate space of the dungeon level
+we are rendering.
+
+DOCUMENTATION provides information for Dungeon Masters and during game
+design.  NARRATIVE provides hints or other information to players via
+emacs interactive help e.g., tooltips, et. all.
+
+** Cursor Drawing using the [[https://developer.mozilla.org/en-US/docs/Web/SVG/Tutorial/Paths][SVG path element]]
+
+Dungeon uses a cursor based drawing approach similar to "Lingo"
+(e.g. turtle graphics).  By concatenating all of the required draw
+instructions (along with approprite cursor movement for bank areas)
+for all elements of the map visible to players we can add most
+non-text elements with a single path.
+
+This imposes limitations in terms, for example, of individually
+styling elements such as secret doors (drawn in-line, currently) but
+seems a good starting point in terms of establishing a baseline for
+performance rendering on-demand from within Emacs.
+
+** SVG path macros
+
+These macros support noweb syntax with ~org-babel~ to eliminate boilerplate for
+basic cursor based drawing using the [[https://css-tricks.com/svg-path-syntax-illustrated-guide/][SVG path element]].
+
+* Features
+
+SVG drawing support for map features.
+
+ * The first row defines (names) a Feature (e.g. SYMBOL).
+ * Additional rows may define a new symbol or continue the draw
+   instructions (the "Plan"), or Documentation, or Narrative, or more
+   than one these, which are each appended to the most recently
+   defined Feature's attributes.
+ * Ignore Blank rows and hlines.
+
+TODO consider other fields: version, area
+
+
+| Feature              | Plan                | Documentation | Narrative |
+|----------------------+---------------------+---------------+-----------|
+| corridor-north-south | <<PATH(v 1 m 0 1)>> |               |           |
+| corridor-east-west   |                     |               |           |
