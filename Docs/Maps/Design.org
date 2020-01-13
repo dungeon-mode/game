@@ -13,13 +13,12 @@ chambers and stairs.
 
 The first column provides a SYMBOL for referencing the instruction set
 in level designs.  PLAN is a mixed sequence of SVG drawing
-instructions and function which receives SYMBOL and ORIGIN and which
-returns a list of SVG drawing instructions.  ORIGIN passed to such
-functions is a cons cell containing ( X . Y ) representing the
-upper-left absolute grid position of the upper-most left-most corner
-of the smallest possible top-left justified rectangle completing
-covering the drawn region in the coordinate space of the dungeon level
-we are rendering.
+instructions and functions which return lists of SVG drawing
+instructions.  ORIGIN passed to such functions is a cons cell
+containing ( X . Y ) representing the upper-left absolute grid
+position of the upper-most left-most corner of the smallest possible
+top-left justified rectangle completing covering the drawn region in
+the coordinate space of the dungeon level we are rendering.
 
 DOCUMENTATION provides information for Dungeon Masters and during game
 design.  NARRATIVE provides hints or other information to players via
@@ -32,18 +31,19 @@ rendering of maps.
 
 ** Cursor Drawing using the [[https://developer.mozilla.org/en-US/docs/Web/SVG/Tutorial/Paths][SVG path element]]
 
-Dungeon uses a cursor based drawing approach similar to "Lingo"
-(e.g. turtle graphics).  By concatenating all of the required draw
-instructions (along with approprite cursor movement for bank areas)
-for all elements of the map visible to players we can add most
-non-text elements with a single path.
+Dungeon using the Scalable Vector Graphic (SVG) [[https://www.w3.org/TR/SVG/paths.html][path element]] to
+implement a simple cursor based drawing approach similar to [[https://en.wikipedia.org/wiki/Logo_(programming_language)][Logo]]
+(e.g. [[https://github.com/hahahahaman/turtle-geometry][turtle graphics]]).  By concatenating all of the required draw
+instructions for the elements of the map visible to players (along
+with suitable fixed-address based movement instructions between) we
+can add most non-text elements within a single path.
 
 This imposes limitations in terms, for example, of individually
 styling elements such as secret doors (drawn in-line, currently) but
 seems a good starting point in terms of establishing a baseline for
-performance rendering on-demand from within Emacs.
+the performance rendering SVG maps on-demand within Emacs.
 
-** Controls
+* Controls
 
 These variables will be available (lexically bound) during expansion
 of the SVG path macros below.  They cannot considered global because
@@ -51,15 +51,22 @@ the data representing an individual map may be driving display into
 several different buffers which must retain their own settings
 (e.g. scale and view-box dimensions).
 
-| Control  | Setting | Documentation                           | Narrative |
-|----------+---------+-----------------------------------------+-----------|
-| scale    |     100 | Pixels per 10' game space.              |           |
-#| zoom     |       1 | Zoom, as a number between 0 and 1.      |           |
-| view-box |      16 | List of min-x, min-y, width and height. |           |
+| Control   | Setting | Documentation                           | Narrative |
+|-----------+---------+-----------------------------------------+-----------|
+| scale     |     100 | Pixels per 10' game space.              |           |
+| view-box  |      16 | List, min-x, min-y, width and height.   |           |
+|-----------+---------+-----------------------------------------+-----------|
+| path-data |         | While rendering, String: main draw path |           |
+| map-data  |         | List, map features to draw              |           |
+
+# | zoom     |       1 | Zoom, as a number between 0 and 1.      |           |
 
 #+begin_src elisp
 (defvar dm-map-scale 100 "TODO: generate this var from the table above")
 (defvar dm-map-view-box 16 "TODO: see `dm-scale' for detail.")
+
+(defvar dm-map--path-data nil "TODO: see `dm-scale' for detail.")
+(defvar dm-map--map-data nil "TODO: see `dm-scale' for detail.")
 #+end_src
 
 ** SVG path macros
@@ -71,10 +78,10 @@ basic cursor based drawing using the [[https://css-tricks.com/svg-path-syntax-il
     (defmacro dm-map-append-path (&rest forms)
       "Add FORMS to the main draw path.
 
-  Specifically, append to the \"d\" attribute value for the primary
-  path that represents chambers, corridor and secret doors in map."
-  ;; TODO put some code here
-  )
+    Specifically, append to the \"d\" attribute value for the primary
+    path that represents chambers, corridor and secret doors in map."
+      ;; TODO put some code here
+      )
 #+end_src
 
 * Features
@@ -88,13 +95,47 @@ SVG drawing support for map features.
    defined Feature's attributes.
  * Ignore Blank rows and hlines.
 
-Note, the UM here is map cells (e.g. "10'" in game terms) not pixels.
+Note, the UM here is map cells (e.g. ~10'~ in game terms) not pixels.
 Macros apply a scale factor during expansion.
 
 TODO consider other fields: version, area
 
 
-| Feature              | Plan                | Documentation | Narrative |
-|----------------------+---------------------+---------------+-----------|
-| corridor-north-south | <<d+=(v 1 m 0 1)>>  |               |           |
-| corridor-east-west   |                     |               |           |
+| Feature | Plan        | Documentation                          | Narrative |
+|---------+-------------+----------------------------------------+-----------|
+| c-NS    | v1 m0,1 v-1 | North/South                            |           |
+| c-NSE   | v1          | North/South/East                       |           |
+| c-NE    | m0,1 v1 h-1 | North/East                             |           |
+| c-NSW   | m0,1 v1     | North/West/South                       |           |
+| c-NW    | h1 v1       | North/East                             |           |
+| sS      |             | North/East/West :efl secret-door South |           |
+| c-NS+sE |             | North/South :elf secret-door East      |           |
+| c-EW    | h1 m1,0 h-1 | East/west                              |           |
+| c-EW+sN |             | East/West :elf secret-door North       |           |
+| c-EW+sS |             | East/west :elf secret-door South       |           |
+
+** Test Map
+
+This is a sample map used to develop and test the above.
+
+ For each cell:
+
+ * If the cell contains a reference follow it:
+   * Setting absolute position to given X and Y
+   * Draw features sequentially
+ * Add to the list of "seen" cells.
+
+NOTE: features must cooperate in terms of assumptions in terms of
+relative position except for the first named feature.  No movement or
+other instructions are added to the path between Features in the same
+cell.
+
+NOTE: This approach may only work when drawing the whole map.
+
+TODO: write test, harness and document here
+
+| X | Y | Features | Documentation | Narrative |
+|---+---+----------+---------------+-----------|
+| 0 | 0 | c-S      |               |           |
+| 0 | 1 |          | 20x20 area    |           |
+| 0 | 1 | c-WS     |               |           |
