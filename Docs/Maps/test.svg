@@ -73,6 +73,9 @@
   <!-- 10 x 10 room Secret door on the south -->
   <path fill="none" stroke="black" stroke-width="1" d="M 900 1100 l 0 100 l 43 0 a 1 1 0 1 1 14 0 a 1 1 0 1 1 -14 0 m 14 0 l 43 0 l 0 -100 l -100 0" />
 
+  <!-- 10 x 10 room Secret door on the south -->
+  <path  fill="none" stroke="black" stroke-width="1" d="M 1000 1500 l 0 100 l 43 0 a 1 1 0 1 1 14 0 a 1 1 0 1 1 -14 0 m 14 0 l 43 0 l 0 -100 l -100 0" />
+
   
   <!-- 10 x 20 rooms -->
 
@@ -344,7 +347,7 @@
   </g>
 
   <!-- Elevator, secret door to the North -->
-  <path fill="none" stroke="black" stroke-width="1" d="M1200,1500 h43 a,7,7,0,0,1,14,0 a7,7,0,1,1,-14,0 m14,0 h43 v100 h-100 v-100" />
+  <path fill="none" stroke="black" stroke-width="1" d="M1200,1500 h43 a7,7,0,0,1,14,0 a7,7,0,1,1,-14,0 m14,0 h43 v100 h-100 v-100" />
   <path fill="yellow" stroke="none" d="M1200,1500 h43 a,1,1,0,0,0,14,0 h43 v100 h-100 v-100" />
   <text x="1235" y="1565" font-size="50" fill="blue">E</text>
 
