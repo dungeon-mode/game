@@ -307,14 +307,7 @@
 
   <!-- Ramp -->
   <path stroke="black" fill="url(#vert_ramp)" stroke-width="1" d="M200,800 m100,0 v500 h-100 v-500" />
-  <g stroke="green" fill="green" font-size="50">
-    <text>
-      <tspan x="240" y="850">1</tspan>
-      <tspan x="240" y="1275">2</tspan>
-    </text>
-    <path stroke-width="1" d="M245,900 h10 v260 l20,-15 l-25,50 l-25,-50 l20,15 z" />
-  </g>
-  
+  <text stroke="green" fill="green" font-size="50" x="240" y="1275">2</text>
 
 
   <!-- Special areas -->
