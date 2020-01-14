@@ -291,6 +291,11 @@
   <!-- Corridor East-West -->
   <path stroke="black" fill="none" stroke-width="1" d="M600,1300 h100 m-100,100 h100" />
 
+  <!-- Corridor 4-way -->
+  <path stroke="black" fill="none" stroke-width="1" d="M2000,900 m-5,0 h5 v-5 m100,0 v5 h5 m0,100 h-5 v5 m-100,0 v-5 h-5" />
+  <circle fill="none" stroke="red" stroke-width="1" cx="2050" cy="950" r="50"/>
+  <text x="2035" y="965" font-size="50" fill="red">4</text>
+  
 
 
   <!-- Special areas -->
