@@ -101,18 +101,35 @@ Macros apply a scale factor during expansion.
 TODO consider other fields: version, area
 
 
-| Feature | Plan        | Documentation                          | Narrative |
-|---------+-------------+----------------------------------------+-----------|
-| c-NS    | v1 m0,1 v-1 | North/South                            |           |
-| c-NSE   | v1          | North/South/East                       |           |
-| c-NE    | m0,1 v1 h-1 | North/East                             |           |
-| c-NSW   | m0,1 v1     | North/West/South                       |           |
-| c-NW    | h1 v1       | North/East                             |           |
-| sS      |             | North/East/West :efl secret-door South |           |
-| c-NS+sE |             | North/South :elf secret-door East      |           |
-| c-EW    | h1 m1,0 h-1 | East/west                              |           |
-| c-EW+sN |             | East/West :elf secret-door North       |           |
-| c-EW+sS |             | East/west :elf secret-door South       |           |
+| Feature  | Plan                           | Documentation                           | Narrative |
+|----------+--------------------------------+-----------------------------------------+-----------|
+| c-N      |                                | North                                   |           |
+| c-NS     | v1 m1,0 v-1                    | North/South                             |           |
+| c-NSE    | v1                             | North/South/East                        |           |
+| c-NSEW   |                                | North/South/East/West (four-way)        |           |
+| c-NE     | m0,1 v1 h-1                    | North/East                              |           |
+| c-NSW    | m0,1 v1                        | North/South/West                        |           |
+| c-NW     | v1 h1                          | North/East                              |           |
+| c-S      |                                | South                                   |           |
+| c-SE     | h1 v1                          |                                         |           |
+| c-SEW    | h1                             | South/East/West                         |           |
+| c-SW     | h1 m-1,0 v1                    | South/West                              |           |
+| c-E      | h1 v1 h-1                      | East                                    |           |
+| c-EW     | h1 m0,1 h-1                    | East/west                               |           |
+| c-W      | v1 h1 m0,-1 h-1                | East                                    |           |
+| sN       | h.43 a.14,.14,0,1,1,.14,0      | South/East/West                         |           |
+|          | a.14,.14,0,1,1,-.14,0 h.43     | :efl secret-door North                  |           |
+| sE       | v.43 a.14,.14,0,1,1,0,.14      | North/South/West                        |           |
+|          | a.14,.14,0,1,1,0,-.14 v.43     | :efl secret-door East                   |           |
+| sS       | m0,1 h.43 a.14,.14,0,1,1,.14,0 | North/East/West                         |           |
+|          | a.14,.14,0,1,1,-.14,0 h.43     | :efl secret-door South                  |           |
+| sW       | m1,0 v.43 a.14,.14,0,1,1,0,.14 | North/South/East                        |           |
+|          | a.14,.14,0,1,1,0,-.14 v.43     | :efl secret-door East                   |           |
+| c-NS+sE  | c-NS m-1,0 sE                  | North/South :elf secret-door East       |           |
+| c-NS+sEW | c-NS m-1,0 sEW                 | North/South :elf secret-doors East/West |           |
+| c-NS+sW  | c-NS m-1,0 sW                  | North/South :elf secret-door West       |           |
+| c-EW+sN  | c-EW m-1,0 sN                  | East/West :elf secret-door North        |           |
+| c-EW+sS  | c-EW m-1,0 sS                  | East/west :elf secret-door South        |           |
 
 ** Test Map
 
@@ -138,4 +155,4 @@ TODO: write test, harness and document here
 |---+---+----------+---------------+-----------|
 | 0 | 0 | c-S      |               |           |
 | 0 | 1 |          | 20x20 area    |           |
-| 0 | 1 | c-WS     |               |           |
+| 1 | 1 | c-WS     |               |           |
