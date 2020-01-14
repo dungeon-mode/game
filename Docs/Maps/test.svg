@@ -221,11 +221,6 @@
   <!-- Corridor East-West -->
   <path stroke="black" fill="none" stroke-width="1" d="M 400 700 h 100 m -100 100 h 100" />
 
-  <!-- Corridor 4-way -->
-  <path stroke="blue" fill="none" stroke-width="1" d="M200,700 m0,2 v-2 h2 m96,0 h2 v2 m0,96 v2 h-2 m-96,0 h-2 v-2" />
-  <circle fill="none" stroke="red" stroke-width="1" cx="250" cy="750" r="50"/>
-  <text x="235" y="765" font-size="50" fill="red">4</text>
-  
   <!-- Corridor North-South -->
   <path stroke="black" fill="none" stroke-width="1" d="M 200 600 l 0 100 m 100 -100 l 0 100" />
 
@@ -293,13 +288,13 @@
   <path stroke="black" fill="none" stroke-width="1" d="M600,1300 h100 m-100,100 h100" />
 
   <!-- Corridor 4-way -->
-  <path stroke="black" fill="none" stroke-width=".5" d="M2000,900 m0,2 v-2 h2 m96,0 h2 v2 m0,96 v2 h-2 m-96,0 h-2 v-2" />
-  <circle fill="none" stroke="red" stroke-width="1" cx="2050" cy="950" r="50"/>
+  <path stroke="black" fill="none" stroke-width="1" d="M2000,900 m0,2 v-2 h2 m96,0 h2 v2 m0,96 v2 h-2 m-96,0 h-2 v-2" />
+  <circle fill="none" stroke="red" stroke-width="1" cx="2050" cy="950" r="40"/>
   <text x="2035" y="965" font-size="50" fill="red">4</text>
   
   <!-- Corridor 4-way -->
-  <path stroke="black" fill="none" stroke-width=".5" d="M200,700 m0,2 v-2 h2 m96,0 h2 v2 m0,96 v2 h-2 m-96,0 h-2 v-2" />
-  <circle fill="none" stroke="red" stroke-width="1" cx="250" cy="750" r="50"/>
+  <path stroke="black" fill="none" stroke-width="1" d="M200,700 m0,2 v-2 h2 m96,0 h2 v2 m0,96 v2 h-2 m-96,0 h-2 v-2" />
+  <circle fill="none" stroke="red" stroke-width="1" cx="250" cy="750" r="40"/>
   <text x="235" y="765" font-size="50" fill="red">4</text>
   
 
@@ -320,11 +315,7 @@
   <text x="685" y="315" font-size="50" fill="red">A</text>
 
   <!-- Compulsion -->
-  <path fill="none" stroke="black" stroke-width="1" d="M 1000 1200
-						       m 100 0 h 300
-						       v 100 m 0 100 v 100
-						       h -100 h -43 a 1 1 0 1 1 -14 0 a 1 1 0 1 1 14 0 m -14 0 h -43 m -100 0 h -100
-						       m 0 -100 v -100" /> 
+  <path fill="none" stroke="black" stroke-width="1" d="M1000,1200 m100,0 h300 v100 m0,100 v100 h-143 a,1,1,0,1,1,-14,0 a,1,1,0,1,1,14,0 m-14,0 h-43 m-100,0 h-100 m0,-100 v-100" /> 
   <text x="1185" y="1375" font-size="50" fill="red">C</text>
   <text x="1040" y="1225" font-size="40" fill="red">1</text>
   <text x="1385" y="1365" font-size="40" fill="red">2</text>
