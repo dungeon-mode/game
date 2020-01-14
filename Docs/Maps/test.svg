@@ -304,7 +304,7 @@
       <tspan x="240" y="850">1</tspan>
       <tspan x="240" y="1275">2</tspan>
     </text>
-    <path stroke-width="1" d="M245,900 h10 v260 l20,-15 l-25,50 l-25,-50 l20,15 z" />
+    <path stroke-width="1" d="M245,910 h10 l10,-10 v30 l-10,10 v220 l20,-15 l-25,50 l-25,-50 l20,15 v-220 l-10,-10 v-30 l10,10" />
   </g>
   
 
