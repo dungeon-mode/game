@@ -62,11 +62,24 @@ several different buffers which must retain their own settings
 # | zoom     |       1 | Zoom, as a number between 0 and 1.      |           |
 
 #+begin_src elisp
-(defvar dm-map-scale 100 "TODO: generate this var from the table above")
-(defvar dm-map-view-box 16 "TODO: see `dm-scale' for detail.")
+;; public vars
+;; TODO: defcustom these instead?
+(defvar dm-map-scale 100 "Drawing scale; pixles per 10' of map.
 
-(defvar dm-map--path-data nil "TODO: see `dm-scale' for detail.")
-(defvar dm-map--map-data nil "TODO: see `dm-scale' for detail.")
+TODO: generate this var from the table above")
+
+(defvar dm-map-view-box nil "Croping view-box for the SVG tag.
+
+TODO: see `dm-scale' for detail.")
+
+;; private vars
+(defvar dm-map--path-data nil "Main SVG path data as a string.
+
+TODO: see `dm-scale' for detail.")
+
+(defvar dm-map--map-data nil "SVG data as a string.
+
+TODO: see `dm-scale' for detail.")
 #+end_src
 
 ** SVG path macros
@@ -75,6 +88,11 @@ These macros support noweb syntax with ~org-babel~ to eliminate boilerplate for
 basic cursor based drawing using the [[https://css-tricks.com/svg-path-syntax-illustrated-guide/][SVG path element]].
 
 #+begin_src emacs-lisp
+
+  (defvar dm-map--svg-data "Non-path SVG instructions.
+
+  Filled by `dm-map--append' for `dm-map-append' while appending to
+  path data.")
   (defmacro dm-map-append (&rest forms)
     "Add FORMS to map.
 
@@ -83,7 +101,7 @@ basic cursor based drawing using the [[https://css-tricks.com/svg-path-syntax-il
 
   FORMS may be any of:
    - strings
-     - when starting with a \"*\"*, literal SVG source
+     - when starting with a \"<\"*, literal SVG source
      - otherwise literal path data
    - keywords
      - taken as SVG basic drawing elements
@@ -91,10 +109,30 @@ basic cursor based drawing using the [[https://css-tricks.com/svg-path-syntax-il
        ( :ATTRIBUTE1 \"value1\" ... )
    - functions
      - called without arguments
-     - return treated as per FORMS"
+     - return treated as per FORMS
+
+  As a special case, to support recursion, if FORMS begins with nil
+  results aren't added to `dm-map--path-data' and returned value
+  does not include any prior value thereof."
     ;; TODO put some code here
-    (setq dm-map--path-data
-	  (apply 'concat dm-map--path-data forms)))
+    (let* ((inhibit-add
+	    (when (and forms (null (car forms)))))
+	   (todo (if inhibit-add (cdr forms) forms))
+	   (new-path (mapconcat 'dm-map--append todo)))
+      (if inhibit-add
+	  `(cons dm-map--svg-data (concat new-path))
+	`(cons (setq dm-map--map-data
+		     (concat dm-map--map-data dm-map--svg-data))
+	       (setq dm-map--path-data
+		     (concat dm-map--path-data ,new-path))))))
+
+  (defun dm-map--append (form)
+    "Implemention for `dm-map-append' which see.
+
+  Return strings remaining after recursively processing FORM."
+    (cond (nil "nope")
+	  (t "yep")
+	  ))
 #+end_src
 
 * Features
