@@ -222,6 +222,7 @@
   <path stroke="black" fill="none" stroke-width="1" d="M 400 700 h 100 m -100 100 h 100" />
 
   <!-- Corridor 4-way -->
+  <path stroke="black" fill="none" stroke-width="1" d="M200,700 m-5,0 h5 v-5 m100,0 v5 h5 m0,100 h-5 v5 m-100,0 v-5 h-5" />
   <circle fill="none" stroke="red" stroke-width="1" cx="250" cy="750" r="50"/>
   <text x="235" y="765" font-size="50" fill="red">4</text>
   
