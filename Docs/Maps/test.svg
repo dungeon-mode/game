@@ -342,7 +342,7 @@
   </g>
 
   <!-- Elevator, secret door to the North -->
-  <path fill="yellow" stroke="black" stroke-width="1" d="M1200,1500 h43 a,7,7,0,1,1,14,0 7,7,0,1,1,-14,0 m14,0 h43 v100 h-100 v-100" />
+  <path fill="yellow" stroke="black" stroke-width="1" d="M1200,1500 h43 a,7,7,0,1,1,14,0 a7,7,0,1,1,-14,0 m14,0 h43 v100 h-100 v-100" />
   <text x="1235" y="1565" font-size="50" fill="blue">E</text>
 
 </svg>
