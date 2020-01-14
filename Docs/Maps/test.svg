@@ -293,12 +293,12 @@
   <path stroke="black" fill="none" stroke-width="1" d="M600,1300 h100 m-100,100 h100" />
 
   <!-- Corridor 4-way -->
-  <path stroke="blue" fill="none" stroke-width="1" d="M2000,900 m0,2 v-2 h2 m96,0 h2 v2 m0,96 v2 h-2 m-96,0 h-2 v-2" />
+  <path stroke="black" fill="none" stroke-width=".5" d="M2000,900 m0,2 v-2 h2 m96,0 h2 v2 m0,96 v2 h-2 m-96,0 h-2 v-2" />
   <circle fill="none" stroke="red" stroke-width="1" cx="2050" cy="950" r="50"/>
   <text x="2035" y="965" font-size="50" fill="red">4</text>
   
   <!-- Corridor 4-way -->
-  <path stroke="blue" fill="none" stroke-width="1" d="M200,700 m0,2 v-2 h2 m96,0 h2 v2 m0,96 v2 h-2 m-96,0 h-2 v-2" />
+  <path stroke="black" fill="none" stroke-width=".5" d="M200,700 m0,2 v-2 h2 m96,0 h2 v2 m0,96 v2 h-2 m-96,0 h-2 v-2" />
   <circle fill="none" stroke="red" stroke-width="1" cx="250" cy="750" r="50"/>
   <text x="235" y="765" font-size="50" fill="red">4</text>
   
