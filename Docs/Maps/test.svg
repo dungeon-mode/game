@@ -296,6 +296,16 @@
   <path stroke="black" fill="none" stroke-width="1" d="M200,700 m0,2 v-2 h2 m96,0 h2 v2 m0,96 v2 h-2 m-96,0 h-2 v-2" />
   <circle fill="none" stroke="red" stroke-width="1" cx="250" cy="750" r="40"/>
   <text x="235" y="765" font-size="50" fill="red">4</text>
+
+  <!-- Ramp -->
+  <path stroke="black" fill="none" stroke-width="1" d="M200,800 m100,0 v500 h-100 v-500" />
+  <g stroke="green" fill="green" font-size="50">
+    <text>
+      <tspan x="240" y="850">1</tspan>
+      <tspan x="240" y="1275">2</tspan>
+    </text>
+    <path stroke-width="1" d="M240,900 h20 v250 h20 l-30,50 l-30,-50 h20 z" />
+  </g>
   
 
 
@@ -316,6 +326,7 @@
 
   <!-- Compulsion -->
   <path fill="none" stroke="black" stroke-width="1" d="M1000,1200 m100,0 h300 v100 m0,100 v100 h-143 a,1,1,0,1,1,-14,0 a,1,1,0,1,1,14,0 m-14,0 h-43 m-100,0 h-100 m0,-100 v-100" /> 
+
   <text x="1185" y="1375" font-size="50" fill="red">C</text>
   <text x="1040" y="1225" font-size="40" fill="red">1</text>
   <text x="1385" y="1365" font-size="40" fill="red">2</text>
@@ -324,5 +335,5 @@
   <text x="1000" y="1465" font-size="40" fill="red">5</text>
   <text x="1000" y="1265" font-size="40" fill="red">6</text>
 
- 
+
 </svg>
