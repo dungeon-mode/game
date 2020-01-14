@@ -306,11 +306,13 @@
   <text x="235" y="765" font-size="50" fill="red">4</text>
 
   <!-- Ramp -->
-  <path stroke="black" fill="url(#vert_ramp)" stroke-width="1" d="M200,800 m100,0 v500 h-100 v-500" />
+  <path stroke="black" fill="none" stroke-width="1" d="M200,800 m100,0 v500 h-100 v-500" />
+  <path stroke="none" fill="url(#vert_ramp)" d="M200,800 h100 v500 h-100 z" />
   <text stroke="green" fill="blue" font-size="50" x="240" y="1285">2</text>
 
   <!-- Stairs, opening to the north -->
-  <path fill="yellow" stroke="black" stroke-width="1" d="M1700,1700 m100,0 v200 h-100 v-200" />
+  <path fill="none" stroke="black" stroke-width="1" d="M1700,1700 m100,0 v200 h-100 v-200" />
+  <path fill="yellow" stroke="none" d="M1700,1700 h100 v200 h-100 z" />
   <text x="1735" y="1885" font-size="50" fill="blue">2</text>
 
 
@@ -342,7 +344,8 @@
   </g>
 
   <!-- Elevator, secret door to the North -->
-  <path fill="yellow" stroke="black" stroke-width="1" d="M1200,1500 h43 a,7,7,0,1,1,14,0 a7,7,0,1,1,-14,0 m14,0 h43 v100 h-100 v-100" />
+  <path fill="none" stroke="black" stroke-width="1" d="M1200,1500 h43 a,7,7,0,0,1,14,0 a7,7,0,1,1,-14,0 m14,0 h43 v100 h-100 v-100" />
+  <path fill="yellow" stroke="none" d="M1200,1500 h43 a,1,1,0,0,0,14,0 h43 v100 h-100 v-100" />
   <text x="1235" y="1565" font-size="50" fill="blue">E</text>
 
 </svg>
