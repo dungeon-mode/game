@@ -463,6 +463,36 @@
     <text x="1885" y="1115">B</text>
   </g>
 
+  <!-- 20x20 Beach on North-West corner of pool -->
+  <path fill="none" stroke="black" stroke-width="1" d="M1500,1200 m100,0 h100 v100 a150,150,0,0,0,-100,100 m-100,0 v-200" />
+  <g fill="blue" stroke="none" font-size="50">
+    <path d="M1500,1200 m200,100 a150,150,0,0,0,-100,100 h100 v-100" />
+    <text x="1585" y="1315">B</text>
+  </g>
+
+  <!-- 20x20 Beach on North-east corner of pool -->
+  <path fill="none" stroke="black" stroke-width="1" d="M1800,1200 m100,0 h100 v200 m-100,0 a150,150,0,0,0,-100,-100 m0,-100" />
+  <g fill="blue" stroke="none" font-size="50">
+    <path d="M1800,1200 m100,200 a150,150,0,0,0,-100,-100 v100 h100" />
+    <text x="1885" y="1315">B</text>
+  </g>
+
+  <!-- 20x20 Beach on South-West corner of pool -->
+  <path fill="none" stroke="black" stroke-width="1" d="M1500,1500 m100,0 a150,150,0,0,0,100,100 m0,100 h-200 v-200" />
+  <g fill="blue" stroke="none" font-size="50">
+    <path d="M1500,1500 m100,0 a150,150,0,0,0,100,100 v-100 h-100" />
+    <text x="1585" y="1615">B</text>
+  </g>
+
+  <!-- 20x20 Beach on South-east corner of pool -->
+  <path fill="none" stroke="black" stroke-width="1" d="M1800,1500 m200,0 v200 h-100 m-98,0 h-2 v-2 m0,-98 a150,150,0,0,0,100,-100 m-100,0" />
+  <g fill="blue" stroke="none" font-size="50">
+    <path d="M1800,1500 m0,100 a150,150,0,0,0,100,-100 h-100 v-100 " />
+    <text x="1885" y="1615">B</text>
+  </g>
+
+
+
   
   <!-- Corridor North-South -->
   <path stroke="black" fill="none" stroke-width="1" d="M1900,300 m100,0 v100 m-100,0 v-100" />
