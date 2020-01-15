@@ -8,11 +8,11 @@
       <stop offset="50%" style="stop-color:yellow;stop-opacity:1" />
     </linearGradient>
   </defs>
-  
+
   <!-- Background Graph paper -->
-  
+
   <rect fill="#fffdd0" stroke="none" x="0" y="0" width="100%" height="100%"/>
-  
+
   <!-- Graph paper horizontal lines -->
   <path d="M 0 0 L 2400 0 M 0 100 L 2400 100 M 0 200 L 2400 200 M 0 300 L 2400 300 M 0 400 L 2400 400 M 0 500 L 2400 500 M 0 600 L 2400 600
 	   M 0 700 L 2400 700 M 0 800 L 2400 800 M 0 900 L 2400 900 M 0 1000 L 2400 1000 M 0 1100 L 2400 1100 M 0 1200 L 2400 1200
@@ -27,10 +27,10 @@
 	   M 1900 0 L 1900 2400 M 2000 0 L 2000 2400 M 2100 0 L 2100 2400 M 2200 0 L 2200 2400 M 2300 0 L 2300 2400 M 2400 0 L 2400 2400"
            fill="none" stroke="blue" stroke-width=".2" />
 
-	   
+
   <!-- 10 x 10 rooms -->
 
-  
+
   <!-- 10 x 10 room Secret door on the north -->
   <path fill="none" stroke="black" stroke-width="1" d="M 1100 1000 l 43 0 a 1 1 0 1 1 14 0 a 1 1 0 1 1 -14 0 m 14 0 l 43 0 l 0 100 l -100 0 l 0 -100" />
 
@@ -76,10 +76,10 @@
   <!-- 10 x 10 room Secret door on the south -->
   <path  fill="none" stroke="black" stroke-width="1" d="M 1000 1500 l 0 100 l 43 0 a 1 1 0 1 1 14 0 a 1 1 0 1 1 -14 0 m 14 0 l 43 0 l 0 -100 l -100 0" />
 
-  
+
   <!-- 10 x 20 rooms -->
 
-  
+
   <!-- 10 x 20 room extending north-south, Secret door on the south -->
   <path fill="none" stroke="black" stroke-width="1" d="M 500 800 l 0 200 l 43 0 a 1 1 0 1 1 14 0 a 1 1 0 1 1 -14 0 m 14 0 l 43 0 l 0 -200 l -100 0" />
 
@@ -95,17 +95,17 @@
   <!-- 10 x 20 room extending north-south, Secret door on the southern part of the eastern wall -->
   <path fill="none" stroke="black" stroke-width="1" d="M300,1100 h100 v143 a1,1,0,1,1,0,14 a1,1,0,1,1,0,-14 m0,14 v43 h-100 v-200" />
 
-  
+
   <!-- 10 x 30 rooms -->
 
-  
+
   <!-- 10 x 30 rooms Secret door on the north -->
   <path fill="none" stroke="black" stroke-width="1" d="M 1100 300 l 43 0 a 1 1 0 1 1 14 0 a 1 1 0 1 1 -14 0 m 14 0 l 43 0 l 0 300 l -100 0 l 0 -300" />
 
-  
+
   <!-- 20 x 20 rooms -->
 
-  
+
   <!-- 20 x 20 room with secret doors in the northern part of the western wall and the western part of the northern wall -->
   <path fill="none" stroke="black" stroke-width="1"
 	d="M 800 700 l 0 200 l -200 0 l 0 -143 a 1 1 0 1 1 0 -14 a 1 1 0 1 1 0 14 m 0 -14 l 0 -43 l 43 0 a 1 1 0 1 1 14 0 a 1 1 0 1 1 -14 0 m 14 0 l 143 0" />
@@ -126,13 +126,13 @@
   <path fill="none" stroke="black" stroke-width="1"
 	d="M 900 300 l 43 0 a 1 1 0 1 1 14 0 a 1 1 0 1 1 -14 0 m 14 0 l 143 0 l 0 200 l -200 0 l 0 -200" />
 
-  
+
   <!-- Corridor -->
 
 
   <!-- Corridor North-South-East -->
   <path stroke="black" fill="none" stroke-width="1" d="M 1400 500 l 0 100" />
-  
+
   <!-- Corridor North-South -->
   <path stroke="black" fill="none" stroke-width="1" d="M 1400 300 l 0 100 m 100 -100 l 0 100" />
 
@@ -159,7 +159,7 @@
 
   <!-- Corridor East-West-South with secret door to the north -->
   <path stroke="black" fill="none" stroke-width="1" d="M 1400 200 l 43 0 a 1 1 0 1 1 14 0 a 1 1 0 1 1 -14 0 m 14 0 l 43 0" />
-  
+
   <!-- Corridor East-West -->
   <path stroke="black" fill="none" stroke-width="1" d="M 1300 200 l 100 0 m -100 100 l 100 0" />
 
@@ -302,7 +302,7 @@
   <path stroke="black" fill="none" stroke-width="1" d="M300,100 m0,2 v-2 h2 m96,0 h2 v2 m0,96 v2 h-2 m-96,0 h-2 v-2" />
   <circle fill="none" stroke="red" stroke-width="1" cx="350" cy="150" r="40"/>
   <text x="335" y="165" font-size="50" fill="red">4</text>
-  
+
   <!-- Corridor 4-way -->
   <path stroke="black" fill="none" stroke-width="1" d="M200,700 m0,2 v-2 h2 m96,0 h2 v2 m0,96 v2 h-2 m-96,0 h-2 v-2" />
   <circle fill="none" stroke="red" stroke-width="1" cx="250" cy="750" r="40"/>
@@ -321,7 +321,7 @@
 
   <!-- Special areas -->
 
-  
+
   <!-- General Store -->
   <path fill="none" stroke="black" stroke-width="1" d="M 900 900 l -100 0 l 0 -300 l 100 0 l 0 -100 l 200 0 l 0 100 l 100 0 l 0 300 l -200 0" />
   <text x="850" y="725" font-size="60" fill="blue">General Store</text>
@@ -335,7 +335,7 @@
   <text x="685" y="315" font-size="50" fill="red">A</text>
 
   <!-- Compulsion -->
-  <path fill="none" stroke="black" stroke-width="1" d="M1000,1200 m100,0 h300 v100 m0,100 v100 h-143 a,1,1,0,1,1,-14,0 a,1,1,0,1,1,14,0 m-14,0 h-43 m-100,0 h-100 m0,-100 v-100" /> 
+  <path fill="none" stroke="black" stroke-width="1" d="M1000,1200 m100,0 h300 v100 m0,100 v100 h-143 a,1,1,0,1,1,-14,0 a,1,1,0,1,1,14,0 m-14,0 h-43 m-100,0 h-100 m0,-100 v-100" />
   <text x="1185" y="1375" font-size="50" fill="blue">C</text>
   <g font-size="40" fill="blue">
     <text x="1040" y="1225">1</text>
@@ -358,37 +358,51 @@
 
 
   <!-- Pool -->
-  <path fill="blue" fill-opacity="0.5" d="M2100,200 h100 a150,150,0,0,0,100,100 v100 a150,150,0,0,0,-100,100 h-100 a150,150,0,0,0,-100,-100 v-100" />
+  <path fill="blue" fill-opacity="0.5" d="M2100,200 h100 a150,150,0,0,1,100,100 v100 a150,150,0,0,1,-100,100 h-100 a150,150,0,0,1,-100,-100 v-100 a150,150,0,0,1,100,-100" />
 
-  <!-- River -->
+  <!-- River flowing south -->
   <path stroke="none" fill="blue" d="M2100,500 h100 v100 h-100 v-100" />
+  <path stroke="none" fill="cyan" d="M2100,500 m48,20 h4 v50 h5 l-6,10 l-6,-10 h5 v-50" />
 
-  <!-- River -->
+  <!-- River flowing south  -->
   <path stroke="none" fill="blue" d="M2100,600 h100 v100 h-100 v-100" />
+  <path stroke="none" fill="cyan" d="M2100,600 m48,20 h4 v50 h5 l-6,10 l-6,-10 h5 v-50" />
 
-  <!-- River -->
+  <!-- River flowing south  -->
   <path stroke="none" fill="blue" d="M2100,700 h100 v100 h-100 v-100" />
+  <path stroke="none" fill="cyan" d="M2100,700 m48,20 h4 v50 h5 l-6,10 l-6,-10 h5 v-50" />
 
-  <!-- River -->
+  <!-- River flowing south -->
   <path stroke="none" fill="blue" d="M2100,800 h100 v100 h-100 v-100" />
+  <path stroke="none" fill="cyan" d="M2100,800 m48,20 h4 v50 h5 l-6,10 l-6,-10 h5 v-50" />
 
-  <!-- River -->
+  <!-- River flowing west -->
   <path stroke="none" fill="blue" d="M2000,900 h100 v100 h-100 v-100" />
+  <path stroke="none" fill="cyan" d="M2000,900 m25,48 h50 v2 h-50 v5 l-10,-6 l10,-6 v5"	/>
 
-  <!-- River -->
+  <!-- River flowing west -->
   <path stroke="none" fill="blue" d="M1900,900 h100 v100 h-100 v-100" />
+  <path stroke="none" fill="cyan" d="M1900,900 m25,48 h50 v2 h-50 v5 l-10,-6 l10,-6 v5"	/>
 
-  <!-- River -->
+  <!-- River flowing west -->
   <path stroke="none" fill="blue" d="M1800,900 h100 v100 h-100 v-100" />
+  <path stroke="none" fill="cyan" d="M1800,900 m25,48 h50 v2 h-50 v5 l-10,-6 l10,-6 v5"	/>
 
-  <!-- River -->
+  <!-- River flowing south -->
   <path stroke="none" fill="blue" d="M1700,1000 h100 v100 h-100 v-100" />
+  <path stroke="none" fill="cyan" d="M1700,1000 m48,20 h4 v50 h5 l-6,10 l-6,-10 h5 v-50" />
 
-  <!-- River -->
+  <!-- River flowing south -->
   <path stroke="none" fill="blue" d="M1700,1100 h100 v100 h-100 v-100" />
+  <path stroke="none" fill="cyan" d="M1700,1100 m48,20 h4 v50 h5 l-6,10 l-6,-10 h5 v-50" />
 
-  <!-- River -->
+  <!-- River flowing south -->
   <path stroke="none" fill="blue" d="M1700,1200 h100 v100 h-100 v-100" />
+  <path stroke="none" fill="cyan" d="M1700,1200 m48,20 h4 v50 h5 l-6,10 l-6,-10 h5 v-50" />
+
+  <!-- Pool -->
+  <path fill="blue" fill-opacity="0.5" d="M1700,1300 h100 a150,150,0,0,1,100,100 v100 a150,150,0,0,1,-100,100 h-100 a150,150,0,0,1,-100,-100 v-100 a150,150,0,0,1,100,-100" />
+
 
 
   <!-- Beach Chambers -->
@@ -399,7 +413,7 @@
     <path d="M1900,100 m200,100 a150,150,0,0,0,-100,100 h100 v-100" />
     <text x="1985" y="215">B</text>
   </g>
-    
+
   <!-- 20x20 Beach on South-West corner of pool -->
   <path fill="none" stroke="black" stroke-width="1" d="M1900,400 m100,0 a150,150,0,0,0,100,100 v100 m-100,0 h-100 v-200" />
   <g fill="blue" stroke="none" font-size="50">
@@ -421,18 +435,32 @@
     <text x="2285" y="515">B</text>
   </g>
 
-  <!-- 20x20 Beach on South-east corner of river -->
+  <!-- 20x20 Beach on South-east corner of river outside curve -->
   <path fill="none" stroke="black" stroke-width="1" d="M2100,900 m200,0 v100 m0,100 h-200 m0,-100 a150,150,0,0,0,100,-100 m-100,0" />
   <g fill="blue" stroke="none" font-size="50">
     <path d="M2100,900 m0,100 a150,150,0,0,0,100,-100 h-100 v-100 " />
     <text x="2185" y="1015">B</text>
   </g>
 
-  <!-- 20x20 Beach on North-West corner of tiver -->
+  <!-- 20x20 Beach on North-West corner of river inside curve -->
   <path fill="none" stroke="black" stroke-width="1" d="M1900,700 h100 m100,0 v100 a150,150,0,0,1,-100,100 h-100 v-100 m0,-100" />
   <g fill="blue" stroke="none" font-size="50">
     <path d="M1900,700 m200,100 a150,150,0,0,1,-100,100 h100 v-100" />
     <text x="1985" y="815">B</text>
+  </g>
+
+  <!-- 20x20 Beach on North-West corner of river outside curve -->
+  <path fill="none" stroke="black" stroke-width="1" d="M1600,800 h100 m100,0 v100 a150,150,0,0,0,-100,100 h-100 v-100 m0,-100" />
+  <g fill="blue" stroke="none" font-size="50">
+    <path d="M1600,800 m200,100 a150,150,0,0,0,-100,100 h100 v-100" />
+    <text x="1685" y="915">B</text>
+  </g>
+
+  <!-- 20x20 Beach on South-east corner of river outside curve -->
+  <path fill="none" stroke="black" stroke-width="1" d="M1800,1000 m100,0 h100 m0,100 v100 h-100 m-100,-100 a150,150,0,0,1,100,-100 m-100,0" />
+  <g fill="blue" stroke="none" font-size="50">
+    <path d="M1800,1000 m0,100 a150,150,0,0,1,100,-100 h-100 v-100 " />
+    <text x="1885" y="1115">B</text>
   </g>
 
   
