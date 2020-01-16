@@ -46,9 +46,10 @@
 ;; install deps to a custom location using -Q, e.g:
 ;; emacs -Q -e "(setq dm-devel-packages-path \"d:/dm-packages\")" -l bootstrap.el 
 
-;;; Code:
+;; then you can link in the new libraries with this:
+;;   (add-to-list 'load-path (expand-file-name dm-devel-packages-path))
 
-(add-to-list 'load-path (expand-file-name dm-devel-packages-path))
+;;; Code:
 
 (progn
   (unless (bound-and-true-p dm-devel-packages-path)
@@ -64,6 +65,3 @@
   (package-initialize)
   (package-refresh-contents)
   (package-install-selected-packages))
-
-(provide 'dm-devel-bootstrap)
-;;; foo.el ends here
