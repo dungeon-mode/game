@@ -54,7 +54,7 @@
 (progn
   (unless (bound-and-true-p dm-devel-packages-path)
     (defvar dm-devel-packages-path
-      `(expand-file-name "dm-elpa" user-emacs-directory)
+      (expand-file-name "dm-elpa" user-emacs-directory)
       "Folder to store packages installed for dungeon-mode development."))
   (setq
    package-user-dir dm-devel-packages-path
