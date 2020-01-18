@@ -82,5 +82,15 @@ in the usual way.")
   	(concat (oref object path-data)
 		(mapconcat 'concat strings ""))))
 
+(cl-defmethod render-and-insert ((object dm-svg))
+  "Insert the SVG image in `current-buffer'at `point'."
+  (let* ((svg (oref object svg))
+	 (path-data (oref object path-data))
+	 (path (dom-node 'path '((d . path-data)))))
+    (dom-append-child svg path)
+    (svg-insert-image svg)))
+
+;; (render-and-insert (dm-svg :svg (svg-create 500 500)))
+
 (provide 'dm-svg)
 ;;; dm-svg.el ends here
