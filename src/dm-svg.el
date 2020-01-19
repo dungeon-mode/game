@@ -65,32 +65,70 @@
   (or (null obj)
       (eq 'svg (and (listp obj) (car obj)))))
 
+(defun dm-svg-path-or-path-data-p (obj)
+  "True when OBJ is nil, a string, or a \"path\" `dom-node'."
+  (or (null obj)
+      (stringp obj)
+      (eq 'path (and (listp obj) (car obj)))))
+
+(defun dm-svg-create-path (&optional path-data properties children)
+  "Create a 'path `dom-node'.
+
+PATH-DATA is an optional string controling the \"d\" attribute.
+PROPERTIES and CHILDREN map to corrisponding inputs accepted
+by, e.g. `dom-node' which see."
+  (if children
+      (dom-node 'path `((d . ,path-data) ,@properties) children)
+    (dom-node 'path `((d . ,path-data) ,@properties))))
+
 (defclass dm-svg ()
   ((svg :type dm-svg-or-nil :initarg :svg :initform nil)
-   (path-data :type (or null (satisfies stringp))
-	      :initarg :path-data :initform nil))
+   (path-data :type dm-svg-path-or-path-data
+	      :initarg :path-data
+	      :initform nil))
   :documentation
   "Wrap `svg' as an 'eieio' object.
 
-This allows us to built up data for a \"main\" path represented
-as a string in parallel to adding elements to the SVG in slot 1
-in the usual way.")
+This allows us to built up data for a \"main\" SVG element in
+parallel to adding elements to the SVG in slot 1 in the usual
+way.  PATH-DATA may be a string or a `dom-node' containing a
+'path element, or nil.  PATH-DATA is internally represented as a
+'dom-node', created when a string is provided by wrapping the
+initarg value as a new 'path and using the string as the value of
+the \"d\" attribute.")
+
+(cl-defmethod initialize-instance :after ((object dm-svg) &rest _)
+  "Docstring using MYOBJECT and _ARGS"
+  (with-slots (path-data) object
+    (unless (and (listp path-data)
+		 (eq 'path (car path-data)))
+	(setq path-data (dm-svg-create-path path-data)))
+    ))
 
 (cl-defmethod add-path-data ((object dm-svg) &rest strings)
   "Add STRINGS to `dm-svg' OBJECT's path-data."
-  (oset object path-data
-  	(concat (oref object path-data)
-		(mapconcat 'concat strings ""))))
+  (with-slots (path-data) object
+    (dom-set-attribute path-data 'd
+		       (concat (cdr (assoc 'd (dom-attributes path-data)))
+			       (mapconcat 'concat strings "")))))
+
+(let ((o (dm-svg :svg (svg-create 500 500)
+		 :path-data "v100")))
+  (add-path-data o "h100v-100h-100"))
 
 (cl-defmethod render-and-insert ((object dm-svg))
-  "Insert the SVG image in `current-buffer'at `point'."
+  "Render and insert `svg' from a DM-SVG.
+
+Image is inserted to `current-buffer' at `point' after appending
+a path element using path-data of DM-SVG. See `add-path-data'."
   (let* ((svg (oref object svg))
 	 (path-data (oref object path-data))
-	 (path (dom-node 'path '((d . path-data)))))
+	 (path (dom-node 'path `((d . ,path-data)))))
     (dom-append-child svg path)
     (svg-insert-image svg)))
 
-;; (render-and-insert (dm-svg :svg (svg-create 500 500)))
+;; not sure exactly how to ert-ize this so leaving it here.
+(render-and-insert (dm-svg :svg (svg-create 500 500) :path-data "m100,100h100v100h-100-v-100"))
 
 (provide 'dm-svg)
 ;;; dm-svg.el ends here

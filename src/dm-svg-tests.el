@@ -25,7 +25,7 @@
 ;;; Code:
 
 (defmacro dm-test-load-path ()
-  "Build a temporary load-path for a test's context package."
+  "Build a temporary `load-path' for a test's context package."
   `(list (file-name-directory (or buffer-file-name (buffer-name)))))
 
 (ert-deftest dm-svg--require ()
@@ -39,11 +39,39 @@
   :tags '(:dm-svg :svg :predicate)
   (should (eq 2 (length (delete
 			 nil
-			 (mapcar 'svg-or-nil-p
+			 (mapcar 'dm-svg-or-nil-p
 				 (list nil t (svg-create 500 500))))))))
 
+(ert-deftest dm-svg-path-or-path-data-p ()
+  "predicate `dm-svg-path-or-path-data-p'"
+  :tags '(:dm-svg :svg :predicate)
+  (should (eq nil (dm-svg-path-or-path-data-p 'foo)))
+  (should (eq t (dm-svg-path-or-path-data-p nil)))
+  (should (eq t (dm-svg-path-or-path-data-p "")))
+  (should (eq t (dm-svg-path-or-path-data-p (dom-node 'path)))))
+
+(ert-deftest dm-svg-create-path ()
+  "function `dm-svg-create-path'"
+  :tags '(:dm-svg :svg :predicate)
+  (should (dm-svg-create-path))
+  (should (equal (dom-node 'path '((d)))
+		 (dm-svg-create-path)))
+  (should (equal (dom-node 'path '((d)))
+		 (dm-svg-create-path nil)))
+  (should (equal (dom-node 'path '((d . "")))
+		 (dm-svg-create-path "")))
+  (should (equal (dom-node 'path '((d . "m1,1")))
+		 (dm-svg-create-path "m1,1")))
+  (should (equal (dom-node 'path '((d . "") (stroke . "black")))
+		 (dm-svg-create-path "" '((stroke . "black")))))
+  (should (equal (dom-node 'path '((d . "")) (dom-node 'child))
+		 (dm-svg-create-path "" nil (dom-node 'child) )))
+
+  )
+
+
 (ert-deftest dm-svg--create ()
-  "create `dm-svg'"
+  "constructor `dm-svg'"
   :tags '(:dm-svg :svg :create)
   (should
    (prog1 t (dolist (x (list '(nil . nil) `(,(svg-create 500 500) . "v100")))
@@ -56,9 +84,6 @@
    (string= "v100h100v-100h-100"
 	    (let ((o (dm-svg :svg (svg-create 500 500) :path-data "v100")))
 	      (add-path-data o "h100v-100h-100")))))
-
-
-
 
 (provide 'dm-svg-tests)
 ;;; dm-svg-tests.el ends here
