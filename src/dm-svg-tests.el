@@ -28,12 +28,19 @@
   "Build a temporary `load-path' for a test's context package."
   `(list (file-name-directory (or buffer-file-name (buffer-name)))))
 
+(defun dm-test-maybe-require (package &optional forcep)
+  "Require PACKAGE when not loaded or FORCEP is t."
+  (unless (or forcep (featurep 'dm-svg))
+    (require package)))
+
+;; TODO factor out above macro and func
+;; TODO consider buttercup.el https://github.com/jorgenschaefer/emacs-buttercup
+
 (ert-deftest dm-svg--require ()
   "require `dm-svg'"
   :tags '(:dm-svg :requires)
   (let ((load-path (dm-test-load-path)))
     (should (eq 'dm-svg (require 'dm-svg)))))
-
 
 (ert-deftest dm-svg-dom-node-p ()
   "predicate `dm-svg-dom-node-p'"
@@ -97,7 +104,7 @@
 	      (dm-svg :svg (car x) :path-data (cdr x))))))
 
 (ert-deftest dm-svg-add-svg-element ()
-  "method `dm-svg-add-path-data'"
+  "method `add-path-data'"
   :tags '(:dm-svg :svg :method)
   (should
    (equal (dom-append-child (dom-node 'svg) (dom-node 'child))
@@ -106,12 +113,39 @@
 	      ))))
 
 (ert-deftest dm-svg-add-path-data ()
-  "method `dm-svg-add-svg-element'"
+  "method `add-svg-element'"
   :tags '(:dm-svg :svg :method)
   (should
    (string= "v100h100v-100h-100"
 	    (let ((o (dm-svg :svg (svg-create 500 500) :path-data "v100")))
 	      (add-path-data o "h100v-100h-100")))))
+
+(ert-deftest dm-svg-render-and-insert ()
+  "method `render-and-insert'"
+  :tags '(:dm-svg :svg :method)
+  (with-temp-buffer)
+  (let* ((c (with-temp-buffer
+	      (render-and-insert (dm-svg :svg (svg-create 100 100)
+					 :path-data
+					 "m100,100h100v100h-100v-100"))
+	      ;;(buffer-string)
+	      (plist-get (text-properties-at 1) 'display)))
+	 (d (plist-get (cdr c) ':data))
+	 (s (plist-get (cdr  c) ':type)))
+    (message "c:%s\nd:%s\ns:%s" c d s)
+    (should (eq s 'svg))
+    (should (string= d (concat
+			"<svg width=\"100\" height=\"100\""
+			" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\">"
+			" <path d=\"m100,100h100v100h-100v-100\"></path></svg>")))
+    ))
+
+(render-and-insert (dm-svg :svg (svg-create 500 500 :stroke "none" :fill "none")
+			   :path-data
+			   (dm-svg-create-path "m100,100h100v100h-100v-100"
+					       '((stroke . "green")
+						 (stroke-width  .  3))
+					       )))
 
 (provide 'dm-svg-tests)
 ;;; dm-svg-tests.el ends here

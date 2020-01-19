@@ -141,14 +141,5 @@ a path element using path-data of DM-SVG. See `add-path-data'."
       ;;(with-temp-file "out.svg" (set-buffer-multibyte nil) (svg-print svg))
       (svg-insert-image svg)))
 
-;; not sure exactly how to ert-ize this so leaving it here.
-(render-and-insert (dm-svg :svg (svg-create 500 500)
-			   :path-data
-			   (dm-svg-create-path "m100,100h100v100h-100v-100"
-					       '((stroke . "green")
-						 (stroke-width  .  10))
-					       )))
-
-
 (provide 'dm-svg)
 ;;; dm-svg.el ends here
