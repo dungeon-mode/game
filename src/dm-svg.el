@@ -60,16 +60,26 @@
 
 ;;; Code:
 
+(defun dm-svg-dom-node-p (object &optional tag)
+  "Return t when OBJECT is a dom-node.
+
+When TAG is non-nill (car OBJECT) must also `equal' TAG."
+  (and (listp object)
+       (symbolp (car object))
+       (not  (null (car object)))
+       (or (null tag)
+	   (equal tag (car object)))))
+
 (defun dm-svg-or-nil-p (obj)
   "True if OBJ is nil or an SVG `dom'."
   (or (null obj)
-      (eq 'svg (and (listp obj) (car obj)))))
+      (dm-svg-dom-node-p obj 'svg)))
 
 (defun dm-svg-path-or-path-data-p (obj)
   "True when OBJ is nil, a string, or a \"path\" `dom-node'."
   (or (null obj)
       (stringp obj)
-      (eq 'path (and (listp obj) (car obj)))))
+      (dm-svg-dom-node-p obj 'path)))
 
 (defun dm-svg-create-path (&optional path-data properties children)
   "Create a 'path `dom-node'.
@@ -99,10 +109,12 @@ the \"d\" attribute.")
 
 (cl-defmethod initialize-instance :after ((object dm-svg) &rest _)
   "Docstring using MYOBJECT and _ARGS"
-  (with-slots (path-data) object
-    (unless (and (listp path-data)
-		 (eq 'path (car path-data)))
-	(setq path-data (dm-svg-create-path path-data)))
+  (with-slots (svg path-data) object
+    (unless (dm-svg-dom-node-p svg 'svg)
+      (setq svg (dom-node 'svg)))
+    (unless (dm-svg-dom-node-p path-data 'path)
+      (setq path-data (dm-svg-create-path (and (stringp path-data)
+					       path-data))))
     ))
 
 (cl-defmethod add-path-data ((object dm-svg) &rest strings)
@@ -112,23 +124,31 @@ the \"d\" attribute.")
 		       (concat (cdr (assoc 'd (dom-attributes path-data)))
 			       (mapconcat 'concat strings "")))))
 
-(let ((o (dm-svg :svg (svg-create 500 500)
-		 :path-data "v100")))
-  (add-path-data o "h100v-100h-100"))
+(cl-defmethod add-svg-element ((object dm-svg) &rest elements)
+  "Add ELEMENTS to `dm-svg' OBJECT's path-data."
+  (with-slots (svg) object
+    (dolist (element elements)
+      (setq svg (dom-append-child svg element)))
+    svg))
 
 (cl-defmethod render-and-insert ((object dm-svg))
   "Render and insert `svg' from a DM-SVG.
 
 Image is inserted to `current-buffer' at `point' after appending
 a path element using path-data of DM-SVG. See `add-path-data'."
-  (let* ((svg (oref object svg))
-	 (path-data (oref object path-data))
-	 (path (dom-node 'path `((d . ,path-data)))))
-    (dom-append-child svg path)
-    (svg-insert-image svg)))
+  (with-slots (svg path-data) object
+      (dom-append-child svg path-data)
+      ;;(with-temp-file "out.svg" (set-buffer-multibyte nil) (svg-print svg))
+      (svg-insert-image svg)))
 
 ;; not sure exactly how to ert-ize this so leaving it here.
-(render-and-insert (dm-svg :svg (svg-create 500 500) :path-data "m100,100h100v100h-100-v-100"))
+(render-and-insert (dm-svg :svg (svg-create 500 500)
+			   :path-data
+			   (dm-svg-create-path "m100,100h100v100h-100v-100"
+					       '((stroke . "green")
+						 (stroke-width  .  10))
+					       )))
+
 
 (provide 'dm-svg)
 ;;; dm-svg.el ends here

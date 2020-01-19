@@ -117,8 +117,8 @@ basic cursor based drawing using the [[https://css-tricks.com/svg-path-syntax-il
   main-draw path."
     ;; TODO put some code here
     (let* (new-svg
-	   (f (apply-partially 'dm-map-append 'new-svg))
-	   (new-path (mapconcat f todo)))
+	   (f (apply-partially 'dm-map--append 'new-svg))
+	   (new-path (mapconcat f forms)))
       `(cons (setq dm-map--svg-data
 		   (concat dm-map--svg-data ,new-svg))
 	     (setq dm-map--path-data
@@ -169,7 +169,7 @@ TODO consider other fields: version, area
 | c-S      | v1 m0,-1 h1 v1                     | South                                   |           |
 | c-SE     | h1 v1                              |                                         |           |
 | c--SEW   | h1                                 | South/East/West                         |           |
-| c-SEW    |                                    | South/East/West                         |           |
+| c-SEW    | v1 h1 v-1                          | South/East/West                         |           |
 | c-SW     | h1 m-1,0 v1                        | South/West                              |           |
 | c-E      | h1 v1 h-1                          | East                                    |           |
 | c-EW     | h1 m0,1 h-1                        | East/west                               |           |
@@ -196,10 +196,11 @@ This is a sample map used to develop and test the above.
 
  For each cell:
 
- * If the cell contains a reference follow it:
-   * Setting absolute position to given X and Y
-   * Draw features sequentially
- * Add to the list of "seen" cells.
+ * If the cell contains a reference follow it
+ * With the cell referenced cell content giving X,Y and FEATURES:
+   * Setting absolute position to given X,Y
+   * Draw FEATURES sequentially
+ * Add cell to list of "seen" cells.
 
 NOTE: features must cooperate in terms of assumptions in terms of
 relative position except for the first named feature.  No movement or
@@ -210,9 +211,36 @@ NOTE: This approach may only work when drawing the whole map.
 
 TODO: write test, harness and document here
 
-| X | Y | Features | Documentation | Narrative |
-|---+---+----------+---------------+-----------|
-| 0 | 0 |          | 20x20 area    |           |
-| 3 | 0 | c-NW     |               |           |
-| 3 | 1 | c-NW     |               |           |
-| 3 | 1 | c-N      |               |           |
+
+| X | Y | Features | Documentation                         | Narrative |
+|---+---+----------+---------------------------------------+-----------|
+| 0 | 0 |          | 20x20 area with two exits west.       |           |
+| 3 | 0 | c-E      | Corridor ends.                        |           |
+| 3 | 1 | c-E      | Corridor ends.                        |           |
+
+Which should produce something similar to the following:
+
+#+begin_src emacs-lisp :tangle design_org--test.svg
+  (let ((svg (svg-create 400 400 :stroke-width 10)))
+    (dom-append-child svg
+		      (dom-node 'path
+				'((d . "h300,v200,h-300,v-200,m0,-100,v200")
+				  (stroke . "black")
+				  (stroke-weight . 3))))
+    ;;(svg-gradient svg "gradient1" 'linear '((0 . "red") (100 . "blue")))
+    ;;(svg-circle svg 200 200 100 :gradient "gradient1" :stroke-color "green")
+    (with-temp-buffer
+      (svg-print svg)
+      (buffer-string)))
+#+end_src
+
+#+RESULTS:
+: <svg width="400" height="400" version="1.1" xmlns="http://www.w3.org/2000/svg" stroke-width="10"> <path d="h300,v200,h-300,v-200,m0,-100,v200" stroke="black" stroke-weight="3"></path></svg>
+
+#+begin_src text
+  +-------+
+  |       |
+  |  A  --|
+  |       |
+  +-------+
+#+end_src

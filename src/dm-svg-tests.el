@@ -30,9 +30,31 @@
 
 (ert-deftest dm-svg--require ()
   "require `dm-svg'"
-  :tags '(:dm-svg :svg :requires)
+  :tags '(:dm-svg :requires)
   (let ((load-path (dm-test-load-path)))
     (should (eq 'dm-svg (require 'dm-svg)))))
+
+
+(ert-deftest dm-svg-dom-node-p ()
+  "predicate `dm-svg-dom-node-p'"
+  :tags '(:dm-svg :dom :predicate)
+  (should (equal nil (dm-svg-dom-node-p nil)))
+  (should (equal nil (dm-svg-dom-node-p '())))
+  (should (equal t (dm-svg-dom-node-p '(tag))))
+  (should (equal nil (dm-svg-dom-node-p '(tag) 'nottag)))
+  (should (equal t (dm-svg-dom-node-p '(tag) 'tag)))
+  (should (equal t (dm-svg-dom-node-p (dom-node 'tag) 'tag)))
+  (should (equal t (dm-svg-dom-node-p (dom-node 'tag
+						'((attr . "val")))
+				      'tag)))
+  (should (equal t (dm-svg-dom-node-p (dom-node 'tag
+						nil
+						(dom-node 'child))
+				      'tag)))
+  (should (equal t (dm-svg-dom-node-p (dom-node 'tag
+						'((attr . "val"))
+						(dom-node 'child))
+				      'tag))))
 
 (ert-deftest dm-svg-or-nil-p ()
   "predicate `dm-svg-or-nil-p'"
@@ -65,10 +87,7 @@
   (should (equal (dom-node 'path '((d . "") (stroke . "black")))
 		 (dm-svg-create-path "" '((stroke . "black")))))
   (should (equal (dom-node 'path '((d . "")) (dom-node 'child))
-		 (dm-svg-create-path "" nil (dom-node 'child) )))
-
-  )
-
+		 (dm-svg-create-path "" nil (dom-node 'child) ))))
 
 (ert-deftest dm-svg--create ()
   "constructor `dm-svg'"
@@ -77,8 +96,17 @@
    (prog1 t (dolist (x (list '(nil . nil) `(,(svg-create 500 500) . "v100")))
 	      (dm-svg :svg (car x) :path-data (cdr x))))))
 
-(ert-deftest dm-svg-add-path-data ()
+(ert-deftest dm-svg-add-svg-element ()
   "method `dm-svg-add-path-data'"
+  :tags '(:dm-svg :svg :method)
+  (should
+   (equal (dom-append-child (dom-node 'svg) (dom-node 'child))
+	    (let ((o (dm-svg)))
+	      (add-svg-element o (dom-node 'child))
+	      ))))
+
+(ert-deftest dm-svg-add-path-data ()
+  "method `dm-svg-add-svg-element'"
   :tags '(:dm-svg :svg :method)
   (should
    (string= "v100h100v-100h-100"
