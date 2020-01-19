@@ -130,9 +130,9 @@ the players.
 An interesting distinction of Dungeon is the Special Power, a unique
 intrinsic provided to each character the rules for which are
 negotiated with the Dungeon Master prior to play.  Some Dungeon
-Masters (Steven Brust) have add included the ability for special
-powers to be altered during or by play, for example as a result of
-certain events.
+Masters have add included the ability for special powers to be altered
+during or by play, for example as a result of certain events further
+complicating the problem spaces from a system design perspective.
 
 ** Implementation
 
