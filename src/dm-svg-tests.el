@@ -140,12 +140,13 @@
 			" <path d=\"m100,100h100v100h-100v-100\"></path></svg>")))
     ))
 
-(render-and-insert (dm-svg :svg (svg-create 500 500 :stroke "none" :fill "none")
-			   :path-data
-			   (dm-svg-create-path "m100,100h100v100h-100v-100"
-					       '((stroke . "green")
-						 (stroke-width  .  3))
-					       )))
+;; :ease-of-eval
+;; (render-and-insert (dm-svg :svg (svg-create 500 500 :stroke "none" :fill "none")
+;; 			   :path-data
+;; 			   (dm-svg-create-path "m100,100h100v100h-100v-100"
+;; 					       '((stroke . "green")
+;; 						 (stroke-width  .  3))
+;; 					       )))
 
 (provide 'dm-svg-tests)
 ;;; dm-svg-tests.el ends here
