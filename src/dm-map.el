@@ -417,15 +417,15 @@ path data.")
 	     (setq dm-map--path-data
 		   (concat dm-map--path-data ,new-path)))))
 
-  (defun dm-map--append (svg-elements form)
-    "Implemention for `dm-map-append' which see.
+(defun dm-map--append (svg-elements form)
+  "Implemention for `dm-map-append' which see.
 
-  Return strings remaining after recursively processing FORM.
-  SVG-ELEMENTS are a list to which any SVG (e.g. non-path) elements
-  found will be added."
-    (cond (nil "nope")
-	  (t "yep")
-	  ))
+Return strings remaining after recursively processing FORM.
+SVG-ELEMENTS are a list to which any SVG (e.g. non-path) elements
+found will be added."
+  (cond (nil "nope")
+	(t "yep")
+	))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; newer cruft
