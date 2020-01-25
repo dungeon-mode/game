@@ -85,7 +85,8 @@ element.  The \"d\" property will be appended to with drawing
 instructions to implement the features included with each of
 CELLS therefor any inital value provided for
 \"d\" (e.g. \"path-data\") *must* return the stylus to the
-origin (e.g. M0,0) as it's final instruction.")
+origin (e.g. M0,0) as it's final instruction."
+  )
 
 (defun dm-map-load-tagged-tables-in-files (predicate &rest org-files)
   "Return a list of rows from tables with TAG in ORG-FILES.
@@ -260,6 +261,7 @@ the argument sequence each as a seperate list item."
 	(mapcar 'string-to-number
 		(split-string (substring svg-path-command-string 1)
 			      "[,]"))))
+
 ;;(dm-map--parse-path-command "A-.01,1.20")
 ;;(split-string "A-.01,1.20" "[0-9,.-]" t nil)
 
