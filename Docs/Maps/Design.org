@@ -136,6 +136,9 @@ basic cursor based drawing using the [[https://css-tricks.com/svg-path-syntax-il
 #+end_src
 
 * Features
+  :PROPERTIES:
+  :map-features: t
+  :END:
 
 SVG drawing support for map features.
 
@@ -150,8 +153,13 @@ Note, the UM here is map cells (e.g. ~10'~ in game terms) not pixels.
 Macros apply a scale factor during expansion.
 
 TODO consider other fields: version, area
+** Features Table
+   :PROPERTIES:
+   :name: default-map-features
+   :MAP-FEATURES: t
+   :END:
 
-
+# #+NAME: default-map-features
 | Feature  | Plan                               | Documentation                           | Narrative |
 |----------+------------------------------------+-----------------------------------------+-----------|
 | c-N      | v1 h1 v1                           | North                                   |           |
@@ -175,13 +183,13 @@ TODO consider other fields: version, area
 | c-EW     | h1 m0,1 h-1                        | East/west                               |           |
 | c-W      | v1 h1 m0,-1 h-1                    | East                                    |           |
 | sN       | h.43 a.14,.14,0,1,1,.14,0          | South/East/West                         |           |
-|          | -.14,-.14,0,1,1,-.14,0 h.43        | :efl secret-door North                  |           |
+| :elf     | -.14,-.14,0,1,1,-.14,0 h.43        | secret-door North                       |           |
 | sE       | v.43 a.14,.14,0,1,1,0,.14          | North/South/West                        |           |
-|          | -.14,-.14,0,1,1,0,-.14 v.43        | :efl secret-door East                   |           |
+|          | -.14,-.14,0,1,1,0,-.14 v.43        | :elf secret-door East                   |           |
 | sS       | m0,1 h.43 a.14,.14,0,1,1,.14,0     | North/East/West                         |           |
-|          | -.14,-.14,0,1,1,-.14,0 h.43        | :efl secret-door South                  |           |
+|          | -.14,-.14,0,1,1,-.14,0 h.43        | :elf secret-door South                  |           |
 | sW       | m1,0 v.43 a.14,.14,0,1,1,0,.14     | North/South/East                        |           |
-|          | -.14,-.14,0,1,1,0,-.14 v.43        | :efl secret-door East                   |           |
+|          | -.14,-.14,0,1,1,0,-.14 v.43        | :elf secret-door East                   |           |
 | c-NS+sE  | c--NSE m-1,0 sE                    | North/South :elf secret-door East       |           |
 | c-NS+sEW | c--NSE m-1,0 sEW                   | North/South :elf secret-doors East/West |           |
 | c-NS+sW  | c--NSE m-1,0 sW                    | North/South :elf secret-door West       |           |
@@ -191,6 +199,11 @@ TODO consider other fields: version, area
 TODO reorder clockwise NESW
 
 ** Test Map
+:PROPERTIES:
+:NAME: regression-test-map-level
+:END:
+
+#+NAME: regression-test-map-level
 
 This is a sample map used to develop and test the above.
 
@@ -211,12 +224,11 @@ NOTE: This approach may only work when drawing the whole map.
 
 TODO: write test, harness and document here
 
-
-| X | Y | Features | Documentation                         | Narrative |
-|---+---+----------+---------------------------------------+-----------|
-| 0 | 0 |          | 20x20 area with two exits west.       |           |
-| 3 | 0 | c-E      | Corridor ends.                        |           |
-| 3 | 1 | c-E      | Corridor ends.                        |           |
+| X | Y | Features       | Documentation                   | Narrative |
+|---+---+----------------+---------------------------------+-----------|
+| 0 | 0 | m1,0 h-1 v1 h1 | 20x20 area with two exits west. |           |
+| 3 | 0 | c-W            | Corridor ends.                  |           |
+| 3 | 1 | c-W            | Corridor ends.                  |           |
 
 Which should produce something similar to the following:
 
