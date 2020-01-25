@@ -160,41 +160,42 @@ TODO consider other fields: version, area
    :END:
 
 # #+NAME: default-map-features
-| Feature  | Plan                               | Documentation                           | Narrative |
-|----------+------------------------------------+-----------------------------------------+-----------|
-| c-N      | v1 h1 v1                           | North                                   |           |
-| c-NS     | v1 m1,0 v-1                        | North/South                             |           |
-| c--NSE   | v1                                 | North/South/East                        |           |
-| c-NSE    | c--NSE                             | North/South/East                        |           |
-|          | m.98,0 h.02 v-.02 m 0,-.96 h-.02   |                                         |           |
-| c-NSEW   | m0,.02 v-.02 h2 m.96,0 h2 v.02     | North/South/East/West (four-way)        |           |
-|          | m0,.96 v2 h-.02 m-.96,0 h-2 v-.02  | :comment from test.svg                  |           |
-| c-NE     | m0,1 v1 h-1                        | North/East                              |           |
-| c--NSW   | v1                                 | North/South/West                        |           |
-| c-NSW    | c--NSW                             | North/South/West                        |           |
-|          | m.98,0 h.02 v.02 m0,.96 v.02 h-.02 |                                         |           |
-| c-NW     | v1 h1                              | North/East                              |           |
-| c-S      | v1 m0,-1 h1 v1                     | South                                   |           |
-| c-SE     | h1 v1                              |                                         |           |
-| c--SEW   | h1                                 | South/East/West                         |           |
-| c-SEW    | v1 h1 v-1                          | South/East/West                         |           |
-| c-SW     | h1 m-1,0 v1                        | South/West                              |           |
-| c-E      | h1 v1 h-1                          | East                                    |           |
-| c-EW     | h1 m0,1 h-1                        | East/west                               |           |
-| c-W      | v1 h1 m0,-1 h-1                    | East                                    |           |
-| sN       | h.43 a.14,.14,0,1,1,.14,0          | South/East/West                         |           |
-| :elf     | -.14,-.14,0,1,1,-.14,0 h.43        | secret-door North                       |           |
-| sE       | v.43 a.14,.14,0,1,1,0,.14          | North/South/West                        |           |
-|          | -.14,-.14,0,1,1,0,-.14 v.43        | :elf secret-door East                   |           |
-| sS       | m0,1 h.43 a.14,.14,0,1,1,.14,0     | North/East/West                         |           |
-|          | -.14,-.14,0,1,1,-.14,0 h.43        | :elf secret-door South                  |           |
-| sW       | m1,0 v.43 a.14,.14,0,1,1,0,.14     | North/South/East                        |           |
-|          | -.14,-.14,0,1,1,0,-.14 v.43        | :elf secret-door East                   |           |
-| c-NS+sE  | c--NSE m-1,0 sE                    | North/South :elf secret-door East       |           |
-| c-NS+sEW | c--NSE m-1,0 sEW                   | North/South :elf secret-doors East/West |           |
-| c-NS+sW  | c--NSE m-1,0 sW                    | North/South :elf secret-door West       |           |
-| c-EW+sN  | c--NEW m-1,0 sN                    | East/West :elf secret-door North        |           |
-| c-EW+sS  | c--SEW m-1,0 sS                    | East/west :elf secret-door South        |           |
+| Feature  | Plan                               | Documentation                             | Narrative |
+|----------+------------------------------------+-------------------------------------------+-----------|
+| c-N      | v1 h1 v1                           | North                                     |           |
+| c-NS     | v1 m1,0 v-1                        | North/South                               |           |
+| c--NSE   | v1                                 | North/South/East                          |           |
+| c-NSE    | c--NSE                             | North/South/East                          |           |
+|          | m.98,0 h.02 v-.02 m 0,-.96 h-.02   |                                           |           |
+| c-NSEW   | m0,.02 v-.02 h2 m.96,0 h2 v.02     | North/South/East/West (four-way)          |           |
+|          | m0,.96 v2 h-.02 m-.96,0 h-2 v-.02  | :comment from test.svg                    |           |
+| c-NE     | m0,1 v1 h-1                        | North/East                                |           |
+| c--NSW   | v1                                 | North/South/West                          |           |
+| c-NSW    | c--NSW                             | North/South/West                          |           |
+|          | m.98,0 h.02 v.02 m0,.96 v.02 h-.02 |                                           |           |
+| c-NW     | v1 h1                              | North/East                                |           |
+| c-S      | v1 m0,-1 h1 v1                     | South                                     |           |
+| c-SE     | h1 v1                              |                                           |           |
+| c--SEW   | h1                                 | South/East/West                           |           |
+| c-SEW    | v1 h1 v-1                          | South/East/West                           |           |
+| c-SW     | h1 m-1,0 v1                        | South/West                                |           |
+| c-E      | h1 v1 h-1                          | East                                      |           |
+| c-EW     | h1 m0,1 h-1                        | East/west                                 |           |
+| c-W      | v1 h1 m0,-1 h-1                    | East                                      |           |
+| sE       | v.43 a.14,.14,0,1,1,0,.14          | North/South/West                          |           |
+|          | -.14,-.14,0,1,1,0,-.14 v.43        | :elf secret-door East                     |           |
+| sS       | m0,1 h.43 a.14,.14,0,1,1,.14,0     | North/East/West                           |           |
+|          | -.14,-.14,0,1,1,-.14,0 h.43        | :elf secret-door South                    |           |
+| sW       | m1,0 v.43 a.14,.14,0,1,1,0,.14     | North/South/East                          |           |
+|          | -.14,-.14,0,1,1,0,-.14 v.43        | :elf secret-door East                     |           |
+| c-NS+sE  | c--NSE m-1,0 sE                    | North/South :elf secret-door East         |           |
+| c-NS+sEW | c--NSE m-1,0 sEW                   | North/South :elf secret-doors East/West   |           |
+| c-NS+sW  | c--NSE m-1,0 sW                    | North/South :elf secret-door West         |           |
+| c-EW+sN  | c--NEW m-1,0 sN                    | East/West :elf secret-door North          |           |
+| c-EW+sS  | c--SEW m-1,0 sS                    | East/west :elf secret-door South          |           |
+| sN       |                                    | South/East/West                           |           |
+| :default | h1                                 | :comment no extra doc by defualt          |           |
+| :elf     | -.14,-.14,0,1,1,-.14,0 h.43        | secret-door North :comment elves see this |           |
 
 TODO reorder clockwise NESW
 
