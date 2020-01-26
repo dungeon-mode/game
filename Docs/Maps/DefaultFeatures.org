@@ -26,41 +26,41 @@ See Design.org for details about the formatting of these tables.
 
 
 # #+NAME: private-map-features
-| Feature    | Plan                                                         | Documentation                               | Narrative |
-|------------+--------------------------------------------------------------+---------------------------------------------+-----------|
-| >          | m1,0                                                         |                                             |           |
-| <          | m-1,0                                                        |                                             |           |
-| ^          | m0,-1                                                        |                                             |           |
-| !          | m0,1                                                         |                                             |           |
-|            |                                                              |                                             |           |
-| .NE        | m.98,0 h.02 v.02                                             | Corner Dot - North/East corner              |           |
-| .ES        | m1,.98 v.02 h-.02                                            | Corner Dot - East/South corner              |           |
-| .SW        | m.02,1 h-.02 v-.02                                           | Corner Dot - South/West corner              |           |
-| .WN        | m0,.02 v-.02 h.02                                            | Corner Dot - West/North corner              |           |
-|            |                                                              |                                             |           |
-| _N         | h1                                                           | North Wall                                  |           |
-| _E         | m1,0 v1                                                      | East Wall                                   |           |
-| _S         | m0,1 h1                                                      | South Wall                                  |           |
-| _W         | v1                                                           | West Wall                                   |           |
-|            |                                                              |                                             |           |
-| *N         |                                                              | Corridor East/South/West                    |           |
-| *N:default | h1                                                           |                                             |           |
-| *N:elf     | h.43 a.7,.7,0,1,1,.14,0 a.7,.7,0,1,1,-.14,0 m.14,0 h.43      | , Secret door North :comment elves see this |           |
-| *E         |                                                              | Corridor North/South/West                   |           |
-| *E:default | m1,0 v1                                                      |                                             |           |
-| *E:elf     | m1,0 v.43 a.7,.7,0,1,1,0,.14 a.7,.7,0,1,1,0,-.14 m0,.14 v.43 | , Secret door East :comment elves see this  |           |
-| *S         |                                                              | Corridor North/East/West                    |           |
-| *S:default | m0,1 h1                                                      |                                             |           |
-| *S:elf     | m0,1 h.43 a.7,.7,0,1,1,.14,0 a.7,.7,0,1,1,-.14,0 m.14,0 h.43 | , Secret door South :comment elves see this |           |
-| *W         |                                                              | Corridor North/South/East                   |           |
-| *W:default | v1                                                           |                                             |           |
-| *W:elf     | v.43 a.7,.7,0,1,1,0,.14 a.7,.7,0,1,1,0,-.14 m0,.14 v.43      | , Secret door East :comment elves see this  |           |
-|            |                                                              |                                             |           |
-| ]N         | v1 h1 v-1                                                    | Corridor North (Dead-End South)             |           |
-| ]E         | h1 m0,1 v-1 h-1                                              | Corridor East (Dead-End west)               |           |
-| ]S         | h1 v1 m-1,0 v-1                                              | Corridor South (Dead-End North)             |           |
-| ]W         | h1 v1 h-1                                                    | Corridor West (Dead-End East)               |           |
-|            |                                                              |                                             |           |
+| Feature    | Plan                                                                | Documentation                               | Narrative |
+|------------+---------------------------------------------------------------------+---------------------------------------------+-----------|
+| >          | m1,0                                                                |                                             |           |
+| <          | m-1,0                                                               |                                             |           |
+| ^          | m0,-1                                                               |                                             |           |
+| !          | m0,1                                                                |                                             |           |
+|            |                                                                     |                                             |           |
+| .NE        | m.98,0 h.02 v.02 m-1,-.02                                           | Corner Dot - North/East corner              |           |
+| .ES        | m1,.98 v.02 h-.02 m-.98,-1                                          | Corner Dot - East/South corner              |           |
+| .SW        | m.02,1 h-.02 v-.02 m-.98,0                                          | Corner Dot - South/West corner              |           |
+| .WN        | m0,.02 v-.02 h.02 m-.02,0                                           | Corner Dot - West/North corner              |           |
+|            |                                                                     |                                             |           |
+| _N         | h1 m-1,0                                                            | North Wall                                  |           |
+| _E         | m1,0 v1 m-1,-1                                                      | East Wall                                   |           |
+| _S         | m0,1 h1 m-1,-1                                                      | South Wall                                  |           |
+| _W         | v1 m0,-1                                                            | West Wall                                   |           |
+|            |                                                                     |                                             |           |
+| *N         |                                                                     | Corridor East/South/West                    |           |
+| *N:default | _N                                                                  |                                             |           |
+| *N:elf     | h.43 a.7,.7,0,1,1,.14,0 a.7,.7,0,1,1,-.14,0 m.14,0 h.43 m-1,0       | , Secret door North :comment elves see this |           |
+| *E         |                                                                     | Corridor North/South/West                   |           |
+| *E:default | _E                                                                  |                                             |           |
+| *E:elf     | m1,0 v.43 a.7,.7,0,1,1,0,.14 a.7,.7,0,1,1,0,-.14 m0,.14 v.43 m-1,-1 | , Secret door East :comment elves see this  |           |
+| *S         |                                                                     | Corridor North/East/West                    |           |
+| *S:default | _S                                                                  |                                             |           |
+| *S:elf     | m0,1 h.43 a.7,.7,0,1,1,.14,0 a.7,.7,0,1,1,-.14,0 m.14,0 h.43 m-1,-1 | , Secret door South :comment elves see this |           |
+| *W         |                                                                     | Corridor North/South/East                   |           |
+| *W:default | _W                                                                  |                                             |           |
+| *W:elf     | v.43 a.7,.7,0,1,1,0,.14 a.7,.7,0,1,1,0,-.14 m0,.14 v.43 m0,-1       | , Secret door East :comment elves see this  |           |
+|            |                                                                     |                                             |           |
+| ]N         | v1 h1 v-1 m-1,0                                                     | Corridor North (Dead-End South)             |           |
+| ]E         | h1 m0,1 v-1 h-1                                                     | Corridor East (Dead-End west)               |           |
+| ]S         | h1 v1 m-1,0 v-1                                                     | Corridor South (Dead-End North)             |           |
+| ]W         | h1 v1 h-1 m-1,0                                                     | Corridor West (Dead-End East)               |           |
+|            |                                                                     |                                             |           |
 
 
 
