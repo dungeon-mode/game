@@ -25,7 +25,7 @@ See Design.org for details about the formatting of these tables.
 
 
 
-# #+NAME: default-map-features
+# #+NAME: private-map-features
 | Feature    | Plan                                                         | Documentation                               | Narrative |
 |------------+--------------------------------------------------------------+---------------------------------------------+-----------|
 | .NE        | m.98,0 h.02 v.02                                             | Corner Dot - North/East corner              |           |
@@ -60,34 +60,52 @@ See Design.org for details about the formatting of these tables.
 
 
 
-** Map Features Table
+** Corridor Features Table
    :PROPERTIES:
-   :name: private-map-features
+   :name: corridor-features
    :MAP-FEATURES: t
    :END:
 
-# #+NAME: default-map-features
-| Feature | Plan                | Documentation                               | Narrative |
-|---------+---------------------+---------------------------------------------+-----------|
-| cNS     | _W _E               | Corridor North/South                        |           |
-| cEW     | _N _S               | Corridor East/west                          |           |
-|         |                     |                                             |           |
-| cNE     | _W _S               | Corridor North/East                         |           |
-| cES     | _N _W               | Corridor East/South                         |           |
-| cSW     | _N _E               | Corridor South/West                         |           |
-| cWN     | _E _S               | Corridor West/North                         |           |
-|         |                     |                                             |           |
-| cESW    | _N .SE .SW          | Corridor East/South/West (Wall North)       |           |
-| cNSW    | _E .NW .SW          | Corridor North/South/West (Wall East)       |           |
-| cNEW    | _S .NW .NE          | Corridor North/East/West (Wall South)       |           |
-| cNES    | _W .NE .SE          | Corridor North/East/South (Wall West)       |           |
-|         |                     |                                             |           |
-| cNSEW   | .NE .SE .SW .NW     | Corridor Four Way (No Walls)                |           |
-|         |                     |                                             |           |
-| cNS+sE  | *E _W               | Corridor North/South, :elf Secret Door East |           |
-| cNS+sEW | *E *W               | North/South :elf secret-doors East/West     |           |
-| cNS+sW  | _E *W               | North/South :elf secret-door West           |           |
-| cEW+sN  | *N _S               | East/West :elf secret-door North            |           |
-| cEW+sS  | _N *S               | East/west :elf secret-door South            |           |
+# #+NAME: corridor-features
+| Feature | Plan            | Documentation                               | Narrative |
+|---------+-----------------+---------------------------------------------+-----------|
+| cNS     | _W _E           | Corridor North/South                        |           |
+| cEW     | _N _S           | Corridor East/west                          |           |
+|         |                 |                                             |           |
+| cNE     | _W _S           | Corridor North/East                         |           |
+| cES     | _N _W           | Corridor East/South                         |           |
+| cSW     | _N _E           | Corridor South/West                         |           |
+| cWN     | _E _S           | Corridor West/North                         |           |
+|         |                 |                                             |           |
+| cESW    | _N .SE .SW      | Corridor East/South/West (Wall North)       |           |
+| cNSW    | _E .NW .SW      | Corridor North/South/West (Wall East)       |           |
+| cNEW    | _S .NW .NE      | Corridor North/East/West (Wall South)       |           |
+| cNES    | _W .NE .SE      | Corridor North/East/South (Wall West)       |           |
+|         |                 |                                             |           |
+| cNESW   | .NE .SE .SW .NW | Corridor Four Way (No Walls)                |           |
+|         |                 |                                             |           |
+| cNS+sE  | *E _W           | Corridor North/South, :elf Secret Door East |           |
+| cNS+sEW | *E *W           | North/South :elf secret-doors East/West     |           |
+| cNS+sW  | _E *W           | North/South :elf secret-door West           |           |
+| cEW+sN  | *N _S           | East/West :elf secret-door North            |           |
+| cEW+sS  | _N *S           | East/west :elf secret-door South            |           |
+|         |                 |                                             |           |
 
 
+** Chamber Features Table
+   :PROPERTIES:
+   :name: chamber-features
+   :MAP-FEATURES: t
+   :END:
+
+# #+NAME: chamber-features
+| Feature | Plan                    | Documentation                                              | Narrative |
+|---------+-------------------------+------------------------------------------------------------+-----------|
+| 10*N    | ]N *N                   | 10x10 chamber, secret door North                           |           |
+| 10*E    | ]E *E                   | 10x10 chamber, secret door East                            |           |
+| 10*S    | ]S *S                   | 10x10 chamber, secret door South                           |           |
+| 10*W    | ]W *W                   | 10x10 chamber, secret door West                            |           |
+|         |                         |                                                            |           |
+| 20*N-E  | _N *N _E _E _S _S _W _W | 20x20 chamber, Secret door in Eastern half of nothern wall |           |
+| 20*N-W  | *N _N _E _E _S _S _W _W | 20x20 chamber, Secret door in Western half of nothern wall |           |
+|         |                         |                                                            |           |
