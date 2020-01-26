@@ -64,6 +64,7 @@
   "Return t when OBJECT is a dom-node.
 
 When TAG is non-nill (car OBJECT) must also `equal' TAG."
+;;; (message "dm-svg-dom-node-p:car:%s=>%s" (type-of (car object)) (car object))
   (and (listp object)
        (symbolp (car object))
        (not  (null (car object)))

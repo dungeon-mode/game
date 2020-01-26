@@ -84,7 +84,48 @@ height and font-size attributes of each element of each
 `dom-node' which contains them in the parent (e.g. outter-most)
 element.  SCALE is applied to only when the present value is
 between 0 and 1 inclusive."
-  (ignore scale cells))
+  (ignore scale cells)
+  (dolist (cell cells)
+    (message "cell:%s" cell)
+    (cond
+     ((dm-svg-dom-node-p cell 'text)
+      (message "svg text!")
+      (when (eq 'text (car cell))
+	;; scale SVG text elements right here!
+	(dom-set-attribute cell 'text-size (* (car (dom-attr cell 'text-size))
+					      (car scale)))
+	))
+     ((consp cell)
+      (message "consp!")
+      (pcase cell
+	;; move or line in the form (sym (h v)
+	(`(,(or 'm 'l)
+	   (,(and h (guard (numberp h)))
+	    ,(and v (guard (numberp v)))))
+	 ;;(message "1:%s 2:%s" (caadr cell) (cadadr cell))
+	 (setcdr cell (list (* h (car scale))
+			    (* v (cdr scale)))))
+
+	;; h and v differ only in which part of scale applies
+	(`(h (,(and d (guard (numberp d)))))
+	 (setcdr cell (list (* d (car scale)))))
+	(`(v (,(and d (guard (numberp d)))))
+	 (setcdr cell (list (* d (cdr scale)))))
+
+	(`(a (,rx ,ry ,x-axis-rotation ,large-arc-flag ,sweep-flag
+		,(and h (guard (numberp h)))
+		,(and v (guard (numberp v)))))
+	 (setcdr cell (list rx ry x-axis-rotation large-arc-flag sweep-flag
+			    (* h (car scale))
+			    (* v (cdr scale)))))
+
+	;; fall-back to a message
+	(_ (message "unhandled %s => %s" (type-of cell) cell))
+	))
+     ))
+  cells)
+
+;;(dm-map-default-scale-function '(100 . 1000) (dom-node 'text '((text-size .5))) '(h (.1)) '(v (.2))'(m (.3 .4)) '(l (.5 .6)) '(x (.7 .8)) '(a (.7 .7 0 1 1 0 .14)))
 
 (cl-defun dm-map-quick-draw (features
 			     cells
@@ -112,8 +153,7 @@ we append the drawing instructions to implement the features
 included with each of CELLS therefor any inital value provided
 for \"d\" (e.g. \"path-data\") *must* return the stylus to the
 origin (e.g. M0,0) as it's final instruction."
-
-  )
+  (ignore features cells scale size viewbox svg-attributes path-attributes scale-function))
 
 (defun dm-map-load-tagged-tables-in-files (predicate &rest org-files)
   "Return a list of rows from tables with TAG in ORG-FILES.
@@ -142,7 +182,6 @@ if a file doesn't exist, cannot be opened, etc."
 				)) feature-tables)))))))
     (apply `seq-concatenate 'list feature-tables)))
 
-
 (defun dm-map-load-level (name &rest org-files)
   "Return a list of cells in map-level NAME from ORG-FILES."
   (apply 'dm-map-load-tagged-tables-in-files
@@ -161,9 +200,11 @@ if a file doesn't exist, cannot be opened, etc."
 		    'plan plan
 		    'docs  (delete "" (list dstr nstr))
 		    ))) rows))
-(apply 'dm-map--parse-map-level
-       (dm-map-load-level "regression-test-map-level"
-			  "../Docs/Maps/Design.org"))
+
+;; (apply 'dm-map--parse-map-level (dm-map-load-level "regression-test-map-level" "../Docs/Maps/Design.org"))
+
+;; TODO we need to split out :keywords that may be run together
+;; with repeated feature names
 
 (defun dm-map-load-feature-files (&rest org-files)
   "Return list of map features as defined in ORG-FILES.
@@ -179,6 +220,7 @@ if a file doesn't exist, cannot be opened, etc."
 	 (lambda (tpom)
 	   (org-entry-get tpom dm-map-features-table-property-tag)
 	   ) org-files))
+
 ;;(dm-map-load-feature-files  "../Docs/Maps/Design.org" "../Docs/Maps/test.org")
 ;;(car(dm-map-load-feature-files "../Docs/Maps/test.org"))
 
@@ -224,7 +266,7 @@ TODO deal with docstrings"
     ))
 
 
-(apply 'dm-map-defeatures (dm-map-load-feature-files  "../Docs/Maps/test.org" "../Docs/Maps/test.org"))
+;; (apply 'dm-map-defeatures (dm-map-load-feature-files  "../Docs/Maps/test.org" "../Docs/Maps/test.org"))
 
 (cl-defun dm-map--init-hash-entry (hash (feature plan docstring narrative)
 					feature-list)
@@ -263,7 +305,7 @@ with the following possable keys:
 			   words)))
     (puthash fsymbol `(plan ,plan paths ,commands docs ,docs) hash)))
 
-(gethash 'c-NS+sE (apply 'dm-map-defeatures (dm-map-load-feature-files  "../Docs/Maps/Design.org" "../Docs/Maps/test.org")))
+;; (gethash 'c-NS+sE (apply 'dm-map-defeatures (dm-map-load-feature-files  "../Docs/Maps/Design.org" "../Docs/Maps/test.org")))
 
 (defun dm-map--parse-plan (hash)
   "Cross-map HASH keys to resolve features as SVG code."
@@ -369,7 +411,8 @@ between zero and one. (0..1)."
    (scale :type (integer 1 100) :initarg :scale :initform 100)
    (view-box :type (or null dm-map-viewbox) :initarg :view-box :initform nil)
    (svg-attributes :type list :initarg :svg-attributes :initform nil)
-   (path-attributes :type list :initarg :path-attributes :initform nil))
+   (path-attributes :type list :initarg :path-attributes :initform nil)
+   (scale-function :type function :initarg 'dm-map-s))
   :documentation
   "Create and update RPG maps displayed as inline SVG images.")
 
