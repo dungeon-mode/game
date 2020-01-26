@@ -93,6 +93,7 @@ These features are intended to be used mostly as parts of compositions and rarel
 |         |                 |                                                  |           |
 | cNE     | _W _S           | Corridor North/East                              |           |
 | cES     | _N _W           | Corridor East/South                              |           |
+| cES*NW  | *N *W           | Corridor East/South, Secret doors North/West     |           |
 | cSW     | _N _E           | Corridor South/West                              |           |
 | cWN     | _E _S           | Corridor West/North                              |           |
 |         |                 |                                                  |           |
@@ -111,6 +112,19 @@ These features are intended to be used mostly as parts of compositions and rarel
 | cEW*S   | _N *S           | Corridor East/west :elf secret Door South        |           |
 | cEW*NS  | *N *S           | Corridor East/west :elf secret Doors North/South |           |
 |         |                 |                                                  |           |
+
+
+** Area Features Table
+   :PROPERTIES:
+   :name: area-features
+   :MAP-FEATURES: t
+   :END:
+
+# #+NAME: area-features
+| Feature | Plan                                                      | Documentation | Narrative |
+|---------+-----------------------------------------------------------+---------------+-----------|
+| A2      | <text x=".85" y="1.15" font-size=".5" fill="red">A</text> |               |           |
+|         |                                                           |               |           |
 
 
 ** Chamber Features Table

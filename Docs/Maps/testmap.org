@@ -1,0 +1,33 @@
+#+TITLE: Test Map
+#+PROPERTIES:
+ :Version: 0.01
+ :Author: Erik Elmshauser
+ :Created: 2020/01/26
+ :END:
+
+* Test Map
+:PROPERTIES:
+:NAME: test-map-level
+:END:
+
+#+NAME:test-map-level
+
+This is a sample map used to develop and test map features and rendering code.
+Refer to design.org for more details.
+
+| X | Y | Features                   | Documentation                                                                      | Narrative |
+|---+---+----------------------------+------------------------------------------------------------------------------------+-----------|
+| 0 | 0 | 20*S-E                     | 20x20 chamber, Secret door in Eastern half of Southern Wall                        |           |
+| 2 | 0 | 20*S-E                     | 20x20 chamber, Secret door in Eastern half of Southern Wall                        |           |
+| 4 | 0 | 20*S-W                     | 20x20 chamber, Secret door in Western half of Southern Wall                        |           |
+| 6 | 0 | 20*S-W                     | 20x20 chamber, Secret door in Western half of Southern Wall                        |           |
+|   |   |                            |                                                                                    |           |
+| 0 | 2 | 10*E                       | 10x10 chamber, secret door East                                                    |           |
+| 1 | 2 | cES*NW                     | Corridor East/South, Secret doors North/West                                       |           |
+| 2 | 2 | cESW                       | Corridor East/South/West                                                           |           |
+| 3 | 2 | cEW*NS                     | Corridor East/west :elf secret Doors North/South                                   |           |
+| 4 | 2 | cEW*NS                     | Corridor East/west :elf secret Doors North/South                                   |           |
+| 5 | 2 | cSW                        | Corridor South/West                                                                |           |
+| 6 | 2 | A2 _W *N > _N ! _E _S < _S | 20x20 area, exits N part of E wall, S part of W wall, Secret door W part of N wall |           |
+|   |   |                            |                                                                                    |           |
+| 0 | 3 | 10*E                       | 10x10 chamber, secret door East                                                    |           |
