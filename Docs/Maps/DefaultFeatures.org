@@ -28,15 +28,15 @@ See Design.org for details about the formatting of these tables.
 # #+NAME: default-map-features
 | Feature     | Plan                                                         | Documentation                               | Narrative |
 |-------------+--------------------------------------------------------------+---------------------------------------------+-----------|
-| _cdNE       | m.98,0 h.02 v.02                                             | Corner Dot - North/East corner              |           |
-| _cdES       | m1,.98 v.02 h-.02                                            | Corner Dot - East/South corner              |           |
-| _cdSW       | m.02,1 h-.02 v-.02                                           | Corner Dot - South/West corner              |           |
-| _cdWN       | m0,.02 v-.02 h.02                                            | Corner Dot - West/North corner              |           |
+| _.NE        | m.98,0 h.02 v.02                                             | Corner Dot - North/East corner              |           |
+| _.ES        | m1,.98 v.02 h-.02                                            | Corner Dot - East/South corner              |           |
+| _.SW        | m.02,1 h-.02 v-.02                                           | Corner Dot - South/West corner              |           |
+| _.WN        | m0,.02 v-.02 h.02                                            | Corner Dot - West/North corner              |           |
 |             |                                                              |                                             |           |
-| _cNES       | m0,1 v-1                                                     | Corridor North/East/South                   |           |
-| _cNSW       | v1                                                           | Corridor North/South/West                   |           |
-| _cESW       | h1                                                           | Corridor East/South/West                    |           |
-| _cNEW       | m1,1 h-1                                                     | Corridor North/East/West                    |           |
+| _wN         | h1                                                           | North Wall                                  |           |
+| _wE         | m1,0 v1                                                      | East Wall                                   |           |
+| _wS         | m0,1 h1                                                      | South Wall                                  |           |
+| _wW         | v1                                                           | West Wall                                   |           |
 |             |                                                              |                                             |           |
 | _sN         |                                                              | Corridor East/South/West                    |           |
 | _sN:default | h1                                                           |                                             |           |
@@ -50,7 +50,12 @@ See Design.org for details about the formatting of these tables.
 | _sW         |                                                              | Corridor North/South/East                   |           |
 | _sW:default | v1                                                           |                                             |           |
 | _sW:elf     | v.43 a.7,.7,0,1,1,0,.14 a.7,.7,0,1,1,0,-.14 m0,.14 v.43      | , Secret door East :comment elves see this  |           |
-
+|             |                                                              |                                             |           |
+| _cN         | v1 h1 v-1                                                    | Corridor North (Dead-End South)             |           |
+| _cE         | h1 m0,1 v-1 h-1                                              | Corridor East (Dead-End west)               |           |
+| _cS         | h1 v1 m-1,0 v-1                                              | Corridor South (Dead-End North)             |           |
+| _cW         | h1 v1 h-1                                                    | Corridor West (Dead-End East)               |           |
+|             |                                                              |                                             |           |
 
 
 
@@ -62,35 +67,33 @@ See Design.org for details about the formatting of these tables.
    :END:
 
 # #+NAME: default-map-features
-| Feature  | Plan                               | Documentation                             | Narrative |
-|----------+------------------------------------+-------------------------------------------+-----------|
-| cN       | m1,0 v1 h-1 v-1                    | Corridor North (Dead-End South)           |           |
-| cE       | h1 m0,1 v-1 h-1                    | Corridor East (Dead-End west)             |           |
-| cS       | h1 v1 m-1,0 v-1                    | Corridor South (Dead-End North)           |           |
-| cW       | h1 v1 h-1                          | Corridor West (Dead-End East)             |           |
-|          |                                    |                                           |           |
-| cNS      | m1,0 v1, m-1,0 v-1                 | Corridor North/South                      |           |
-| cEW      | h1 m0,1 h-1                        | Corridor East/west                        |           |
-|          |                                    |                                           |           |
-| cNE      | m1,1 h-1 v-1                       | Corridor North/East                       |           |
-| cES      | h1 m-1,1 v-1                       | Corridor East/South                       |           |
-| cSW      | h1 v1                              | Corridor South/West                       |           |
-| cWN      | m1,0 v1 h-1                        | Corridor West/North                       |           |
-|          |                                    |                                           |           |
-| cNES     | c--NES                             | Corridor North/East/South                 |           |
-|          | m.98,0 h.02 v-.02 m 0,-.96 h-.02   |                                           |           |
-| cNSW     | c--NSW                             | Corridor North/South/West                 |           |
-|          | m.98,0 h.02 v.02 m0,.96 v.02 h-.02 |                                           |           |
-|          |                                    |                                           |           |
-| cESW     | v1 h1 v-1                          | Corridor East/South/West                  |           |
-|          |                                    |                                           |           |
-| cNSEW    | m0,.02 v-.02 h2 m.96,0 h2 v.02     | Corridor North/South/East/West (four-way) |           |
-|          | m0,.96 v2 h-.02 m-.96,0 h-2 v-.02  | :comment from test.svg                    |           |
-|          |                                    |                                           |           |
-| cNS+sE   | c--NSE m-1,0 sE                    | North/South :elf secret-door East         |           |
-| cNS+sEW  | c--NSE m-1,0 sEW                   | North/South :elf secret-doors East/West   |           |
-| cNS+sW   | c--NSE m-1,0 sW                    | North/South :elf secret-door West         |           |
-| cEW+sN   | c--NEW m-1,0 sN                    | East/West :elf secret-door North          |           |
-| cEW+sS   | c--SEW m-1,0 sS                    | East/west :elf secret-door South          |           |
+| Feature        | Plan                | Documentation                           | Narrative |
+|----------------+---------------------+-----------------------------------------+-----------|
+| cNS            | _wW _wE             | Corridor North/South                    |           |
+| cEW            | _wN _wS             | Corridor East/west                      |           |
+|                |                     |                                         |           |
+| cNE            | _wW _wS             | Corridor North/East                     |           |
+| cES            | _wN _wW             | Corridor East/South                     |           |
+| cSW            | _wN _wE             | Corridor South/West                     |           |
+| cWN            | _wE _wS             | Corridor West/North                     |           |
+|                |                     |                                         |           |
+| cESW           | _cSEW _.SE _.SW     | Corridor East/South/West (Wall North)   |           |
+| cNSW           | _cNSW _.NW _.SW     | Corridor North/South/West (Wall East)   |           |
+| cNEW           | _cNEW _.NW _.NE     | Corridor North/East/West (Wall South)   |           |
+| cNES           | _cNES _.NE _.SE     | Corridor North/East/South (Wall West)   |           |
+|                |                     |                                         |           |
+| cNSEW          | _.NE _.SE _.SW _.NW | Corridor Four Way (No Walls)            |           |
+|                |                     |                                         |           |
+|                |                     |                                         |           |
+|                |                     |                                         |           |
+|                |                     |                                         |           |
+| cNS+sE         |                     | Corridor North/South                    |           |
+| cNS+sE:default | cNS                 |                                         |           |
+| cNS+sE:elf     | _wW _sE             | , Secret door East                      |           |
+|                |                     |                                         |           |
+| cNS+sEW        | c--NSE m-1,0 sEW    | North/South :elf secret-doors East/West |           |
+| cNS+sW         | c--NSE m-1,0 sW     | North/South :elf secret-door West       |           |
+| cEW+sN         | c--NEW m-1,0 sN     | East/West :elf secret-door North        |           |
+| cEW+sS         | c--SEW m-1,0 sS     | East/west :elf secret-door South        |           |
 
 
