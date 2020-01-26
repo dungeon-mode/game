@@ -67,27 +67,27 @@ See Design.org for details about the formatting of these tables.
    :END:
 
 # #+NAME: default-map-features
-| Feature | Plan                | Documentation                           | Narrative |
-|---------+---------------------+-----------------------------------------+-----------|
-| cNS     | _wW _wE             | Corridor North/South                    |           |
-| cEW     | _wN _wS             | Corridor East/west                      |           |
-|         |                     |                                         |           |
-| cNE     | _wW _wS             | Corridor North/East                     |           |
-| cES     | _wN _wW             | Corridor East/South                     |           |
-| cSW     | _wN _wE             | Corridor South/West                     |           |
-| cWN     | _wE _wS             | Corridor West/North                     |           |
-|         |                     |                                         |           |
-| cESW    | _cSEW _.SE _.SW     | Corridor East/South/West (Wall North)   |           |
-| cNSW    | _cNSW _.NW _.SW     | Corridor North/South/West (Wall East)   |           |
-| cNEW    | _cNEW _.NW _.NE     | Corridor North/East/West (Wall South)   |           |
-| cNES    | _cNES _.NE _.SE     | Corridor North/East/South (Wall West)   |           |
-|         |                     |                                         |           |
-| cNSEW   | _.NE _.SE _.SW _.NW | Corridor Four Way (No Walls)            |           |
-|         |                     |                                         |           |
-| cNS+sE  | _wW _sE             | Corridor North/South, Secret Door East  |           |
-| cNS+sEW | _sW _sW             | North/South :elf secret-doors East/West |           |
-| cNS+sW  | _wE _sW             | North/South :elf secret-door West       |           |
-| cEW+sN  | _sN _wS             | East/West :elf secret-door North        |           |
-| cEW+sS  | _wN _sS             | East/west :elf secret-door South        |           |
+| Feature | Plan                | Documentation                               | Narrative |
+|---------+---------------------+---------------------------------------------+-----------|
+| cNS     | _wW _wE             | Corridor North/South                        |           |
+| cEW     | _wN _wS             | Corridor East/west                          |           |
+|         |                     |                                             |           |
+| cNE     | _wW _wS             | Corridor North/East                         |           |
+| cES     | _wN _wW             | Corridor East/South                         |           |
+| cSW     | _wN _wE             | Corridor South/West                         |           |
+| cWN     | _wE _wS             | Corridor West/North                         |           |
+|         |                     |                                             |           |
+| cESW    | _wN _.SE _.SW       | Corridor East/South/West (Wall North)       |           |
+| cNSW    | _wE _.NW _.SW       | Corridor North/South/West (Wall East)       |           |
+| cNEW    | _wS _.NW _.NE       | Corridor North/East/West (Wall South)       |           |
+| cNES    | _wW _.NE _.SE       | Corridor North/East/South (Wall West)       |           |
+|         |                     |                                             |           |
+| cNSEW   | _.NE _.SE _.SW _.NW | Corridor Four Way (No Walls)                |           |
+|         |                     |                                             |           |
+| cNS+sE  | _wW _sE             | Corridor North/South, :elf Secret Door East |           |
+| cNS+sEW | _sW _sW             | North/South :elf secret-doors East/West     |           |
+| cNS+sW  | _wE _sW             | North/South :elf secret-door West           |           |
+| cEW+sN  | _sN _wS             | East/West :elf secret-door North            |           |
+| cEW+sS  | _wN _sS             | East/west :elf secret-door South            |           |
 
 
