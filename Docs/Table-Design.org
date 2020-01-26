@@ -1,0 +1,66 @@
+#+TITLE: Table Design
+
+Rules for designing dungeon mode tables and table implementations.
+
+ 1. Tables are stored in org files or sections having a
+    `dungeon-mode' property specifying the scope of the data-set.
+
+  1.1 Tables must be nested within a section or as a special case
+      before first section, if any.
+
+  1.2 Any section level is accepted
+
+  1.3 The 'dungon-mode property is added the containing section,
+      or to the document when at the top of the page.
+
+  1.4 The 'dungeon-mode' property is not inheretable, e.g. by sub-
+      elements.
+
+ 2. Tables may be further identified used the built-in NAME
+    property.
+
+  2.1 Given table implementations (e.g. map-features) may ignore
+      NAME properties.
+
+  2.2 Given table implementations (e.g. map-level) may require
+      NAME properties.
+
+  2.3 Name properties are positioned as per the dungon-mode
+      property, that is within the property drawer or otherwise
+      immediately after the beginning of the section, or in the
+      properties drawer or otherwise at the top of the file.
+
+ 3. Given table implementations may support different modes of
+    altering the target data-set as a result of reading the table
+    content.
+  3.1 Create - create or replace a data-set or the NAMed feature
+               thereof.
+
+  3.2 Add - add records to a data-set or the NAMED feature thereof.
+
+ 4. Each table must contain an header row.
+
+  4.1 The header row appears exactly once as the first row of the
+    table.
+
+  4.2 Given table implementations may accept a fixed or variable
+    column arrangement.
+
+  4.3 Table implementations with variable column arrangements may
+    define given columns as required or optional.
+
+   4.3.1 Rows which omit required columns are assmed to take their
+    values for missing columns from the prior row.
+
+   4.3.2 Rows which omit all required columns or which begin the first
+    column with a comment are considered comments and ignored.
+
+  4.4 Table implementation with variable column arrangements and which
+    support Add mode may allow incrementally accumulating row values
+    (e.g. "striping").
+
+   4.4.1 Tables are striped only when all identifying properties are
+    identical (`eq').
+
+   4.4.2 Tables include striped rows only when they include all
+    required columns (eventually).
