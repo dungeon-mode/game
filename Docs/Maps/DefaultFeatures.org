@@ -146,9 +146,9 @@ These features are intended to be used mostly as parts of compositions and rarel
    :END:
 
 # #+NAME: special-chamber-features
-| Feature | Plan                                                                   | Documentation                    | Narrative |
-|---------+------------------------------------------------------------------------+----------------------------------+-----------|
-| GS      | h2 v1 h1 v3 h-2 m-1,0 h-1 v-3 h1 v-1                                   | General Store                    |           |
-|         | <text x="+50" y="+225" font-size=".6" fill="blue">General Store</text> |                                  |           |
-|         |                                                                        |                                  |           |
-| B-E     | / > _N > \ ! *E ! / < _S < \ ^ _W                                      | Balrog chamber, Secret door east |           |
+| Feature | Plan                                                                  | Documentation                    | Narrative |
+|---------+-----------------------------------------------------------------------+----------------------------------+-----------|
+| GS      | _W _N > _N _E > ! _N _E ! _E ! _E _S < _S < < _S _W ^ _W ^ _W _N      | General Store                    |           |
+|         | <text x=".5" y="2.25" font-size=".6" fill="blue">General Store</text> |                                  |           |
+|         |                                                                       |                                  |           |
+| B-E     | / > _N > \ ! *E ! / < _S < \ ^ _W                                     | Balrog chamber, Secret door east |           |
