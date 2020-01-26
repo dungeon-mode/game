@@ -82,6 +82,7 @@ These features are intended to be used mostly as parts of compositions and rarel
    :PROPERTIES:
    :name: corridor-features
    :MAP-FEATURES: t
+
    :END:
 
 # #+NAME: corridor-features
@@ -135,3 +136,19 @@ These features are intended to be used mostly as parts of compositions and rarel
 | 20*W-S  | _W _N > _N _E ! _E _S < _S *W | 20x20 chamber, Secret door in Southern half of Westrern Wall |           |
 | 20*W-N  | *W _N > _N _E ! _E _S < _S _W | 20x20 chamber, Secret door in Northern half of Western Wall  |           |
 |         |                               |                                                              |           |
+
+
+
+** Special Chamber Features Table
+   :PROPERTIES:
+   :name: special-chamber-features
+   :MAP-FEATURES: t
+   :END:
+
+# #+NAME: special-chamber-features
+| Feature | Plan                                                                   | Documentation                    | Narrative |
+|---------+------------------------------------------------------------------------+----------------------------------+-----------|
+| GS      | h2 v1 h1 v3 h-2 m-1,0 h-1 v-3 h1 v-1                                   | General Store                    |           |
+|         | <text x="+50" y="+225" font-size=".6" fill="blue">General Store</text> |                                  |           |
+|         |                                                                        |                                  |           |
+| B-E     | / > _N > \ ! *E ! / < _S < \ ^ _W                                      | Balrog chamber, Secret door east |           |
