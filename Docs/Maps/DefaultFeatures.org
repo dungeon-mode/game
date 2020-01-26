@@ -106,6 +106,6 @@ See Design.org for details about the formatting of these tables.
 | 10*S    | ]S *S                         | 10x10 chamber, secret door South                           |           |
 | 10*W    | ]W *W                         | 10x10 chamber, secret door West                            |           |
 |         |                               |                                                            |           |
-| 20*N-E  | _W _N > *N _E < _W _S > _S _E | 20x20 chamber, Secret door in Eastern half of nothern wall |           |
-| 20*N-W  | _W *N > _N _E < _W _S > _S _E | 20x20 chamber, Secret door in Western half of nothern wall |           |
+| 20*N-E  | _W _N > *N _E ! _E _S <_W _S  | 20x20 chamber, Secret door in Eastern half of nothern wall |           |
+| 20*N-W  | _W *N > _N _E ! _E _S <_W _S  | 20x20 chamber, Secret door in Western half of nothern wall |           |
 |         |                               |                                                            |           |
