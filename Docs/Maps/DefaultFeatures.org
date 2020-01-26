@@ -84,14 +84,10 @@ See Design.org for details about the formatting of these tables.
 |         |                     |                                         |           |
 | cNSEW   | _.NE _.SE _.SW _.NW | Corridor Four Way (No Walls)            |           |
 |         |                     |                                         |           |
-|         |                     |                                         |           |
-|         |                     |                                         |           |
-|         |                     |                                         |           |
-| cNS+sE  | _wW _sE             | Corridor North/South                    |           |
-|         |                     |                                         |           |
-| cNS+sEW | c--NSE m-1,0 sEW    | North/South :elf secret-doors East/West |           |
-| cNS+sW  | c--NSE m-1,0 sW     | North/South :elf secret-door West       |           |
-| cEW+sN  | c--NEW m-1,0 sN     | East/West :elf secret-door North        |           |
-| cEW+sS  | c--SEW m-1,0 sS     | East/west :elf secret-door South        |           |
+| cNS+sE  | _wW _sE             | Corridor North/South, Secret Door East  |           |
+| cNS+sEW | _sW _sW             | North/South :elf secret-doors East/West |           |
+| cNS+sW  | _wE _sW             | North/South :elf secret-door West       |           |
+| cEW+sN  | _sN _wS             | East/West :elf secret-door North        |           |
+| cEW+sS  | _wN _sS             | East/west :elf secret-door South        |           |
 
 
