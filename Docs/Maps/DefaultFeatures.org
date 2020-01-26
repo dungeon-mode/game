@@ -99,13 +99,13 @@ See Design.org for details about the formatting of these tables.
    :END:
 
 # #+NAME: chamber-features
-| Feature | Plan                        | Documentation                                              | Narrative |
-|---------+-----------------------------+------------------------------------------------------------+-----------|
-| 10*N    | ]N *N                       | 10x10 chamber, secret door North                           |           |
-| 10*E    | ]E *E                       | 10x10 chamber, secret door East                            |           |
-| 10*S    | ]S *S                       | 10x10 chamber, secret door South                           |           |
-| 10*W    | ]W *W                       | 10x10 chamber, secret door West                            |           |
-|         |                             |                                                            |           |
-| 20*N-E  | _W _N, *N _E > _W _S, _S _E | 20x20 chamber, Secret door in Eastern half of nothern wall |           |
-| 20*N-W  | _W *N, _N _E > _W _S, _S _E | 20x20 chamber, Secret door in Western half of nothern wall |           |
-|         |                             |                                                            |           |
+| Feature | Plan                          | Documentation                                              | Narrative |
+|---------+-------------------------------+------------------------------------------------------------+-----------|
+| 10*N    | ]N *N                         | 10x10 chamber, secret door North                           |           |
+| 10*E    | ]E *E                         | 10x10 chamber, secret door East                            |           |
+| 10*S    | ]S *S                         | 10x10 chamber, secret door South                           |           |
+| 10*W    | ]W *W                         | 10x10 chamber, secret door West                            |           |
+|         |                               |                                                            |           |
+| 20*N-E  | _W _N > *N _E < _W _S > _S _E | 20x20 chamber, Secret door in Eastern half of nothern wall |           |
+| 20*N-W  | _W *N > _N _E < _W _S > _S _E | 20x20 chamber, Secret door in Western half of nothern wall |           |
+|         |                               |                                                            |           |
