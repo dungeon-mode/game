@@ -66,14 +66,40 @@
 ;;;;;
 ;; quick and dirty procedural approach
 
-(defun dm-map-quick-draw (cells
-			  features
-			  scale size viewbox
-			  svg-attributes path-attributes)
+(defun dm-map-default-scale-function (scale &rest cells)
+  "Return CELLS with SCALE applied.
+
+SCALE is the number of pixes per map cell, given as a cons cell:
+
+  (X . Y)
+
+CELLS may be either svg `dom-nodes' or cons cells in the form:
+
+  (CMD . (ARGS))
+
+Where CMD is an SVG path command and ARGS are arguments thereto.
+
+SCALE is applied to numeric ARGS of cons cells and to the width,
+height and font-size attributes of each element of each
+`dom-node' which contains them in the parent (e.g. outter-most)
+element.  SCALE is applied to only when the present value is
+between 0 and 1 inclusive."
+  (ignore scale cells))
+
+(cl-defun dm-map-quick-draw (features
+			     cells
+			     &key
+			     (scale 100)
+			     (size '(32 . 40))
+			     viewbox
+			     svg-attributes
+			     path-attributes
+			     (scale-function 'dm-map-default-scale-function)
+			     &allow-other-keys)
   "No-frills draw routine.
 
-CELLS is the list of map cells to draw.  FEATURES is a map of
-symbols to draw code and documentation.  SCALE sets the number of
+FEATURES is a map of symbols to draw code and documentation.
+CELLS is the list of map cells to draw.  SCALE sets the number of
 pixels per map cell.  SIZE constrains the rendered image canvas
 size.  VIEWBOX is a list of four positive numbers controlling the
 X and Y origin and displayable width and height.  SVG-ATTRIBUTES
@@ -81,11 +107,12 @@ is an alist of additional attributes for the outer-most SVG
 element.
 
 PATH-ATTRIBUTES is an alist of attributes for the main SVG path
-element.  The \"d\" property will be appended to with drawing
-instructions to implement the features included with each of
-CELLS therefor any inital value provided for
-\"d\" (e.g. \"path-data\") *must* return the stylus to the
+element.  The \"d\" property provides an initial value to which
+we append the drawing instructions to implement the features
+included with each of CELLS therefor any inital value provided
+for \"d\" (e.g. \"path-data\") *must* return the stylus to the
 origin (e.g. M0,0) as it's final instruction."
+
   )
 
 (defun dm-map-load-tagged-tables-in-files (predicate &rest org-files)
@@ -239,7 +266,7 @@ with the following possable keys:
 (gethash 'c-NS+sE (apply 'dm-map-defeatures (dm-map-load-feature-files  "../Docs/Maps/Design.org" "../Docs/Maps/test.org")))
 
 (defun dm-map--parse-plan (hash)
-  "Cross-map HASH all hash keys to resolve features to SVG code."
+  "Cross-map HASH keys to resolve features as SVG code."
   (maphash (lambda (outer-k outer-v)
 	     (when (plist-member outer-v 'paths)
 	       (plist-put outer-v
@@ -351,10 +378,10 @@ between zero and one. (0..1)."
   (with-slots (svg size svg-attributes) object
     (unless (dm-svg-p 'svg)
       (if (dm-svg-dom-node-p object 'svg)
-	  (setq svg (dm-svg :svg svg)))
-      (let ((so (svg-create (car size) (cdr size))))
-	(dom-set-attributes so svg-attributes)
-	(setq svg (dm-svg :svg so))))))
+	  (setq svg (dm-svg :svg svg))
+	(let ((so (svg-create (car size) (cdr size))))
+	  (dom-set-attributes so svg-attributes)
+	  (setq svg (dm-svg :svg so)))))))
 
 (dm-map)
 
