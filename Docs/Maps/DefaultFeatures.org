@@ -88,6 +88,8 @@ These features are intended to be used mostly as parts of compositions and rarel
 # #+NAME: corridor-features
 | Feature | Plan            | Documentation                                    | Narrative |
 |---------+-----------------+--------------------------------------------------+-----------|
+| cN*ES   | *E *S _W        | Corridor North, Secret Doors East and South      |           |
+|         |                 |                                                  |           |
 | cNS     | _W _E           | Corridor North/South                             |           |
 | cEW     | _N _S           | Corridor East/west                               |           |
 |         |                 |                                                  |           |
@@ -96,11 +98,17 @@ These features are intended to be used mostly as parts of compositions and rarel
 | cES*NW  | *N *W           | Corridor East/South, Secret doors North/West     |           |
 | cSW     | _N _E           | Corridor South/West                              |           |
 | cWN     | _E _S           | Corridor West/North                              |           |
+| cWN*E   | *E _S           | Corridor West/North, Secret Door East            |           |
 |         |                 |                                                  |           |
 | cESW    | _N .SE .SW      | Corridor East/South/West (Wall North)            |           |
 | cNSW    | _E .NW .SW      | Corridor North/South/West (Wall East)            |           |
 | cNEW    | _S .NW .NE      | Corridor North/East/West (Wall South)            |           |
 | cNES    | _W .NE .SE      | Corridor North/East/South (Wall West)            |           |
+|         |                 |                                                  |           |
+| cESW*N  | *N .SE .SW      | Corridor East/South/West Secreet Door North      |           |
+| cNSW*E  | *E .NW .SW      | Corridor North/South/West Secret Door East       |           |
+| cNEW*S  | *S .NW .NE      | Corridor North/East/West Secret Door South       |           |
+| cNES*W  | *W .NE .SE      | Corridor North/East/South Secret Door West       |           |
 |         |                 |                                                  |           |
 | c4      | .NE .SE .SW .NW | Corridor Four Way (No Walls)                     |           |
 |         |                 |                                                  |           |
@@ -134,23 +142,23 @@ These features are intended to be used mostly as parts of compositions and rarel
    :END:
 
 # #+NAME: chamber-features
-| Feature | Plan                          | Documentation                                                | Narrative |
-|---------+-------------------------------+--------------------------------------------------------------+-----------|
-| 10*N    | ]N *N                         | 10x10 chamber, secret door North                             |           |
-| 10*E    | ]E *E                         | 10x10 chamber, secret door East                              |           |
-| 10*S    | ]S *S                         | 10x10 chamber, secret door South                             |           |
-| 10*W    | ]W *W                         | 10x10 chamber, secret door West                              |           |
-|         |                               |                                                              |           |
-| 20*N-W  | _W *N > _N _E ! _E _S < _S _W | 20x20 chamber, Secret door in Western half of nothern wall   |           |
-| 20*N-E  | _W _N > *N _E ! _E _S < _S _W | 20x20 chamber, Secret door in Eastern half of nothern wall   |           |
-| 20*E-N  | _W _N > _N *E ! _E _S < _S _W | 20x20 chamber, Secret door in Northern half of Eastern Wall  |           |
-| 20*E-S  | _W _N > _N _E ! *E _S < _S _W | 20x20 chamber, Secret door in Southern half of Eastern Wall  |           |
-| 20*S-E  | _W _N > _N _E ! _E *S < _S _W | 20x20 chamber, Secret door in Eastern half of Southern Wall  |           |
-| 20*S-W  | _W _N > _N _E ! _E _S < *S _W | 20x20 chamber, Secret door in Western half of Southern Wall  |           |
-| 20*W-S  | _W _N > _N _E ! _E _S < _S *W | 20x20 chamber, Secret door in Southern half of Westrern Wall |           |
-| 20*W-N  | *W _N > _N _E ! _E _S < _S _W | 20x20 chamber, Secret door in Northern half of Western Wall  |           |
-|         |                               |                                                              |           |
-
+| Feature    | Plan                          | Documentation                                                   | Narrative |
+|------------+-------------------------------+-----------------------------------------------------------------+-----------|
+| 10*N       | ]N *N                         | 10x10 chamber, secret door North                                |           |
+| 10*E       | ]E *E                         | 10x10 chamber, secret door East                                 |           |
+| 10*S       | ]S *S                         | 10x10 chamber, secret door South                                |           |
+| 10*W       | ]W *W                         | 10x10 chamber, secret door West                                 |           |
+|            |                               |                                                                 |           |
+| 20*N-W     | _W *N > _N _E ! _E _S < _S _W | 20x20 chamber, Secret door in Western half of nothern wall      |           |
+| 20*N-E     | _W _N > *N _E ! _E _S < _S _W | 20x20 chamber, Secret door in Eastern half of nothern wall      |           |
+| 20*E-N     | _W _N > _N *E ! _E _S < _S _W | 20x20 chamber, Secret door in Northern half of Eastern Wall     |           |
+| 20*E-S     | _W _N > _N _E ! *E _S < _S _W | 20x20 chamber, Secret door in Southern half of Eastern Wall     |           |
+| 20*S-E     | _W _N > _N _E ! _E *S < _S _W | 20x20 chamber, Secret door in Eastern half of Southern Wall     |           |
+| 20*S-W     | _W _N > _N _E ! _E _S < *S _W | 20x20 chamber, Secret door in Western half of Southern Wall     |           |
+| 20*W-S     | _W _N > _N _E ! _E _S < _S *W | 20x20 chamber, Secret door in Southern half of Westrern Wall    |           |
+| 20*W-N     | *W _N > _N _E ! _E _S < _S _W | 20x20 chamber, Secret door in Northern half of Western Wall     |           |
+|            |                               |                                                                 |           |
+| 20*W-N*N-W | *W *N > _N _E ! _E _S < _S _W | 20x20 chamber, Secret doors West (Northern) and North (Western) |           |
 
 
 ** Special Chamber Features Table
