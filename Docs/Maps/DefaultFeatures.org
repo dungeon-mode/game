@@ -88,37 +88,81 @@ These features are intended to be used mostly as parts of compositions and rarel
 # #+NAME: corridor-features
 | Feature | Plan            | Documentation                                    | Narrative |
 |---------+-----------------+--------------------------------------------------+-----------|
-| cN*ES   | *E *S _W        | Corridor North, Secret Doors East and South      |           |
-|         |                 |                                                  |           |
-| cNS     | _W _E           | Corridor North/South                             |           |
-| cEW     | _N _S           | Corridor East/west                               |           |
-|         |                 |                                                  |           |
-| cNE     | _W _S           | Corridor North/East                              |           |
-| cES     | _N _W           | Corridor East/South                              |           |
-| cES*NW  | *N *W           | Corridor East/South, Secret doors North/West     |           |
-| cSW     | _N _E           | Corridor South/West                              |           |
-| cWN     | _E _S           | Corridor West/North                              |           |
-| cWN*E   | *E _S           | Corridor West/North, Secret Door East            |           |
-|         |                 |                                                  |           |
-| cESW    | _N .SE .SW      | Corridor East/South/West (Wall North)            |           |
-| cNSW    | _E .NW .SW      | Corridor North/South/West (Wall East)            |           |
-| cNEW    | _S .NW .NE      | Corridor North/East/West (Wall South)            |           |
-| cNES    | _W .NE .SE      | Corridor North/East/South (Wall West)            |           |
-|         |                 |                                                  |           |
-| cESW*N  | *N .SE .SW      | Corridor East/South/West Secreet Door North      |           |
-| cNSW*E  | *E .NW .SW      | Corridor North/South/West Secret Door East       |           |
-| cNEW*S  | *S .NW .NE      | Corridor North/East/West Secret Door South       |           |
-| cNES*W  | *W .NE .SE      | Corridor North/East/South Secret Door West       |           |
-|         |                 |                                                  |           |
 | c4      | .NE .SE .SW .NW | Corridor Four Way (No Walls)                     |           |
 |         |                 |                                                  |           |
+| cESW    | _N .SE .SW      | Corridor East/South/West                         |           |
+| cESW*N  | *N .SE .SW      | Corridor East/South/West, Secreet Door North     |           |
+|         |                 |                                                  |           |
+| cNSW    | _E .NW .SW      | Corridor North/South/West                        |           |
+| cNSW*E  | *E .NW .SW      | Corridor North/South/West, Secret Door East      |           |
+|         |                 |                                                  |           |
+| cNEW    | _S .NW .NE      | Corridor North/East/West                         |           |
+| cNEW*S  | *S .NW .NE      | Corridor North/East/West, Secret Door South      |           |
+|         |                 |                                                  |           |
+| cNES    | _W .NE .SE      | Corridor North/East/South                        |           |
+| cNES*W  | *W .NE .SE      | Corridor North/East/South, Secret Door West      |           |
+|         |                 |                                                  |           |
+| cNS     | _W _E           | Corridor North/South                             |           |
 | cNS*E   | *E _W           | Corridor North/South, :elf Secret Door East      |           |
 | cNS*W   | _E *W           | Corridor North/South :elf secret Door West       |           |
 | cNS*EW  | *E *W           | Corridor North/South :elf secret Doors East/West |           |
 |         |                 |                                                  |           |
+| cEW     | _N _S           | Corridor East/west                               |           |
 | cEW*N   | *N _S           | Corridor East/West :elf secret Door North        |           |
 | cEW*S   | _N *S           | Corridor East/west :elf secret Door South        |           |
 | cEW*NS  | *N *S           | Corridor East/west :elf secret Doors North/South |           |
+|         |                 |                                                  |           |
+| cNE     | _W _S           | Corridor North/East                              |           |
+| cNE*S   | _W *S           | Corridor North/East, Secret door North           |           |
+| cNE*W   | *W _S           | Corridor North/East, Secret door South           |           |
+| cNE*SW  | *W *S           | Corridor North/East, Secret doors North/South    |           |
+|         |                 |                                                  |           |
+| cES     | _N _W           | Corridor East/South                              |           |
+| cES*N   | *N _W           | Corridor East/South, Secret door North           |           |
+| cES*W   | _N *W           | Corridor East/South, Secret door West            |           |
+| cES*NW  | *N *W           | Corridor East/South, Secret doors North/West     |           |
+|         |                 |                                                  |           |
+| cSW     | _N _E           | Corridor South/West                              |           |
+| cSW*N   | *N _E           | Corridor South/West, Secret Door North           |           |
+| cSW*E   | _N *E           | Corridor South/West, Secret Door East            |           |
+| cSW*NE  | *N *E           | Corridor South/West, Secret Doors North/East     |           |
+|         |                 |                                                  |           |
+| cWN     | _E _S           | Corridor West/North                              |           |
+| cWN*E   | *E _S           | Corridor West/North, Secret Door East            |           |
+| cWN*S   | _E *S           | Corridor West/North, Secret Door South           |           |
+| cWN*ES  | *E *S           | Corridor West/North, Secret Doors South/West     |           |
+|         |                 |                                                  |           |
+| cN*E    | *E _S _W        | Corridor North, Secret Door East                 |           |
+| cN*S    | _E *S _W        | Corridor North, Secret Door South                |           |
+| cN*W    | _E _S *W        | Corridor North, Secret Door West                 |           |
+| cN*ES   | *E *S _W        | Corridor North, Secret Doors East/South          |           |
+| cN*EW   | *E _S *W        | Corridor North, Secret Doors East/West           |           |
+| cN*SW   | _E *S *W        | Corridor North, Secret Doors South/West          |           |
+| cN*ESW  | *E *S *W        | Corridor North, Secret Doors all sides           |           |
+|         |                 |                                                  |           |
+| cE*N    | *N _S _W        | Corridor East, Secret Door North                 |           |
+| cE*S    | _N *S _W        | Corridor East, Secret Door South                 |           |
+| cE*W    | _N _S *W        | Corridor East, Secret Door West                  |           |
+| cE*NS   | *N *S _W        | Corridor East, Secret Doors North/South          |           |
+| cE*NW   | *N _S *W        | Corridor East, Secret Doors North/West           |           |
+| cE*SW   | _N *S *W        | Corridor East, Secret Doors South/West           |           |
+| cE*NSW  | *N *S *W        | Corridor East, Secret Doors all sides            |           |
+|         |                 |                                                  |           |
+| cS*N    | *N _E _W        | Corridor North, Secret Door North                |           |
+| cS*E    | _N *E _W        | Corridor North, Secret Door East                 |           |
+| cS*W    | _N _E *W        | Corridor North, Secret Door West                 |           |
+| cS*NE   | *N *E _W        | Corridor North, Secret Doors North/East          |           |
+| cS*NW   | *N _E *W        | Corridor North, Secret Doors North/West          |           |
+| cS*EW   | _N *E *W        | Corridor North, Secret Doors East/West           |           |
+| cS*NEW  | *N *E *W        | Corridor North, Secret Doors all sides           |           |
+|         |                 |                                                  |           |
+| cW*N    | *N _E _S        | Corridor West, Secret Door North                 |           |
+| cW*E    | _N *E _S        | Corridor West, Secret Door East                  |           |
+| cW*S    | _N _E *S        | Corridor West, Secret Door South                 |           |
+| cW*NE   | *N *E _S        | Corridor West, Secret Doors North/East           |           |
+| cW*NS   | *N _E *S        | Corridor West, Secret Doors North/South          |           |
+| cW*ES   | _N *E *S        | Corridor West, Secret Doors East/South           |           |
+| cW*NES  | *N *E *S        | Corridor West, Secret Doors all sides            |           |
 |         |                 |                                                  |           |
 
 
