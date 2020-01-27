@@ -18,9 +18,22 @@ Refer to design.org for more details.
 | X | Y | Features                   | Documentation                                                                      | Narrative |
 |---+---+----------------------------+------------------------------------------------------------------------------------+-----------|
 | 0 | 0 | 20*S-E                     | 20x20 chamber, Secret door in Eastern half of Southern Wall                        |           |
+| 1 | 0 | (0 . 0)                    | Part of area defined at 0,0                                                        |           |
 | 2 | 0 | 20*S-E                     | 20x20 chamber, Secret door in Eastern half of Southern Wall                        |           |
+| 3 | 0 | (2 . 0)                    | Part of area defined at 2,0                                                        |           |
 | 4 | 0 | 20*S-W                     | 20x20 chamber, Secret door in Western half of Southern Wall                        |           |
+| 5 | 0 | (4 . 0)                    | Part of area defined at 4,0                                                        |           |
 | 6 | 0 | 20*S-W                     | 20x20 chamber, Secret door in Western half of Southern Wall                        |           |
+| 7 | 0 | (6 . 0)                    | Part of area defined at 6,0                                                        |           |
+|   |   |                            |                                                                                    |           |
+| 0 | 1 | (0 . 0)                    | Part of area defined at 0,0                                                        |           |
+| 1 | 1 | (0 . 0)                    | Part of area defined at 0,0                                                        |           |
+| 2 | 1 | (2 . 0)                    | Part of area defined at 2,0                                                        |           |
+| 3 | 1 | (2 . 0)                    | Part of area defined at 2,0                                                        |           |
+| 4 | 1 | (4 . 0)                    | Part of area defined at 4,0                                                        |           |
+| 5 | 1 | (4 . 0)                    | Part of area defined at 4,0                                                        |           |
+| 6 | 1 | (6 . 0)                    | Part of area defined at 6,0                                                        |           |
+| 7 | 1 | (6 . 0)                    | Part of area defined at 6,0                                                        |           |
 |   |   |                            |                                                                                    |           |
 | 0 | 2 | 10*E                       | 10x10 chamber, secret door East                                                    |           |
 | 1 | 2 | cES*NW                     | Corridor East/South, Secret doors North/West                                       |           |
@@ -29,6 +42,7 @@ Refer to design.org for more details.
 | 4 | 2 | cEW*NS                     | Corridor East/west :elf secret Doors North/South                                   |           |
 | 5 | 2 | cSW                        | Corridor South/West                                                                |           |
 | 6 | 2 | A2 _W *N > _N ! _E _S < _S | 20x20 area, exits N part of E wall, S part of W wall, Secret door W part of N wall |           |
+| 7 | 2 | (6 . 2)                    | Part of the area described at 6,2                                                  |           |
 |   |   |                            |                                                                                    |           |
 | 0 | 3 | 10*E                       | 10x10 chamber, secret door East                                                    |           |
 | 1 | 3 | cNS*W                      | Corridor North/South :elf secret Door West                                         |           |
@@ -36,6 +50,8 @@ Refer to design.org for more details.
 | 3 | 3 | 10*N                       | 10x10 chamber, secret door North                                                   |           |
 | 4 | 3 | 10*N                       | 10x10 chamber, secret door North                                                   |           |
 | 5 | 3 | cNES                       | Corridor North/East/South                                                          |           |
+| 6 | 3 | (6 . 2)                    | Part of the area described at 6,2                                                  |           |
+| 7 | 3 | (6 . 2)                    | Part of the area described at 6,2                                                  |           |
 |   |   |                            |                                                                                    |           |
 | 0 | 4 | 10*E                       | 10x10 chamber, secret door East                                                    |           |
 | 1 | 4 | cNS*W                      | Corridor North/South :elf secret Door West                                         |           |
