@@ -66,6 +66,17 @@
 ;;;;;
 ;; quick and dirty procedural approach
 
+(cl-defun dm-map--dom-attr-scale-nth (dom-node scale (attr n))
+  "Apply Nth of SCALE to ATTR of DOM-NODE if present."
+  (when (numberp (car (dom-attr dom-node attr)))
+    (dom-set-attribute dom-node attr (* (nth n scale)
+					(car (dom-attr dom-node attr))))))
+;; (dm-map--dom-attr-scale-nth (dom-node 'foo '((bar 1))) '(2 3 4) '(bar 0))
+;; second test case to figure out looping a list
+;; (let ((dom-node (dom-node 'foo '((text-size 1) (y 1)))))
+;;   (dolist (args '((text-size 0) (x 0) (y 1)) dom-node)
+;;     (dm-map--dom-attr-scale-nth dom-node '(2 3) args)))
+
 (defun dm-map-default-scale-function (scale &rest cells)
   "Return CELLS with SCALE applied.
 
@@ -84,27 +95,22 @@ height and font-size attributes of each element of each
 `dom-node' which contains them in the parent (e.g. outter-most)
 element.  SCALE is applied to only when the present value is
 between 0 and 1 inclusive."
-  (ignore scale cells)
-  (dolist (cell cells)
+  (message "scale:%s cells:%s" scale cells)
+  (dolist (cell cells cells)
     (message "cell:%s" cell)
     (cond
      ((dm-svg-dom-node-p cell 'text)
-      (message "svg text!")
-      (when (eq 'text (car cell))
-	;; scale SVG text elements right here!
-	(dom-set-attribute cell 'text-size (* (car (dom-attr cell 'text-size))
-					      (car scale)))
-	))
-     ((consp cell)
-      (message "consp!")
+      (message "text:%s" cell)
+      (dolist (args '((text-size 0) (x 0) (y 1)) )
+	(dm-map--dom-attr-scale-nth cell scale args)))
+     ((consp cell) (message "consp!%s" cell)
       (pcase cell
 	;; move or line in the form (sym (h v)
 	(`(,(or 'm 'l)
-	   (,(and h (guard (numberp h)))
-	    ,(and v (guard (numberp v)))))
-	 ;;(message "1:%s 2:%s" (caadr cell) (cadadr cell))
-	 (setcdr cell (list (* h (car scale))
-			    (* v (cdr scale)))))
+	   (,(and x (guard (numberp x)))
+	    ,(and y (guard (numberp y)))))
+	 (setcdr cell (list (* x (car scale))
+			    (* y (cdr scale)))))
 
 	;; h and v differ only in which part of scale applies
 	(`(h (,(and d (guard (numberp d)))))
@@ -112,20 +118,22 @@ between 0 and 1 inclusive."
 	(`(v (,(and d (guard (numberp d)))))
 	 (setcdr cell (list (* d (cdr scale)))))
 
+	;; arc has tons of args but we only mess with the last two
 	(`(a (,rx ,ry ,x-axis-rotation ,large-arc-flag ,sweep-flag
-		,(and h (guard (numberp h)))
-		,(and v (guard (numberp v)))))
+		,(and x (guard (numberp x)))
+		,(and y (guard (numberp y)))))
 	 (setcdr cell (list rx ry x-axis-rotation large-arc-flag sweep-flag
-			    (* h (car scale))
-			    (* v (cdr scale)))))
+			    (* x (car scale))
+			    (* y (cdr scale)))))
 
 	;; fall-back to a message
 	(_ (message "unhandled %s => %s" (type-of cell) cell))
 	))
-     ))
-  cells)
+     )))
 
-;;(dm-map-default-scale-function '(100 . 1000) (dom-node 'text '((text-size .5))) '(h (.1)) '(v (.2))'(m (.3 .4)) '(l (.5 .6)) '(x (.7 .8)) '(a (.7 .7 0 1 1 0 .14)))
+(dm-map-default-scale-function '(100 . 1000)
+			       (dom-node 'text '((text-size .5)(x .2)))
+			       '(h (.1)) '(v (.2))'(m (.3 .4)) '(l (.5 .6)) '(x (.7 .8)) '(a (.7 .7 0 1 1 0 .14)))
 
 (cl-defun dm-map-quick-draw (features
 			     cells
@@ -136,6 +144,8 @@ between 0 and 1 inclusive."
 			     svg-attributes
 			     path-attributes
 			     (scale-function 'dm-map-default-scale-function)
+			     ;; TODO repeat above patter for "late-binding-references"
+			     ;; for binding of features from cell draw instructions
 			     &allow-other-keys)
   "No-frills draw routine.
 
@@ -153,7 +163,10 @@ we append the drawing instructions to implement the features
 included with each of CELLS therefor any inital value provided
 for \"d\" (e.g. \"path-data\") *must* return the stylus to the
 origin (e.g. M0,0) as it's final instruction."
-  (ignore features cells scale size viewbox svg-attributes path-attributes scale-function))
+  (ignore features cells scale size viewbox svg-attributes path-attributes scale-function)
+  (let ((paths nil))
+    )
+  )
 
 (defun dm-map-load-tagged-tables-in-files (predicate &rest org-files)
   "Return a list of rows from tables with TAG in ORG-FILES.
@@ -203,6 +216,59 @@ if a file doesn't exist, cannot be opened, etc."
 
 ;; (apply 'dm-map--parse-map-level (dm-map-load-level "regression-test-map-level" "../Docs/Maps/Design.org"))
 
+
+
+;;=============================================================================
+;; :TODO:table-striping:
+;; obviously we need to be smarter about column headings and more flexiable
+;; in terms of not requring columns which won't be used to bind data in a
+;; given table.
+
+;; Given:
+
+;;  Map tables are not a special case but rather the protypical case
+;;  from which required complexity will be established.
+
+;; Consider:
+
+;;  1. Tables are stored in org files or sections having a
+;;     `dungeon-mode' property specifying the scope of the data-set.
+;;   1.1 Tables must be nested within a section or as a special case
+;;       before first section, if any.
+;;   1.2 Any section level is accepted
+;;   1.3 The 'dungon-mode property is added the containing section,
+;;       or to the document when at the top of the page.
+;;   1.4 The 'dungeon-mode' property is not inheretable, e.g. by sub-
+;;       elements.
+
+;;  2. Tables may be further identified used the built-in NAME
+;;     property.
+;;   2.1 Given table implementations (e.g. map-features) may ignore
+;;       NAME properties.
+;;   2.2 Given table implementations (e.g. map-level) may require
+;;       NAME properties.
+;;   2.3 Name properties are positioned as per the dungon-mode
+;;       property, that is within the property drawer or otherwise
+;;       immediately after the beginning of the section, or in the
+;;       properties drawer or otherwise at the top of the file.
+
+;;  3. Given table implementations may support different modes of
+;;     altering the target data-set as a result of reading the table
+;;     content.
+;;   3.1 Create - create or replace a data-set or the NAMed feature
+;;                thereof.
+;;   3.2 Add - add records to a data-set or the NAMED feature thereof.
+;;  4. Each table must contain an header row.
+;;   4.1 The header row appears exactly once as the first row of the table.
+;;   4.2 Given table implementations may accept a fixed or variable column arrangement.
+;;   4.3 Table implementations with variable column arrangments may define given columns as required or optional.
+;;    4.3.1 Rows which omit required columns are assmed to take their values for missing columns from the prior row.
+;;    4.3.2 Rows which omit all required columns or which begin the first column with a comment are considered comments and ignored.
+;;   4.4 Table implementation with variable column arrangements and which support Add mode may allow incrementally accumulating row values (e.g. "striping").
+;;    4.4.1 Tables are striped only when all identifiying properties are identical (`eq').
+;;    4.4.2 Tables are striped only when all required columns are included.
+;;=============================================================================
+
 ;; TODO we need to split out :keywords that may be run together
 ;; with repeated feature names
 
@@ -221,13 +287,58 @@ if a file doesn't exist, cannot be opened, etc."
 	   (org-entry-get tpom dm-map-features-table-property-tag)
 	   ) org-files))
 
-;;(dm-map-load-feature-files  "../Docs/Maps/Design.org" "../Docs/Maps/test.org")
+b;;(dm-map-load-feature-files  "../Docs/Maps/Design.org" "../Docs/Maps/test.org")
 ;;(car(dm-map-load-feature-files "../Docs/Maps/test.org"))
+
+;; New plan:
+;; Maintain two control lists as we walk the list once.
+;;   lost: plist mapping symbols mentioned but not defined to a
+;;   list of referent indexes within 'paths
+;;  found: symbols as we find them
+
+;; start with something to keep things tidy
+
+(cl-defmacro dm-with-org-table-hash
+    ((&whole table first-row)
+     (&whole headings (first-heading (car first-row)))
+     &body (body nil body-forms-p)
+     &key (hash #s(hash-table size 30 test equal) hash-p)
+     (key first-heading)
+     intern-keys)
+  "Read `org-mode' tables into HASH and execute BODY-FORMS.
+
+This function accepts string TABLES in the form of a list of
+lists of strings:
+
+  ((\"h1\" \"h2\")
+   (\"c1.1\" \"c2.2\")
+   (\"c2.1\" \"c2.1\"))
+
+TABLE may also be an expression returning a such a list.
+
+HEADINGS is a list of symbols for binding each value from the
+corrisonding column prior to evaluating BODY for a given
+row (e.g. outter list item) in TABLE.
+
+Each of HEADINGS may be an underscore to suppressing binding
+values from that position.
+
+When KEY is non-nil it is either a symbol equal to one of
+HEADINGS or an expression evaluated after and in the same
+context when BODY has yielded a non-nill result.  The default
+value 'first-heading takes the value from the first column.
+
+When intern-keys is non-nill, the value or result of KEY is
+interned prior updating or creating an entry in HASH."
+  (ignore table headings)
+  (or (and (null body-forms-p)
+	   hash)
+      body))
 
 (cl-defun dm-map-defeatures
     (&rest feature-attributes-list
-     &key (hash #s(hash-table size 30 test equal))
-     &allow-other-keys)
+	   &key (hash #s(hash-table size 30 test equal))
+	   &allow-other-keys)
   "Read map features from FEATURE-ATTRIBUTES-LIST.
 
 TODO Update this if the hash-table approach pans-out
@@ -257,19 +368,25 @@ TODO deal with docstrings"
 	 (mapcar 'intern
 		 (seq-uniq (mapcar 'car feature-attributes-list)
 			   'string=))))
+
+    ;; Corwin: I'm somewhat attracted to plugability of having
+    ;; SVG parsing completely seperated out like this but I'm
+    ;; not comfortable with need to keep re-walking the list.
+    ;;
     (dolist (strings feature-attributes-list)
       (dm-map--init-hash-entry hash strings names))
     (dm-map--parse-plan hash)
+
     hash
     ;; (dolist (tbl tables features)
     ;;   (push (cdddr tbl) features))
     ))
 
 
-;; (apply 'dm-map-defeatures (dm-map-load-feature-files  "../Docs/Maps/test.org" "../Docs/Maps/test.org"))
+;; (princ (apply 'dm-map-defeatures (dm-map-load-feature-files  "../Docs/Maps/test.org" "../Docs/Maps/test.org")))
 
-(cl-defun dm-map--init-hash-entry (hash (feature plan docstring narrative)
-					feature-list)
+(cl-defun dm-map--init-hash-entry
+    (hash (feature plan docstring narrative) feature-list)
   "Add or update an entry in HASH for STRINGS.
 
 Strings are a list in the form:
@@ -277,8 +394,8 @@ Strings are a list in the form:
 
 FEATURE-LIST is a list of all known features.
 
-While HASH entries are keyed on FEATURE associated to a plist
-with the following possable keys:
+HASH entries are keyed on FEATURE interned as a symbol and
+associated to a plist with the following keys:
 
   plan - the original unmodified draw plan, as a string
 
@@ -307,19 +424,146 @@ with the following possable keys:
 
 ;; (gethash 'c-NS+sE (apply 'dm-map-defeatures (dm-map-load-feature-files  "../Docs/Maps/Design.org" "../Docs/Maps/test.org")))
 
+(with-temp-buffer
+  (let ((hash (apply 'dm-map-defeatures
+		     (dm-map-load-feature-files "../Docs/Maps/Design.org"
+						"../Docs/Maps/test.org")))
+	(standard-output (current-buffer))
+	print-length print-level)
+    (seq-map (lambda (key)
+	       (prin1 (format "\n\n[%s]\n" key))
+	       (print (gethash key hash))
+	       ) (hash-table-keys hash)))
+  (buffer-string))
+
+(cl-defun dm-map--maybe-resolve-path
+    (hash path
+	  &optional error
+	  (recurse t)
+	  (update t)
+	  (resolver 'dm-map--maybe-resolve-path))
+  "Resolve PATH if it is a reference to draw code in HASH.
+
+Returns 'path, a list of draw commands and arguments as cons
+cells intermixed with `svg' dom-nodes and unresolved symbols,
+when PATH is a symbol and exists as a key in hash which contains
+a 'path property.
+
+When ERROR is t signal an error upon finding an unresolvable
+symbol, otherwise the symbol is returned enclosed in a list or,
+in the case of recusive processing, left in their places within
+the list eventually returned.
+
+When RECURSE is t, similarly recurse to resolve symbols within
+referenced draw commands.
+
+When UPDATE is t update refferents while resolving symbols in
+referenced draw commands. During recursion UPDATE is the symbol
+to be modified.
+
+RESOLVER provides an alternative to this function to be used to
+resolve symbols found within reference paths.  It is called with
+the same inputs as this function and expected to return a list of
+symbols, `sgv' dom-elements, and draw commands as described
+above."
+  (or (and (symbolp path)
+	   (if-let* ((ref (gethash path hash))
+		     (ref-path (plist-get ref 'path)))
+	       (if (null recurse) ref-path
+		 ;; recursion
+		 ;;(mapcan (or resolver 'dm-map--maybe-resolve-path) ref-path)
+		 (if (null update)
+		     (mapcan (lambda (ref-path-part)
+			       (funcall resolver hash ref-path-part
+					error recurse update resolver)
+			       ) ref-path)
+		   ;; TODO handle updating during recursion
+		   ref-path
+		   )
+		 )
+	     (when error
+	       (error "Reference to missing or incomplete path: %s" path))))
+      (list path)))
+
+(cl-defun dm-map-maybe-resolve-path
+    (hash &optional
+	  key error
+	  (recurse t) (update t) (resolver 'dm-map--maybe-resolve-path))
+  "Attempt to resolve symbols from paths attributes keys of HASH.
+
+If KEY is non-nil (recursively) process this key only. ERROR may
+be set to t to cause an error to be throw in case a symbol cannot
+be resolved.  RECURSE (default: t) may be set to nil to suppress
+recursive resolution of symbols found while dereferencing.
+UPDATE (default: t) controls whether to update the KEY of
+HASH (or all keys of HASH when KEY was nil).
+
+RESOLVER (default: this function) is called to perform recursive
+resolution including any required updates to HASH."
+  (if (null key)
+      ;; TODO: special case: no key means try resolving symbols in 'path of all keys
+      (mapc (lambda (key)
+	      (dm-map-maybe-resolve-path hash key error recurse update resolver)
+	      ) (hash-table-keys hash))
+    (if-let* ((ref (gethash key hash))
+	      (ref-paths (plist-member ref 'path)))
+      (seq-map-indexed
+       (lambda (path ix)
+	 (if (not (symbolp path))
+	     (prog1  path (message "not a symbol:%s" path))
+	   (if (not update)
+	       (prog1 (funcall resolver hash path error recurse update resolver)
+		 (message "not updating, recurse: %s" path))
+	     (setcar
+	      (nth ix ref-paths)
+	      (funcall resolver hash path error recurse update resolver))
+	     (message "updated %s => %s" path ref-paths)))
+	 ) ref-paths)
+      ref-paths)))
+
+(defun dm-map--keys-by-desc-path-ref-count (hash)
+  "Return keys of HASH with at least on symbol in path.
+
+Keys are sorted from fewest to least symbols in their respective
+'path attributes Keys without an 'path property or which 'path
+contains no symbols are omitted."
+  (let (ap ac bp bc drop-list)
+    (seq-drop
+     (lambda (x) (seq-contains x drop-list))
+     (sort
+      (hash-table-keys hash)
+      (lambda (a b)
+	(or (prog1 (null (setq bp (plist-get (gethash b hash) 'paths)))
+	      (unless bp (push b drop-list)))
+	    (and (prog1 (setq ap (plist-get (gethash a hash) 'paths))
+		   (unless ap (push a drop-list)))
+		 (prog1 (setq ac (seq-count 'symbolp
+					    (plist-get ap 'paths)))
+		   (unless (and ac (> ac 0))
+		     (push a drop-list)))
+		 (or (null (prog1 (setq bc (seq-count 'symbolp
+						      (plist-get bp 'paths)))
+			     (unless (and bc (> bc 0))
+			       (push b drop-list))))
+		     (> bc ac)))))))))
+
+;(dm-map--keys-by-desc-path-ref-count (apply 'dm-map-defeatures (dm-map-load-feature-files "../Docs/Maps/test.org")))
+
 (defun dm-map--parse-plan (hash)
-  "Cross-map HASH keys to resolve features as SVG code."
-  (maphash (lambda (outer-k outer-v)
-	     (when (plist-member outer-v 'paths)
-	       (plist-put outer-v
-			  'paths
-			  (mapcan (lambda (word)
-				    (if (symbolp word)
-					(plist-get (gethash word hash word)
-						   'paths)
-				      (list word)))
-				  (plist-get outer-v 'paths))))
-	     ) hash))
+  "Cross-map HASH keys to resolve features as SVG code.
+
+TODO: return a list of unresolved symbols?"
+  (dm-map-maybe-resolve-path hash))
+  ;; (maphash (lambda (k v)
+  ;; 	     (when (plist-member v 'paths)
+  ;; 	       (plist-put v 'paths
+  ;; 			  (mapcan (lambda (ref)
+  ;; 				    (dm-map--maybe-resolve-path hash ref
+  ;; 								nil t nil))
+  ;; 				  (plist-get v 'paths))))
+  ;; 	     ) hash))
+
+;(gethash 'c-NSN (apply 'dm-map-defeatures (dm-map-load-feature-files "../Docs/Maps/test.org")))
 
 (defun dm-map--parse-path-command (svg-path-command-string)
   "Split SVG-PATH-COMMAND-STRING into command and args.
@@ -377,7 +621,10 @@ the argument sequence each as a seperate list item."
 ;;   (or (gethash feature hash (and inhibit-error feature))
 ;;       (error "No feature \"%s\" found" feature)))
 
-;;(apply 'dm-map-defeatures (dm-map-load-feature-files  "../Docs/Maps/test.org" "../Docs/Maps/test.org"))
+;; (let (print-level print-length)
+;;   (prin1-to-string (apply 'dm-map-defeatures
+;; 			  (dm-map-load-feature-files "../Docs/Maps/test.org"
+;; 						     "../Docs/Maps/test.org"))))
 
 ;; (let ((sl (list "aa" "bb" "aa" "cc"))) (seq-uniq sl 'string=))
 
@@ -405,28 +652,28 @@ between zero and one. (0..1)."
   `(or null (list (number 0 ,min)
 		  (number 0 ,max))))
 
-(defclass dm-map ()
-  ((svg :type (or dm-svg-or-nil dm-svg) :initarg :svg :initform (dm-svg))
-   (size :type dm-map-size :initarg :size :initform (list 1.0 1.0))
-   (scale :type (integer 1 100) :initarg :scale :initform 100)
-   (view-box :type (or null dm-map-viewbox) :initarg :view-box :initform nil)
-   (svg-attributes :type list :initarg :svg-attributes :initform nil)
-   (path-attributes :type list :initarg :path-attributes :initform nil)
-   (scale-function :type function :initarg 'dm-map-s))
-  :documentation
-  "Create and update RPG maps displayed as inline SVG images.")
+;; (defclass dm-map ()
+;;   ((svg :type (or dm-svg-or-nil dm-svg) :initarg :svg :initform (dm-svg))
+;;    (size :type dm-map-size :initarg :size :initform (list 1.0 1.0))
+;;    (scale :type (integer 1 100) :initarg :scale :initform 100)
+;;    (view-box :type (or null dm-map-viewbox) :initarg :view-box :initform nil)
+;;    (svg-attributes :type list :initarg :svg-attributes :initform nil)
+;;    (path-attributes :type list :initarg :path-attributes :initform nil)
+;;    (scale-function :type function :initarg 'dm-map-s))
+;;   :documentation
+;;   "Create and update RPG maps displayed as inline SVG images.")
 
-(cl-defmethod initialize-instance :after ((object dm-map) &rest _)
-  "Initialize instance slots after inital argument processing."
-  (with-slots (svg size svg-attributes) object
-    (unless (dm-svg-p 'svg)
-      (if (dm-svg-dom-node-p object 'svg)
-	  (setq svg (dm-svg :svg svg))
-	(let ((so (svg-create (car size) (cdr size))))
-	  (dom-set-attributes so svg-attributes)
-	  (setq svg (dm-svg :svg so)))))))
+;; (cl-defmethod initialize-instance :after ((object dm-map) &rest _)
+;;   "Initialize instance slots after inital argument processing."
+;;   (with-slots (svg size svg-attributes) object
+;;     (unless (dm-svg-p 'svg)
+;;       (if (dm-svg-dom-node-p object 'svg)
+;; 	  (setq svg (dm-svg :svg svg))
+;; 	(let ((so (svg-create (car size) (cdr size))))
+;; 	  (dom-set-attributes so svg-attributes)
+;; 	  (setq svg (dm-svg :svg so)))))))
 
-(dm-map)
+;;(dm-map)
 
 ;; *** public variables :code:
 ;; TODO defcustom these instead?
@@ -461,8 +708,9 @@ path data.")
 (defmacro dm-map-append (&rest forms)
     "Add FORMS to map.
 
-  Generally meaning, append to the \"d\" attribute value for the primary
-  path representing chambers, corridor and secret doors in map.
+Generally meaning, append to the \"d\" attribute value for the
+primary path representing chambers, corridor and secret doors in
+map.
 
   FORMS may be any of:
    - strings
@@ -476,10 +724,12 @@ path data.")
      - called without arguments
      - return treated as per FORMS
 
-  Returns a cons cell in the form:
-    ( SVG-STRING . PATH-STRING ) Where SVG-STRING is SVG code other
-  than the main draw path and PATH-STRING is the path-data for the
-  main-draw path."
+Returns a cons cell in the form:
+
+  ( SVG-STRING . PATH-STRING )
+
+Where SVG-STRING is SVG code other than the main draw path and
+PATH-STRING is the path-data for the main-draw path."
     ;; TODO put some code here
     (let* (new-svg
 	   (f (apply-partially 'dm-map--append 'new-svg))
