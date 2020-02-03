@@ -1,0 +1,103 @@
+#+TITLE: Application for Savannah
+
+Savannah is the project hosting solution provided by the Free Software foundation.
+
+This document represents our (dungeon-mode, the project and product
+team) application to host with and authoritatively publish via
+Savannah.
+
+The initial application web-form is on gnu's web-site:
+
+  https://savannah.gnu.org/register/
+
+Which provides some additional advice:
+
+  http://savannah.gnu.org/maintenance/HowToGetYourProjectApprovedQuickly/
+
+You must have an account to register a project.  Accounts expire
+quickly (within days) if not used for example to report a bug or
+create a project.
+
+* Document Scope
+
+The above links as well as the body of this document relate to hosting
+'dungeon-mode' on GNU Savannah.
+
+This refers to providing a repository for the source code and
+deployable artifacts of dungeon-mode "core". Generally this is meant
+to include all of the source material for the default game, the elisp
+or C sources for the game, and any other sources and configuration
+needed for SDLC as well as the source materials for authoritative
+documentation of each of these.  In this context "game" and "core"
+both mean all of the features provided by dungeon-mode, for example
+those for content authoring and print publication.
+
+This is a separate process from (and one not implicitly linked to)
+offering our project sources (e.g. transfer of the copyright for the
+above same work) to GNU.  Source donation has a [[https://www.gnu.org/help/evaluation.html][separate application]].
+
+* ~20-lines technical description
+** Detail and Clarification
+ * What is your project?
+(purpose, topic, programming language...)
+ * What is special about it?
+** Notes
+** Response
+
+Create free (as in freedom) RPGs with GNU Emacs.  And then play them.
+
+We want to:
+  1. Create, publish and play RPGs without any costs now or ever.
+  2. Understand our rights when we use other people's content and our
+     rights and responsibilities when we share games and game content.
+  3. Learn and contribute to a single tool to play interactively in a
+     shared world via network or while preparing a commercial work for
+     printing and binding.
+  4. Play and create with the fewest limitations or assumptions
+     possible "baked in", for example the presence of a window
+     manager, access to a network, or use of a restricted or
+     proprietary operating system or external application feature.
+  5. Use software and features which are self-documenting and which
+     provide and provide for universal and accessible (and ideally
+     Universally Accessible) heuristic experiences.
+  6. Maintain and distribute the minimum original technical components
+     needed to support interactive play, authoring and publishing.
+  7. Enable and support peer-to-peer and distributed content sharing
+     free from any implicit oversight and which enable content
+     providers to enable explicit and meaningful protections for
+     publishers and consumers.  This project will not host user
+     provided game content, supplemental sources, etc. beyond the
+
+* Other license, details
+** Detail and Clarification
+** Notes
+** Response
+
+* Checkboxes
+ * Checklist - see How To Get Your Project Approved Quickly
+ * My project runs primarily on a completely free OS
+ * My license is compatible with the GNU GPL or GFDL
+ * My dependencies are compatible with my project license
+ * All my files include valid copyright notices
+ * All my files include a license header [1] [2]
+ * Origin and license of media files is specified
+ * My tarball includes a copy of the license
+ * I read carefully and don't check this one
+ * I agree with the hosting requirements
+
+** Detail and Clarification
+** Notes
+** Response
+
+* Dependencies
+** Detail and Clarification
+
+name + license + website for each dependency
+
+** Notes
+** Response
+
+* Other Comments
+** Detail and Clarification
+** Notes
+** Response
