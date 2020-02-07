@@ -74,7 +74,7 @@
     <path d="M200,1100 m100,0 a200,200,0,0,0,200,200 v-200 h-200" />
     <text x="285" y="1315">B</text>
   </g>
-  
+
   <!-- River flowing east -->
   <path stroke="none" fill="blue" d="M500,1100 h100 v200 h-100 v-200" />
   <path stroke="none" fill="cyan" d="M500,1100 m75,98 h-50 v2 h50 v5 l10,-6 l-10,-6 v5"	/>
@@ -148,5 +148,30 @@
   <!-- River flowing west -->
   <path stroke="none" fill="blue" d="M700,400 h100 v200 h-100 v-200" />
   <path stroke="none" fill="cyan" d="M700,400 m25,98 h50 v2 h-50 v5 l-10,-6 l10,-6 v5"	/>
+
+
+
+  <!-- Neutronium -->
+  <path stroke="none" fill="purple" d="M500,600 h100 v100 h-100 v-100" />
+  <path stroke="none" fill="purple" d="M600,600 h100 v100 h-100 v-100" />
+  <path stroke="none" fill="purple" d="M700,600 h100 v100 h-100 v-100" />
+  <path stroke="none" fill="purple" d="M800,600 h100 v100 h-100 v-100" />
+  <path stroke="none" fill="purple" d="M900,600 h100 v100 h-100 v-100" />
+  <path stroke="none" fill="purple" d="M1000,600 h100 v100 h-100 v-100" />
+
+  <path stroke="none" fill="purple" d="M500,1000 h100 v100 h-100 v-100" />
+  <path stroke="none" fill="purple" d="M600,1000 h100 v100 h-100 v-100" />
+  <path stroke="none" fill="purple" d="M700,1000 h100 v100 h-100 v-100" />
+  <path stroke="none" fill="purple" d="M800,1000 h100 v100 h-100 v-100" />
+  <path stroke="none" fill="purple" d="M900,1000 h100 v100 h-100 v-100" />
+  <path stroke="none" fill="purple" d="M1000,1000 h100 v100 h-100 v-100" />
+
+  <path stroke="none" fill="purple" d="M500,700 h100 v100 h-100 v-100" />
+  <path stroke="none" fill="purple" d="M500,800 h100 v100 h-100 v-100" />
+  <path stroke="none" fill="purple" d="M500,900 h100 v100 h-100 v-100" />
+
+  <path stroke="none" fill="purple" d="M1000,700 h100 v100 h-100 v-100" />
+  <path stroke="none" fill="purple" d="M1000,800 h100 v100 h-100 v-100" />
+  <path stroke="none" fill="purple" d="M1000,900 h100 v100 h-100 v-100" />
 
 </svg>
