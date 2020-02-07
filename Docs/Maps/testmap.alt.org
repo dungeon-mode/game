@@ -14,14 +14,14 @@ This is a sample map used to develop and test map features and rendering code.
 Refer to design.org for more details.
 
 #+NAME:test-map-level
-|   | 0       | 1       | 2       | 3       | 4       | 5       | 6                           | 7       |
-| 0 | 20*S-E  | (0 . 0) | 20*S-E  | (2 . 0) | 20*S-W  | (4 . 0) | 20*S-W                      | (6 . 0) |
-| 1 | (0 . 0) | (0 . 0) | (2 . 0) | (2 . 0) | (4 . 0) | (4 . 0) | (6 . 0)                     | (6 . 0) |
-| 2 | 10*E    | cES*NW  | cESW    | cEW*NS  | cEW*NS  | cSW     | A2 _W *N > _N  ! _E _S < _S | (6 . 2) |
-| 3 | 10*E    | cNS*W   | cNS     | 10*N    | 10*N    | cNES    | (6 . 2)                     | (6 . 2) |
-| 4 | 10*E    | cNS*W   | cNES    | cEW*S   | cEW     | cNSW    | cSE *E                      | 10*W    |
-| 5 | 10*E    | cNS*W   | cNS     | 20*N-W  | (3 . 5) | cNES    | cNSW*E                      | 10*W    |
-| 6 | 10*E    | cNS*W   | cNS     | (3 . 5) | (3 . 5) | cNS     | cN*ES                       | 10*W    |
-| 7 | 10*E    | cNES*W  | c4      | cESW    | cEW     | cWN*E   | 20*W-N*N-W                  | (6 . 7) |
-| 8 | 10*E    | cNS*W   | cNS     | cNS     | 10*S    | 10*S    | (6 . 7)                     | (6 . 7) |
+|   | 0       | 1       | 2       | 3       | 4       | 5       | 6                           | 7       | 8       | 9       | 10       | 11       | 12       | 13       | 14       | 15       | 16  | 17       | 18       | 19       | 20       | 21       | 22       | 23  |
+| 0 | 20*S-E  | (0 . 0) | 20*S-E  | (2 . 0) | 20*S-W  | (4 . 0) | 20*S-W                      | (6 . 0) | 20*S-W  | (7 . 0) | 20*S-E   | (10 . 0) | 20*S-W   | (12 . 0) | 20*S-W   | (14 . 0) | cES | cEW      | cEW*S    | cEW*S    | cEW      | cEW      | cEW*S    | cSW |
+| 1 | (0 . 0) | (0 . 0) | (2 . 0) | (2 . 0) | (4 . 0) | (4 . 0) | (6 . 0)                     | (6 . 0) | (7 . 0) | (7 . 0) | (10 . 0) | (10 . 0) | (12 . 0) | (12 . 0) | (14 . 0) | (14 . 0) | cNS | 20*N-E   | (17 . 1) | 20*N-W   | (19 . 1) | 10xS*S   | 10xS*N   | cNS |
+| 2 | 10*E    | cES*NW  | cESW    | cEW*NS  | cEW*NS  | cSW     | A2 _W *N > _N  ! _E _S < _S | (6 . 2) | cEW*NS  | cEW*S   | cEW      | cEW*NS   | cEW*NS   | cEW      | cESW*N   | cEW      | cNW | (17 . 1) | (17 . 1) | (19 . 1) | (19 . 1) | (21 . 1) | (22 . 1) | cNS |
+| 3 | 10*E    | cNS*W   | cNS     | 10*N    | 10*N    | cNES    | (6 . 2)                     | (6 . 2) |         |         |          |          |          |          |          |          |     |          |          |          |          |          |          |     |
+| 4 | 10*E    | cNS*W   | cNES    | cEW*S   | cEW     | cNSW    | cSE *E                      | 10*W    |         |         |          |          |          |          |          |          |     |          |          |          |          |          |          |     |
+| 5 | 10*E    | cNS*W   | cNS     | 20*N-W  | (3 . 5) | cNES    | cNSW*E                      | 10*W    |         |         |          |          |          |          |          |          |     |          |          |          |          |          |          |     |
+| 6 | 10*E    | cNS*W   | cNS     | (3 . 5) | (3 . 5) | cNS     | cN*ES                       | 10*W    |         |         |          |          |          |          |          |          |     |          |          |          |          |          |          |     |
+| 7 | 10*E    | cNES*W  | c4      | cESW    | cEW     | cWN*E   | 20*W-N*N-W                  | (6 . 7) |         |         |          |          |          |          |          |          |     |          |          |          |          |          |          |     |
+| 8 | 10*E    | cNS*W   | cNS     | cNS     | 10*S    | 10*S    | (6 . 7)                     | (6 . 7) |         |         |          |          |          |          |          |          |     |          |          |          |          |          |          |     |
 
