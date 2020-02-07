@@ -29,11 +29,11 @@
   <!-- Water features -->
 
   <!-- Pool -->
-  <path fill="blue" fill-opacity=".5" d="M300,200 h200 a200,200,0,0,1,200,200 v200 a200,200,0,0,1,-200,200
-					 h-200 a200,200,0,0,1,-200,-200 v-200 a200,200,0,0,1,200,-200" />
-
-  <!-- Block of pool -->
+  <path fill="blue" stroke="none" d="M300,200 h200 v200 h-200 v-200" />
   <path fill="blue" stroke="none" d="M300,400 h200 v200 h-200 v-200" />
+  <path fill="blue" stroke="none" d="M300,600 h200 v200 h-200 v-200" />
+  <path fill="blue" stroke="none" d="M100,400 h200 v200 h-200 v-200" />
+  <path fill="blue" stroke="none" d="M500,400 h200 v200 h-200 v-200" />
 
   <!-- Beach NW corner -->
   <path fill="none" stroke="black" stroke-width="1" d="M0,100 v300 m300,-300 h-300" />
@@ -55,7 +55,6 @@
     <path d="M500,100 m0,100 a200,200,0,0,1,200,200 h-200 v-200" />
     <text x="685" y="215">B</text>
   </g>
-
 
   <!-- River flowing south -->
   <path stroke="none" fill="blue" d="M300,800 h200 v100 h-200 v-100" />
