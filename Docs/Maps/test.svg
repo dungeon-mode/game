@@ -3,9 +3,9 @@
 
   <!-- Define gradients for the map -->
   <defs>
-    <linearGradient id="vert_ramp" x1="0%" y1="0%" x2="0%" y2="100%">
+    <linearGradient id="level" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" style="stop-color:white;stop-opacity:0" />
-      <stop offset="50%" style="stop-color:yellow;stop-opacity:1" />
+      <stop offset="75%" style="stop-color:pink;stop-opacity:1" />
     </linearGradient>
   </defs>
 
@@ -13,20 +13,18 @@
 
   <rect fill="#fffdd0" stroke="none" x="0" y="0" width="100%" height="100%"/>
 
-  <!-- Graph paper horizontal lines -->
-  <path d="M 0 0 L 2400 0 M 0 100 L 2400 100 M 0 200 L 2400 200 M 0 300 L 2400 300 M 0 400 L 2400 400 M 0 500 L 2400 500 M 0 600 L 2400 600
-	   M 0 700 L 2400 700 M 0 800 L 2400 800 M 0 900 L 2400 900 M 0 1000 L 2400 1000 M 0 1100 L 2400 1100 M 0 1200 L 2400 1200
-	   M 0 1300 L 2400 1300 M 0 1400 L 2400 1400 M 0 1500 L 2400 1500 M 0 1600 L 2400 1600 M 0 1700 L 2400 1700 M 0 1800 L 2400 1800
-	   M 0 1900 L 2400 1900 M 0 2000 L 2400 2000 M 0 2100 L 2400 2100 M 0 2200 L 2400 2200 M 0 2300 L 2400 2300 M 0 2400 L 2400 2400"
-	   fill="none" stroke="blue" stroke-width=".2" />
+  <!-- Graph Paper -->
+  <g fill="none" stroke="blue" stroke-width=".2">
+  
+    <!-- Graph paper horizontal lines -->
+    <path d="M0,0 h2400 M0,100 h2400 M0,200 h2400 M0,300 h2400 M0,400 h2400 M0,500 h2400 M0,600 h2400 M0,700 h2400 M0,800 h2400 M0,900 h2400 M0,1000 h2400 M0,1100 h2400 M0,1200 h2400 
+	     M0,1300 h2400 M0,1400 h2400 M0,1500 h2400 M0,1600 h2400 M0,1700 h2400 M0,1800 h2400 M0,1900 h2400 M0,2000 h2400 M0,2100 h2400 M0,2200 h2400 M0,2300 h2400 M0,2400 h2400" />
 
-  <!-- Graph paper Vertical lines -->
-  <path d="M 0 0 L 0 2400 M 100 0 L 100 2400 M 200 0 L 200 2400 M 300 0 L 300 2400 M 400 0 L 400 2400 M 500 0 L 500 2400 M 600 0 L 600 2400
-           M 700 0 L 700 2400 M 800 0 L 800 2400 M 900 0 L 900 2400 M 1000 0 L 1000 2400 M 1100 0 L 1100 2400 M 1200 0 L 1200 2400 
-	   M 1300 0 L 1300 2400 M 1400 0 L 1400 2400 M 1500 0 L 1500 2400 M 1600 0 L 1600 2400 M 1700 0 L 1700 2400 M 1800 0 L 1800 2400
-	   M 1900 0 L 1900 2400 M 2000 0 L 2000 2400 M 2100 0 L 2100 2400 M 2200 0 L 2200 2400 M 2300 0 L 2300 2400 M 2400 0 L 2400 2400"
-           fill="none" stroke="blue" stroke-width=".2" />
+    <!-- Graph paper Vertical lines -->
+    <path d="M0,0 v2400 M100,0 v2400 M200,0 v2400 M300,0 v2400 M400,0 v2400 M500,0 v2400 M600,0 v2400 M700,0 v2400 M800,0 v2400 M900,0 v2400 M1000,0 v2400 M1100,0 v2400 M1200,0 v2400 
+	     M1300,0 v2400 M1400,0 v2400 M1500,0 v2400 M1600,0 v2400 M1700,0 v2400 M1800,0 v2400 M1900,0 v2400 M2000,0 v2400 M2100,0 v2400 M2200,0 v2400 M2300,0 v2400 M2400,0 v2400" />
 
+  </g>
 
   <!-- 10 x 10 rooms -->
 
@@ -310,13 +308,18 @@
 
   <!-- Ramp -->
   <path stroke="black" fill="none" stroke-width="1" d="M200,800 m100,0 v500 h-100 v-500" />
-  <path stroke="none" fill="url(#vert_ramp)" d="M200,800 h100 v500 h-100 z" />
-  <text stroke="green" fill="blue" font-size="50" x="240" y="1285">2</text>
+  <path stroke="none" fill="url(#level)" d="M200,800 h100 v500 h-100 z" />
+  <text stroke="none" fill="blue" font-size="50" x="240" y="1285">2</text>
 
   <!-- Stairs, opening to the north -->
-  <path fill="none" stroke="black" stroke-width="1" d="M100,100 m100,0 v200 h-100 v-200" />
-  <path fill="yellow" stroke="none" d="M100,100 h100 v200 h-100 z" />
-  <text x="135" y="285" font-size="50" fill="blue">2</text>
+  <path fill="none" stroke="black" stroke-width="1" d="M300,200 m100,0 v200 h-100 v-200" />
+  <path fill="url(#level)" stroke="none" d="M300,200 h100 v200 h-100 v-200" />
+  <text x="335" y="385" font-size="50" fill="black">2</text>
+
+  <!-- Stairs, opening to the West -->
+  <path fill="none" stroke="black" stroke-width="1" d="M400,100 h200 v100 h-200" />
+  <path fill="url(#level)" stroke="none" d="M400,100 h200 v100 h-200 v-100" />
+  <text x="565" y="175" font-size="50" fill="black">2</text>
 
 
   <!-- Special areas -->
@@ -348,9 +351,8 @@
 
   <!-- Elevator, secret door to the North -->
   <path fill="none" stroke="black" stroke-width="1" d="M1200,1500 h43 a7,7,0,0,1,14,0 a7,7,0,1,1,-14,0 m14,0 h43 v100 h-100 v-100" />
-  <path fill="yellow" stroke="none" d="M1200,1500 h43 a,1,1,0,0,0,14,0 h43 v100 h-100 v-100" />
+  <path fill="url(#level)" stroke="none" d="M1200,1500 h43 a,1,1,0,0,0,14,0 h43 v100 h-100 v-100" />
   <text x="1235" y="1565" font-size="50" fill="blue">E</text>
-
 
 
 

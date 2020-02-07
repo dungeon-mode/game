@@ -82,7 +82,13 @@ These features are intended to be used mostly as parts of compositions and rarel
 | *\:elf     | l.45,.45 a.05,.05,0,1,1,.1,.1                          | with Secret Door                |          |
 |            | a.05,.05,0,1,1,-.1,-.1 m.1,.1 l.45,.45 m-1,-1          |                                 |          |
 |            |                                                        |                                 |          |
-| __         | <path stroke="none" fill="purple" d="h1 v1 h-1 v-1" /> | Neutronium Wall                 |          |
+| __         |                                                        | Neutronium Wall                 |          |
+| __:default | _N _E _S _W                                            | :comment probably never correct |          |
+| __:north   | _N                                                     |                                 |          |
+| __:east    | _E                                                     |                                 |          |
+| __:south   | _S                                                     |                                 |          |
+| __:west    | _W                                                     |                                 |          |
+| __:human   | <path stroke="none" fill="purple" d="h1 v1 h-1 v-1" /> |                                 |          |
 |            |                                                        |                                 |          |
 
 
@@ -325,3 +331,70 @@ These features are intended to be used mostly as parts of compositions and rarel
 |         |                                                                       |                                   |          |
 | B-W     | / > _N > \ ! _E ! / < _S < \ ^ *W                                     | Balrog chamber, Secret door West  |          |
 |         |                                                                       |                                   |          |
+
+
+** Level Change Features Table
+   :PROPERTIES:
+   :name: level-change-features
+   :MAP-FEATURES: t
+   :END:
+
+# #+NAME: level-change-features
+| Feature     | Plan                                                                                       | Documentation               | Behavior        |
+|-------------+--------------------------------------------------------------------------------------------+-----------------------------+-----------------|
+| S^E         | cEW > ]W                                                                                   | Stairs up extending East    | <<stairs-up>>   |
+|             | <path fill="url(#level)" stroke="none" d="h1 v2 h-1 v-2" />                                |                             |                 |
+|             | <text x="1.65" y=".75" font-size=".5" fill="black">U</text>                                |                             |                 |
+|             |                                                                                            |                             |                 |
+| S^S         | cNS ! ]N                                                                                   | Stairs up extending South   | <<stairs-up>>   |
+|             | <path fill="url(#level)" stroke="none" d="h2 v1 h-2 v-1" />                                |                             |                 |
+|             | <text x=".4" y="1.85" font-size=".5" fill="black">U</text>                                 |                             |                 |
+|             |                                                                                            |                             |                 |
+| S!E         | cEW > ]W                                                                                   | Stairs down extending East  | <<stairs-down>> |
+|             | <path fill="url(#level)" stroke="none" d="h1 v2 h-1 v-2" />                                |                             |                 |
+|             | <text x="1.65" y=".75" font-size=".5" fill="black">D</text>                                |                             |                 |
+|             |                                                                                            |                             |                 |
+| S!S         | cNS ! ]N                                                                                   | Stairs down extending South | <<stairs-down>> |
+|             | <path fill="url(#level)" stroke="none" d="h2 v1 h-2 v-1" />                                |                             |                 |
+|             | <text x=".4" y="1.85" font-size=".5" fill="black">D</text>                                 |                             |                 |
+|             |                                                                                            |                             |                 |
+| R^E         |                                                                                            | Ramp up extending East      | <<ramp-up>>     |
+| R^E:default | cEW > cEW > cEW > cEW > ]W                                                                 |                             |                 |
+| R^E:dwarf   | cEW > cEW > cEW > cEW > ]W                                                                 |                             |                 |
+|             | <path fill="url(#level)" stroke="none" d="h5 v1 h-5 v-1" />                                |                             |                 |
+|             | <text x="4.65" y=".75" font-size=".5" fill="black">U</text>                                |                             |                 |
+|             |                                                                                            |                             |                 |
+| R^S         |                                                                                            | Ramp up extending South     | <<ramp-down>>   |
+| R^S:default | cNS ! cNS ! cNS ! cNS ! ]N                                                                 |                             |                 |
+| R^S:dwarf   | cNS ! cNS ! cNS ! cNS ! ]N                                                                 |                             |                 |
+|             | <path fill="url(#level)" stroke="none" d="h1 v5 h-1 v-5" />                                |                             |                 |
+|             | <text x=".4" y="4.85" font-size=".5" fill="black">U</text>                                 |                             |                 |
+|             |                                                                                            |                             |                 |
+| R!E         |                                                                                            | Ramp down extending East    | <<ramp-down>>   |
+| R!E:default | cEW > cEW > cEW > cEW > ]W                                                                 |                             |                 |
+| R!E:dwarf   | cEW > cEW > cEW > cEW > ]W                                                                 |                             |                 |
+|             | <path fill="url(#level)" stroke="none" d="h5 v1 h-5 v-1" />                                |                             |                 |
+|             | <text x="4.65" y=".75" font-size=".5" fill="black">D</text>                                |                             |                 |
+|             |                                                                                            |                             |                 |
+| R!S         |                                                                                            | Ramp down extending south   | <<ramp-down>>   |
+| R!S:default | cNS ! cNS ! cNS ! cNS ! ]N                                                                 |                             |                 |
+| R!S:dwarf   | cNS ! cNS ! cNS ! cNS ! ]N                                                                 |                             |                 |
+|             | <path fill="url(#level)" stroke="none" d="h1 v5 h-1 v-5" />                                |                             |                 |
+|             | <text x=".4" y="4.85" font-size=".5" fill="black">D</text>                                 |                             |                 |
+|             |                                                                                            |                             |                 |
+| E*N         | *N ]N                                                                                      | Elevator, Door North        | <<elevator>>    |
+|             | <path fill="url(#level)" stroke="none" d="h.43 a,.14,.14,0,0,0,.14,0 h.43 v1 h-1 v-1" />   |                             |                 |
+|             | <text x=".4" y=".65" font-size=".5" fill="blue">E</text>                                   |                             |                 |
+|             |                                                                                            |                             |                 |
+| E*E         | *E ]E                                                                                      | Elevator, Door East         | <<elevator>>    |
+|             | <path fill="url(#level)" stroke="none" d="h1 v.43 a,.14,.14,0,0,0,0,.14 v.43 h-1 v-1" />   |                             |                 |
+|             | <text x=".4" y=".65" font-size=".5" fill="blue">E</text>                                   |                             |                 |
+|             |                                                                                            |                             |                 |
+| E*S         | *S ]S                                                                                      | Elevator, Door South        | <<elevator>>    |
+|             | <path fill="url(#level)" stroke="none" d="h1 v1 h-.43 a,.14,.14,0,0,0,-.14,0 h-.43 v-1" /> |                             |                 |
+|             | <text x=".4" y=".65" font-size=".5" fill="blue">E</text>                                   |                             |                 |
+|             |                                                                                            |                             |                 |
+| E*W         | *W ]W                                                                                      | Elevator, Door West         | <<elevator>>    |
+|             | <path fill="url(#level)" stroke="none" d="h1 v1 h-1 v-.43 a,.14,.14,0,0,0,0,-.14 v-43" />  |                             |                 |
+|             | <text x=".4" y=".65" font-size=".5" fill="blue">E</text>                                   |                             |                 |
+|             |                                                                                            |                             |                 |
