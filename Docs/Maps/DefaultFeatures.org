@@ -30,58 +30,60 @@ functions for areas and beaches simply add text tags and water, but require the 
 These features are intended to be used mostly as parts of compositions and rarely will be the right thing alone.
 
 # #+NAME: private-map-features
-| Feature    | Plan                                          | Documentation                   | Behavior |
-|------------+-----------------------------------------------+---------------------------------+----------|
-| >          | m1,0                                          | Move 1 DU Right                 |          |
-| <          | m-1,0                                         | Move 1 DU Left                  |          |
-| ^          | m0,-1                                         | Move 1 DU Up                    |          |
-| !          | m0,1                                          | Move 1 DU Down                  |          |
-|            |                                               |                                 |          |
-| .NE        | m.98,0 h.02 v.02 m-1,-.02                     | Corner Dot - North/East corner  |          |
-| .ES        | m1,.98 v.02 h-.02 m-.98,-1                    | Corner Dot - East/South corner  |          |
-| .SW        | m.02,1 h-.02 v-.02 m-.98,0                    | Corner Dot - South/West corner  |          |
-| .WN        | m0,.02 v-.02 h.02 m-.02,0                     | Corner Dot - West/North corner  |          |
-|            |                                               |                                 |          |
-| _N         | h1 m-1,0                                      | North Wall                      |          |
-| _E         | m1,0 v1 m-1,-1                                | East Wall                       |          |
-| _S         | m0,1 h1 m-1,-1                                | South Wall                      |          |
-| _W         | v1 m0,-1                                      | West Wall                       |          |
-|            |                                               |                                 |          |
-| *N         |                                               | Corridor East/South/West        |          |
-| *N:default | _N                                            |                                 |          |
-| *N:elf     | h.43 a.7,.7,0,1,1,.14,0                       | Secret door North               |          |
-|            | a.7,.7,0,1,1,-.14,0 m.14,0 h.43 m-1,0         |                                 |          |
-| *E         |                                               | Corridor North/South/West       |          |
-| *E:default | _E                                            |                                 |          |
-| *E:elf     | m1,0 v.43 a.7,.7,0,1,1,0,.14                  | Secret door East                |          |
-|            | a.7,.7,0,1,1,0,-.14 m0,.14 v.43 m-1,-1        |                                 |          |
-| *S         |                                               | Corridor North/East/West        |          |
-| *S:default | _S                                            |                                 |          |
-| *S:elf     | m0,1 h.43 a.7,.7,0,1,1,.14,0                  | Secret door South               |          |
-|            | a.7,.7,0,1,1,-.14,0 m.14,0 h.43 m-1,-1        |                                 |          |
-| *W         |                                               | Corridor North/South/East       |          |
-| *W:default | _W                                            |                                 |          |
-| *W:elf     | v.43 a.7,.7,0,1,1,0,.14                       | Secret door East                |          |
-|            | a.7,.7,0,1,1,0,-.14 m0,.14 v.43 m0,-1         |                                 |          |
-|            |                                               |                                 |          |
-| ]N         | v1 h1 v-1 m-1,0                               | Corridor North (Dead-End South) |          |
-| ]E         | h1 m0,1 v-1 h-1                               | Corridor East (Dead-End west)   |          |
-| ]S         | h1 v1 m-1,0 v-1                               | Corridor South (Dead-End North) |          |
-| ]W         | h1 v1 h-1 m-1,0                               | Corridor West (Dead-End East)   |          |
-|            |                                               |                                 |          |
-| /          | m0,1 l1,-1 m-1,0                              | Half square NW/SE               |          |
-| \          | l1,1 m-1,-1                                   | Half square NE/SW               |          |
-|            |                                               |                                 |          |
-| */         |                                               | Half square NW/SE               |          |
-| */:default | m0,1 l1,-1 m-1,0                              |                                 |          |
-| */:elf     | m0,1 l.45,-.45 a.05,.05,0,1,1,.1,-.1          | with Secret Door                |          |
-|            | a.05,.05,0,1,1,-.1,.1 m.1,-.1 l.45,-.45 m-1,0 |                                 |          |
-|            |                                               |                                 |          |
-| *\         |                                               | Half square NE/SW               |          |
-| *\:default | l1,1 m1,1                                     |                                 |          |
-| *\:elf     | l.45,.45 a.05,.05,0,1,1,.1,.1                 | with Secret Door                |          |
-|            | a.05,.05,0,1,1,-.1,-.1 m.1,.1 l.45,.45 m-1,-1 |                                 |          |
-|            |                                               |                                 |          |
+| Feature    | Plan                                                   | Documentation                   | Behavior |
+|------------+--------------------------------------------------------+---------------------------------+----------|
+| >          | m1,0                                                   | Move 1 DU Right                 |          |
+| <          | m-1,0                                                  | Move 1 DU Left                  |          |
+| ^          | m0,-1                                                  | Move 1 DU Up                    |          |
+| !          | m0,1                                                   | Move 1 DU Down                  |          |
+|            |                                                        |                                 |          |
+| .NE        | m.98,0 h.02 v.02 m-1,-.02                              | Corner Dot - North/East corner  |          |
+| .ES        | m1,.98 v.02 h-.02 m-.98,-1                             | Corner Dot - East/South corner  |          |
+| .SW        | m.02,1 h-.02 v-.02 m-.98,0                             | Corner Dot - South/West corner  |          |
+| .WN        | m0,.02 v-.02 h.02 m-.02,0                              | Corner Dot - West/North corner  |          |
+|            |                                                        |                                 |          |
+| _N         | h1 m-1,0                                               | North Wall                      |          |
+| _E         | m1,0 v1 m-1,-1                                         | East Wall                       |          |
+| _S         | m0,1 h1 m-1,-1                                         | South Wall                      |          |
+| _W         | v1 m0,-1                                               | West Wall                       |          |
+|            |                                                        |                                 |          |
+| *N         |                                                        | Corridor East/South/West        |          |
+| *N:default | _N                                                     |                                 |          |
+| *N:elf     | h.43 a.7,.7,0,1,1,.14,0                                | Secret door North               |          |
+|            | a.7,.7,0,1,1,-.14,0 m.14,0 h.43 m-1,0                  |                                 |          |
+| *E         |                                                        | Corridor North/South/West       |          |
+| *E:default | _E                                                     |                                 |          |
+| *E:elf     | m1,0 v.43 a.7,.7,0,1,1,0,.14                           | Secret door East                |          |
+|            | a.7,.7,0,1,1,0,-.14 m0,.14 v.43 m-1,-1                 |                                 |          |
+| *S         |                                                        | Corridor North/East/West        |          |
+| *S:default | _S                                                     |                                 |          |
+| *S:elf     | m0,1 h.43 a.7,.7,0,1,1,.14,0                           | Secret door South               |          |
+|            | a.7,.7,0,1,1,-.14,0 m.14,0 h.43 m-1,-1                 |                                 |          |
+| *W         |                                                        | Corridor North/South/East       |          |
+| *W:default | _W                                                     |                                 |          |
+| *W:elf     | v.43 a.7,.7,0,1,1,0,.14                                | Secret door East                |          |
+|            | a.7,.7,0,1,1,0,-.14 m0,.14 v.43 m0,-1                  |                                 |          |
+|            |                                                        |                                 |          |
+| ]N         | v1 h1 v-1 m-1,0                                        | Corridor North (Dead-End South) |          |
+| ]E         | h1 m0,1 v-1 h-1                                        | Corridor East (Dead-End west)   |          |
+| ]S         | h1 v1 m-1,0 v-1                                        | Corridor South (Dead-End North) |          |
+| ]W         | h1 v1 h-1 m-1,0                                        | Corridor West (Dead-End East)   |          |
+|            |                                                        |                                 |          |
+| /          | m0,1 l1,-1 m-1,0                                       | Half square NW/SE               |          |
+| \          | l1,1 m-1,-1                                            | Half square NE/SW               |          |
+|            |                                                        |                                 |          |
+| */         |                                                        | Half square NW/SE               |          |
+| */:default | m0,1 l1,-1 m-1,0                                       |                                 |          |
+| */:elf     | m0,1 l.45,-.45 a.05,.05,0,1,1,.1,-.1                   | with Secret Door                |          |
+|            | a.05,.05,0,1,1,-.1,.1 m.1,-.1 l.45,-.45 m-1,0          |                                 |          |
+|            |                                                        |                                 |          |
+| *\         |                                                        | Half square NE/SW               |          |
+| *\:default | l1,1 m1,1                                              |                                 |          |
+| *\:elf     | l.45,.45 a.05,.05,0,1,1,.1,.1                          | with Secret Door                |          |
+|            | a.05,.05,0,1,1,-.1,-.1 m.1,.1 l.45,.45 m-1,-1          |                                 |          |
+|            |                                                        |                                 |          |
+| __         | <path stroke="none" fill="purple" d="h1 v1 h-1 v-1" /> | Neutronium Wall                 |          |
+|            |                                                        |                                 |          |
 
 
 ** Water Features Tables
@@ -128,8 +130,7 @@ These features are intended to be used mostly as parts of compositions and rarel
 # #+NAME: 20-water-features
 | Feature | Plan                                                                                       | Documentation                    | Behavior |
 |---------+--------------------------------------------------------------------------------------------+----------------------------------+----------|
-| pool    | <path fill="blue" fill-opacity="1" d="h2 a2,2,0,0,1,2,2 v2 a2,2,0,0,1,-2,2                 |                                  |          |
-|         | h-2 a2,2,0,0,1,-2,-2 v-2 a2,2,0,0,1,2,-2" />                                               |                                  |          |
+| pool    | <path fill="blue" fill-opacity="1" d="h2 v2 h-2 v-2" />                                                                                           |                                  |          |
 |         |                                                                                            |                                  |          |
 | rivN    | <path stroke="none" fill="blue" d="h2 v1 h-2 v-1" />                                       |                                  |          |
 |         | <path stroke="none" fill="cyan" d="m.98,.8 h.02 v-.5 h.05 l-.06,-.1 l-.06,.1 h.05 v.5" />  |                                  |          |
@@ -159,9 +160,6 @@ These features are intended to be used mostly as parts of compositions and rarel
 |         | <path d="m1,3 a2,2,0,0,0,2,-2 h2 v-2" />                                                   |                                  |          |
 |         | <text x=".85" y="1.15">B</text></g>                                                        |                                  |          |
 |         |                                                                                            |                                  |          |
-
-
-
 
 
 ** Corridor Features Table
@@ -280,6 +278,20 @@ These features are intended to be used mostly as parts of compositions and rarel
 | 10*E       | ]E *E                         | 10x10 chamber, secret door East                                 |          |
 | 10*S       | ]S *S                         | 10x10 chamber, secret door South                                |          |
 | 10*W       | ]W *W                         | 10x10 chamber, secret door West                                 |          |
+|            |                               |                                                                 |          |
+| 10xS*N     | _W *N _E ! ]N                 | 10x20NS chamber, secret door North                              |          |
+| 10xS*E-N   | _W _N  *E ! ]N                | 10x20NS chamber, secret door East (north)                       |          |
+| 10xS*E-S   | ]S ! _W _S *E                 | 10x20NS chamber, secret door East (south)                       |          |
+| 10xS*S     | ]S ! _W *S _E                 | 10x20NS chamber, secret door South                              |          |
+| 10xS*W-N   | *W _N _E ! ]N                 | 10x20NS chamber, secret door West (North)                       |          |
+| 10xS*W-S   | ]S ! *W _S _E                 | 10x20NS chamber, secret door West (south)                       |          |
+|            |                               |                                                                 |          |
+| 10xE*N-E   | ]E > *N _E _S                 | 10x20EW chamber, secret door North (East)                       |          |
+| 10xE*N-W   | *N _S _W > ]W                 | 10x20EW chamber, secret door North (West)                       |          |
+| 10xE*E     | ]E > _N *E _S                 | 10x20EW chamber, secret door East                               |          |
+| 10xE*S-E   | ]E > _N _E *S                 | 10x20EW chamber, secret door South (East)                       |          |
+| 10xE*S-W   | _N *S _W > ]W                 | 10x20EW chamber, secret door South (West)                       |          |
+| 10xE*W     | _N _S *W > ]W                 | 10x20EW chamber, secret door West                               |          |
 |            |                               |                                                                 |          |
 | 20*N-W     | _W *N > _N _E ! _E _S < _S _W | 20x20 chamber, Secret door in Western half of nothern wall      |          |
 | 20*N-E     | _W _N > *N _E ! _E _S < _S _W | 20x20 chamber, Secret door in Eastern half of nothern wall      |          |
