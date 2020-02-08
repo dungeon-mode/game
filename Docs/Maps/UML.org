@@ -1,0 +1,71 @@
+#+TITLE: Dungeon Mode Rendering Design in Unified Modeling Language
+
+#+begin_src plantuml :file tryout2.png
+start
+partition Predicates {
+note right
+  ~~GIVEN~~
+  *""__dm-svg__              ""object to update or //nil// to return draw code
+  * ""__target-map-pos__       ""as tuple ""(x y dlv)"", the new Map Position if successful
+  * ""__direction-of-travel__  ""one of N..NE, or Teleport, Stairs, etc.
+  * ""__scaling-factor__       ""as a cons cell ""(x-scale . y-scale)""
+  *""__map-source__            ""as an hash table
+  ** Each Key is one of:
+  ***""**Map Feature**   ""a unique symbol, or
+  ***""**Map Position**  ""as elsewhere described, or
+  ***""//t//             ""as a special case, for features we always draw.
+  ** Values are a plist including pairs as such:
+  ""   (list 'plan          LIST             ;; raw draw source""
+  ""         'paths         LIST             ;; abbreviated SVG path code""
+  ""         'elements      LIST             ;; complete SVG nodes""
+  ""         'documentation STRING           ;; local doc-string""
+  ""         'narrative     STRING_OR_SYMBOL ;; narration for players""
+  ""         'behaviour     LIST            );; symbols or functions""
+  *""__party-location-plist__  ""Which properites derive from:
+  **""**Party** compisition    ""presence of each **Race**, etc.
+  **""**Event**                ""including circumstantial e.g. Chased by Slugs
+  **""**Special Powers**       ""character **Special Power** may affect movement
+  **""**Map Position**         ""as tuple ""(x y div)"", prior to this move
+  **""**Map Seen**             ""list of **Map Position**
+  **""t                        ""default behaviours, e.g. automation
+end note
+  :update-party-position(A);
+  partition with-properties {
+    while (unprocessed properties?) is (t)
+      :let (val);
+      if (not consp) then (t)
+        :setq val list(val);
+      endif
+      if (functionp) then (t)
+        :apply;
+      elseif (symbolp) then (yes)
+        :resolve|
+      else (nil)
+      endif
+      if (target-map-pos changed?) then (t)
+        (A)
+	detach
+      endif
+    endwhile (nil)
+  }
+  partition resolve-paths {
+    :let ((path (gethash target-map-pos))
+          features);
+    while (path contains symbol?) is (t)
+      :let symbol-path (gethash symbol);
+      while (symbol-path contains inner-symbol?) is (t)
+        :setq symbol-path (resolve-paths inner-symbol);
+      endwhile (nil)
+      :add-to-list features symbol-path;
+    endwhile (nil)
+  }
+:return (path . features);
+}
+stop
+#+end_src
+
+#+RESULTS:
+[[file:tryout2.png]]
+
+This document provides a Unified Modeling Language version of the
+design for rendering dungeon-mode maps as Scalable Vector Graphics.
