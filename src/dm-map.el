@@ -287,7 +287,7 @@ if a file doesn't exist, cannot be opened, etc."
 	   (org-entry-get tpom dm-map-features-table-property-tag)
 	   ) org-files))
 
-b;;(dm-map-load-feature-files  "../Docs/Maps/Design.org" "../Docs/Maps/test.org")
+;;(dm-map-load-feature-files  "../Docs/Maps/Design.org" "../Docs/Maps/test.org")
 ;;(car(dm-map-load-feature-files "../Docs/Maps/test.org"))
 
 ;; New plan:
@@ -369,10 +369,9 @@ TODO deal with docstrings"
 		 (seq-uniq (mapcar 'car feature-attributes-list)
 			   'string=))))
 
-    ;; Corwin: I'm somewhat attracted to plugability of having
-    ;; SVG parsing completely seperated out like this but I'm
-    ;; not comfortable with need to keep re-walking the list.
-    ;;
+    ;; Corwin: I'm somewhat attracted to plugability of having SVG
+    ;; parsing completely seperated out like this but not with
+    ;; repeatedly re-walking the list.
     (dolist (strings feature-attributes-list)
       (dm-map--init-hash-entry hash strings names))
     (dm-map--parse-plan hash)
@@ -423,18 +422,6 @@ associated to a plist with the following keys:
     (puthash fsymbol `(plan ,plan paths ,commands docs ,docs) hash)))
 
 ;; (gethash 'c-NS+sE (apply 'dm-map-defeatures (dm-map-load-feature-files  "../Docs/Maps/Design.org" "../Docs/Maps/test.org")))
-
-(with-temp-buffer
-  (let ((hash (apply 'dm-map-defeatures
-		     (dm-map-load-feature-files "../Docs/Maps/Design.org"
-						"../Docs/Maps/test.org")))
-	(standard-output (current-buffer))
-	print-length print-level)
-    (seq-map (lambda (key)
-	       (prin1 (format "\n\n[%s]\n" key))
-	       (print (gethash key hash))
-	       ) (hash-table-keys hash)))
-  (buffer-string))
 
 (cl-defun dm-map--maybe-resolve-path
     (hash path
@@ -577,6 +564,18 @@ the argument sequence each as a seperate list item."
 
 ;;(dm-map--parse-path-command "A-.01,1.20")
 ;;(split-string "A-.01,1.20" "[0-9,.-]" t nil)
+
+(with-temp-buffer
+  (let ((hash (apply 'dm-map-defeatures
+		     (dm-map-load-feature-files "../Docs/Maps/Design.org"
+						"../Docs/Maps/test.org")))
+	(standard-output (current-buffer))
+	print-length print-level)
+    (seq-map (lambda (key)
+	       (prin1 (format "\n\n[%s]\n" key))
+	       (print (gethash key hash))
+	       ) (hash-table-keys hash)))
+  (buffer-string))
 
 ;; I invented intern, but dumber.
 ;;(equal (car (let ((x "foo")) (read-from-string x))) (intern "foo")) => t

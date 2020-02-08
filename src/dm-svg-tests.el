@@ -33,7 +33,7 @@
   (unless (or forcep (featurep 'dm-svg))
     (require package)))
 
-;; TODO factor out above macro and func
+;; :TODO:DONE: factor out above macro and func
 ;; TODO consider buttercup.el https://github.com/jorgenschaefer/emacs-buttercup
 
 (ert-deftest dm-svg--require ()

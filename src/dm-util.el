@@ -1,4 +1,4 @@
-;;; dm-util.el --- dungeon-mode macros and internals  -*- lexical-binding: t; -*-
+;;; dm-util.el --- dungeon-mode table binding internals  -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2020 Corwin Brust
 
@@ -20,7 +20,11 @@
 
 ;;; Commentary:
 
-;;
+;; TODO dm-util:1 refactor to use `cl-destructuring-bind' then factor
+;;  out most or all of the keyword implementations compisitonally.
+
+;; TODO dm-util:2 binds should be the first arg and strings the second
+;;  this can be done irrespective of when we take on the dm-util:1.
 
 ;;; Code:
 
@@ -47,7 +51,8 @@ See `dm-coalesce-hash."
       (dm--remove-keywords (cdr-safe (cdr form)))
     (if (cdr-safe form)
 	(cons (car-safe form) (dm--remove-keywords (cdr form)))
-      form)))
+      (unless (and (car-safe form) (keywordp (car form)))
+	  form))))
 ;;(equal (dm--remove-keywords '(foo :bar baz qwz)) '(foo qwz))
 ;;(equal (dm--remove-keywords '(:foo 1 baz qwz)) '(baz qwz))
 
@@ -122,9 +127,9 @@ key by interning the value of KEY-SYMBOL."
        ,hash-symbol)))
 
 (dm-coalesce-hash (("h1" "H2" "H3")
-			 ("r1" "V12" "V13")
-			 ("r2" "V22" "V23")
-			 ("r3" "V32" "V33"))
+		   ("r1" "V12" "V13")
+		   ("r2" "V22" "V23")
+		   ("r3" "V32" "V33"))
     nil
   (puthash (nth 0 row) row hash)
   :after nil)
@@ -155,14 +160,14 @@ key by interning the value of KEY-SYMBOL."
 
 (let ((dm-default-coalesce-key '(id _ h1)))
   (dm-coalesce-hash (("h1" "H2" "H3")
-			   ("r1" "V12" "V13")
-			   ("r2" "V22" "V23")
-			   ("r3" "V32" "V33"))))
+		     ("r1" "V12" "V13")
+		     ("r2" "V22" "V23")
+		     ("r3" "V32" "V33"))))
 
 (dm-coalesce-hash (("h1" "H2" "H3")
-			 ("r1" "V12" "V13")
-			 ("r2" "V22" "V23")
-			 ("r3" "V32" "V33"))
+		   ("r1" "V12" "V13")
+		   ("r2" "V22" "V23")
+		   ("r3" "V32" "V33"))
     (id bob)
   (list (quote bob) bob))
 

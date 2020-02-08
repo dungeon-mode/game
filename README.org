@@ -11,7 +11,73 @@ Dungeon (Minneapolis Dungeon, Larry's Maze, et. al.).
 Requires GNU Emacs 26.3 or later, available here for most platforms:
   http://gnu.org/software/emacs
 
-* APPROACH 
+* STATUS
+
+** The MTPT
+
+ We're writing POC code for the two features targeted for the initial
+ Minimum Learning Product, which we call our "Minimum Play-Testable
+ Product", or MPTP.
+
+ 1. Rendering levels of dungeon maze as SVG graphics
+    * Erik (Tigersbite) is hand authoring sample maps in SVG and
+	org-mode.  We'll use these eventually in test code, we think.
+	Currently they are serving to flush out the complexities of
+	expressing the data and driving out design for Corwin's work.
+    * Corwin (mplsCorwin) is writing lisp packages to read in data
+	from the org-mode tables and draw SVG graphics and including
+	some basic optimizations targeting a server that needs to build
+	draw instructions from secret information and send them to
+	multiple clients that must redraw sections of the display as
+	revealed secrets change players understanding of previously
+	uncovered parts of the map.
+ 2. The Battle Board is the primary player display interface during
+     combat, while combat and movement about the map are the two
+     primary states of play for Dungeon.  We'll take this on once we
+     like our designs for mapping, and especially for interacting with
+     source material written in/with/for/by org-mode.
+
+** State of this Repository
+
+This is currently the offical repository of dungeon-mode et. al.
+
+*** Why Repo Much Ugly?
+
+Lots of the documentation is aspirational.  We spent the first six or
+so weeks of the project considering what we might want dungeon-mode to
+do.  Since then we've turned our attention to POC code, as mentioned
+above.
+
+Eventually, as play-testing moves forward, we can come back
+and see what parts of our conceptual visions stuck and feel like they
+should be part of the package and which feel extra.
+
+   * Our current approach is pitching all manner of sources every
+     which way while taking little to no care for repository hygiene.
+   * We'll continue in this manner until we can build the MPTP.
+
+*** Mkay. How do I make sense of all this, then?
+
+Generally look at this we've committed recently for a more tacitical and less aspirational view of the project.
+   * Recently pushed .el files give a sense what our code is looking like
+   * Recently pushed .svg files are demo the (limited) graphics
+     capabilities planned.
+   * This document, while aspirational, give a great sense of what
+     dungeon-mode /might/ be able to do.
+   * Other Org documents in the Docs, especially Docs/Maps folders,
+     provide feature specific designs or prototypes of a more and less
+     aspirational nature.
+   * Generally, the more recently someone has committed something the
+     more likely it is tactical with respect to the MPTP.
+   * Ask!  Open an issue and ask your question or pop over to our
+     Discord server (linked at EOF).
+
+*** Help Wanted
+
+Even if all you feel like doing is grooming this repo a bit we'd love
+you're help and enthusiasm!  Reach out via issue for commit access.
+
+* APPROACH
 
 Dungeon-mode is a game engine and REPL for creating and playing
 multi-user dungeons written primarily in emacs lisp.  While playing a
@@ -374,3 +440,5 @@ editor.  We'd love your input and participation!
 
 Find us on [[https://discord.gg/gar8ns][Discord]] or join #dungeon-mode on Freenet.net IRC or open an
 issue on github to request commit access or make contact.
+
+#  LocalWords:  MPTP POC EOF Org svg
