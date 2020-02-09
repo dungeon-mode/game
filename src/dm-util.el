@@ -56,6 +56,18 @@ See `dm-coalesce-hash."
 ;;(equal (dm--remove-keywords '(foo :bar baz qwz)) '(foo qwz))
 ;;(equal (dm--remove-keywords '(:foo 1 baz qwz)) '(baz qwz))
 
+;; (let ((h (dm-coalesce-hash (("h1" "H2" "H3")
+;; 				  ("r1" "V12" "V13")
+;; 				  ("r2" "V22" "V23")
+;; 				  ("r3" "V32" "V33"))
+;; 	     (id h2)
+;; 	   :hash-table #s(hash-table size 30 test equal)
+;; 	   :start-column 1
+;; 	   (list 'id id 'h2 h2))))
+;;   ;;(print h)
+;;   h)
+;; (dm-coalesce-hash((1 "a")(2 "b"))(_) :after(puthash(nth 0 row)(cdr row)hash))
+
 (cl-defmacro dm-coalesce-hash
     (strings &optional (bindings dm-util-default-coalesce-key) &body body
 	     &key (hash-symbol 'hash)
@@ -125,72 +137,6 @@ key by interning the value of KEY-SYMBOL."
     `(let* ((,hash-symbol ,hash-table) ,row-symbol ,result-symbol)
        (mapcar ,row-form (quote ,strings))
        ,hash-symbol)))
-
-(dm-coalesce-hash (("h1" "H2" "H3")
-		   ("r1" "V12" "V13")
-		   ("r2" "V22" "V23")
-		   ("r3" "V32" "V33"))
-    nil
-  (puthash (nth 0 row) row hash)
-  :after nil)
-
-(dm-coalesce-hash (("h1" "H2" "H3")
-			 ("r1" "V12" "V13")
-			 ("r2" "V22" "V23")
-			 ("r3" "V32" "V33"))
-    (_)
-  (puthash (intern (nth 0 row)) row hash)
-  :after nil
-  )
-
-(dm-coalesce-hash (("h1" "H2" "H3")
-			 ("r1" "V12" "V13")
-			 ("r2" "V22" "V23")
-			 ("r3" "V32" "V33"))
-    (_)
-  :after
-  (puthash (intern (nth 0 row)) (cdr row) hash))
-
-(dm-coalesce-hash (("h1" "H2" "H3")
-			 ("r1" "V12" "V13")
-			 ("r2" "V22" "V23")
-			 ("r3" "V32" "V33"))
-    ;;(id h2)
-  )
-
-(let ((dm-default-coalesce-key '(id _ h1)))
-  (dm-coalesce-hash (("h1" "H2" "H3")
-		     ("r1" "V12" "V13")
-		     ("r2" "V22" "V23")
-		     ("r3" "V32" "V33"))))
-
-(dm-coalesce-hash (("h1" "H2" "H3")
-		   ("r1" "V12" "V13")
-		   ("r2" "V22" "V23")
-		   ("r3" "V32" "V33"))
-    (id bob)
-  (list (quote bob) bob))
-
-
-
-(dm-coalesce-hash (("h1" "H2" "H3")
-			 ("r1" "V12" "V13")
-			 ("r2" "V22" "V23")
-			 ("r3" "V32" "V33"))
-    (id _ h2)
-  :start-column 0
-  (list 'id (format "id:<%s>" id) '2 h2 'raw row))
-
-(let ((h (dm-coalesce-hash (("h1" "H2" "H3")
-				  ("r1" "V12" "V13")
-				  ("r2" "V22" "V23")
-				  ("r3" "V32" "V33"))
-	     (id h2)
-	   :hash-table #s(hash-table size 30 test equal)
-	   :start-column 1
-	   (list 'id id 'h2 h2))))
-  ;;(print h)
-  h)
 
 (provide 'dm-util)
 ;;; dm-util.el ends here

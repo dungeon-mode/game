@@ -57,13 +57,194 @@
 		   (require 'cl))
 
 ;; DEVEL hack: prefer version from CWD, if any
-(let ((load-path (append '(".") load-path))) (require 'dm-svg))
+(let ((load-path (append '(".") load-path)))
+  (require 'dm-util)
+  (require 'dm-svg))
 
 ;;; Code:
 
-(defvar dm-map-features-table-property-tag "MAP-FEATURES")
+(defcustom dm-map-columns-header-alist '()
+  "Columns to bind as an alist.")
 
-;;;;;
+(defvar dm-map-features-table-property-tag "MAP-FEATURES"
+  "Table property flagging MAP-FEATURES.
+
+TODO this will change with the \"striping\" design")
+
+(defvar dm-map-on-row-hook '()
+  "Called while reading, immediately after setting `dm-map--last-row'.
+
+The default value removes hlines and saves and removes header rows.")
+
+(defvar dm-map-default-row-functions `(dm-map-remove-hline
+				       dm-map-stow-header
+				       dm-map-count-rows)
+  "While reading, functions for dm-map-on-row-hook.")
+
+(defvar dm-map-feature '()
+  "List of map features.  Populated while reading.")
+
+(defvar dm-map-missing-feature-alist '()
+  "List mentioned but undefined map features.
+
+Populated while reading.")
+
+(defvar dm-map-cell-feature-alist '()
+  "Alist mapping map cells to refererenced features.
+
+Populated while reading.  Map cells are expressed in the form:
+
+  (x y dlv)")
+
+;;;;;;; private vars
+
+(defvar dm-map--last-row nil
+  "While reading, the last row read.
+
+When set to nil row is omited from read result.")
+
+(defvar dm-map--last-feature nil
+  "While reading, the last feature read.
+
+When the identity column for a give row is blank this value
+retains a key to update.  Value is either a symbol identifying
+derd a map feature, or a map-level location, e.g. in the form:
+
+  (x y dlv)")
+
+(defvar dm-map--row-count nil
+  "While reading, the count of undropped rows read.")
+
+(defvar dm-map--last-header-row nil
+  "While reading, the last header row found.")
+
+;;;;;;; some default hooks for row triage
+
+(defun dm-map-remove-hline (row)
+  "While reading, suppress 'hline."
+  (not (equal 'hline row)))
+
+(defun dm-map-stow-header (row)
+  "While reading, suppress and save header lines.
+
+Header is saved in 'dm-map--last-header-row' overwriting any
+value already there.  ROW is ignored."
+  (ignore row)
+  ;;(message "col:%s car:%s downcase-car:%s")
+  (not (when (and (car-safe dm-map--last-row)
+		  (not (string-blank-p (car dm-map--last-row)))
+		  (not (eq (aref (car dm-map--last-row) 0)
+			   (downcase (or (aref (car dm-map--last-row) 0)
+					 0)))))
+	 (message "found header-row:%s" dm-map--last-row)
+	 (setq dm-map--last-row nil
+	       dm-map--last-header-row dm-map--last-row))))
+
+(define-inline dm-map-count-rows (row)
+  "While reading, count lines that will be added.
+
+Uses `dm-map-last-row', ROW is ignored."
+  (message "hello from counter"))
+
+
+(dm-map-load-feature-files  "../Docs/Maps/Design.org" "../Docs/Maps/test.org")
+
+;;;;;;; read support
+
+(defun dm-map-load-tagged-tables-in-files (predicate &rest org-files)
+  "Return a list of rows from tables with TAG in ORG-FILES.
+
+ORG-FILES is a list of file-names as strings.  PREDICATE is a
+function which receives the point-or-marker (POM) indicating the
+start position for a given `org-table' and should return true if
+the table is to be included.
+
+Results are a list each each found column as a list of strings.
+Errors are thown if a file doesn't exist, cannot be opened, etc."
+  (let ( dm-map--last-row
+	(dm-map--row-count 0)
+	(dm-map-on-row-hook
+	 (seq-map (lambda (hook-func)
+		    (message "adding %s" hook-func)
+		    (add-hook 'dm-map-on-row-hook hook-func t t)
+		    ) dm-map-default-row-functions)))
+    ;; (dolist (hook-func dm-map-default-row-functions)
+    ;;   (add-hook 'dm-map-on-row-hook hook-func t t))
+    (seq-map
+     (lambda (this-file)
+       (with-temp-buffer
+	 (insert-file-contents this-file)
+	 (org-element-map (org-element-parse-buffer) 'table
+	   (lambda (table)
+	     (let ((tpom (org-element-property :begin table)))
+	       (and (funcall predicate tpom)
+		    (save-excursion
+		      (goto-char tpom)
+		      (delete
+		       nil
+		       (mapcar
+			(lambda (row)
+			  (setq dm-map--last-row row)
+			  (when  (and (run-hook-with-args-until-failure
+				       'dm-map-on-row-hook
+				       dm-map--last-row))
+			    (append dm-map--last-row
+				    (list (setq dm-map--row-count
+						(1+ dm-map--row-count)))))
+			  ) (org-table-to-lisp)))
+		      ))))))) org-files)))
+
+(defun dm-map-load-feature-files (&rest org-files)
+  "Return list of map features as defined in ORG-FILES.
+
+Results are a single list of feature attributes each in the form:
+
+   ( \"FEATURE\" \"DRAW CODE\" \"DOCSTRING\" \"NARRATIVE\" )
+
+Map feature tables are those contained in a section with the
+MAP-FEATURES property set to a truthy value.  Errors are thown
+if a file doesn't exist, cannot be opened, etc."
+  (apply 'dm-map-load-tagged-tables-in-files
+	 (lambda (tpom)
+	   (org-entry-get tpom dm-map-features-table-property-tag)
+	   ) org-files))
+
+(defun dm-map-load-level (name &rest org-files)
+  "Return a list of cells in map-level NAME from ORG-FILES."
+  (apply 'dm-map-load-tagged-tables-in-files
+	 (lambda (tpom)
+	   (message "%s=%s" name (org-entry-get tpom "NAME"))
+	   (string= name (org-entry-get tpom "NAME"))
+	   ) org-files))
+
+;;(dm-map-load-feature-files  "../Docs/Maps/Design.org" "../Docs/Maps/test.org")
+;;(car(dm-map-load-feature-files "../Docs/Maps/test.org"))
+;;(dm-map-load-level "regression-test-map-level" "../Docs/Maps/Design.org")
+;; (apply 'dm-map--parse-map-level (dm-map-load-level "regression-test-map-level" "../Docs/Maps/Design.org"))
+;; ;; examples from early dm-util test tests
+;; (let ((h (dm-coalesce-hash (("h1" "H2" "H3")
+;; 				  ("r1" "V12" "V13")
+;; 				  ("r2" "V22" "V23")
+;; 				  ("r3" "V32" "V33"))
+;; 	     (id h2)
+;; 	   :hash-table #s(hash-table size 30 test equal)
+;; 	   :start-column 1
+;; 	   (list 'id id 'h2 h2))))
+;;   ;;(print h)
+;;   h)
+;; (dm-coalesce-hash( )(_) :after(puthash(nth 0 row)(cdr row)hash))
+
+(defun dm-map--parse-map-level (&rest rows)
+  "Return a list of map-level cells from `org-table' ROWS."
+  (mapcar (lambda (cell)
+	    (cl-destructuring-bind (x y plan dstr nstr) cell
+	      (list 'pos (cons (string-to-number x)
+			       (string-to-number y))
+		    'plan plan
+		    'docs  (delete "" (list dstr nstr))
+		    ))) rows))
+;;;;;;;;;
+
 ;; quick and dirty procedural approach
 
 (cl-defun dm-map--dom-attr-scale-nth (dom-node scale (attr n))
@@ -130,10 +311,52 @@ between 0 and 1 inclusive."
 	(_ (message "unhandled %s => %s" (type-of cell) cell))
 	))
      )))
+;; (dm-map-default-scale-function '(100 . 1000)
+;; 			       (dom-node 'text '((text-size .5)(x .2)))
+;; 			       '(h (.1)) '(v (.2))'(m (.3 .4)) '(l (.5 .6)) '(x (.7 .8)) '(a (.7 .7 0 1 1 0 .14)))
 
-(dm-map-default-scale-function '(100 . 1000)
-			       (dom-node 'text '((text-size .5)(x .2)))
-			       '(h (.1)) '(v (.2))'(m (.3 .4)) '(l (.5 .6)) '(x (.7 .8)) '(a (.7 .7 0 1 1 0 .14)))
+;; TODO we need to split out :keywords that may be run together
+;; with repeated feature names
+(defun dm-map--parse-path-command (svg-path-command-string)
+  "Split SVG-PATH-COMMAND-STRING into command and args.
+
+Returned list has the command ([MmVvHhSsAaLl]) as car followed by
+the argument sequence each as a seperate list item."
+  (list (substring svg-path-command-string 0 1)
+	(mapcar 'string-to-number
+		(split-string (substring svg-path-command-string 1)
+			      "[,]"))))
+;;(dm-map--parse-path-command "A-.01,1.20")
+;;(split-string "A-.01,1.20" "[0-9,.-]" t nil)
+
+(defun dm-map--parse-plan (hash)
+  "Cross-map HASH keys to resolve features as SVG code.
+
+TODO: return a list of unresolved symbols?"
+  (dm-map-maybe-resolve-path hash))
+  ;; (maphash (lambda (k v)
+  ;; 	     (when (plist-member v 'paths)
+  ;; 	       (plist-put v 'paths
+  ;; 			  (mapcan (lambda (ref)
+  ;; 				    (dm-map--maybe-resolve-path hash ref
+  ;; 								nil t nil))
+  ;; 				  (plist-get v 'paths))))
+  ;; 	     ) hash))
+
+;(gethash 'c-NSN (apply 'dm-map-defeatures (dm-map-load-feature-files "../Docs/Maps/test.org")))
+
+
+(with-temp-buffer
+  (let ((hash (apply 'dm-map-defeatures
+		     (dm-map-load-feature-files "../Docs/Maps/Design.org"
+						"../Docs/Maps/test.org")))
+	(standard-output (current-buffer))
+	print-length print-level)
+    (seq-map (lambda (key)
+	       (prin1 (format "\n\n[%s]\n" key))
+	       (print (gethash key hash))
+	       ) (hash-table-keys hash)))
+  (buffer-string))
 
 (cl-defun dm-map-quick-draw (features
 			     cells
@@ -167,54 +390,6 @@ origin (e.g. M0,0) as it's final instruction."
   (let ((paths nil))
     )
   )
-
-(defun dm-map-load-tagged-tables-in-files (predicate &rest org-files)
-  "Return a list of rows from tables with TAG in ORG-FILES.
-
-ORG-FILES is a list of file-names as strings.  PREDICATE is a
-function which receives the point-or-marker (POM) indicating the
-start position for a given `org-table' and should return true if
-the table is to be included.
-
-Results are a single list where each element represents a table
-row populated with the cell values as strings.  Errors are thown
-if a file doesn't exist, cannot be opened, etc."
-  (let ((files org-files)
-	this-file
-	feature-tables)
-    (while (setq this-file (pop files))
-      (with-temp-buffer
-	(insert-file-contents this-file)
-	(org-element-map (org-element-parse-buffer) 'table
-	  (lambda (table)
-	    (let ((tpom (org-element-property :begin table)))
-	      (and (funcall predicate tpom)
-		   (push (save-excursion
-			   (goto-char tpom)
-			   (cdr (delete 'hline (org-table-to-lisp))
-				)) feature-tables)))))))
-    (apply `seq-concatenate 'list feature-tables)))
-
-(defun dm-map-load-level (name &rest org-files)
-  "Return a list of cells in map-level NAME from ORG-FILES."
-  (apply 'dm-map-load-tagged-tables-in-files
-	 (lambda (tpom)
-	   (message "%s=%s" name (org-entry-get tpom "NAME"))
-	   (string= name (org-entry-get tpom "NAME"))
-	   ) org-files))
-;;(dm-map-load-level "regression-test-map-level" "../Docs/Maps/Design.org")
-
-(defun dm-map--parse-map-level (&rest rows)
-  "Return a list of map-level cells from `org-table' ROWS."
-  (mapcar (lambda (cell)
-	    (cl-destructuring-bind (x y plan dstr nstr) cell
-	      (list 'pos (cons (string-to-number x)
-			       (string-to-number y))
-		    'plan plan
-		    'docs  (delete "" (list dstr nstr))
-		    ))) rows))
-
-;; (apply 'dm-map--parse-map-level (dm-map-load-level "regression-test-map-level" "../Docs/Maps/Design.org"))
 
 
 
@@ -269,26 +444,6 @@ if a file doesn't exist, cannot be opened, etc."
 ;;    4.4.2 Tables are striped only when all required columns are included.
 ;;=============================================================================
 
-;; TODO we need to split out :keywords that may be run together
-;; with repeated feature names
-
-(defun dm-map-load-feature-files (&rest org-files)
-  "Return list of map features as defined in ORG-FILES.
-
-Results are a single list of feature attributes each in the form:
-
-   ( \"FEATURE\" \"DRAW CODE\" \"DOCSTRING\" \"NARRATIVE\" )
-
-Map feature tables are those contained in a section with the
-MAP-FEATURES property set to a truthy value.  Errors are thown
-if a file doesn't exist, cannot be opened, etc."
-  (apply 'dm-map-load-tagged-tables-in-files
-	 (lambda (tpom)
-	   (org-entry-get tpom dm-map-features-table-property-tag)
-	   ) org-files))
-
-;;(dm-map-load-feature-files  "../Docs/Maps/Design.org" "../Docs/Maps/test.org")
-;;(car(dm-map-load-feature-files "../Docs/Maps/test.org"))
 
 ;; New plan:
 ;; Maintain two control lists as we walk the list once.
@@ -533,49 +688,7 @@ contains no symbols are omitted."
 			     (unless (and bc (> bc 0))
 			       (push b drop-list))))
 		     (> bc ac)))))))))
-
 ;(dm-map--keys-by-desc-path-ref-count (apply 'dm-map-defeatures (dm-map-load-feature-files "../Docs/Maps/test.org")))
-
-(defun dm-map--parse-plan (hash)
-  "Cross-map HASH keys to resolve features as SVG code.
-
-TODO: return a list of unresolved symbols?"
-  (dm-map-maybe-resolve-path hash))
-  ;; (maphash (lambda (k v)
-  ;; 	     (when (plist-member v 'paths)
-  ;; 	       (plist-put v 'paths
-  ;; 			  (mapcan (lambda (ref)
-  ;; 				    (dm-map--maybe-resolve-path hash ref
-  ;; 								nil t nil))
-  ;; 				  (plist-get v 'paths))))
-  ;; 	     ) hash))
-
-;(gethash 'c-NSN (apply 'dm-map-defeatures (dm-map-load-feature-files "../Docs/Maps/test.org")))
-
-(defun dm-map--parse-path-command (svg-path-command-string)
-  "Split SVG-PATH-COMMAND-STRING into command and args.
-
-Returned list has the command ([MmVvHhSsAaLl]) as car followed by
-the argument sequence each as a seperate list item."
-  (list (substring svg-path-command-string 0 1)
-	(mapcar 'string-to-number
-		(split-string (substring svg-path-command-string 1)
-			      "[,]"))))
-
-;;(dm-map--parse-path-command "A-.01,1.20")
-;;(split-string "A-.01,1.20" "[0-9,.-]" t nil)
-
-(with-temp-buffer
-  (let ((hash (apply 'dm-map-defeatures
-		     (dm-map-load-feature-files "../Docs/Maps/Design.org"
-						"../Docs/Maps/test.org")))
-	(standard-output (current-buffer))
-	print-length print-level)
-    (seq-map (lambda (key)
-	       (prin1 (format "\n\n[%s]\n" key))
-	       (print (gethash key hash))
-	       ) (hash-table-keys hash)))
-  (buffer-string))
 
 ;; I invented intern, but dumber.
 ;;(equal (car (let ((x "foo")) (read-from-string x))) (intern "foo")) => t

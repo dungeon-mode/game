@@ -48,25 +48,33 @@ Create free (as in freedom) RPGs with GNU Emacs.  And then play them.
 
 We want to:
   1. Create, publish and play RPGs without any costs now or ever.
-  2. Understand our rights when we use other people's content and our
-     rights and responsibilities when we share games and game content.
-  3. Learn and contribute to a single tool to play interactively in a
-     shared world via network or while preparing a commercial work for
-     printing and binding.
-  4. Play and create with the fewest limitations or assumptions
-     possible "baked in", for example the presence of a window
-     manager, access to a network, or use of a restricted or
-     proprietary operating system or external application feature.
-  5. Use software and features which are self-documenting and which
-     provide and provide for universal and accessible (and ideally
-     Universally Accessible) heuristic experiences.
-  6. Maintain and distribute the minimum original technical components
-     needed to support interactive play, authoring and publishing.
+  2. Own all our data and understand our rights when we use other
+     people's content and when we share content, especially online.
+  3. Learn from self-documenting software and heuristic features that
+     maximize universal design opportunities improve RPG accessibility.
+  4. Evangelize open-source and GNU and drive adaptation by gamers by
+     providing a single open source platform e.g., whether for
+     interactively joining a shared world across a network connection
+     or at a table or while preparing a commercial work for binding.
+  5. Play and create with the fewest possible assumptions, for example
+     the presence of a window manager, access to a network, or use of
+     a restricted or proprietary operating system or application.
+  6. Maintain and distribute a "core" (meaning minimum original) set
+     of technical components to support interactive play and authoring
+     and provide a basis for creating original game experiences.
   7. Enable and support peer-to-peer and distributed content sharing
-     free from any implicit oversight and which enable content
-     providers to enable explicit and meaningful protections for
-     publishers and consumers.  This project will not host user
-     provided game content, supplemental sources, etc. beyond the
+     free from any implicit oversight.  If approved, the dungeon-mode
+     repository will include neither user supplied content nor game
+     sources except for the "Default Dungeon" which source materials
+     share the copyright and licensing terms of the of the project.
+  8. If otherwise successful, enhance the GNU open-source tool-chain
+     with additional audio and video conferencing capabilities
+     especially for gaming and empower users to manage such streams
+     from GNU Emacs and, e.g. while playing.  While these would likely
+     culminate in new projects initial research may occur at this one.
+  9. If otherwise successful, fork GNU Emacs and other GNU projects to
+     create a mobile first information centric heuristic operating
+     system focused on user freedom and privacy, e.g. to dungeon with.
 
 * Other license, details
 ** Detail and Clarification

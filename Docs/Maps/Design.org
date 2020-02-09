@@ -187,16 +187,21 @@ TODO consider other fields: version, area
 | sS       | m0,1 h.43 a.14,.14,0,1,1,.14,0     | North/East/West                           |           |
 |          | -.14,-.14,0,1,1,-.14,0 h.43        | :elf secret-door South                    |           |
 | sW       | m1,0 v.43 a.14,.14,0,1,1,0,.14     | North/South/East                          |           |
-|          | -.14,-.14,0,1,1,0,-.14 v.43        | :elf secret-door East                     |           |
+| sW       | -.14,-.14,0,1,1,0,-.14 v.43        | :elf secret-door East                     |           |
 | c-NS+sE  | c--NSE m-1,0 sE                    | North/South :elf secret-door East         |           |
 | c-NS+sEW | c--NSE m-1,0 sEW                   | North/South :elf secret-doors East/West   |           |
 | c-NS+sW  | c--NSE m-1,0 sW                    | North/South :elf secret-door West         |           |
 | c-EW+sN  | c--NEW m-1,0 sN                    | East/West :elf secret-door North          |           |
 | c-EW+sS  | c--SEW m-1,0 sS                    | East/west :elf secret-door South          |           |
 | sN       |                                    | South/East/West                           |           |
-| :default | h1                                 | :comment no extra doc by defualt          |           |
+| :default | h1                                 | :comment no extra doc by default          |           |
+| :elf     | -.14,-.14,0,1,1,-.14,0 h.43        | secret-door North :comment elves see this |           |
+| 10x10+SN | v1 h1 v-1                          | South/East/West                           |           |
+| :default | h1                                 | :comment no extra doc by default          |           |
 | :elf     | -.14,-.14,0,1,1,-.14,0 h.43        | secret-door North :comment elves see this |           |
 
+TODO update docs to reflect using feature name + keyword selector and not leaving feature name blank
+TODO stub for scaling+placement; this should be uniform after dm-svg renders and
 TODO reorder clockwise NESW
 
 ** Test Map
