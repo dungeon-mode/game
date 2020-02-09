@@ -1,4 +1,5 @@
-#+TITLE: Dungeon Mode Rendering Design in Unified Modeling Language
+<<<<<<< HEAD
+ #+TITLE: Dungeon Mode Rendering Design in Unified Modeling Language
 #+SETUPFILE: https://raw.githubusercontent.com/fniessen/org-html-themes/master/setup/theme-bigblow.setup
 
 This document provides a Unified Modeling Language version of the
@@ -635,3 +636,4 @@ end
 [[file:uml--dm-map-finish-update.svg]]
 # EOF
 #  LocalWords:  MPTP
+>>>>>>> 30ad2b7454389e9db02de9282bdfb885d0fd0b84
