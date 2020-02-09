@@ -64,8 +64,66 @@ end note
 stop
 #+end_src
 
+#+begin_src plantuml :file tryout.png
+title ""Client Side (e.g. second pass) Rendering""
+
+start
+
+fork
+partition Fetch {
+  :INTERACTIVE\n//As via e.g, ""C-n"", ""C-j"", ...//;
+  :add to pending-call-alist\n""  ( ARGS :WHEN DTTM-STRING""\n""    :CONTEXT BOF)"";
+  :dm-call-server-func ""draw""\n""  :SOUTH (1 '[\C-n] dm-map-setup-local-draw)""\n""  :FROM '(0 0 1)""\n""  :TO '(0 1 1)"";
+}
+-[#blue]->  ""LOCAL ASYNC"";
+(B)
+detach
+
+fork again
+(b)
+-[#orange]-> ""remote"";
+:validate args\n//accept://\n * known symbols (unquoted)\n *  integers\n * properly ballanced double quoted strings;
+(c)
+-> remote responds;
+detach
+
+fork again
+(C)
+-> remote eval;
+:""dm-call-client-func(orig-args, result)""\n//result as://"" **path**     ""string\n""        **features** ""list of ""(SYMBOL STRING)"";
+partition dm-handle-server-response {
+  :remove from pending server call alist;
+  :add path at key of cell\n  E.g. ""(x y dlv)"";
+  while (features?) is (t)
+    if (feature previously cached?) then (t)
+      if (feature differs from cache) then (t)
+        :collect listed referents for redraw;
+        :freshen cache;
+      endif
+    else (nil)
+      :add feature to cache;
+    endif
+  endwhile (nil)
+}
+(D)
+-> local deligation;q
+detach
+
+fork again
+(D)
+-> from local;
+partition dm-map-finish-update {
+  :maybe-adjust-viewport;
+  :maybe-scale-and-update(BOF path features);
+  :maybe-save(BOF);
+}
+
+end fork
+end
+#+end_src
+
 #+RESULTS:
-[[file:tryout2.png]]
+[[file:tryout.png]]
 
 This document provides a Unified Modeling Language version of the
 design for rendering dungeon-mode maps as Scalable Vector Graphics.
