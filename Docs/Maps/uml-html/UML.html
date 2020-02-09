@@ -3,10 +3,10 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2020-02-09 Sun 02:26 -->
+<!-- 2020-02-09 Sun 15:28 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Dungeon Mode Rendering Design in Unified Modeling Language</title>
+<title>Dungeon Mode Rendering Design in Unified Modeling Language Dungeon Mode Rendering Design in Unified Modeling Language</title>
 <meta name="generator" content="Org mode" />
 <meta name="author" content="Corwin Brust" />
 <style type="text/css">
@@ -193,6 +193,17 @@
   .org-svg { width: 90%; }
   /*]]>*/-->
 </style>
+<link rel="stylesheet" type="text/css" href="https://fniessen.github.io/org-html-themes/styles/bigblow/css/htmlize.css"/>
+<link rel="stylesheet" type="text/css" href="https://fniessen.github.io/org-html-themes/styles/bigblow/css/bigblow.css"/>
+<link rel="stylesheet" type="text/css" href="https://fniessen.github.io/org-html-themes/styles/bigblow/css/hideshow.css"/>
+<script type="text/javascript" src="https://fniessen.github.io/org-html-themes/styles/bigblow/js/jquery-1.11.0.min.js"></script>
+<script type="text/javascript" src="https://fniessen.github.io/org-html-themes/styles/bigblow/js/jquery-ui-1.10.2.min.js"></script>
+<script type="text/javascript" src="https://fniessen.github.io/org-html-themes/styles/bigblow/js/jquery.localscroll-min.js"></script>
+<script type="text/javascript" src="https://fniessen.github.io/org-html-themes/styles/bigblow/js/jquery.scrollTo-1.4.3.1-min.js"></script>
+<script type="text/javascript" src="https://fniessen.github.io/org-html-themes/styles/bigblow/js/jquery.zclip.min.js"></script>
+<script type="text/javascript" src="https://fniessen.github.io/org-html-themes/styles/bigblow/js/bigblow.js"></script>
+<script type="text/javascript" src="https://fniessen.github.io/org-html-themes/styles/bigblow/js/hideshow.js"></script>
+<script type="text/javascript" src="https://fniessen.github.io/org-html-themes/styles/lib/js/jquery.stickytableheaders.min.js"></script>
 <script type="text/javascript">
 /*
 @licstart  The following is the entire license notice for the
@@ -242,29 +253,49 @@ for the JavaScript code in this tag.
 </head>
 <body>
 <div id="content">
-<h1 class="title">Dungeon Mode Rendering Design in Unified Modeling Language</h1>
+<h1 class="title">Dungeon Mode Rendering Design in Unified Modeling Language Dungeon Mode Rendering Design in Unified Modeling Language</h1>
 <div id="table-of-contents">
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org488b5f2">1. Two Pass Rendering</a>
+<li><a href="#org6498142">1. Two Pass Rendering</a>
 <ul>
-<li><a href="#org9686195">1.1. Re-rendering</a></li>
+<li><a href="#org6bbc8c5">1.1. Re-rendering</a></li>
 </ul>
 </li>
-<li><a href="#orgdacbf95">2. First Pass</a>
+<li><a href="#orgf67fd35">2. First Pass</a>
 <ul>
-<li><a href="#org386ffe3">2.1. Server Side (first pass) Variables</a></li>
-<li><a href="#org019e26d">2.2. First Pass Predicates</a></li>
-<li><a href="#org5d2643c">2.3. Resolve Paths</a></li>
+<li><a href="#org95387b0">2.1. Server Side (first pass) Variables</a></li>
+<li><a href="#org0d82076">2.2. First Pass Predicates</a></li>
+<li><a href="#org3b124e2">2.3. Resolve Paths</a></li>
 </ul>
 </li>
-<li><a href="#org9e68110">3. Second Pass</a>
+<li><a href="#orgb3f6436">3. Second Pass</a>
 <ul>
-<li><a href="#org657d953">3.1. Request to Server</a></li>
-<li><a href="#org361efe8">3.2. Response from Server</a></li>
-<li><a href="#org4e6829d">3.3. Client Response Handler</a></li>
-<li><a href="#orgd0dcdd5">3.4. Update Buffer or File</a></li>
+<li><a href="#org58be998">3.1. Request to Server</a></li>
+<li><a href="#orgd0791d1">3.2. Response from Server</a></li>
+<li><a href="#org380938c">3.3. Client Response Handler</a></li>
+<li><a href="#org70dcbba">3.4. Update Buffer or File</a></li>
+</ul>
+</li>
+<li><a href="#orge3a12c9">4. Two Pass Rendering</a>
+<ul>
+<li><a href="#org02b827f">4.1. Re-rendering</a></li>
+</ul>
+</li>
+<li><a href="#orgacfb8c2">5. First Pass</a>
+<ul>
+<li><a href="#orgbf098ca">5.1. Server Side (first pass) Variables</a></li>
+<li><a href="#org01283ad">5.2. First Pass Predicates</a></li>
+<li><a href="#orgf6734db">5.3. Resolve Paths</a></li>
+</ul>
+</li>
+<li><a href="#org0a22893">6. Second Pass</a>
+<ul>
+<li><a href="#orgbe108a3">6.1. Request to Server</a></li>
+<li><a href="#org46de79d">6.2. Response from Server</a></li>
+<li><a href="#orgd93e2c4">6.3. Client Response Handler</a></li>
+<li><a href="#orge957e26">6.4. Update Buffer or File</a></li>
 </ul>
 </li>
 </ul>
@@ -275,8 +306,8 @@ This document provides a Unified Modeling Language version of the
 design for rendering dungeon-mode maps as Scalable Vector Graphics.
 </p>
 
-<div id="outline-container-org488b5f2" class="outline-2">
-<h2 id="org488b5f2"><span class="section-number-2">1</span> Two Pass Rendering</h2>
+<div id="outline-container-org6498142" class="outline-2">
+<h2 id="org6498142"><span class="section-number-2">1</span> Two Pass Rendering</h2>
 <div class="outline-text-2" id="text-1">
 
 <div class="figure">
@@ -316,8 +347,8 @@ code).
 </ul>
 </div>
 
-<div id="outline-container-org9686195" class="outline-3">
-<h3 id="org9686195"><span class="section-number-3">1.1</span> Re-rendering</h3>
+<div id="outline-container-org6bbc8c5" class="outline-3">
+<h3 id="org6bbc8c5"><span class="section-number-3">1.1</span> Re-rendering</h3>
 <div class="outline-text-3" id="text-1-1">
 <p>
 Changes in game circumstance may require redefining Features. For
@@ -369,8 +400,8 @@ ultimately expressed in the MPTP and driven out while examining it.
 </div>
 </div>
 
-<div id="outline-container-orgdacbf95" class="outline-2">
-<h2 id="orgdacbf95"><span class="section-number-2">2</span> First Pass</h2>
+<div id="outline-container-orgf67fd35" class="outline-2">
+<h2 id="orgf67fd35"><span class="section-number-2">2</span> First Pass</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 Illustrations for (nominally) Server Side processing.  Nominally in
@@ -379,8 +410,8 @@ efficiently transacting updates to player is within MPTP scope.
 </p>
 </div>
 
-<div id="outline-container-org386ffe3" class="outline-3">
-<h3 id="org386ffe3"><span class="section-number-3">2.1</span> Server Side (first pass) Variables</h3>
+<div id="outline-container-org95387b0" class="outline-3">
+<h3 id="org95387b0"><span class="section-number-3">2.1</span> Server Side (first pass) Variables</h3>
 <div class="outline-text-3" id="text-2-1">
 
 <div class="figure">
@@ -391,8 +422,8 @@ Sorry, your browser does not support SVG.</object>
 </div>
 </div>
 
-<div id="outline-container-org019e26d" class="outline-3">
-<h3 id="org019e26d"><span class="section-number-3">2.2</span> First Pass Predicates</h3>
+<div id="outline-container-org0d82076" class="outline-3">
+<h3 id="org0d82076"><span class="section-number-3">2.2</span> First Pass Predicates</h3>
 <div class="outline-text-3" id="text-2-2">
 
 <div class="figure">
@@ -403,8 +434,8 @@ Sorry, your browser does not support SVG.</object>
 </div>
 </div>
 
-<div id="outline-container-org5d2643c" class="outline-3">
-<h3 id="org5d2643c"><span class="section-number-3">2.3</span> Resolve Paths</h3>
+<div id="outline-container-org3b124e2" class="outline-3">
+<h3 id="org3b124e2"><span class="section-number-3">2.3</span> Resolve Paths</h3>
 <div class="outline-text-3" id="text-2-3">
 
 <div class="figure">
@@ -416,8 +447,8 @@ Sorry, your browser does not support SVG.</object>
 </div>
 </div>
 
-<div id="outline-container-org9e68110" class="outline-2">
-<h2 id="org9e68110"><span class="section-number-2">3</span> Second Pass</h2>
+<div id="outline-container-orgb3f6436" class="outline-2">
+<h2 id="orgb3f6436"><span class="section-number-2">3</span> Second Pass</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 These illustrations represent work to perform just before display.
@@ -426,8 +457,8 @@ example of drawing commands after scaling.
 </p>
 </div>
 
-<div id="outline-container-org657d953" class="outline-3">
-<h3 id="org657d953"><span class="section-number-3">3.1</span> Request to Server</h3>
+<div id="outline-container-org58be998" class="outline-3">
+<h3 id="org58be998"><span class="section-number-3">3.1</span> Request to Server</h3>
 <div class="outline-text-3" id="text-3-1">
 
 <div class="figure">
@@ -439,8 +470,8 @@ Sorry, your browser does not support SVG.</object>
 </div>
 
 
-<div id="outline-container-org361efe8" class="outline-3">
-<h3 id="org361efe8"><span class="section-number-3">3.2</span> Response from Server</h3>
+<div id="outline-container-orgd0791d1" class="outline-3">
+<h3 id="orgd0791d1"><span class="section-number-3">3.2</span> Response from Server</h3>
 <div class="outline-text-3" id="text-3-2">
 
 <div class="figure">
@@ -451,8 +482,8 @@ Sorry, your browser does not support SVG.</object>
 </div>
 </div>
 
-<div id="outline-container-org4e6829d" class="outline-3">
-<h3 id="org4e6829d"><span class="section-number-3">3.3</span> Client Response Handler</h3>
+<div id="outline-container-org380938c" class="outline-3">
+<h3 id="org380938c"><span class="section-number-3">3.3</span> Client Response Handler</h3>
 <div class="outline-text-3" id="text-3-3">
 
 <div class="figure">
@@ -463,9 +494,218 @@ Sorry, your browser does not support SVG.</object>
 </div>
 </div>
 
-<div id="outline-container-orgd0dcdd5" class="outline-3">
-<h3 id="orgd0dcdd5"><span class="section-number-3">3.4</span> Update Buffer or File</h3>
+<div id="outline-container-org70dcbba" class="outline-3">
+<h3 id="org70dcbba"><span class="section-number-3">3.4</span> Update Buffer or File</h3>
 <div class="outline-text-3" id="text-3-4">
+
+<div class="figure">
+<p><object type="image/svg+xml" data="uml--dm-map-finish-update.svg" class="org-svg">
+Sorry, your browser does not support SVG.</object>
+</p>
+</div>
+
+<p>
+<code>=====</code>
+</p>
+<p>
+This document provides a Unified Modeling Language version of the
+design for rendering dungeon-mode maps as Scalable Vector Graphics.
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orge3a12c9" class="outline-2">
+<h2 id="orge3a12c9"><span class="section-number-2">4</span> Two Pass Rendering</h2>
+<div class="outline-text-2" id="text-4">
+
+<div class="figure">
+<p><object type="image/svg+xml" data="dm-map-overview.svg" class="org-svg">
+Sorry, your browser does not support SVG.</object>
+</p>
+</div>
+
+<p>
+In the pencil and paper game we express Dungeon maps on graph-paper.
+Most commonly taking an 8x10 inch block, most of a US letter sized
+sheet of quad-rule, for each Dungeon Level (dlv).  As the party of
+player characters move about within the system of dungeon levels (or
+"Maze") the game must reveal information by adding or redrawing
+features, mimicking the players taking notes from the Dungeon Master's
+oral descriptions.
+</p>
+
+<p>
+Our MPTP will render dungeon maps as SVG from sources extract from
+org-mode.  As players move, using keyboard commands, etc., we reveal
+additional areas of the map by adding to our master path element,
+representing corridor and chamber walls and most doors, and SVG
+elements which are generally used to add decorations such as text
+labels or fill color.
+</p>
+
+<p>
+The two pass approach simplifies fog-of-war concerns such as ensuring
+the privacy flags (implemented as :keywords punctuating the draw
+code).
+</p>
+<ul class="org-ul">
+<li>Clear separation of concerns.</li>
+<li>Maybe cache features after scaling the to the user's display settings.</li>
+<li>Re-rending efficiencies</li>
+</ul>
+</div>
+
+<div id="outline-container-org02b827f" class="outline-3">
+<h3 id="org02b827f"><span class="section-number-3">4.1</span> Re-rendering</h3>
+<div class="outline-text-3" id="text-4-1">
+<p>
+Changes in game circumstance may require redefining Features. For
+example the party could suddenly learn the location all of the Secret
+Doors on a level.  This may require replacing some large chunks of the
+master SVG path element.  In the case of Default Maze, we have
+implemented visibility predicates for all of the draw code that
+creates the "Secret Doors" throughout the maze.
+</p>
+
+<p>
+To complete this we must, and assuming single-pass render that does
+not want to scale images on the remote side of a network connection:
+</p>
+
+<ul class="org-ul">
+<li>iterate the maze cells the player has seen on this level</li>
+<li>create the new draw code, ensuring that we get the :elf and not
+:default variants</li>
+<li>edit or replace the master path</li>
+<li>deal with new/add/changed SVG elements</li>
+<li>send the updated draw instruction to client to scale and render</li>
+</ul>
+
+<p>
+Note this punts on the question of transacting a delta, perhaps not supporting it or else requiring the client to keep a cache of the original draw instructions and compare them to calculate offsets.
+</p>
+
+<p>
+For Default Maze a small set of features provide variable draw
+code.  The first phase, after evaluating game circumstances and potentially bouncing action back to the Party or Dungeon Master, results in a collection of draw code and referenced feature definitions per current play conditions.
+</p>
+
+<p>
+The second pass, executed on the Emacs instance where the graphic is
+(or will be) displayed.  The phase must consider a cache of features
+along with a cross reference of cells which use them, perhaps along
+with markers into the scaled rendered path, in order smoothly update
+an image already displayed, e.g. inserted into a buffer.
+</p>
+
+<p>
+Naturally, much depends on the composition of draw code into features
+into a given level, an area where we currently plan much flexibility,
+and thus complexity.  More then, perhaps, depends on the complexities
+ultimately expressed in the MPTP and driven out while examining it.
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgacfb8c2" class="outline-2">
+<h2 id="orgacfb8c2"><span class="section-number-2">5</span> First Pass</h2>
+<div class="outline-text-2" id="text-5">
+<p>
+Illustrations for (nominally) Server Side processing.  Nominally in
+that we need to support the case of local rendering as well; however,
+efficiently transacting updates to player is within MPTP scope.
+</p>
+</div>
+
+<div id="outline-container-orgbf098ca" class="outline-3">
+<h3 id="orgbf098ca"><span class="section-number-3">5.1</span> Server Side (first pass) Variables</h3>
+<div class="outline-text-3" id="text-5-1">
+
+<div class="figure">
+<p><object type="image/svg+xml" data="server-givenss.svg" class="org-svg">
+Sorry, your browser does not support SVG.</object>
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org01283ad" class="outline-3">
+<h3 id="org01283ad"><span class="section-number-3">5.2</span> First Pass Predicates</h3>
+<div class="outline-text-3" id="text-5-2">
+
+<div class="figure">
+<p><object type="image/svg+xml" data="server-predicates.svg" class="org-svg">
+Sorry, your browser does not support SVG.</object>
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgf6734db" class="outline-3">
+<h3 id="orgf6734db"><span class="section-number-3">5.3</span> Resolve Paths</h3>
+<div class="outline-text-3" id="text-5-3">
+
+<div class="figure">
+<p><object type="image/svg+xml" data="uml--server-resolve-paths.svg" class="org-svg">
+Sorry, your browser does not support SVG.</object>
+</p>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org0a22893" class="outline-2">
+<h2 id="org0a22893"><span class="section-number-2">6</span> Second Pass</h2>
+<div class="outline-text-2" id="text-6">
+<p>
+These illustrations represent work to perform just before display.
+We'd like to be able to consider different client-side caching, for
+example of drawing commands after scaling.
+</p>
+</div>
+
+<div id="outline-container-orgbe108a3" class="outline-3">
+<h3 id="orgbe108a3"><span class="section-number-3">6.1</span> Request to Server</h3>
+<div class="outline-text-3" id="text-6-1">
+
+<div class="figure">
+<p><object type="image/svg+xml" data="uml--client-request.svg" class="org-svg">
+Sorry, your browser does not support SVG.</object>
+</p>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-org46de79d" class="outline-3">
+<h3 id="org46de79d"><span class="section-number-3">6.2</span> Response from Server</h3>
+<div class="outline-text-3" id="text-6-2">
+
+<div class="figure">
+<p><object type="image/svg+xml" data="uml--remote-swag.svg" class="org-svg">
+Sorry, your browser does not support SVG.</object>
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgd93e2c4" class="outline-3">
+<h3 id="orgd93e2c4"><span class="section-number-3">6.3</span> Client Response Handler</h3>
+<div class="outline-text-3" id="text-6-3">
+
+<div class="figure">
+<p><object type="image/svg+xml" data="uml--dm-handle-server-response.svg" class="org-svg">
+Sorry, your browser does not support SVG.</object>
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orge957e26" class="outline-3">
+<h3 id="orge957e26"><span class="section-number-3">6.4</span> Update Buffer or File</h3>
+<div class="outline-text-3" id="text-6-4">
 
 <div class="figure">
 <p><object type="image/svg+xml" data="uml--dm-map-finish-update.svg" class="org-svg">
@@ -478,7 +718,7 @@ Sorry, your browser does not support SVG.</object>
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Corwin Brust</p>
-<p class="date">Created: 2020-02-09 Sun 02:26</p>
+<p class="date">Created: 2020-02-09 Sun 15:28</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>
