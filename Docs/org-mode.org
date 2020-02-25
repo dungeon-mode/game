@@ -1,0 +1,71 @@
+#+TITLE: Gaming in org-mode
+
+Most game sources (e.g. maps, treasure tables, etc) as well as some game play information (character sheets, the battle board giving the party's order of battle, and so forth) are written as ~[[https://org-mode.org][org-mode]]~ files to one or more users' file-system.  While these files are "hand-editable" ~dungeon-mode~ provides additional domain specific tools to supplement those of ~org-mode~ and other components of GNU Emacs.  The rest of this file describes those tools and chronicles their development.
+
+* INPROGRESS Things we are working on right now!
+
+** ETL: Extract, Transform, and Load
+
+   ETL is a technology industry term representing a specialization,
+   whether of talent or tool, to the task of moving information around.
+   In the context of the project, and this document, this refers to two
+   general use cases:
+
+   1. Interactive: for example, updating documents to implement
+      higher-level editing functions, and
+   2. Indirect: for example, updating a remote document representing a
+      character sheet after an NPC has stolen an item.
+
+  For the sake scoping a reasonable initial effort in this are we
+  essentially hand-waving at the network related challenges implicit
+  in the second use case, generally assuming use of remote eval
+  against player's host Emacs within a LAN environment (e.g. VPN).
+  Thus, this document --and present designs in code-- will treat these
+  uses cases as similar or identical unless noted otherwise.
+
+  This section, then, provides the holistic treatment of dungeon-mode
+  specific provisions for automating manipulation of user editable
+  files, and generally considers the problem in terms of extracting,
+  transforming, or loading information to/from org-mode documents or,
+  in fact, in terms of coordinated sequences of such actions.
+
+*** ox-dump - export org-mode documents as Emacs Lisp
+
+    This package is an exporter for org-mode providing structured Emacs
+    Lisp formatted output as files, buffers or to evaluate after the
+    export is complete.
+
+    We can specify a template in which to wrap the exported lisp
+    either within a document or section using "~#+DUMP_EXPR~" or by
+    setting ~ox-dump-expr~.  This accepts the following placeholders:
+
+    | Symbol | Replacement               |
+    |--------+---------------------------|
+    | *      | The result of evaluation. |
+    | \n     | A newline.                |
+
+    This feature also supports a destructuring syntax based on
+    [[info:cl-lib][cl-destructuring-bind]] accessed via a header property "~#+DUMP_BIND~"
+    and associated to ~ox-dump-bind~.
+
+**** TODO implement DUMP_BIND/ox-dump-bind, look at cldb*?
+
+* References
+
+** Writing org-mode exporters
+
+   * Tutorial! - https://code.orgmode.org/bzg/worg/src/org-export-backend-tutorial/org-tutorials/org-export-backend.org
+   * Exporter - https://orgmode.org/worg/dev/org-export-reference.html
+   * Header Arguments - https://orgmode.org/manual/Using-Header-Arguments.html#Using-Header-Arguments
+   * Babel Export vs Results - https://orgmode.org/manual/Results-of-Evaluation.html#Results-of-Evaluation
+   * Similar Problem Space - https://github.com/jlumpe/ox-json
+   * This looks super cool - https://github.com/alphapapa/org-ql
+   * Handy fork - https://github.com/fgeller/org-mode/tree/master/lisp
+   * The real deal - https://code.orgmode.org/bzg/org-mode/src/master/lisp
+   * Locally (9.3.2):
+     + [[file:~/.emacs.d/elpa/org-9.3.2/ox-latex.el][ox-latex.el]]
+     + [[file:~/.emacs.d/elpa/org-9.3.2/ox-ascii.el][ox-ascii.el]]
+
+* Research
+
+#  LocalWords:  destructuring ETL
