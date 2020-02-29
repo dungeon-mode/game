@@ -54,12 +54,12 @@ Most game sources (e.g. maps, treasure tables, etc) as well as some game play in
 
 ** Writing org-mode exporters
 
-   * Tutorial! - https://code.orgmode.org/bzg/worg/src/org-export-backend-tutorial/org-tutorials/org-export-backend.org
-   * Exporter - https://orgmode.org/worg/dev/org-export-reference.html
    * Header Arguments - https://orgmode.org/manual/Using-Header-Arguments.html#Using-Header-Arguments
-   * Babel Export vs Results - https://orgmode.org/manual/Results-of-Evaluation.html#Results-of-Evaluation
-   * Similar Problem Space - https://github.com/jlumpe/ox-json
+   * Tutorial! - https://code.orgmode.org/bzg/worg/src/org-export-backend-tutorial/org-tutorials/org-export-backend.org
    * This looks super cool - https://github.com/alphapapa/org-ql
+   * Similar Problem Space - https://github.com/jlumpe/ox-json
+   * Exporter - https://orgmode.org/worg/dev/org-export-reference.html
+   * Babel Export vs Results - https://orgmode.org/manual/Results-of-Evaluation.html#Results-of-Evaluation
    * Handy fork - https://github.com/fgeller/org-mode/tree/master/lisp
    * The real deal - https://code.orgmode.org/bzg/org-mode/src/master/lisp
    * Locally (9.3.2):
@@ -67,5 +67,62 @@ Most game sources (e.g. maps, treasure tables, etc) as well as some game play in
      + [[file:~/.emacs.d/elpa/org-9.3.2/ox-ascii.el][ox-ascii.el]]
 
 * Research
+
+** Problem: Collecting Source Materials
+
+   Solution Objective:
+
+   As a game author I want to use org-mode properties to describe
+   how to load arbitrary game sources as Emacs Lisp data.
+
+*** Use Cases
+
+**** Random Result from Linked Tables                             :TODO:TEST:
+
+     This pattern is commonly used in treasure and creature selection
+     mechanics as well by boxcars and snake-eyes tables.
+
+     * SOURCE, an org-file, contains a series of square (6x6 TABLES) without headers
+     * Each CELL within each of TABLES contains either
+       | Result    | number or string literal              |
+       | Reference | as for [[https://orgmode.org/manual/References.html#References][remote]] in formula, e.g. ~(NAME)~ |
+     * Exporting will yield RESULT as a single value:
+       1. Choose a random cell from the first table
+       2. If the chosen cell contains a number or string return it
+       3. otherwise, start again selecting from the referenced table
+
+**** Selected Result from Linked Tables                           :TODO:TEST:
+
+     This is similar to the [[Random Result from Linked Tables][Random Result from Linked Tables]] use case
+     but supports a specific table, row, column intersection
+     e.g. representing dice rolls or otherwise selection into the
+     table-set.
+
+     * SOURCE, an org-file, contains a series of square (6x6 TABLES) without headers
+     * REFERENCE, a property, as for [[https://orgmode.org/manual/References.html#References][remote]] in formula, e.g. ~(NAME, REF)~
+     * RESULT of exporting the document, either:
+       | A number or string literal.                             |
+       | A table reference as for [[https://orgmode.org/manual/References.html#References][remote]] in formula, e.g. ~(NAME)~ |
+
+**** Destructuring Linked Tables                                  :TODO:TEST:
+
+     This pattern enables selection of some or all of a table-set,
+     such as for custom lookup implementation to and cache tables, for
+     example of dawing instuctions, in memory.
+
+     * SOURCE, an org-file, contains a series of TABLES, each having:
+       | ~hrow~   | 0-1 | the top of the table may contain titles      |
+       | ~hlines~ |   * | horizontal separation rows                   |
+       | ~mcol~   | 0-1 | col, reserved for [[https://orgmode.org/manual/Advanced-features.html#Advanced-features][special marking characters]] |
+     * DEF, a property, as for ~ARGS~ in [[info:cl#Macros][cl-destructuring-bind]]
+       #+BEGIN_SRC org
+         #+DUMP_DEF: ((feature (@1)) (path (@2)))
+       #+END_SRC
+     * EXPR, a property, as for EXPR in [[info:cl#Macros][cl-destructuring-bind]]
+       #+BEGIN_SRC org
+         #+DUMP_EXPR: (list feature ('path path))
+       #+END_SRC
+     * RESULT of exporting the document is a macro-expanded form as
+       from [[info:cl#Macros][cl-destructuring-bind]].
 
 #  LocalWords:  destructuring ETL
