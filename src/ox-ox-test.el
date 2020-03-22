@@ -47,12 +47,9 @@
 		     (and ?@ (group ?#))))
 	(remote (item) (and "remote(" (0+ blank) (group (1+ (not ?,)))
 			    comma item ")"))
-	(col (or named
-		 boundry
-		 (and (opt sign) numbered)))
+	(col (or named boundry (and (opt sign) numbered)))
 	(row (or boundry
-		 (and (opt sign)
-		      (group (1+ ?I))
+		 (and (opt sign) (group (1+ ?I))
 		      (opt (and sign numbered)))
 		 (and (opt sign) numbered)))
 	(cell (or (and row-sigel row (opt (and col-sigel col)))
@@ -98,27 +95,69 @@
 	right-col-boundry ; 31
 	right-col-sign ; 32
 	right-col-number ; 33
-	nil nil nil nil nil nil nil ;; 34-40
+	;; 34-40 never fill because remote doesn't handle:
+	;; | @#, 1 grp | special, 2 grp | col-*, 4 grp | = 6 |
+	nil nil nil nil nil nil nil
 	remote-name ; 41
+	remote-row-boundry ; 42
+	remote-row-hline-sign ; 43
+	remote-row-hline ; 44
+	remote-row-hline-adj-sign ; 45
+	remote-row-hline-adj ; 46
+	remote-row-sign ; 47
+	remote-row-number ; 48
+	remote-field-name ; 49
+	remote-field-boundry ; 50
+	remote-field-sign ; 51
+	remote-field-number ; 52
+	remote-col-name ; 53
+	remote-col-boundry ; 54
+	remote-col-sign ; 55
+	remote-col-number ; 56
+	remote-right-row-boundry ; 57
+	remote-right-row-hline-sign ; 58
+	remote-right-row-hline ; 59
+	remote-right-row-hline-adj-sign ; 60
+	remote-right-row-hline-adj ; 61
+	remote-right-row-sign ; 62
+	remote-right-row-number ; 63
+	remote-right-field-name ; 64
+	remote-right-field-boundry ; 65
+	remote-right-field-sign ; 66
+	remote-right-field-number ; 67
+	remote-right-col-name ; 68
+	remote-right-col-boundry ; 69
+	remote-right-col-sign ; 70
+	remote-right-col-number ; 71
 	))
 
 (defvar my:rx-test-strings nil "These are test strings that should all match.")
 (setq my:rx-test-strings
-      '("$foo" "remote(Bar,$foo)" "$foo:kw" ;;ZZZ: ?
+      '("$foo" ;; "remote(Bar,$foo)" "$foo:kw" ;;ZZZ: ?
 	"$_" "$_:kw" "$*" "$*:kw" "$:" "$::kw"
 	"@#" "$#" "$1" "$+2" "$>>>"
-	;; "@1$1" "@-2$2" "@3$-3" "@+4$+4" "@+4$foo"
-	;; "@<$5" "@6$>" "@>>$7" "@8$<<" "@>>>>>$foo"
-	;; "@I$9" "@II$10" "@I$-1" "@I+1$-2" "@I$+1" "@I-1$+2"
-	;; "@III-3$11" "@+I$12" "@-II$13" "@+III-17$14"
-	;; "@1$2..@3$4" "@+1$-2..@-3$+4"
-	;; "@+II-2$foo..@<<$bar" "@>>>>>$-4..@-IIIII$bar:kw"
-	;; "@>$<..@+III-17$14" "@+III-17..$<" "@+III-17..$+14"
+	"@1$1"  "@1$1..@-2$+1" "remote(Bar,@1$1..@-2$+1)"
+	"@-2$+1"  "@-2$+1..@3$>>>" "remote(Bar,@-2$+1..@3$>>>)"
+	"@3$>>>"  "@3$>>>..@+4$foo" "remote(Bar,@3$>>>..@+4$foo)"
+	"@+4$foo"
+	"@+4$foo..@<$1" "remote(Bar,@+4$foo..@<$1)"
+	"@<$1"  "@<$1..@<<$-2" "remote(Bar,@<$1..@<<$-2)"
+	"@<<$-2"  "@<<$-2..@>>>$<<<" "remote(Bar,@<<$-2..@>>>$<<<)"
+	"@>>>$<<<"  "@>>>$<<<..@>>>>$foo" "remote(Bar,@>>>$<<<..@>>>>$foo)"
+	"@>>>>$foo"
+	"@>>>>$foo..@I$1" "remote(Bar,@>>>>$foo..@I$1)"
+	"@I$1"  "@I$1..@I+2$>>" "remote(Bar,@I$1..@I+2$>>)"
+	"@I+2$>>"  "@I+2$>>..@III$foo" "remote(Bar,@I+2$>>..@III$foo)"
+	"@III$foo"  "@III$foo..@+IIII-44$+4" "remote(Bar,@III$foo..@+IIII-44$+4)"
+	"@+IIII-44$+4"
+	"@+IIII-44$+4..@III-3$11" "remote(Bar,@+IIII-44$+4..@III-3$11)"
+	"@III-3$11"  "@III-3$11..@+I$12" "remote(Bar,@III-3$11..@+I$12)"
+	"@+I$12"  "@+I$12..@-II$13" "remote(Bar,@+I$12..@-II$13)"
+	"@-II$13"  "@-II$13..@+III-17$14" "remote(Bar,@-II$13..@+III-17$14)"
 	"@>$<..@+III-17$foo" "remote(Bar,@>$<..@+III-17$foo)"
 	"@+III-17$foo..$<" "remote(Bar,@+III-17$foo..$<)"
-	",@+2$foo..@<<<$+14" "remote(Bar,@+2$foo..@<<<$+14)"
-	"@>>$foo..$+42"	"remote(Bar,@>>$foo..$+42)"
-	"@+II-2$<..$foo" "remote(Bar,@+II-2$<..$foo)"))
+	"@+2$foo..@<<<$+14" "remote(Bar,@+2$foo..@<<<$+14)"
+	"@>>$foo..$+42"	"remote(Bar,@>>$foo..$+42)"))
 
 (defmacro my:rx-test (str &optional result)
   "Create an `ert' function testing STR expecting RESULT."
@@ -131,11 +170,9 @@
 	(delq nil (seq-map-indexed
 		   (lambda (_ n)
 		     (when-let ((m (match-string n ,str))
-				(g (or (nth-value (if (> n 41) (- n 38) n)
-						  my:rx-labels)
-				       "?")))
+				(g (nth-value n my:rx-labels)))
 		       (format "| %s | %s | %s |" n m g)))
-		   (make-list 200 nil)))
+		   (make-list 72 nil)))
 	"\n")
        )))
 
