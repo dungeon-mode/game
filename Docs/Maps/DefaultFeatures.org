@@ -3,6 +3,7 @@
  :Version: 0.01
  :Author: Erik Elmshauser
  :Created: 2020/01/25
+ :ETL: tile
  :END:
 
 * Overview
@@ -33,6 +34,10 @@ These features are intended to be used mostly as parts of compositions and rarel
 | ←          | m-1,0                                         | Move 1 DU Left                  |          |
 | ↑          | m0,-1                                         | Move 1 DU Up                    |          |
 | ↓          | m0,1                                          | Move 1 DU Down                  |          |
+| ↖          | m-1,-1                                        | Move 1 DU Up and 1 DU Left      |          |
+| ↗          | m1,-1                                         | Move 1 DU Up and 1 DU Right     |          |
+| ↙          | m-1,1                                         | Move 1 DU Down and 1 DU Left    |          |
+| ↘          | m1,1                                          | Move 1 DU Down and 1 DU right   |          |
 |            |                                               |                                 |          |
 | .NE        | m.98,0 h.02 v.02 m-1,-.02                     | Corner Dot - North/East corner  |          |
 | .ES        | m1,.98 v.02 h-.02 m-.98,-1                    | Corner Dot - East/South corner  |          |
