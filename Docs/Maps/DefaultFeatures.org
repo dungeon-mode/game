@@ -28,7 +28,7 @@ These features are intended to be used mostly as parts of compositions and rarel
 
 
 # #+NAME: private-map-features
-| Feature    | Plan                                          | Documentation                   | Behavior |
+| Tile       | Path                                          | Documentation                   | Behavior |
 |------------+-----------------------------------------------+---------------------------------+----------|
 | →          | m1,0                                          | Move 1 DU Right                 |          |
 | ←          | m-1,0                                         | Move 1 DU Left                  |          |
