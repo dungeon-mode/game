@@ -109,7 +109,7 @@ initarg value as a new 'path and using the string as the value of
 the \"d\" attribute.")
 
 (cl-defmethod initialize-instance :after ((object dm-svg) &rest _)
-  "Docstring using MYOBJECT and _ARGS"
+  "Docstring using MYOBJECT."
   (with-slots (svg path-data) object
     (unless (dm-svg-dom-node-p svg 'svg)
       (setq svg (dom-node 'svg)))

@@ -54,14 +54,360 @@
 ;;; Requirements:
 
 (eval-when-compile (require 'eieio)
-		   (require 'cl))
+		   (require 'cl-lib)
+		   (require 'subr-x)
+		   ;;(require 'subr)
+		   )
+
+(require 'org-element)
 
 ;; DEVEL hack: prefer version from CWD, if any
 (let ((load-path (append '(".") load-path)))
   (require 'dm-util)
-  (require 'dm-svg))
+  (require 'dm-svg)
+  (require 'dm-table))
 
 ;;; Code:
+
+(defgroup dm-map nil "Game map settings." :group 'dungeon-mode)
+(defcustom dm-map-files '() "List of files from which load game maps." :type (list 'symbol))
+(defcustom dm-map-property "ETL" "Property to insepect when finding tables." :type 'string)
+
+(defvar dm-map-table-var-alist '((cell dm-map-level)
+				 (tile dm-map-feature))
+  "Alist mapping table types to variables storing an hash-table for each.")
+
+(defvar dm-map-level nil "Hash-table; draw code for game map levels.")
+(defvar dm-map-level-cols '(x y path) "List of colums from feature tables.")
+(defvar dm-map-level-key '(cons (string-to-number x) (string-to-number y))
+  "Expression to create new keys in `dm-map-features'.")
+
+(defvar dm-map-feature nil
+  "Hash-table; draw code for `dungeon-mode' game map features.")
+
+(defvar dm-map-feature-cols nil "List of colums from feature tables.")
+
+(defvar dm-map-current-level nil
+  "Hash-table; draw code for the current game map.")
+
+(defvar dm-map-draw-prop 'path
+  "Default attributes for cells as they are loaded.")
+
+(defvar dm-map-cell-defaults `(,dm-map-draw-prop nil)
+  "Default attributes for cells as they are loaded.")
+
+(defsubst dm-map-header-to-cols (first-row)
+  "Create column identifier from FIRST-ROW of a table."
+  (seq-map
+   (lambda (label)
+     (intern (downcase label)))
+   first-row))
+
+(cl-defsubst dm-map-table-cell (cell
+				(table dm-map-level)
+				&optional &key
+				(defaults dm-map-level-defaults))
+  "Return value for CELL from TABLE or a default."
+  (if (and cell table) (gethash cell table defaults) defaults))
+
+(cl-defsubst dm-map-path (cell
+			   &optional &key
+			   (table dm-map-level table)
+			   (prop dm-map-draw-prop))
+  "When CELL exists in TABLE return PROP therefrom.
+
+CELL is an hash-table key, TABLE is an hash-table (default:
+`dm-map-level'), PROP is a property (default: \"path\")."
+  (if (and (hash-table-p table) (gethash cell table))
+      (plist-get (gethash cell table) prop))
+  nil)
+
+(defsubst dm-map-parse-plan-part (word)
+  "Given trimmed WORD and FIRST-CHAR of a plan, DTRT."
+  (message "[parse] word:%s type:%s" word (type-of word))
+  (delq nil (list
+	     (when (org-string-nw-p word)
+	       (cond ((string-match-p "<[^ ]\\|>[^ ]\\|[^ ]<\\|[^ ]>" word) word)
+		     ((string-match-p "[()]" word) (read word))
+		     ((string-match-p "[ \t\n\"]" word)
+		      (mapcan 'dm-map-parse-plan-part
+			      (split-string word nil t "[ \t\n]+")))
+		     (;;(memq first-char '(?M ?m ?V ?v ?H ?h ?S ?s ?A ?a ?L ?l))
+		      (string-match-p "^[MmVvHhSsAaL][0-9.,+-]+$" word)
+		      (list (string-to-char word)
+			    (mapcar 'string-to-number
+				    (split-string (substring word 1) "[,]"))))
+		     (t (list (intern word))))))))
+
+
+(cl-defmacro dm-map-tile-path (tile &optional &key (prop dm-map-draw-prop))
+  "When TILE exists in `dm-map-feature' return PROP therefrom.
+
+TILE is an hash-table key, PROP is a property (default: \"path\"."
+  `(dm-map-path ,tile :table dm-map-feature :prop ',prop))
+
+(defmacro dm-map-draw-test (svg &rest body)
+  "Open (erase) buffer evaluate BODY and dump SVG."
+  (declare (indent 1))
+  `(with-current-buffer (pop-to-buffer "**dm-map**")
+     (dm-map-mode)
+     (erase-buffer)
+     (goto-char (point-min))
+     (insert (format-time-string "%D %-I:%M:%S %p on %A, %B %e, %Y\n"))
+     ,@body
+     (insert (format "\n\n[SVG DUMP]:\n%s" ,svg))))
+
+(defun dm-map-load (&rest files)
+  "Truncate and replace `dm-map-features' and `dm-map-levels' from FILES.
+
+Kick off a new batch for each \"feature\" or \"level\" table found."
+  (dolist (var dm-map-table-var-alist)
+    (set (cadr var) (dm-make-hashtable)))
+  (list nil
+	(seq-map
+	 (lambda (this-file)
+	   (message "[map-load] file:%s" this-file)
+	   (with-temp-buffer
+	     (insert-file-contents this-file)
+	     ;; (org-macro-initialize-templates)
+	     ;; (org-macro-replace-all org-macro-templates)
+	     (org-element-map (org-element-parse-buffer) 'table
+	       (lambda (table)
+		 (save-excursion
+		   (let* ((tpom (org-element-property :begin table))
+			  (prop dm-map-property)
+			  (pval (org-entry-get nil prop))
+			  (pvar (assoc pval dm-map-table-var-alist)))
+		     (message "[map-load] tpom:%s prop:%s pval:%s pvar:%s"
+			      tpom prop pval (type-of pvar)))
+		   (goto-char (org-element-property :begin table))
+		   (forward-line 1)
+		   ;;(when (not (org-at-table-p)) (error "No table at %s %s" this-file (point)))
+		   (when-let* ((tpom (save-excursion (org-element-property :begin table)))
+			       (type (org-entry-get tpom dm-map-property t))
+			       (type (intern type))
+			       (var (cadr (assoc type dm-map-table-var-alist 'equal))))
+		     ;;(let ((dm-table-load-table-var var)))
+		     (dm-table-batch type)))))))
+	 (or files dm-map-files))))
+
+(defun dm-map-level-transform (table)
+  "Transform a TABLE of strings into an hash-map."
+  (let* ((cols (or dm-map-level-cols
+		   (seq-map (lambda (label) (intern (downcase label)))
+			    (car table))))
+	 (cform
+	  `(dm-coalesce-hash ,(cdr table) ,cols
+	     ,@(when dm-map-level-key `(:key-symbol ,dm-map-level-key))
+	     ;;:key-symbol (cons x y)
+	     :hash-table dm-map-level
+	     ;;(progn (message "[map-xform] cols:%s row:%s key:%s" ,cols row key))
+	     (when (and (boundp 'path) path) (list 'path (dm-map-parse-plan-part path)))
+	     ;;(list 'path nil)
+	     ))
+	 (result (progn
+		   (print cform)
+		   (eval `(list :load ,cform)))))))
+
+(defun dm-map-feature-transform (table)
+  "Transform a TABLE of strings into an hash-map."
+  (let* ((cols (or dm-map-feature-cols (dm-map-header-to-cols (car table))))
+	 (last-key (gensym))
+	 (last-path (gensym))
+	 (cform
+	  `(dm-coalesce-hash ,(cdr table) ,cols
+	     :hash-table dm-map-feature
+	     :key-symbol last-key
+	     (when (and (boundp 'path) (org-string-nw-p path))
+	       (when (and (boundp 'tile) (org-string-nw-p tile))
+		 (setq last-key (intern tile))
+		 (setq last-path (plist-get (gethash last-key hash) 'path)))
+	       ;;(message "[cell] tile:%s lkey:%s lentry:%s path:%s" tile last-key last-entry path)
+	       (message "[cell] tile:%s lkey:%s lpath:%s" tile last-key last-path)
+	       (setq last-path (nconc last-path (dm-map-parse-plan-part path)))
+	       (list 'path last-path))))
+	 (result (eval `(list :load ,cform))))))
+
+(dm-table-defstates 'map :extract #'dm-map-load)
+(dm-table-defstates 'tile :transform #'dm-map-feature-transform)
+(dm-table-defstates 'cell :transform #'dm-map-level-transform)
+
+
+;; quick and dirty procedural approach
+
+(cl-defun dm-map--dom-attr-scale-nth (dom-node scale (attr n))
+  "Apply Nth of SCALE to ATTR of DOM-NODE if present."
+  (when (numberp (car (dom-attr dom-node attr)))
+    (dom-set-attribute dom-node attr (* (nth n scale)
+					(car (dom-attr dom-node attr))))))
+;; (dm-map--dom-attr-scale-nth (dom-node 'foo '((bar 1))) '(2 3 4) '(bar 0))
+;; second test case to figure out looping a list
+;; (let ((dom-node (dom-node 'foo '((text-size 1) (y 1)))))
+;;   (dolist (args '((text-size 0) (x 0) (y 1)) dom-node)
+;;     (dm-map--dom-attr-scale-nth dom-node '(12 23) args))
+;;   dom-node)
+
+(defun dm-map-default-scale-function (scale &rest cells)
+  "Return CELLS with SCALE applied.
+
+SCALE is the number of pixes per map cell, given as a cons cell:
+
+  (X . Y)
+
+CELLS may be either svg `dom-nodes' or cons cells in the form:
+
+  (CMD . (ARGS))
+
+Where CMD is an SVG path command and ARGS are arguments thereto.
+
+SCALE is applied to numeric ARGS of cons cells and to the width,
+height and font-size attributes of each element of each
+`dom-node' which contains them in the parent (e.g. outter-most)
+element.  SCALE is applied to only when the present value is
+between 0 and 1 inclusive."
+  (message "scale:%s cells:%s" scale cells)
+  (dolist (cell cells cells)
+    (message "cell:%s" cell)
+    (cond
+     ((dm-svg-dom-node-p cell 'text)
+      (message "text:%s" cell)
+      (dolist (args '((text-size 0) (x 0) (y 1)) )
+	(dm-map--dom-attr-scale-nth cell scale args)))
+     ((consp cell) (message "consp!%s" cell)
+      (pcase cell
+	;; move or line in the form (sym (h v)
+	(`(,(or 'm 'l)
+	   (,(and x (guard (numberp x)))
+	    ,(and y (guard (numberp y)))))
+	 (setcdr cell (list (* x (car scale))
+			    (* y (cdr scale)))))
+
+	;; h and v differ only in which part of scale applies
+	(`(h (,(and d (guard (numberp d)))))
+	 (setcdr cell (list (* d (car scale)))))
+	(`(v (,(and d (guard (numberp d)))))
+	 (setcdr cell (list (* d (cdr scale)))))
+
+	;; arc has tons of args but we only mess with the last two
+	(`(a (,rx ,ry ,x-axis-rotation ,large-arc-flag ,sweep-flag
+		,(and x (guard (numberp x)))
+		,(and y (guard (numberp y)))))
+	 (setcdr cell (list rx ry x-axis-rotation large-arc-flag sweep-flag
+			    (* x (car scale))
+			    (* y (cdr scale)))))
+
+	;; fall-back to a message
+	(_ (message "unhandled %s => %s" (type-of cell) cell))
+	))
+     )))
+;; (dm-map-default-scale-function '(100 . 1000)
+;; 			       (dom-node 'text '((text-size .5)(x .2)))
+;; 			       '(h (.1)) '(v (.2))'(m (.3 .4)) '(l (.5 .6)) '(x (.7 .8)) '(a (.7 .7 0 1 1 0 .14)))
+
+;; image scale
+;;;;;;;;;
+
+;; simple draw methods for testing
+
+(cl-defun dm-map-quick-draw (&optional
+			     (cells (when dm-map-level (hash-table-keys dm-map-level)))
+			     &key
+			     path-attributes
+			     (scale 100)
+			     (scale-function 'dm-map-default-scale-function)
+			     (tiles dm-map-feature)
+			     (level dm-map-level)
+			     (size '(800 . 800))
+			     ;;(svg (dm-svg))
+			     (svg-attributes '(:stroke-color white
+					       :background-color purple
+					       :stroke-width 1))
+			     ;;viewbox
+			     &allow-other-keys)
+  "No-frills draw routine.
+
+CELLS is the map cells to draw defaulting to all those found in
+`dm-map-level'.  TILES is an hash-table containing draw code and
+documentation, defaulting to `dm-map-feature'.  SCALE sets the
+number of pixels per map cell.  SIZE constrains the rendered
+image canvas size.  VIEWBOX is a list of four positive numbers
+controlling the X and Y origin and displayable width and height.
+SVG-ATTRIBUTES is an alist of additional attributes for the
+outer-most SVG element.  LEVEL allows override of level info.
+
+PATH-ATTRIBUTES is an alist of attributes for the main SVG path
+element.  The \"d\" property provides an initial value to which
+we append the drawing instructions to implement the features
+included with each of CELLS therefor any inital value provided
+for \"d\" (e.g. \"path-data\") *must* return the stylus to the
+origin (e.g. M0,0) as it's final instruction.
+
+SCALE-FUNCTION may be used to supply custom scaling."
+  (ignore tiles cells scale size path-attributes scale-function)
+  (let ((img (dm-svg :svg (apply 'svg-create (append (list (car size) (cdr size))
+						     svg-attributes)))))
+    ;;(add-path-data img "m100,100 h400 v400 h-400 v-400") (add-svg-element img ())
+    ;;(apply    'add-path-data)
+    (print `(cells ,cells))
+    (append
+     (list img)
+     (mapcar
+      (lambda (cell)
+	(when-let ((path-list (car-safe (plist-get (gethash cell level)
+						   dm-map-draw-prop))))
+	  ;;(message "word:%s path:%s type:%s" cell path-list (type-of path-list))
+	  (pcase path-list
+	    ;; ignore references when drawing a complete level
+	    (`(,(and x (guard (numberp x))). ,(and y (guard (numberp y))))
+	     ;;(message "[draw] ignoreing reference in %s to %d %d" cell x y)
+	     )
+	    (t (message "[draw] TODO %s" path-list)))
+	  (when (listp (car-safe path-list)) (message "strokes: %s" (mapconcat (lambda (stroke) (format "%s (%s)" stroke (type-of stroke))) path-list "\n\t")))
+	  (cons cell path-list)))
+      cells))
+    img))
+
+;; (setq dm-map-files '("d:/projects/dungeon-mode/Docs/Maps/DefaultFeatures.org"
+;; 		     "d:/projects/dungeon-mode/Docs/Maps/testmap.org"))
+
+;; (let ((svg (svg-create 800 800 :stroke-color 'green :stroke-width 10)))
+;;   (svg-circle svg 200 200 100 :stroke-color 'red)
+;;   (dm-map-draw-test svg (put-image (svg-image svg) (point-max))))
+
+;; (let ((svg (dm-map-quick-draw)))
+;;   (dm-map-draw-test svg
+;;     (add-svg-element svg (dom-node 'circle '((cx . 200) (cy . 200)
+;; 					     (r . 100) (stroke . red)
+;; 					     (stroke-width . 10))))
+;;     (render-and-insert svg)))
+
+
+
+(defun dm-map-draw (&optional arg)
+  "Draw all from `dm-map-level'.  With prefix ARG, reload first."
+  (interactive "P")
+  (when arg (dm-map-load))
+  (let ((svg (dm-map-quick-draw)))
+    (dm-map-draw-test svg (render-and-insert svg))))
+
+;; global key binding
+(global-set-key (kbd "<f9>") 'dm-map-draw)
+
+;; basic major mode for viewing maps
+(defvar dm-map-mode-map
+  (let ((map (make-sparse-keymap)))
+    (define-key map (kbd "q") 'kill-buffer-and-window)
+    (define-key map (kbd "Q") 'kill-buffer)
+    map))
+
+(define-derived-mode dm-map-mode fundamental-mode "MAP"
+  "Major mode for `dugeon-mode' maps.")
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;  zis is de line of cruft
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defcustom dm-map-columns-header-alist '()
   "Columns to bind as an alist.")
@@ -122,7 +468,11 @@ derd a map feature, or a map-level location, e.g. in the form:
 
 (defun dm-map-remove-hline (row)
   "While reading, suppress 'hline."
-  (not (equal 'hline row)))
+  (if (equal 'hline row)
+      (prog1  (setq dm-map--last-row nil)
+	(message "removing hline"))
+    (message "not an hline:%s" row)
+    t))
 
 (defun dm-map-stow-header (row)
   "While reading, suppress and save header lines.
@@ -188,7 +538,8 @@ Errors are thown if a file doesn't exist, cannot be opened, etc."
 			  (when  (and (run-hook-with-args-until-failure
 				       'dm-map-on-row-hook
 				       dm-map--last-row))
-			    (append dm-map--last-row
+			    (append (or (and (listp dm-map--last-row ) dm-map--last-row)
+					(list dm-map--last-row))
 				    (list (setq dm-map--row-count
 						(1+ dm-map--row-count)))))
 			  ) (org-table-to-lisp)))
@@ -243,77 +594,6 @@ if a file doesn't exist, cannot be opened, etc."
 		    'plan plan
 		    'docs  (delete "" (list dstr nstr))
 		    ))) rows))
-;;;;;;;;;
-
-;; quick and dirty procedural approach
-
-(cl-defun dm-map--dom-attr-scale-nth (dom-node scale (attr n))
-  "Apply Nth of SCALE to ATTR of DOM-NODE if present."
-  (when (numberp (car (dom-attr dom-node attr)))
-    (dom-set-attribute dom-node attr (* (nth n scale)
-					(car (dom-attr dom-node attr))))))
-;; (dm-map--dom-attr-scale-nth (dom-node 'foo '((bar 1))) '(2 3 4) '(bar 0))
-;; second test case to figure out looping a list
-;; (let ((dom-node (dom-node 'foo '((text-size 1) (y 1)))))
-;;   (dolist (args '((text-size 0) (x 0) (y 1)) dom-node)
-;;     (dm-map--dom-attr-scale-nth dom-node '(2 3) args)))
-
-(defun dm-map-default-scale-function (scale &rest cells)
-  "Return CELLS with SCALE applied.
-
-SCALE is the number of pixes per map cell, given as a cons cell:
-
-  (X . Y)
-
-CELLS may be either svg `dom-nodes' or cons cells in the form:
-
-  (CMD . (ARGS))
-
-Where CMD is an SVG path command and ARGS are arguments thereto.
-
-SCALE is applied to numeric ARGS of cons cells and to the width,
-height and font-size attributes of each element of each
-`dom-node' which contains them in the parent (e.g. outter-most)
-element.  SCALE is applied to only when the present value is
-between 0 and 1 inclusive."
-  (message "scale:%s cells:%s" scale cells)
-  (dolist (cell cells cells)
-    (message "cell:%s" cell)
-    (cond
-     ((dm-svg-dom-node-p cell 'text)
-      (message "text:%s" cell)
-      (dolist (args '((text-size 0) (x 0) (y 1)) )
-	(dm-map--dom-attr-scale-nth cell scale args)))
-     ((consp cell) (message "consp!%s" cell)
-      (pcase cell
-	;; move or line in the form (sym (h v)
-	(`(,(or 'm 'l)
-	   (,(and x (guard (numberp x)))
-	    ,(and y (guard (numberp y)))))
-	 (setcdr cell (list (* x (car scale))
-			    (* y (cdr scale)))))
-
-	;; h and v differ only in which part of scale applies
-	(`(h (,(and d (guard (numberp d)))))
-	 (setcdr cell (list (* d (car scale)))))
-	(`(v (,(and d (guard (numberp d)))))
-	 (setcdr cell (list (* d (cdr scale)))))
-
-	;; arc has tons of args but we only mess with the last two
-	(`(a (,rx ,ry ,x-axis-rotation ,large-arc-flag ,sweep-flag
-		,(and x (guard (numberp x)))
-		,(and y (guard (numberp y)))))
-	 (setcdr cell (list rx ry x-axis-rotation large-arc-flag sweep-flag
-			    (* x (car scale))
-			    (* y (cdr scale)))))
-
-	;; fall-back to a message
-	(_ (message "unhandled %s => %s" (type-of cell) cell))
-	))
-     )))
-;; (dm-map-default-scale-function '(100 . 1000)
-;; 			       (dom-node 'text '((text-size .5)(x .2)))
-;; 			       '(h (.1)) '(v (.2))'(m (.3 .4)) '(l (.5 .6)) '(x (.7 .8)) '(a (.7 .7 0 1 1 0 .14)))
 
 ;; TODO we need to split out :keywords that may be run together
 ;; with repeated feature names
@@ -357,6 +637,9 @@ TODO: return a list of unresolved symbols?"
 	       (print (gethash key hash))
 	       ) (hash-table-keys hash)))
   (buffer-string))
+
+(let ((standard-output (current-buffer)) print-length print-level something) (insert "\n;; ") (prin1 something))
+
 
 (cl-defun dm-map-quick-draw (features
 			     cells
@@ -633,7 +916,7 @@ above."
 	  (recurse t) (update t) (resolver 'dm-map--maybe-resolve-path))
   "Attempt to resolve symbols from paths attributes keys of HASH.
 
-If KEY is non-nil (recursively) process this key only. ERROR may
+If KEY is non-nil (recursively) process this key only.  ERROR may
 be set to t to cause an error to be throw in case a symbol cannot
 be resolved.  RECURSE (default: t) may be set to nil to suppress
 recursive resolution of symbols found while dereferencing.

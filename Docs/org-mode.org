@@ -1,8 +1,10 @@
 #+TITLE: Gaming in org-mode
+# #+OPTIONS: toc:nil
 
 Most game sources (e.g. maps, treasure tables, etc) as well as some game play information (character sheets, the battle board giving the party's order of battle, and so forth) are written as ~[[https://org-mode.org][org-mode]]~ files to one or more users' file-system.  While these files are "hand-editable" ~dungeon-mode~ provides additional domain specific tools to supplement those of ~org-mode~ and other components of GNU Emacs.  The rest of this file describes those tools and chronicles their development.
 
-* INPROGRESS Things we are working on right now!
+* ABSTRACT
+
 
 ** ETL: Extract, Transform, and Load
 
@@ -14,41 +16,110 @@ Most game sources (e.g. maps, treasure tables, etc) as well as some game play in
    1. Interactive: for example, updating documents to implement
       higher-level editing functions, and
    2. Indirect: for example, updating a remote document representing a
-      character sheet after an NPC has stolen an item.
+      character sheet after an NPC steals an item.
 
-  For the sake scoping a reasonable initial effort in this are we
-  essentially hand-waving at the network related challenges implicit
-  in the second use case, generally assuming use of remote eval
-  against player's host Emacs within a LAN environment (e.g. VPN).
-  Thus, this document --and present designs in code-- will treat these
-  uses cases as similar or identical unless noted otherwise.
+** Scope
 
-  This section, then, provides the holistic treatment of dungeon-mode
-  specific provisions for automating manipulation of user editable
-  files, and generally considers the problem in terms of extracting,
-  transforming, or loading information to/from org-mode documents or,
-  in fact, in terms of coordinated sequences of such actions.
+  For the sake scoping a reasonable initial effort we are essentially
+  hand-waving at the network related challenges implicit in the second
+  use case.  We assume use of remote eval against player's host Emacs
+  within a LAN environment (e.g. VPN).  The host's Emacs will poll
+  clients periodically so that remote evaluation by clients against
+  the host's Emacs is not required.  Thus, this document --and present
+  designs in code-- treat the interactive and indirect uses cases
+  above mentioned as undistinguished, unless noted otherwise.
+
+** Prior Art
+
+  Moreover, the problem sub-domain of rearranging org-mode documents
+  with and without interactivity is a well developed one. (See [[Org-D20 By Sean Whitton][refs:org-d20]])
+
+  Finally, org-ql by Adam Porter provides a simple declarative syntax
+  for expressing selection criteria within and among org-mode
+  documents. While much of this packages capability may optional for
+  game authors or players the synergies are unmistakable. (See [[Declarative Selection Criteria for Org][refs:org-ql]])
+
+** Opportunities
+
+  Thus, the primary -likely only- area of ~org-mode~'s tool-chain atop
+  out-of-box Emacs underdeveloped for the purposes of composing a
+  network aware turn based RPG game-engine is a declarative binding
+  syntax, especially for destructuring information in tables and
+  section hierarchies.
+
+  The project should work closely with other teams developing related
+  and supporting works.  We should generate feature requests and
+  patches to/for intersecting projects and accept all guidance further
+  for dungeon-mode uses who have the related work.  We should avoid
+  depending on related works that do not also target eventual source
+  transition to GNU and/or inclusion in core productions,
+  e.g. ELPA ➢ org-mode ➢ emacs ➢ GNU/Linux.
+
+** SYNOPSIS
+
+  Within this context then, the following sections provide the
+  holistic treatment of dungeon-mode specific provisions for
+  automating manipulation of user editable files, considering the
+  problem in terms of extracting, transforming, or loading information
+  to/from org-mode documents or, in fact, in terms of coordinated
+  sequences of such actions, and focus on creation and transformation
+  of Emacs Lisp sources, including opportunities and plans to factor
+  them out from this project if and as identified.
+
+* INPROGRESS Things we are working on right now!
 
 *** ox-dump - export org-mode documents as Emacs Lisp
 
-    This package is an exporter for org-mode providing structured Emacs
-    Lisp formatted output as files, buffers or to evaluate after the
-    export is complete.
+    This package exports `org-mode' documents in Emacs Lisp files, buffers, and strings.
 
-    We can specify a template in which to wrap the exported lisp
-    either within a document or section using "~#+DUMP_EXPR~" or by
-    setting ~ox-dump-expr~.  This accepts the following placeholders:
+    It exposes a declarative syntax allowing granular (~#+DUMP_ARGS~) and
+    global (~#+DUMP_EXPR~) expression of selection criteria and body forms
+    (~#+DUMP_FORM~).
 
-    | Symbol | Replacement               |
-    |--------+---------------------------|
-    | *      | The result of evaluation. |
-    | \n     | A newline.                |
+    #+BEGIN_SRC org
+    #+TITLE: Great Glass Elevator
+    #+CATEGORY: DUNGEON:DEFAULT-DUNGON:MAPS
+    # use the full document or everything exported, the default
+    #+DUMP_EXPR: *
+    # create a list of section title content and section content, the default
+    # DUMP_BIND lines within a context are cons together
+    #+DUMP_BIND: ((ITEM *))
+    #+DUMP_BIND: ((CHILDREN *))
+    # return the macroexpanded bindings, the default
+    #+DUMP_FORM: (macroexpand *)
+    This room seems made out of glass.  The walls are full of buttons.  As you enter the door slides shut behind you.  Roll a die.
+    * Take the party somewhere random. Higher rolls are safer. :SPOILER:
 
-    This feature also supports a destructuring syntax based on
-    [[info:cl-lib][cl-destructuring-bind]] accessed via a header property "~#+DUMP_BIND~"
-    and associated to ~ox-dump-bind~.
+     | Roll | Result                         |
+     |    1 | Trapdoor (2 levels)            |
+     |    2 | Trapdoor                       |
+     |    3 | Random Teleport                |
+     |    4 | Random Teleport                |
+     |    5 | Up 1 Level and Random Teleport |
+     |    6 | General Store                  |
 
-**** TODO implement DUMP_BIND/ox-dump-bind, look at cldb*?
+     #+END_SRC
+
+
+#+END_SRC
+
+
+**** TODO ATM #+DUMP_EXPR is hard-coded to "*", everything within export context
+    We can specify a form to evaluate with the exported lisp within a
+    document or section context using "~#+DUMP_EXPR~" or by setting
+    ~ox-dump-expr~.
+
+**** TODO implement DUMP_ARGS/ox-dump-args, look at cldb*?
+    We can access a destructuring syntax based on
+    [[info:cl-lib][cl-destructuring-bind]] via a header property "~#+DUMP_ARGS" and
+    associated to ~ox-dump-args~.
+
+**** TODO implement DUMP_FORM/ox-dump-form, look at cldb*?
+    We can define one or more forms to render in the lisp exported
+    from a document or section using "~#+DUMP_FORM~" or by setting
+    ~ox-dump-forms~.  Repeated uses of "~#+DUMP_FORM~" implicitly form an
+    ~progn~.
+
 
 * References
 
@@ -56,7 +127,6 @@ Most game sources (e.g. maps, treasure tables, etc) as well as some game play in
 
    * Header Arguments - https://orgmode.org/manual/Using-Header-Arguments.html#Using-Header-Arguments
    * Tutorial! - https://code.orgmode.org/bzg/worg/src/org-export-backend-tutorial/org-tutorials/org-export-backend.org
-   * This looks super cool - https://github.com/alphapapa/org-ql
    * Similar Problem Space - https://github.com/jlumpe/ox-json
    * Exporter - https://orgmode.org/worg/dev/org-export-reference.html
    * Babel Export vs Results - https://orgmode.org/manual/Results-of-Evaluation.html#Results-of-Evaluation
@@ -66,7 +136,109 @@ Most game sources (e.g. maps, treasure tables, etc) as well as some game play in
      + [[file:~/.emacs.d/elpa/org-9.3.2/ox-latex.el][ox-latex.el]]
      + [[file:~/.emacs.d/elpa/org-9.3.2/ox-ascii.el][ox-ascii.el]]
 
+** Declarative Selection Criteria for Org
+
+   https://github.com/alphapapa/org-ql
+
+   #+BEGIN_QUOTE
+   An Org-mode query language, including search commands and saved views
+   #+END_QUOTE
+
+   This package is simple and highly robust.  The high-level
+   declarative syntax is efficient and seems likely to promote
+   understanding of fundamental selection criteria, for example as for
+   ~org-agenda~, among new users.  It's easy believe this package will
+   become part of core org-mode/Emacs.
+
+   This package doesn't support tables.  We can create/propose
+   patching based on calculations' syntax for references, e.g. @1, $1,
+   @1$1, etc.  This is a complex syntax but likely possible utilize
+   somewhat fully in our context, thus we perhaps do not go out of our
+   way in providing this package's syntax for our users nor promoting
+   our "special needs" for table and cell selection criteria out from
+   the game and into ~org-ql~.
+
+** Org-D20 By Sean Whitton
+
+   https://github.com/alphapapa/org-ql
+
+   #+BEGIN_QUOTE
+   org-d20 is a minor mode for Emacs' Org-mode for GMs running games whose rules centre around rolling d20s.
+   #+END_QUOTE
+
+   It seems likely dungeon-mode may enable additional features for
+   users having this package, especially for authors and players of
+   above style games who may wish to use some ~dungeon-mode~ features
+   based on existing work-flows and campaign notes.
+
 * Research
+
+** Problem: Mapping Structures: Org to Emacs Lisp
+
+*** Document Types
+     :PROPERTIES:
+     :CUSTOM_ID: DocumentTypesSection
+     :END:
+**** A: Unstructured
+     A document containing only content blocks (no sections,
+     properties, src blocks, or tables)
+
+**** B: Simple
+
+     A document containing section hierarchies having only simple
+     content blocks (no properties, src blocks or tables).
+
+**** C: Simple Tables and Properties
+
+     A document containing tables and/or properties controlling section
+     or table export but without src blocks.
+
+**** D: Properties and Complex Tables
+
+     A document containing table src blocks, e.g. using all features.
+
+*** Suitability of Emacs Lisp Structure by Document Type
+
+    #+TOC: headlines 1 :target #DocumentTypesSection
+
+    |   | scope   | cc | l | a | p | v | h | o |
+    |---+---------+----+---+---+---+---+---+---|
+    | A |         |    | ✓ |   |   |   |   |   |
+    |---+---------+----+---+---+---+---+---+---|
+    | B |         | ✓  | ✓ | ✓ | ✓ |   | ✓ |   |
+    |   | section | ✓  | ✓ | ✓ | ✓ |   | ✓ |   |
+    |---+---------+----+---+---+---+---+---+---|
+    | C |         | ✓  | ✓ | ✓ | ✓ |   | ✓ |   |
+    |   | section | ✓  | ✓ | ✓ | ✓ |   | ✓ |   |
+    |   | props   |    |   | ✓ | ✓ |   | ✓ |   |
+    |   | table   | ✓  | ✓ | ✓ | ✓ |   | ✓ |   |
+    |---+---------+----+---+---+---+---+---+---|
+    | D |         | ✓  | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
+    |   | section | ✓  | ✓ | ✓ | ✓ |   | ✓ |   |
+    |   | props   |    |   | ✓ | ✓ |   | ✓ |   |
+    |   | table   | ✓  | ✓ | ✓ | ✓ | ✓ | ✓ |   |
+    |   | src     | ✓  | ✓ | ✓ | ✓ |   |   | ✓ |
+    |---+---------+----+---+---+---+---+---+---|
+
+**** Solution: A simple approach to mapping
+
+     * *Given*: a PREFERENCE among available conversions which may vary
+       by block/section and which takes as default the right most
+       Suitability option, from the table above.
+     * Sections are evaluated from the inside out
+     * Evaluate source blocks and table formula until things stop changing.
+     * Process blocks per section from the inside out in the
+       following order: DRAWERS, RESULTS, TABLES, TEXT, the SECTION
+     * Evaluate vars/props to find the applicable/default PREFERENCE
+     * Create lists by appending all sections including title and
+       content children and contained blocks, in the order given.
+     * Create cons cells as one of:
+       * (src . results)
+       * (table . (( row1 )( row2 ) ...))
+       * (section-title . children)
+
+
+
 
 ** Problem: Collecting Source Materials
 
@@ -114,9 +286,9 @@ Most game sources (e.g. maps, treasure tables, etc) as well as some game play in
        | ~hrow~   | 0-1 | the top of the table may contain titles      |
        | ~hlines~ |   * | horizontal separation rows                   |
        | ~mcol~   | 0-1 | col, reserved for [[https://orgmode.org/manual/Advanced-features.html#Advanced-features][special marking characters]] |
-     * DEF, a property, as for ~ARGS~ in [[info:cl#Macros][cl-destructuring-bind]]
+     * ARGS, a property, as for [[info:cl#Macros][cl-destructuring-bind]]
        #+BEGIN_SRC org
-         #+DUMP_DEF: ((feature (@1)) (path (@2)))
+         #+DUMP_ARGS: ((feature (@1)) (path (@2)))
        #+END_SRC
      * EXPR, a property, as for EXPR in [[info:cl#Macros][cl-destructuring-bind]]
        #+BEGIN_SRC org
@@ -126,3 +298,41 @@ Most game sources (e.g. maps, treasure tables, etc) as well as some game play in
        from [[info:cl#Macros][cl-destructuring-bind]].
 
 #  LocalWords:  destructuring ETL
+
+** Problem: Expressing Content Semantics
+
+   _Solution Objective_
+
+   #+begin_quote
+   As a creator I want a simple means to express how sources
+   materials relate.
+   #+end_quote
+
+   /Background/
+
+   RPGs consist of many, many blocks of source materials
+   which it may be convenient to store across files or larger
+   hierarchically arranged sets depending on the situation.
+
+   It is our intent to allow game designers, as well as players, a
+   great degree of latitude, for example to customize game materials
+   such as to embellish upon them with additional narratives.  Further
+   complicating the problem space, the game concepts (or "content
+   sub-domains") are themselves not etched but rather may freely vary
+   from game to game and from moment to moment as we change the rules.
+
+   In the context of creating games to play either traditionally using
+   hard-copies and dice or else on-line using Emacs, it is vital to
+   provide a uniform mechanism to separate concerns related
+   specifically to "Extraction" (e.g. the de-serialization or parsing
+   for machine use), from the primary content which necessarily must
+   dominate document and cross-document organizational designs.
+
+*** Use-Cases
+
+**** Execute A Form When Productions Bind Successfully
+
+     This is the general pattern of use.  Evaluate a body form given
+     a production of a BNF grammar is when-let bound successfully.
+
+  *

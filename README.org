@@ -2,6 +2,21 @@ dungeon-mode - synchronous and asynchronous world sharing and change resolution
 
 #+CATEGORY: Dungeon
 
+* Project Status
+
+#+BEGIN_QUOTE
+TL;DR We are actively but slowly working on this.
+
+We welcome your interest and participation!
+
+We are doing analysis and head-first conceptual development to create
+a Minimum Play-Testable Product (MPTP).
+#+END_QUOTE
+
+Please open an issue to request commit access or share your thoughts.
+
+More both general and detailed status in [[Community and Outreach][Community and Outreach]], below.
+
 * SYNOPSYS
 
 An hack-and-slash style mult-player dungeon crawl blending the
@@ -438,7 +453,35 @@ also be able find one and other in #emacs on irc.freenode.net.
 We are creating a complete new game-engine writting within a text
 editor.  We'd love your input and participation!
 
-Find us on [[https://discord.gg/gar8ns][Discord]] or join #dungeon-mode on Freenet.net IRC or open an
-issue on github to request commit access or make contact.
+This project started in late 2019 as a collaboration between Erik
+(tigersbite) and Corwin (mplsCorwin).  Shortly thereafter Erik got
+engaged, and moved, and started new work, and things of this nature.
 
-#  LocalWords:  MPTP POC EOF Org svg
+Erik is on creating the game sources for "Default Dungeon", which will
+ship with the game as a playable example of most/all out-of-box
+features.  He's currently focused specifically on flushing out
+edge-cases around storing information about map levels as [[https://org-mode.org][org-mode]]
+documents.
+
+Meanwhile, Corwin is developing programs to load and update elisp data
+structures from org-document.  This work is currently focused on
+creating an exporter that provides a declarative for transforming
+documents, etc., into Emacs Lisp expressions.
+
+We're meeting about once a week to exchange progress reports.  There
+are some others who join us on discord or IRC in the evenings.
+You are welcome among them.
+
+Both Erik and Corwin are using the opportunity of this project to
+teach our kids some programing concepts.  We welcome those learning or
+interested in learning Emacs Lisp and C who share our love of abstract
+self-made semi-disposable hack-and-slash dungeon-crawl and RPG games.
+
+As Corwin is the only elisp dev currently involved (We both know C),
+this is the area where we could use the most help.  Find us on [[https://discord.gg/gar8ns][Discord]]
+or join #dungeon-mode on Freenet.net IRC. Additional input, including
+general interest such as kibitzing the design, planned features, etc.,
+are also welcomed. We draw the line and point and jeering.  Get your
+own discord/irc channel for that please.
+
+#  LocalWords:  MPTP POC EOF Org svg tigersbite mplsCorwin

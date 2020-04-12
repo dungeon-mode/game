@@ -20,164 +20,188 @@
 
 ;;; Commentary:
 
-;;
+;;  A very simple ETL tool for org.
+
+;; We define a batch process in terms of a number of steps each
+;; represented by a function returning the next step, if any.
+
+;;  Support "tables" (or maybe another org elemnt type bound to
+;;  dm-table-element) in terms of a set functions to:
+;;   - Extract e.g. read from the source document
+;;   - Transform, e.g. create a result or side effect from source
+;;   - Load e.g. write the sorce, back to the document or elsewhere
+
+;;  As any implicit cooperation amung these methods is left to their
+;;  implemention, this module simple provides an API for driving the
+;;  implicit state machine via interactive commands, functions, and
+;;  hooks.  Each game intrinsic implements this API to allow
+;;  intersection amung game sources as we work with with them.
 
 ;;; Code:
 
-(defcustom dm-table-default-coalesce-key '(id)
-  "Default key when coalescing strings to hashes.
+(require 'org-table)
+(eval-when-compile (require 'cl-lib)
+		   (require 'subr-x))
 
-See `dm-table-coalesce-hash."
-  :group 'dm-internal)
-;;(setq dm-table-default-coalesce-key '(id))
+(defvar dm-table-alist nil
+  "While editing or playing, an alist of source scope and state.")
 
-(defun dm-table--remove-keywords (form)
-  "Return FORM with any :keyword and following args removed."
-  (if (and (car-safe form)
-	   (cdr-safe form)
-	   (car-safe (cdr form))
-	   (keywordp (car form)))
-      (dm-table--remove-keywords (cdr-safe (cdr form)))
-    (if (cdr-safe form)
-	(cons (car-safe form) (dm-table--remove-keywords (cdr form)))
-      form)))
-;;(dm-table--remove-keywords '(foo :bar baz qwz));;
+(defvar dm-table-load-table-var 'dm-table-alist
+  "Variable updated by the default load function `dm-table-load-table'.")
 
-(cl-defmacro dm-table-coalesce-hash
-    (strings &optional (bindings dm-table-default-coalesce-key) &body body
-	     &key (hash-symbol 'hash)
-	     (hash-table `(make-hash-table) hash-p)
-	     (row-symbol 'row)
-	     (key-symbol (car (delq '_ (delq nil bindings))))
-	     (start-column 0)
-	     (result-symbol 'result)
-	     enable-after-nil
-	     (after `(when (and ,key-symbol
-				(or ,enable-after-nil ,result-symbol))
-		       (puthash (if (stringp ,key-symbol)
-				    (intern ,key-symbol)
-				  ,key-symbol)
-				,result-symbol
-				,hash-symbol)))
-	     &allow-other-keys)
-  "Build HASH by repeatedly applying BINDINGS to STRINGS for BODY.
+(defvar dm-table-load-table-fun (lambda (item list) (push item list))
+  "Function to update `dm-table-load-table-var'.")
 
-STRINGS is list of string lists, ((\"aa\" \"ab\") (\"ba\" \"bb\")).
+(defvar dm-table-states
+  '((ledger :extract #'dm-table-extract-function
+	    :transform #'dm-table-transform-function
+	    :load #'dm-table-load-function))
+  "While editing or playing, available source state transitions.
 
-BINDINGS are symbols, each bound from STRINGS at the corrisonding
-index.  Use \"_\" to ignore given positions.  BODY is evaluated
-once per outer STRING list item after BINDINGS.  BINDINGS are
-taken from `dm-table-default-coalesce-key' when nil or omitted.
+This is an irregular alist with items taking the form:
 
-HASH-TABLE allows hash-table reuse.  HASH-SYMBOL (default:
-\"hash\") exposes HASH-TABLE to BODY.  ROW-SYMBOL (default:
-\"row\") is bound full list taken from STRINGS for a given
-evaluation of BODY.  KEY-SYMBOL provides the value for the key
-written in HASH by the default AFTER implementation; it defaults
-to to the first of BINDINGS.  START-COLUMN (default: 0) allows
-specifying the first column index for BINDINGS.
-RESULT-SYMBOL (default: \"result\") exposes the result of BODY
-after each evaluation.  When ENABLE-AFTER-NIL is nil (the
-default) AFTER is not executed unless FORMS returns a nil value.
-When AFTER expression is non-nill it is evaluated after BODY in
-the same context given either BODY result or ENABLE-AFTER-NILL is
-not nil.  The default AFTER implementation inserts the value of
-RESULT-SYMBOL into the hash identified by HASH-SYMBOL creating a
-key by interning the value of KEY-SYMBOL."
-  (declare (indent 2))
-  (let* ((column-count start-column)
-	 (body-form (if body (dm-table--remove-keywords body)
-		      `((list ,@(mapcan
-				 (lambda (var) `(',var ,var))
-				 (delq '_ (delq nil bindings)))))))
-	 (symbol-bindings
-	  (delete nil (mapcar
-		       (lambda (var)
-			 (prog1 (when (and var
-					   (not (equal '_ var))
-					   (>= column-count start-column))
-				  (list var `(nth ,column-count ,row-symbol)))
-			   (setq column-count (1+ column-count))))
-		       bindings)))
-	 (row-form `(lambda (,row-symbol)
-		      ,(if (and symbol-bindings (length symbol-bindings))
-			   `(let (,@symbol-bindings)
-			      (prog1 (setq ,result-symbol (progn ,@body-form))
-				,after))
-			 `(if ,after
-			      (prog1 (setq ,result-symbol (progn ,@body-form))
-				,after)
-			    (progn ,@body-form))))))
-    ;;(prin1 symbol-bindings)
-    `(let* ((,hash-symbol ,hash-table) ,row-symbol ,result-symbol)
-       (mapcar ,row-form (quote ,strings))
-       ,hash-symbol)))
+  (SCOPE :STATE1 FUN1 ...)
 
-(dm-table-coalesce-hash (("h1" "H2" "H3")
-			 ("r1" "V12" "V13")
-			 ("r2" "V22" "V23")
-			 ("r3" "V32" "V33"))
-    nil
-  (puthash (nth 0 row) row hash)
-  :after nil)
+Where SCOPE is a symbol representing the intrinsic (e.g. source
+category, or frame of reference), and each :STATE FUN pair
+represent a supported set pairing one of :extract :transform or
+:load with a function, called with the parsed element (or with
+point at the start of the unparsed element, in the case of
+:extract with no prior state) followed by any prior state
+information for the current workflow.  FUN may return NEW-STATE
+to continue the workflow or nil to terminate it.
 
-(dm-table-coalesce-hash (("h1" "H2" "H3")
-			 ("r1" "V12" "V13")
-			 ("r2" "V22" "V23")
-			 ("r3" "V32" "V33"))
-    (_)
-  (puthash (intern (nth 0 row)) row hash)
-  :after nil
-  )
+Prior state as well as NEW-STATE may either be a keyword symbol
+or a con cell in the form:
+  (SCOPE . STATE)")
 
-(dm-table-coalesce-hash (("h1" "H2" "H3")
-			 ("r1" "V12" "V13")
-			 ("r2" "V22" "V23")
-			 ("r3" "V32" "V33"))
-    (_)
-  :after
-  (puthash (intern (nth 0 row)) (cdr row) hash))
+(defvar dm-table-extract-function #'dm-table-extract-table
+  "Function used to read from org into to memory.
 
-(dm-table-coalesce-hash (("h1" "H2" "H3")
-			 ("r1" "V12" "V13")
-			 ("r2" "V22" "V23")
-			 ("r3" "V32" "V33"))
-    ;;(id h2)
-  )
+The default implemention deligates to `org-table-to-lisp'.")
 
-(let ((dm-table-default-coalesce-key '(id _ h1)))
-  (dm-table-coalesce-hash (("h1" "H2" "H3")
-			   ("r1" "V12" "V13")
-			   ("r2" "V22" "V23")
-			   ("r3" "V32" "V33"))))
+(defvar dm-table-transform-function #'dm-table-tranform-table
+  "Function used to lexically transform org sources.
 
-(dm-table-coalesce-hash (("h1" "H2" "H3")
-			 ("r1" "V12" "V13")
-			 ("r2" "V22" "V23")
-			 ("r3" "V32" "V33"))
-    (id bob)
-  (list (quote bob) bob))
+The default implemention relies on `dm-coalesce-hash'.")
 
+(defvar dm-table-load-function #'dm-table-load-table
+  "Function used to store a table, e.g. in a var..")
 
+(defvar dm-table-step-function #'dm-table-step
+  "Function to deduce the (next) step for `dm-table-batch'.")
 
-(dm-table-coalesce-hash (("h1" "H2" "H3")
-			 ("r1" "V12" "V13")
-			 ("r2" "V22" "V23")
-			 ("r3" "V32" "V33"))
-    (id _ h2)
-  :start-column 0
-  (list 'id (format "id:<%s>" id) '2 h2 'raw row))
+(defvar dm-table-coalesce-args nil "Options for dm-coalesce-hash.")
 
-(let ((h (dm-table-coalesce-hash (("h1" "H2" "H3")
-				  ("r1" "V12" "V13")
-				  ("r2" "V22" "V23")
-				  ("r3" "V32" "V33"))
-	     (id h2)
-	   :hash-table #s(hash-table size 30 test equal)
-	   :start-column 1
-	   (list 'id id 'h2 h2))))
-  ;;(print h)
-  h)
+(defun dm-table-extract-table
+    (&rest _args)
+  "Return :transform form passing table at point as elisp.
+
+Parsing and converison via `org-table-to-lisp', which see."
+  ;; (when-let ((coalesce-prop (org-entry-get (point) "coalesce" t)))
+  ;;   (setq dm-table-coalesce-args (read coalesce-prop)))
+  (message "[xract] file:%s buffer:%s line:%s pos:%s around:%s"
+	   (buffer-file-name) (buffer-name)
+	   (line-number-at-pos) (point)
+	   (concat (buffer-substring (- (point) 50) (point))
+		   "⧆"
+		   (buffer-substring  (point) (+ (point) 50))))
+  (list :transform (delq 'hline (org-table-to-lisp))))
+
+(defun dm-table-tranform-table (table)
+  "Return :load form with TABLE as an hash-table.
+
+This version creates an hashmap of properties from each row from
+header labels in the first table row, take the first column as key."
+  (eval `(list :load (dm-coalesce-hash ,(cdr table)
+			 ,@(or dm-table-coalesce-args
+			       (seq-map (lambda (label) (intern (downcase label)))
+					(car table)))
+		       ))))
+
+;; (defun dm-table-tranform-table-before-props (table)
+;;   "Return :load form with TABLE as an hash-table.
+;; This version creates an hashmap of properties from each row from
+;; header labels in the first table row, take the first column as key."
+;;   (let ((cols (or dm-table-slots
+;; 		  (seq-map (lambda (label) (intern (downcase label)))
+;; 			   (car table)))))
+;;     (eval `(list :load (dm-coalesce-hash ,(cdr table)
+;; 			   ,cols
+;; 			 ,@(when dm-table-key
+;; 			     `(:key-symbol ,dm-table-key)))))))
+
+;;  (setq x (cons x y))
+;;    (list 'features (nth 2 row))
+
+(defun dm-table-load-table (table)
+  "Apply `dm-table-load-table-fun' to `dm-table-load-table-var' and TABLE.
+
+Return a terminating form."
+  (message "[load] fun:%s var:%s" dm-table-load-table-fun dm-table-load-table-var)
+  (list nil (set dm-table-load-table-var table)))
+
+;; (dm-table-load-table (cdr (apply 'dm-table-tranform-table (cdr (dm-table-extract-table 'map)))) '(map))
+
+(cl-defun dm-table-defstates (type
+			      &optional &key
+			      (extract dm-table-extract-function)
+			      (transform dm-table-transform-function)
+			      (load dm-table-load-function))
+  "Define EXTRACT TRANSFORM and LOAD functions for TYPE, a symbol."
+  (if (assoc type dm-table-states)
+      (setcdr (assoc type dm-table-states)
+	      (list :extract extract :transform transform :load load))
+    (push (list type :extract extract :transform transform :load load)
+	  dm-table-states)))
+
+(defun dm-table-step (scope &optional step &rest _data)
+  "Find the best next function to advance SCOPE.
+
+SCOPE is a symbol.  STEP is a keyword symbol amung :extract
+:transform or :load, defaulting to first given for SCOPE.."
+  ;; (message "[step] scope:%s step:%s scope-states:%s next-step:%s step-func:%s"
+  ;; 	   scope step (cdr-safe (assq scope dm-table-states))
+  ;; 	   (or step (car-safe (cdr-safe (assq scope dm-table-states))))
+  ;; 	   (car-safe (cdr-safe (plist-get (cdr-safe (assq scope dm-table-states))
+  ;; 					  (or step (car-safe (cdr-safe (assq scope dm-table-states))))))))
+  (message "[step] scope:%s step:%s" scope step)
+  (when-let* ((scope-states (cdr-safe (assoc scope dm-table-states 'equal)))
+	      (next-step (or step (car-safe scope-states)))
+	      (step-func (plist-get scope-states next-step)))
+    (message "[step] fun:%s next:%s states:%s" step-func next-step scope-states)
+    (if (functionp step-func) step-func
+      (eval step-func))))
+
+(defun dm-table-batch(scope &optional step &rest data)
+  "Execute functions in batch until unable to advance SCOPE.
+
+SCOPE is a symbol.  STEP is a keyword symbol, nominally amung
+:extract :transform or :load, defaulting to the first for SCOPE
+among those given in `dm-table-states'.  Any DATA is passed to
+the first step function (generally \":extract\").
+
+Functions may return nil to halt the batch or a cons cell to
+continue:
+
+  (NEXT-STEP RESULT)
+
+Where NEXT-STEP is a keyword symbol representing the next
+step (or nil, to stop), and LAST-RESULT is the current result-set
+being carried forward, if any."
+  (let ((step-func (funcall dm-table-step-function scope step data))
+	(result (cons t data)))
+    (while (and (car-safe result) step-func)
+      (message "[batch] before func:%s data:%s" step-func data)
+      (setq result (apply step-func (cdr result)))
+      ;;(message "[batch] result:%s" result)
+      (when (car-safe result)
+	(setq step-func (funcall dm-table-step-function scope (car result)))
+	(message "[batch] newfunc:%s" step-func)
+	step-func)))
+  ;;(message "var:%s eval:%s" dm-table-load-table-var (eval dm-table-load-table-var))
+  dm-table-load-table-var)
+;; ^-- redo as when-let?
 
 (provide 'dm-table)
 ;;; dm-table.el ends here

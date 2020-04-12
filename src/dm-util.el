@@ -34,6 +34,8 @@ These settings are generally intended to be changed lexically
 from elisp-code; however, for game development it may be
 convenient to customize some of defaults." :group 'dungeon-mode)
 
+(eval-when-compile (require 'cl-macs))
+
 (defcustom dm-util-default-coalesce-key '(id)
   "Default key when coalescing strings to hashes.
 
@@ -41,6 +43,10 @@ See `dm-coalesce-hash."
   :group 'dm-util
   :type '(sequence symbol))
 ;;(setq dm-util-default-coalesce-key '(id))
+
+(defsubst dm-make-hashtable (&rest args)
+  "Create an empty hash table using ARGS, if any."
+  (apply 'make-hash-table (append (list :test 'equal) args)))
 
 (defun dm--remove-keywords (form)
   "Return FORM with any :keyword and following args removed."
@@ -56,35 +62,28 @@ See `dm-coalesce-hash."
 ;;(equal (dm--remove-keywords '(foo :bar baz qwz)) '(foo qwz))
 ;;(equal (dm--remove-keywords '(:foo 1 baz qwz)) '(baz qwz))
 
-;; (let ((h (dm-coalesce-hash (("h1" "H2" "H3")
-;; 				  ("r1" "V12" "V13")
-;; 				  ("r2" "V22" "V23")
-;; 				  ("r3" "V32" "V33"))
-;; 	     (id h2)
-;; 	   :hash-table #s(hash-table size 30 test equal)
-;; 	   :start-column 1
-;; 	   (list 'id id 'h2 h2))))
-;;   ;;(print h)
-;;   h)
-;; (dm-coalesce-hash((1 "a")(2 "b"))(_) :after(puthash(nth 0 row)(cdr row)hash))
-
-(cl-defmacro dm-coalesce-hash
-    (strings &optional (bindings dm-util-default-coalesce-key) &body body
-	     &key (hash-symbol 'hash)
-	     (hash-table `(make-hash-table) hash-p)
-	     (row-symbol 'row)
-	     (key-symbol (car (delq '_ (delq nil bindings))))
-	     (start-column 0)
-	     (result-symbol 'result)
-	     enable-after-nil
-	     (after `(when (and ,key-symbol
-				(or ,enable-after-nil ,result-symbol))
-		       (puthash (if (stringp ,key-symbol)
-				    (intern ,key-symbol)
-				  ,key-symbol)
-				,result-symbol
-				,hash-symbol)))
-	     &allow-other-keys)
+(cl-defmacro dm-coalesce-hash  (strings
+				&optional
+				(bindings dm-util-default-coalesce-key)
+				&body body
+				&key (hash-symbol 'hash)
+				(hash-table '(dm-make-hashtable) hash-p)
+				(row-symbol 'row)
+				(key-symbol (car (delq '_ (delq nil bindings))))
+				(start-column 0)
+				(result-symbol 'result)
+				enable-after-nil
+				(after `(when (and ,key-symbol
+						   ,hash-symbol
+						   (or ,enable-after-nil
+						       ,result-symbol)
+						   (hash-table-p ,hash-symbol))
+					  (puthash (if (stringp ,key-symbol)
+						       (intern ,key-symbol)
+						     ,key-symbol)
+						   ,result-symbol
+						   ,hash-symbol)))
+				&allow-other-keys)
   "Build HASH by repeatedly applying BINDINGS to STRINGS for BODY.
 
 STRINGS is list of string lists, ((\"aa\" \"ab\") (\"ba\" \"bb\")).
@@ -111,32 +110,54 @@ RESULT-SYMBOL into the hash identified by HASH-SYMBOL creating a
 key by interning the value of KEY-SYMBOL."
   (declare (indent 2))
   (let* ((column-count start-column)
-	 (body-form (if body (dm--remove-keywords body)
+	 (body-form (or (dm--remove-keywords body)
 		      `((list ,@(mapcan
 				 (lambda (var) `(',var ,var))
 				 (delq '_ (delq nil bindings)))))))
 	 (symbol-bindings
 	  (delete nil (mapcar
 		       (lambda (var)
-			 (prog1 (when (and var
-					   (not (equal '_ var))
-					   (>= column-count start-column))
-				  (list var `(nth ,column-count ,row-symbol)))
+			 (prog1 (if (and var
+					 (not (equal '_ var))
+					 (>= column-count start-column))
+				    (list var `(nth ,column-count ,row-symbol))
+				  nil)
 			   (setq column-count (1+ column-count))))
 		       bindings)))
 	 (row-form `(lambda (,row-symbol)
 		      ,(if (and symbol-bindings (length symbol-bindings))
 			   `(let (,@symbol-bindings)
-			      (prog1 (setq ,result-symbol (progn ,@body-form))
-				,after))
+			      (prog1 ,(if result-symbol
+					  `(setq ,result-symbol
+						 (progn ,@body-form))
+					`(progn ,@body-form))
+				,(when after after)))
 			 `(if ,after
-			      (prog1 (setq ,result-symbol (progn ,@body-form))
+			      (prog1 ,(if result-symbol
+					  `(setq ,result-symbol
+						 (progn ,@body-form))
+					`(progn ,@body-form))
 				,after)
 			    (progn ,@body-form))))))
-    ;;(prin1 symbol-bindings)
+    (prin1 symbol-bindings)
+    ;;(prin1 '(hash hash-table))
     `(let* ((,hash-symbol ,hash-table) ,row-symbol ,result-symbol)
        (mapcar ,row-form (quote ,strings))
        ,hash-symbol)))
+
+
+(let ((h (dm-coalesce-hash (("h1" "H2" "H3")
+				  ("r1" "V12" "V13")
+				  ("r2" "V22" "V23")
+				  ("r3" "V32" "V33"))
+	     (id h2)
+	   :hash-table #s(hash-table size 30 test equal)
+	   :start-column 1
+	   (list 'id id 'h2 h2))))
+  (print h)
+  h)
+(dm-coalesce-hash((1 "a")(2 "b"))(_) :after(puthash(nth 0 row)(cdr row)hash))
+
 
 (provide 'dm-util)
 ;;; dm-util.el ends here

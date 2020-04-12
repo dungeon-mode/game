@@ -81,17 +81,23 @@ We want to:
 ** Notes
 ** Response
 
+In discussion and with support from FSF directory community/proponents
+we have recently updated from GLPv3 to GPLv3+ in order to provide
+users and others the ability, at their option, to select newer terms
+which may address circumstance not anticipated by GLPv3.
+
 * Checkboxes
- * Checklist - see How To Get Your Project Approved Quickly
- * My project runs primarily on a completely free OS
- * My license is compatible with the GNU GPL or GFDL
- * My dependencies are compatible with my project license
- * All my files include valid copyright notices
- * All my files include a license header [1] [2]
- * Origin and license of media files is specified
- * My tarball includes a copy of the license
- * I read carefully and don't check this one
- * I agree with the hosting requirements
+ Checklist - see [[http://savannah.gnu.org/maintenance/HowToGetYourProjectApprovedQuickly/][How To Get Your Project Approved Quickly]]
+
+ * [X] My project runs primarily on a completely free OS
+ * [X] My license is compatible with the GNU GPL or GFDL
+ * [X] My dependencies are compatible with my project license
+ * [X] All my files include valid copyright notices
+ * [X] All my files include a license header [1] [2]
+ * [ ] Origin and license of media files is specified
+ * [ ] My tarball includes a copy of the license
+ * [ ] I read carefully and don't check this one
+ * [ ] I agree with the hosting requirements
 
 ** Detail and Clarification
 ** Notes
