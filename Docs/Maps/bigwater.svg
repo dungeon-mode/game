@@ -150,7 +150,6 @@
   <path stroke="none" fill="cyan" d="M700,400 m25,98 h50 v2 h-50 v5 l-10,-6 l10,-6 v5"	/>
 
 
-
   <!-- Neutronium -->
   <path stroke="none" fill="purple" d="M500,600 h100 v100 h-100 v-100" />
   <path stroke="none" fill="purple" d="M600,600 h100 v100 h-100 v-100" />
