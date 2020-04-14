@@ -1,0 +1,427 @@
+#+TITLE: Map Design
+#+PROPERTIES:
+ :Version: 0.01
+ :Author: Erik Elmshauser
+ :Created: 2020/04/13
+ :END:
+
+* Overview
+
+This file provides tables of drawing instruction sets for common
+map features such as corridor, secret doors, chambers, special areas and stairs.
+
+See Design.org for details about the formatting of these tables.
+
+
+* Tiles
+  :PROPERTIES:
+  :map-features: t
+  :END:
+
+** Automatic Features Tables
+   :PROPERTIES:
+   :name: Automatic-map-features
+   :MAP-FEATURES: t
+   :ETL: tile
+   :END:
+
+These features are intended to be included as the base and background of every map
+
+# #+NAME: automatic-map-features
+| Feature    | Plan                                                                        | Documentation | Behavior |
+|------------+-----------------------------------------------------------------------------+---------------+----------|
+| Background | <rect fill="#fffdd0" stroke="none" x="0" y="0" width="100%" height="100%"/> |               |          |
+| Graphpaper | <g fill="none" stroke="blue" stroke-width=".002">                           |               |          |
+|            | <path d="M0,0 h24 M0,1 h24 M0,2 h24 M0,3 h24 M0,4 h24 M0,5 h24 M0,6 h24     |               |          |
+|            | M0,7 h24 M0,8 h24 M0,9 h24 M0,10 h24 M0,11 h24 M0,12 h24                    |               |          |
+|            | M0,13 h24 M0,14 h24 M0,15 h24 M0,16 h24 M0,17 h24 M0,18 h24                 |               |          |
+|            | M0,19 h24 M0,20 h24 M0,21 h24 M0,22 h24 M0,23 h24 M0,24 h24" />             |               |          |
+|            | <path d="M0,0 v24 M1,0 v24 M2,0 v24 M3,0 v24 M4,0 v24 M5,0 v24 M6,0 v24     |               |          |
+|            | M7,0 v24 M8,0 v24 M9,0 v24 M10,0 v24 M11,0 v24 M12,0 v24                    |               |          |
+|            | M13,0 v24 M14,0 v24 M15,0 v24 M16,0 v24 M17,0 v24 M18,0 v24                 |               |          |
+|            | M19,0 v24 M20,0 v24 M21,0 v24 M22,0 v24 M23,0 v24 M24,0 v24" />             |               |          |
+|            | </g>                                                                        |               |          |
+
+  
+
+** Private Tiles Tables
+   :PROPERTIES:
+   :name: private-map-features
+   :MAP-FEATURES: t
+   :ETL: tile
+   :END:
+
+These features are intended to be used mostly as parts of compositions and rarely will be the right thing alone.
+
+
+# #+NAME: private-map-features
+| Tile       | Path                                          | Documentation                   | Behavior |
+|------------+-----------------------------------------------+---------------------------------+----------|
+| →          | m1,0                                          | Move 1 DU Right                 |          |
+| ←          | m-1,0                                         | Move 1 DU Left                  |          |
+| ↑          | m0,-1                                         | Move 1 DU Up                    |          |
+| ↓          | m0,1                                          | Move 1 DU Down                  |          |
+| ↖          | m-1,-1                                        | Move 1 DU Up and 1 DU Left      |          |
+| ↗          | m1,-1                                         | Move 1 DU Up and 1 DU Right     |          |
+| ↙          | m-1,1                                         | Move 1 DU Down and 1 DU Left    |          |
+| ↘          | m1,1                                          | Move 1 DU Down and 1 DU right   |          |
+|            |                                               |                                 |          |
+| .NE        | m.98,0 h.02 v.02 m-1,-.02                     | Corner Dot - North/East corner  |          |
+| .ES        | m1,.98 v.02 h-.02 m-.98,-1                    | Corner Dot - East/South corner  |          |
+| .SW        | m.02,1 h-.02 v-.02 m-.98,0                    | Corner Dot - South/West corner  |          |
+| .WN        | m0,.02 v-.02 h.02 m-.02,0                     | Corner Dot - West/North corner  |          |
+|            |                                               |                                 |          |
+| ‡N         | h1 m-1,0                                      | North Wall                      |          |
+| ‡E         | m1,0 v1 m-1,-1                                | East Wall                       |          |
+| ‡S         | m0,1 h1 m-1,-1                                | South Wall                      |          |
+| ‡W         | v1 m0,-1                                      | West Wall                       |          |
+|            |                                               |                                 |          |
+| ◦N         |                                               | Corridor East/South/West        |          |
+| ◦N:default | ‡N                                            |                                 |          |
+| ◦N:elf     | h.43 a.7,.7,0,1,1,.14,0                       | Secret door North               |          |
+|            | a.7,.7,0,1,1,-.14,0 m.14,0 h.43 m-1,0         |                                 |          |
+| ◦E         |                                               | Corridor North/South/West       |          |
+| ◦E:default | ‡E                                            |                                 |          |
+| ◦E:elf     | m1,0 v.43 a.7,.7,0,1,1,0,.14                  | Secret door East                |          |
+|            | a.7,.7,0,1,1,0,-.14 m0,.14 v.43 m-1,-1        |                                 |          |
+| ◦S         |                                               | Corridor North/East/West        |          |
+| ◦S:default | ‡S                                            |                                 |          |
+| ◦S:elf     | m0,1 h.43 a.7,.7,0,1,1,.14,0                  | Secret door South               |          |
+|            | a.7,.7,0,1,1,-.14,0 m.14,0 h.43 m-1,-1        |                                 |          |
+| ◦W         |                                               | Corridor North/South/East       |          |
+| ◦W:default | ‡W                                            |                                 |          |
+| ◦W:elf     | v.43 a.7,.7,0,1,1,0,.14                       | Secret door East                |          |
+|            | a.7,.7,0,1,1,0,-.14 m0,.14 v.43 m0,-1         |                                 |          |
+|            |                                               |                                 |          |
+| ]N         | v1 h1 v-1 m-1,0                               | Corridor North (Dead-End South) |          |
+| ]E         | h1 m0,1 v-1 h-1                               | Corridor East (Dead-End west)   |          |
+| ]S         | h1 v1 m-1,0 v-1                               | Corridor South (Dead-End North) |          |
+| ]W         | h1 v1 h-1 m-1,0                               | Corridor West (Dead-End East)   |          |
+|            |                                               |                                 |          |
+| ◤          | m0,1 l1,-1 m-1,0                              | Half square NW/SE               |          |
+| ◥          | l1,1 m1,1                                     | Half square NE/SW               |          |
+|            |                                               |                                 |          |
+| ◦◤         |                                               | Half square NW/SE               |          |
+| ◦◤:default | m0,1 l1,-1 m-1,0                              |                                 |          |
+| ◦◤:elf     | m0,1 l.45,-.45 a.05,.05,0,1,1,.1,-.1          | with Secret Door                |          |
+|            | a.05,.05,0,1,1,-.1,.1 m.1,-.1 l.45,-.45 m-1,0 |                                 |          |
+|            |                                               |                                 |          |
+| ◦◥         |                                               | Half square NE/SW               |          |
+| ◦◥:default | l1,1 m1,1                                     |                                 |          |
+| ◦◥:elf     | l.45,.45 a.05,.05,0,1,1,.1,.1                 | with Secret Door                |          |
+|            | a.05,.05,0,1,1,-.1,-.1 m.1,.1 l.45,.45 m-1,-1 |                                 |          |
+|            |                                               |                                 |          |
+
+
+** Water Features Tables
+   :PROPERTIES:
+   :name: 10-water-features
+   :MAP-FEATURES: t 
+   :ETL:      tile
+   :END:
+
+# #+NAME: 10-water-features
+| Feature | Plan                                                                                           | Documentation                    | Behavior |
+|---------+------------------------------------------------------------------------------------------------+----------------------------------+----------|
+| pool1   | <path fill="blue" fill-opacity="1" d=" h1 a1.5,1.5,0,0,1,1,1 v1 a1.5,1.5,0,0,1,-1,1            |                                  |          |
+|         | h-1 a1.5,1.5,0,0,1,-1,-1 v-1 a1.5,1.5,0,0,1,1,-1" />                                           |                                  |          |
+|         |                                                                                                |                                  |          |
+| riv1    | <path stroke="none" fill="blue" d="h1 v1 h-1 v-1" />                                           |                                  |          |
+|         |                                                                                                |                                  |          |
+| riv1N   | riv <path stroke="none" fill="cyan" d="m.49,.80 h.02 v-.5 h.05 l-.06,-.1 l-.06,.1 h.05 v.5" /> |                                  |          |
+| riv1E   | riv <path stroke="none" fill="cyan" d="m.75,.49 h-.5 v.02 h.5 v.05 l.1,-.06 l-.1,-.06 v.05" /> |                                  |          |
+| riv1S   | riv <path stroke="none" fill="cyan" d="m.49,.2 h.02 v.5 h.05 l-.06,.1 l-.06,-.1 h.05 v-.5" />  |                                  |          |
+| riv1W   | riv <path stroke="none" fill="cyan" d="m.25,.49 h.5 v.02 h-.5 v.05 l-.1,-.06 l.1,-.06 v.05" /> |                                  |          |
+|         |                                                                                                |                                  |          |
+| b1NE    | <g fill="blue" stroke="none" font-size=".5">                                                   | Adds water and Beach text marker |          |
+|         | <path d="m1,2 a1.5,1.5,0,0,0,-1,-1 v1 h1" />                                                   |                                  |          |
+|         | <text x=".85" y="1.15">B</text></g>                                                            |                                  |          |
+|         |                                                                                                |                                  |          |
+| b1SE    | <g fill="blue" stroke="none" font-size=".5">                                                   | Adds water and Beach text marker |          |
+|         | <path d="m0,1 a1.5,1.5,0,0,0,1,-1 h1 v-1" />                                                   |                                  |          |
+|         | <text x=".85" y="1.15">B</text></g>                                                            |                                  |          |
+|         |                                                                                                |                                  |          |
+| b1SW    | <g fill="blue" stroke="none" font-size=".5">                                                   | Adds water and Beach text marker |          |
+|         | <path d="m1,0 a1.5,1.5,0,0,0,1,1 v-1 h-1" />                                                   |                                  |          |
+|         | <text x=".85" y="1.15">B</text></g>                                                            |                                  |          |
+|         |                                                                                                |                                  |          |
+| b1NW    | <g fill="blue" stroke="none" font-size=".5">                                                   | Adds water and Beach text marker |          |
+|         | <path d="m2,1 a1.5,1.5,0,0,0,-1,1 h1 v-1" />                                                   |                                  |          |
+|         | <text x=".85" y="1.15">B</text></g>                                                            |                                  |          |
+|         |                                                                                                |                                  |          |
+
+   :PROPERTIES:
+   :name: 20-water-features
+   :MAP-FEATURES: t
+   :END:
+
+# #+NAME: 20-water-features
+| Feature | Plan                                                                                       | Documentation                    | Behavior |
+|---------+--------------------------------------------------------------------------------------------+----------------------------------+----------|
+| pool    | <path fill="blue" fill-opacity="1" d="h2 v2 h-2 v-2" />                                                                                           |                                  |          |
+|         |                                                                                            |                                  |          |
+| rivN    | <path stroke="none" fill="blue" d="h2 v1 h-2 v-1" />                                       |                                  |          |
+|         | <path stroke="none" fill="cyan" d="m.98,.8 h.02 v-.5 h.05 l-.06,-.1 l-.06,.1 h.05 v.5" />  |                                  |          |
+|         |                                                                                            |                                  |          |
+| rivE    | <path stroke="none" fill="blue" d="h1 v2 h-1 v-2" />                                       |                                  |          |
+|         | <path stroke="none" fill="cyan" d="m.75,.98 h-.5 v.02 h.5 v.05 l.1,-.06 l-.1,-.06 v.5" />  |                                  |          |
+|         |                                                                                            |                                  |          |
+| rivS    | <path stroke="none" fill="blue" d="h2 v1 h-2 v-1" />                                       |                                  |          |
+|         | <path stroke="none" fill="cyan" d="m.98,.2 h.04 v.5 h.05 l-.06,.1 l-.06,-.1 h.05 v-.5" />  |                                  |          |
+|         |                                                                                            |                                  |          |
+| rivW    | <path stroke="none" fill="blue" d="h1 v2 h-1 v-2" />                                       |                                  |          |
+|         | <path stroke="none" fill="cyan" d="m.25,.98 h.5 v.02 h-.5 v.05 l-.1,-.06 l.1,-.06 v.05" /> |                                  |          |
+|         |                                                                                            |                                  |          |
+| bNE     | <g fill="blue" stroke="none" font-size=".5">                                               | Adds water and Beach text marker |          |
+|         | <path d="m0,1 a2,2,0,0,0,-2,-2 v2 h2" />                                                   |                                  |          |
+|         | <text x=".85" y="2.15">B</text></g>                                                        |                                  |          |
+|         |                                                                                            |                                  |          |
+| bSE     | <g fill="blue" stroke="none" font-size=".5">                                               | Adds water and Beach text marker |          |
+|         | <path d="h2 a2,2,0,0,0,-2,2 v-2" />                                                        |                                  |          |
+|         | <text x="1.85" y="2.15">B</text></g>                                                       |                                  |          |
+|         |                                                                                            |                                  |          |
+| bSW     | <g fill="blue" stroke="none" font-size=".5">                                               | Adds water and Beach text marker |          |
+|         | <path d="m1,0 a2,2,0,0,0,2,2 v-2 h-2" />                                                   |                                  |          |
+|         | <text x=".85" y="2.15">B</text></g>                                                        |                                  |          |
+|         |                                                                                            |                                  |          |
+| bNW     | <g fill="blue" stroke="none" font-size=".5">                                               | Adds water and Beach text marker |          |
+|         | <path d="m1,3 a2,2,0,0,0,2,-2 h2 v-2" />                                                   |                                  |          |
+|         | <text x=".85" y="1.15">B</text></g>                                                        |                                  |          |
+|         |                                                                                            |                                  |          |
+
+
+** Corridor Tiles Table
+   :PROPERTIES:
+   :name: corridor-features
+   :MAP-FEATURES: t
+   :ETL: tile
+   :END:
+
+# #+NAME: corridor-features
+| Tile   | Path            | Documentation                                    | Behavior |
+|--------+-----------------+--------------------------------------------------+----------|
+| c4     | .NE .SE .SW .NW | Corridor Four Way (No Walls)                     |          |
+|        |                 |                                                  |          |
+| cESW   | ‡N .SE .SW      | Corridor East/South/West                         |          |
+| cESW◦N | ◦N .SE .SW      | Corridor East/South/West                         |          |
+|        |                 |                                                  |          |
+| cNSW   | ‡E .NW .SW      | Corridor North/South/West                        |          |
+| cNSW◦E | ◦E .NW .SW      | Corridor North/South/West                        |          |
+|        |                 |                                                  |          |
+| cNEW   | ‡S .NW .NE      | Corridor North/East/West                         |          |
+| cNEW◦S | ◦S .NW .NE      | Corridor North/East/West                         |          |
+|        |                 |                                                  |          |
+| cNES   | ‡W .NE .SE      | Corridor North/East/South                        |          |
+| cNES◦W | ◦W .NE .SE      | Corridor North/East/South, Secret Door West      |          |
+|        |                 |                                                  |          |
+| cNS    | ‡W ‡E           | Corridor North/South                             |          |
+| cNS◦E  | ◦E ‡W           | Corridor North/South, :elf Secret Door East      |          |
+| cNS◦W  | ‡E ◦W           | Corridor North/South :elf secret Door West       |          |
+| cNS◦EW | ◦E ◦W           | Corridor North/South :elf secret Doors East/West |          |
+|        |                 |                                                  |          |
+| cEW    | ‡N ‡S           | Corridor East/west                               |          |
+| cEW◦N  | ◦N ‡S           | Corridor East/West :elf secret Door North        |          |
+| cEW◦S  | ‡N ◦S           | Corridor East/west :elf secret Door South        |          |
+| cEW◦NS | ◦N ◦S           | Corridor East/west :elf secret Doors North/South |          |
+|        |                 |                                                  |          |
+| cNE    | ‡W ‡S           | Corridor North/East                              |          |
+| cNE◦S  | ‡W ◦S           | Corridor North/East, Secret door North           |          |
+| cNE◦W  | ◦W ‡S           | Corridor North/East, Secret door South           |          |
+| cNE◦SW | ◦W ◦S           | Corridor North/East, Secret doors North/South    |          |
+|        |                 |                                                  |          |
+| cES    | ‡N ‡W           | Corridor East/South                              |          |
+| cES◦N  | ◦N ‡W           | Corridor East/South, Secret door North           |          |
+| cES◦W  | ‡N ◦W           | Corridor East/South, Secret door West            |          |
+| cES◦NW | ◦N ◦W           | Corridor East/South, Secret doors North/West     |          |
+|        |                 |                                                  |          |
+| cSW    | ‡N ‡E           | Corridor South/West                              |          |
+| cSW◦N  | ◦N ‡E           | Corridor South/West, Secret Door North           |          |
+| cSW◦E  | ‡N ◦E           | Corridor South/West, Secret Door East            |          |
+| cSW◦NE | ◦N ◦E           | Corridor South/West, Secret Doors North/East     |          |
+|        |                 |                                                  |          |
+| cWN    | ‡E ‡S           | Corridor West/North                              |          |
+| cWN◦E  | ◦E ‡S           | Corridor West/North, Secret Door East            |          |
+| cWN◦S  | ‡E ◦S           | Corridor West/North, Secret Door South           |          |
+| cWN◦ES | ◦E ◦S           | Corridor West/North, Secret Doors South/West     |          |
+|        |                 |                                                  |          |
+| cN◦E   | ◦E ‡S ‡W        | Corridor North, Secret Door East                 |          |
+| cN◦S   | ‡E ◦S ‡W        | Corridor North, Secret Door South                |          |
+| cN◦W   | ‡E ‡S ◦W        | Corridor North, Secret Door West                 |          |
+| cN◦ES  | ◦E ◦S ‡W        | Corridor North, Secret Doors East/South          |          |
+| cN◦EW  | ◦E ‡S ◦W        | Corridor North, Secret Doors East/West           |          |
+| cN◦SW  | ‡E ◦S ◦W        | Corridor North, Secret Doors South/West          |          |
+| cN◦ESW | ◦E ◦S ◦W        | Corridor North, Secret Doors all sides           |          |
+|        |                 |                                                  |          |
+| cE◦N   | ◦N ‡S ‡W        | Corridor East, Secret Door North                 |          |
+| cE◦S   | ‡N ◦S ‡W        | Corridor East, Secret Door South                 |          |
+| cE◦W   | ‡N ‡S ◦W        | Corridor East, Secret Door West                  |          |
+| cE◦NS  | ◦N ◦S ‡W        | Corridor East, Secret Doors North/South          |          |
+| cE◦NW  | ◦N ‡S ◦W        | Corridor East, Secret Doors North/West           |          |
+| cE◦SW  | ‡N ◦S ◦W        | Corridor East, Secret Doors South/West           |          |
+| cE◦NSW | ◦N ◦S ◦W        | Corridor East, Secret Doors all sides            |          |
+|        |                 |                                                  |          |
+| cS◦N   | ◦N ‡E ‡W        | Corridor North, Secret Door North                |          |
+| cS◦E   | ‡N ◦E ‡W        | Corridor North, Secret Door East                 |          |
+| cS◦W   | ‡N ‡E ◦W        | Corridor North, Secret Door West                 |          |
+| cS◦NE  | ◦N ◦E ‡W        | Corridor North, Secret Doors North/East          |          |
+| cS◦NW  | ◦N ‡E ◦W        | Corridor North, Secret Doors North/West          |          |
+| cS◦EW  | ‡N ◦E ◦W        | Corridor North, Secret Doors East/West           |          |
+| cS◦NEW | ◦N ◦E ◦W        | Corridor North, Secret Doors all sides           |          |
+|        |                 |                                                  |          |
+| cW◦N   | ◦N ‡E ‡S        | Corridor West, Secret Door North                 |          |
+| cW◦E   | ‡N ◦E ‡S        | Corridor West, Secret Door East                  |          |
+| cW◦S   | ‡N ‡E ◦S        | Corridor West, Secret Door South                 |          |
+| cW◦NE  | ◦N ◦E ‡S        | Corridor West, Secret Doors North/East           |          |
+| cW◦NS  | ◦N ‡E ◦S        | Corridor West, Secret Doors North/South          |          |
+| cW◦ES  | ‡N ◦E ◦S        | Corridor West, Secret Doors East/South           |          |
+| cW◦NES | ◦N ◦E ◦S        | Corridor West, Secret Doors all sides            |          |
+|        |                 |                                                  |          |
+
+
+** Area Tiles Table
+   :PROPERTIES:
+   :name: area-features
+   :MAP-FEATURES: t
+   :ETL: tile
+   :END:
+
+# #+NAME: area-features
+| Tile | Path                                                      | Documentation                | Behavior |
+|---------+-----------------------------------------------------------+------------------------------+----------|
+| A2      | <text x=".85" y="1.15" font-size=".5" fill="red">A</text> | Mark an area with a text tag |          |
+|         |                                                           |                              |          |
+
+
+** Chamber Tiles Table
+   :PROPERTIES:
+   :name: chamber-features
+   :MAP-FEATURES: t
+   :ETL: tile
+   :END:
+
+# #+NAME: chamber-features
+| Tile       | Path                          | Documentation                                                   | Behavior |
+|------------+-------------------------------+-----------------------------------------------------------------+----------|
+| 10◦N       | ]N ◦N                         | 10x10 chamber, secret door North                                |          |
+| 10◦E       | ]E ◦E                         | 10x10 chamber, secret door East                                 |          |
+| 10◦S       | ]S ◦S                         | 10x10 chamber, secret door South                                |          |
+| 10◦W       | ]W ◦W                         | 10x10 chamber, secret door West                                 |          |
+|            |                               |                                                                 |          |
+| 20◦N-W     | ‡W ◦N → ‡N ‡E ↓ ‡E ‡S ← ‡S ‡W | 20x20 chamber, Secret door in Western half of nothern wall      |          |
+| 20◦N-E     | ‡W ‡N → ◦N ‡E ↓ ‡E ‡S ← ‡S ‡W | 20x20 chamber, Secret door in Eastern half of nothern wall      |          |
+| 20◦E-N     | ‡W ‡N → ‡N ◦E ↓ ‡E ‡S ← ‡S ‡W | 20x20 chamber, Secret door in Northern half of Eastern Wall     |          |
+| 20◦E-S     | ‡W ‡N → ‡N ‡E ↓ ◦E ‡S ← ‡S ‡W | 20x20 chamber, Secret door in Southern half of Eastern Wall     |          |
+| 20◦S-E     | ‡W ‡N → ‡N ‡E ↓ ‡E ◦S ← ‡S ‡W | 20x20 chamber, Secret door in Eastern half of Southern Wall     |          |
+| 20◦S-W     | ‡W ‡N → ‡N ‡E ↓ ‡E ‡S ← ◦S ‡W | 20x20 chamber, Secret door in Western half of Southern Wall     |          |
+| 20◦W-S     | ‡W ‡N → ‡N ‡E ↓ ‡E ‡S ← ‡S ◦W | 20x20 chamber, Secret door in Southern half of Westrern Wall    |          |
+| 20◦W-N     | ◦W ‡N → ‡N ‡E ↓ ‡E ‡S ← ‡S ‡W | 20x20 chamber, Secret door in Northern half of Western Wall     |          |
+|            |                               |                                                                 |          |
+| 20◦W-N◦N-W | ◦W ◦N → ‡N ‡E ↓ ‡E ‡S ← ‡S ‡W | 20x20 chamber, Secret doors West (Northern) and North (Western) |          |
+
+
+** Special Chamber Tiles Table
+   :PROPERTIES:
+   :name: special-chamber-features
+   :MAP-FEATURES: t
+   :ETL: tile
+   :END:
+
+# #+NAME: special-chamber-features
+| Tile | Path                                                                  | Documentation                     | Behavior |
+|------+-----------------------------------------------------------------------+-----------------------------------+----------|
+| GS   | ‡W ‡N → ‡N ‡E → ↓ ‡N ‡E ↓ ‡E ↓ ‡E ‡S ← ‡S ← ← ‡S ‡W ↑ ‡W ↑ ‡W ‡N      | General Store                     |          |
+|      | <text x=".5" y="2.25" font-size=".6" fill="blue">General Store</text> |                                   |          |
+|      |                                                                       |                                   |          |
+| B-E  | ◤ → ‡N → ◥ ↓ ◦E ↓ ◤ ← ‡S ← ◥ ↑ ‡W                                     | Balrog chamber, Secret door east  |          |
+|      |                                                                       |                                   |          |
+| B-N  | / > *N > \ ! _E ! / < _S < \ ^ _W                                     | Balrog chamber, Secret door North |          |
+|      |                                                                       |                                   |          |
+| B-S  | / > _N > \ ! _E ! / < *S < \ ^ _W                                     | Balrog chamber, Secret door South |          |
+|      |                                                                       |                                   |          |
+| B-W  | / > _N > \ ! _E ! / < _S < \ ^ *W                                     | Balrog chamber, Secret door West  |          |
+|      |                                                                       |                                   |          |
+
+
+
+** Level Change Features Table
+   :PROPERTIES:
+   :name: level-change-features
+   :MAP-FEATURES: t
+   :ETL: tile
+   :END:
+
+# #+NAME: level-change-features
+| Feature     | Plan                                                                                | Documentation             | Behavior        |
+|-------------+-------------------------------------------------------------------------------------+---------------------------+-----------------|
+| S^N         | cNS ! ]N                                                                            | Stairs up Opening North   | <<stairs-up>>   |
+|             | <path fill="pink" stroke="none" d="h2 v1 h-2 v-1" />                                |                           |                 |
+|             | <text x=".4" y="1.85" font-size=".5" fill="black">U</text>                          |                           |                 |
+|             |                                                                                     |                           |                 |
+| S^E         | ]E > cEW                                                                            | Stairs up Opening East    | <<stairs-up>>   |
+|             | <path fill="pink" stroke="none" d="h1 v2 h-1 v-2" />                                |                           |                 |
+|             | <text x=".1" y=".75" font-size=".5" fill="black">U</text>                           |                           |                 |
+|             |                                                                                     |                           |                 |
+| S^S         | ]S ! cNS                                                                            | Stairs up Opening South   | <<stairs-up>>   |
+|             | <path fill="pink" stroke="none" d="h2 v1 h-2 v-1" />                                |                           |                 |
+|             | <text x=".4" y="1.85" font-size=".5" fill="black">U</text>                          |                           |                 |
+|             |                                                                                     |                           |                 |
+| S^W         | cEW > ]W                                                                            | Stairs up Opening East    | <<stairs-up>>   |
+|             | <path fill="pink" stroke="none" d="h1 v2 h-1 v-2" />                                |                           |                 |
+|             | <text x="1.65" y=".75" font-size=".5" fill="black">U</text>                         |                           |                 |
+|             |                                                                                     |                           |                 |
+| S!N         | cNS ! ]N                                                                            | Stairs down Opening North | <<stairs-down>> |
+|             | <path fill="pink" stroke="none" d="h2 v1 h-2 v-1" />                                |                           |                 |
+|             | <text x=".4" y="1.85" font-size=".5" fill="black">D</text>                          |                           |                 |
+|             |                                                                                     |                           |                 |
+| S!E         | ]E > cEW                                                                            | Stairs down Opening East  | <<stairs-down>> |
+|             | <path fill="pink" stroke="none" d="h1 v2 h-1 v-2" />                                |                           |                 |
+|             | <text x=".1" y=".75" font-size=".5" fill="black">D</text>                           |                           |                 |
+|             |                                                                                     |                           |                 |
+| S!S         | ]S ! cNS                                                                            | Stairs down opening South | <<stairs-down>> |
+|             | <path fill="pink" stroke="none" d="h2 v1 h-2 v-1" />                                |                           |                 |
+|             | <text x=".4" y=".4" font-size=".5" fill="black">D</text>                            |                           |                 |
+|             |                                                                                     |                           |                 |
+| S!W         | cEW > ]W                                                                            | Stairs down Opening East  | <<stairs-down>> |
+|             | <path fill="pink" stroke="none" d="h1 v2 h-1 v-2" />                                |                           |                 |
+|             | <text x="1.65" y=".75" font-size=".5" fill="black">D</text>                         |                           |                 |
+|             |                                                                                     |                           |                 |
+| R^E         |                                                                                     | Ramp up extending East    | <<ramp-up>>     |
+| R^E:default | cEW > cEW > cEW > cEW > ]W                                                          |                           |                 |
+| R^E:dwarf   | cEW > cEW > cEW > cEW > ]W                                                          |                           |                 |
+|             | <path fill="pink" stroke="none" d="h5 v1 h-5 v-1" />                                |                           |                 |
+|             | <text x="4.65" y=".75" font-size=".5" fill="black">U</text>                         |                           |                 |
+|             |                                                                                     |                           |                 |
+| R^S         |                                                                                     | Ramp up extending South   | <<ramp-down>>   |
+| R^S:default | cNS ! cNS ! cNS ! cNS ! ]N                                                          |                           |                 |
+| R^S:dwarf   | cNS ! cNS ! cNS ! cNS ! ]N                                                          |                           |                 |
+|             | <path fill="pink" stroke="none" d="h1 v5 h-1 v-5" />                                |                           |                 |
+|             | <text x=".4" y="4.85" font-size=".5" fill="black">U</text>                          |                           |                 |
+|             |                                                                                     |                           |                 |
+| R!E         |                                                                                     | Ramp down extending East  | <<ramp-down>>   |
+| R!E:default | cEW > cEW > cEW > cEW > ]W                                                          |                           |                 |
+| R!E:dwarf   | cEW > cEW > cEW > cEW > ]W                                                          |                           |                 |
+|             | <path fill="pink" stroke="none" d="h5 v1 h-5 v-1" />                                |                           |                 |
+|             | <text x="4.65" y=".75" font-size=".5" fill="black">D</text>                         |                           |                 |
+|             |                                                                                     |                           |                 |
+| R!S         |                                                                                     | Ramp down extending south | <<ramp-down>>   |
+| R!S:default | cNS ! cNS ! cNS ! cNS ! ]N                                                          |                           |                 |
+| R!S:dwarf   | cNS ! cNS ! cNS ! cNS ! ]N                                                          |                           |                 |
+|             | <path fill="pink" stroke="none" d="h1 v5 h-1 v-5" />                                |                           |                 |
+|             | <text x=".4" y="4.85" font-size=".5" fill="black">D</text>                          |                           |                 |
+|             |                                                                                     |                           |                 |
+| E*N         | *N ]N                                                                               | Elevator, Door North      | <<elevator>>    |
+|             | <path fill="pink" stroke="none" d="h.43 a,.14,.14,0,0,0,.14,0 h.43 v1 h-1 v-1" />   |                           |                 |
+|             | <text x=".4" y=".65" font-size=".5" fill="blue">E</text>                            |                           |                 |
+|             |                                                                                     |                           |                 |
+| E*E         | *E ]E                                                                               | Elevator, Door East       | <<elevator>>    |
+|             | <path fill="pink" stroke="none" d="h1 v.43 a,.14,.14,0,0,0,0,.14 v.43 h-1 v-1" />   |                           |                 |
+|             | <text x=".4" y=".65" font-size=".5" fill="blue">E</text>                            |                           |                 |
+|             |                                                                                     |                           |                 |
+| E*S         | *S ]S                                                                               | Elevator, Door South      | <<elevator>>    |
+|             | <path fill="pink" stroke="none" d="h1 v1 h-.43 a,.14,.14,0,0,0,-.14,0 h-.43 v-1" /> |                           |                 |
+|             | <text x=".4" y=".65" font-size=".5" fill="blue">E</text>                            |                           |                 |
+|             |                                                                                     |                           |                 |
+| E*W         | *W ]W                                                                               | Elevator, Door West       | <<elevator>>    |
+|             | <path fill="pink" stroke="none" d="h1 v1 h-1 v-.43 a,.14,.14,0,0,0,0,-.14 v-43" />  |                           |                 |
+|             | <text x=".4" y=".65" font-size=".5" fill="blue">E</text>                            |                           |                 |
+|             |                                                                                     |                           |                 |
