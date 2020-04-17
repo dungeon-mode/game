@@ -84,11 +84,6 @@ These features are intended to be used mostly as parts of compositions and rarel
 | ◦W:!elf | ‡W                                                                          |                                 |          |
 | ◦W:elf  | v.43 a.07,.07,0,1,1,0,.14 a.07,.07,0,1,1,0,-.14 m0,.14 v.43 ↑               | Secret door East                |          |
 |         |                                                                             |                                 |          |
-| ]N      | → v1 h-1 v-1                                                                | Corridor North (Dead-End South) |          |
-| ]E      | h1 ↓ h-1 v-1                                                                | Corridor East (Dead-End west)   |          |
-| ]S      | h1 v1 ← v-1                                                                 | Corridor South (Dead-End North) |          |
-| ]W      | h1 v1 h-1 ↑                                                                 | Corridor West (Dead-End East)   |          |
-|         |                                                                             |                                 |          |
 | ◤       | → l1,-1 ↑                                                                   | Half square NW/SE               |          |
 | ◥       | l1,1 ↖                                                                      | Half square NE/SW               |          |
 |         |                                                                             |                                 |          |
@@ -286,10 +281,11 @@ These features are intended to be used mostly as parts of compositions and rarel
    :END:
 
 # #+NAME: area-features
-| Tile | overlay                                                   | Documentation                | Behavior |
-|------+-----------------------------------------------------------+------------------------------+----------|
-| A2   | <text x=".85" y="1.15" font-size=".5" fill="red">A</text> | Mark an area with a text tag |          |
-|      |                                                           |                              |          |
+| Tile | overlay                                                   | Documentation                    | Behavior |
+|------+-----------------------------------------------------------+----------------------------------+----------|
+| A2   | <text x=".85" y="1.15" font-size=".5" fill="red">A</text> | Mark an area with a text tag     |          |
+|      |                                                           |                                  |          |
+| F2   | <text x=".85" y="1.15" font-size=".5" fill="red">F</text> | Mark an Fountain with a text tag |          |
 
 
 ** Chamber Tiles Table
@@ -302,10 +298,10 @@ These features are intended to be used mostly as parts of compositions and rarel
 # #+NAME: chamber-features
 | Tile       | Path                          | Documentation                                                   | Behavior |
 |------------+-------------------------------+-----------------------------------------------------------------+----------|
-| 10◦N       | ]N ◦N                         | 10x10 chamber, secret door North                                |          |
-| 10◦E       | ]E ◦E                         | 10x10 chamber, secret door East                                 |          |
-| 10◦S       | ]S ◦S                         | 10x10 chamber, secret door South                                |          |
-| 10◦W       | ]W ◦W                         | 10x10 chamber, secret door West                                 |          |
+| 10◦N       | cN ◦N                         | 10x10 chamber, secret door North                                |          |
+| 10◦E       | cE ◦E                         | 10x10 chamber, secret door East                                 |          |
+| 10◦S       | cS ◦S                         | 10x10 chamber, secret door South                                |          |
+| 10◦W       | cW ◦W                         | 10x10 chamber, secret door West                                 |          |
 |            |                               |                                                                 |          |
 | 20◦NW      | ‡W ◦N → ‡N ‡E ↓ ‡E ‡S ← ‡S ‡W | 20x20 chamber, Secret door in Western half of nothern wall      |          |
 | 20◦NE      | ‡W ‡N → ◦N ‡E ↓ ‡E ‡S ← ‡S ‡W | 20x20 chamber, Secret door in Eastern half of nothern wall      |          |
@@ -319,7 +315,7 @@ These features are intended to be used mostly as parts of compositions and rarel
 | 20◦WN◦NW   | ◦W ◦N → ‡N ‡E ↓ ‡E ‡S ← ‡S ‡W | 20x20 chamber, Secret doors West (Northern) and North (Western) |          |
 
 
-* Special Chamber Tiles Table
+** Special Chamber Tiles Table
    :PROPERTIES:
    :name: special-chamber-tiles
    :MAP-FEATURES: t
@@ -341,7 +337,6 @@ These features are intended to be used mostly as parts of compositions and rarel
 |      |                                                                  |                                   |                                                                       |
 
 
-
 ** Level Change Tiles
    :PROPERTIES:
    :name: level-change-tiles
@@ -353,45 +348,45 @@ These features are intended to be used mostly as parts of compositions and rarel
 # #+NAME: level-change-features
 | Tile       | Path                       | stairs                                       |
 |------------+----------------------------+----------------------------------------------|
-| S▲N        | cNS ↓ ]N                   | h2 v1 h-2 v-1                                |
+| S▲N        | cNS ↓ cN                   | h2 v1 h-2 v-1                                |
 |            |                            |                                              |
-| S▲E        | ]E → cEW                   | h1 v2 h-1 v-2                                |
+| S▲E        | cE → cEW                   | h1 v2 h-1 v-2                                |
 |            |                            |                                              |
-| S▲S        | ]S ↓ cNS                   | h2 v1 h-2 v-1                                |
+| S▲S        | cS ↓ cNS                   | h2 v1 h-2 v-1                                |
 |            |                            |                                              |
-| S▲W        | cEW → ]W                   | h1 v2 h-1 v-2                                |
+| S▲W        | cEW → cW                   | h1 v2 h-1 v-2                                |
 |            |                            |                                              |
-| S▼N        | cNS ↓ ]N                   | h2 v1 h-2 v-1                                |
+| S▼N        | cNS ↓ cN                   | h2 v1 h-2 v-1                                |
 |            |                            |                                              |
-| S▼E        | ]E → cEW                   | h1 v2 h-1 v-2                                |
+| S▼E        | cE → cEW                   | h1 v2 h-1 v-2                                |
 |            |                            |                                              |
-| S▼S        | ]S ↓ cNS                   | h2 v1 h-2 v-1                                |
+| S▼S        | cS ↓ cNS                   | h2 v1 h-2 v-1                                |
 |            |                            |                                              |
-| S▼W        | cEW → ]W                   | h1 v2 h-1 v-2                                |
+| S▼W        | cEW → cW                   | h1 v2 h-1 v-2                                |
 |            |                            |                                              |
 | R▲E        |                            |                                              |
-| R▲E:!dwarf | cEW → cEW → cEW → cEW → ]W |                                              |
-| R▲E:dwarf  | cEW → cEW → cEW → cEW → ]W | h5 v1 h-5 v-1                                |
+| R▲E:!dwarf | cEW → cEW → cEW → cEW → cW |                                              |
+| R▲E:dwarf  | cEW → cEW → cEW → cEW → cW | h5 v1 h-5 v-1                                |
 |            |                            |                                              |
 | R▲S        |                            |                                              |
-| R▲S:!dwarf | cNS ↓ cNS ↓ cNS ↓ cNS ↓ ]N |                                              |
-| R▲S:dwarf  | cNS ↓ cNS ↓ cNS ↓ cNS ↓ ]N | h1 v5 h-1 v-5                                |
+| R▲S:!dwarf | cNS ↓ cNS ↓ cNS ↓ cNS ↓ cN |                                              |
+| R▲S:dwarf  | cNS ↓ cNS ↓ cNS ↓ cNS ↓ cN | h1 v5 h-1 v-5                                |
 |            |                            |                                              |
 | R▼E        |                            |                                              |
-| R▼E:!dwarf | cEW → cEW → cEW → cEW → ]W |                                              |
-| R▼E:!dwarf | cEW → cEW → cEW → cEW → ]W | h5 v1 h-5 v-1                                |
+| R▼E:!dwarf | cEW → cEW → cEW → cEW → cW |                                              |
+| R▼E:!dwarf | cEW → cEW → cEW → cEW → cW | h5 v1 h-5 v-1                                |
 |            |                            |                                              |
 | R▼S        |                            |                                              |
-| R▼S:!dwarf | cNS ↓ cNS ↓ cNS ↓ cNS ↓ ]N |                                              |
-| R▼S:dwarf  | cNS ↓ cNS ↓ cNS ↓ cNS ↓ ]N | h1 v5 h-1 v-5                                |
+| R▼S:!dwarf | cNS ↓ cNS ↓ cNS ↓ cNS ↓ cN |                                              |
+| R▼S:dwarf  | cNS ↓ cNS ↓ cNS ↓ cNS ↓ cN | h1 v5 h-1 v-5                                |
 |            |                            |                                              |
-| E◦N        | ◦N ]N                      | h.43 a,.14,.14,0,0,0,.14,0 h.43 v1 h-1 v-1   |
+| E◦N        | ◦N cN                      | h.43 a,.14,.14,0,0,0,.14,0 h.43 v1 h-1 v-1   |
 |            |                            |                                              |
-| E◦E        | ◦E ]E                      | h1 v.43 a,.14,.14,0,0,0,0,.14 v.43 h-1 v-1   |
+| E◦E        | ◦E cE                      | h1 v.43 a,.14,.14,0,0,0,0,.14 v.43 h-1 v-1   |
 |            |                            |                                              |
-| E◦S        | ◦S ]S                      | h1 v1 h-.43 a,.14,.14,0,0,0,-.14,0 h-.43 v-1 |
+| E◦S        | ◦S cS                      | h1 v1 h-.43 a,.14,.14,0,0,0,-.14,0 h-.43 v-1 |
 |            |                            |                                              |
-| E◦W        | ◦W ]W                      | h1 v1 h-1 v-.43 a,.14,.14,0,0,0,0,-.14 v-43  |
+| E◦W        | ◦W cW                      | h1 v1 h-1 v-.43 a,.14,.14,0,0,0,0,-.14 v-43  |
 |            |                            |                                              |
 
    :PROPERTIES:
