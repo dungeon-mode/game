@@ -74,7 +74,7 @@ Refer to design.org for more details.
 | 3 | 2 | cEW◦NS                     |
 | 4 | 2 | cEW◦NS                     |
 | 5 | 2 | cSW                        |
-| 6 | 2 | A2 ‡W ◦N → ‡N ↓ ‡E ‡S ← ‡S |
+| 6 | 2 | &A2 ‡W ◦N → ‡N ↓ ‡E ‡S ← ‡S |
 | 7 | 2 | (6 . 2)                    |
 | 8 | 2 | cEW◦NS                     |
 | 9 | 2 | cEW◦S                      |
