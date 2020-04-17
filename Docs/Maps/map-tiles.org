@@ -16,10 +16,6 @@ See Design.org for details about the formatting of these tables.
 
 
 * Tiles
-  :PROPERTIES:
-  :map-features: t
-  :END:
-
 ** Automatic Features Table
    :PROPERTIES:
    :name: Automatic-map-features
@@ -39,9 +35,6 @@ These features are intended to be included as the base and background of every m
 |            | <path d="M0,0 v24 M1,0 v24 M2,0 v24 M3,0 v24 M4,0 v24 M5,0 v24 M6,0 v24 M7,0 v24 M8,0 v24 M9,0 v24 M10,0 v24 M11,0 v24 M12,0 v24 |
 |            | M13,0 v24 M14,0 v24 M15,0 v24 M16,0 v24 M17,0 v24 M18,0 v24 M19,0 v24 M20,0 v24 M21,0 v24 M22,0 v24 M23,0 v24 M24,0 v24" />      |
 |            | </g>                                                                                                                             |
-
-| Tile | Neutronium | Documentation |   |
-|      |            |               |   |
 
 
 ** Private Tiles Tables
@@ -110,6 +103,7 @@ These features are intended to be used mostly as parts of compositions and rarel
 
 
 ** Water Tiles Tables
+
    :PROPERTIES:
    :name: 10-water-tiles
    :MAP-FEATURES: t 
@@ -333,96 +327,115 @@ These features are intended to be used mostly as parts of compositions and rarel
 |------+------------------------------------------------------------------+-----------------------------------+-----------------------------------------------------------------------|
 | GS   | ‡W ‡N → ‡N ‡E → ↓ ‡N ‡E ↓ ‡E ↓ ‡E ‡S ← ‡S ← ← ‡S ‡W ↑ ‡W ↑ ‡W ‡N | General Store                     | <text x=".5" y="2.25" font-size=".6" fill="blue">General Store</text> |
 |      |                                                                  |                                   |                                                                       |
-| B-N  | ◤ → ◦N → ◥ ↓ ‡E ↓ ◤ ← ‡S ← ◥ ↑ ‡W                                | Balrog chamber, Secret door North |                                                                       |
+| BalN | ◤ → ◦N → ◥ ↓ ‡E ↓ ◤ ← ‡S ← ◥ ↑ ‡W                                | Balrog chamber, Secret door North |                                                                       |
 |      |                                                                  |                                   |                                                                       |
-| B-E  | ◤ → ‡N → ◥ ↓ ◦E ↓ ◤ ← ‡S ← ◥ ↑ ‡W                                | Balrog chamber, Secret door east  |                                                                       |
+| BalE | ◤ → ‡N → ◥ ↓ ◦E ↓ ◤ ← ‡S ← ◥ ↑ ‡W                                | Balrog chamber, Secret door east  |                                                                       |
 |      |                                                                  |                                   |                                                                       |
-| B-S  | ◤ → ‡N → ◥ ↓ ‡E ↓ ◤ ← ◦S ← ◥ ↑ ‡W                                | Balrog chamber, Secret door South |                                                                       |
+| BalS | ◤ → ‡N → ◥ ↓ ‡E ↓ ◤ ← ◦S ← ◥ ↑ ‡W                                | Balrog chamber, Secret door South |                                                                       |
 |      |                                                                  |                                   |                                                                       |
-| B-W  | ◤ → ‡N → ◥ ↓ ‡E ↓ ◤ ← ‡S ← ◥ ↑ ◦W                                | Balrog chamber, Secret door West  |                                                                       |
+| BalW | ◤ → ‡N → ◥ ↓ ‡E ↓ ◤ ← ‡S ← ◥ ↑ ◦W                                | Balrog chamber, Secret door West  |                                                                       |
 |      |                                                                  |                                   |                                                                       |
 
 
 
-** Level Change Features Table
+** Level Change Tiles
    :PROPERTIES:
-   :name: level-change-features
+   :name: level-change-tiles
+   :MAP-FEATURES: t
+   :ETL: tile
+   :STAIRS: fill="pink" stroke="none"
+   :END:
+
+# #+NAME: level-change-features
+| Tile       | Path                       | stairs                                       |
+|------------+----------------------------+----------------------------------------------|
+| S▲N        | cNS ↓ ]N                   | h2 v1 h-2 v-1                                |
+|            |                            |                                              |
+| S▲E        | ]E → cEW                   | h1 v2 h-1 v-2                                |
+|            |                            |                                              |
+| S▲S        | ]S ↓ cNS                   | h2 v1 h-2 v-1                                |
+|            |                            |                                              |
+| S▲W        | cEW → ]W                   | h1 v2 h-1 v-2                                |
+|            |                            |                                              |
+| S▼N        | cNS ↓ ]N                   | h2 v1 h-2 v-1                                |
+|            |                            |                                              |
+| S▼E        | ]E → cEW                   | h1 v2 h-1 v-2                                |
+|            |                            |                                              |
+| S▼S        | ]S ↓ cNS                   | h2 v1 h-2 v-1                                |
+|            |                            |                                              |
+| S▼W        | cEW → ]W                   | h1 v2 h-1 v-2                                |
+|            |                            |                                              |
+| R▲E        |                            |                                              |
+| R▲E:!dwarf | cEW → cEW → cEW → cEW → ]W |                                              |
+| R▲E:dwarf  | cEW → cEW → cEW → cEW → ]W | h5 v1 h-5 v-1                                |
+|            |                            |                                              |
+| R▲S        |                            |                                              |
+| R▲S:!dwarf | cNS ↓ cNS ↓ cNS ↓ cNS ↓ ]N |                                              |
+| R▲S:dwarf  | cNS ↓ cNS ↓ cNS ↓ cNS ↓ ]N | h1 v5 h-1 v-5                                |
+|            |                            |                                              |
+| R▼E        |                            |                                              |
+| R▼E:!dwarf | cEW → cEW → cEW → cEW → ]W |                                              |
+| R▼E:!dwarf | cEW → cEW → cEW → cEW → ]W | h5 v1 h-5 v-1                                |
+|            |                            |                                              |
+| R▼S        |                            |                                              |
+| R▼S:!dwarf | cNS ↓ cNS ↓ cNS ↓ cNS ↓ ]N |                                              |
+| R▼S:dwarf  | cNS ↓ cNS ↓ cNS ↓ cNS ↓ ]N | h1 v5 h-1 v-5                                |
+|            |                            |                                              |
+| E◦N        | ◦N ]N                      | h.43 a,.14,.14,0,0,0,.14,0 h.43 v1 h-1 v-1   |
+|            |                            |                                              |
+| E◦E        | ◦E ]E                      | h1 v.43 a,.14,.14,0,0,0,0,.14 v.43 h-1 v-1   |
+|            |                            |                                              |
+| E◦S        | ◦S ]S                      | h1 v1 h-.43 a,.14,.14,0,0,0,-.14,0 h-.43 v-1 |
+|            |                            |                                              |
+| E◦W        | ◦W ]W                      | h1 v1 h-1 v-.43 a,.14,.14,0,0,0,0,-.14 v-43  |
+|            |                            |                                              |
+
+   :PROPERTIES:
+   :name: level-change-tiles
    :MAP-FEATURES: t
    :ETL: tile
    :END:
 
 # #+NAME: level-change-features
-| Tile       | stairs                                                                              | Documentation             | Behavior        |
-|------------+-------------------------------------------------------------------------------------+---------------------------+-----------------|
-| S▲N        | cNS ↓ ]N                                                                            | Stairs up Opening North   | <<stairs-up>>   |
-|            | <path fill="pink" stroke="none" d="h2 v1 h-2 v-1" />                                |                           |                 |
-|            | <text x=".4" y="1.85" font-size=".5" fill="black">U</text>                          |                           |                 |
-|            |                                                                                     |                           |                 |
-| S▲E        | ]E → cEW                                                                            | Stairs up Opening East    | <<stairs-up>>   |
-|            | <path fill="pink" stroke="none" d="h1 v2 h-1 v-2" />                                |                           |                 |
-|            | <text x=".1" y=".75" font-size=".5" fill="black">U</text>                           |                           |                 |
-|            |                                                                                     |                           |                 |
-| S▲S        | ]S ↓ cNS                                                                            | Stairs up Opening South   | <<stairs-up>>   |
-|            | <path fill="pink" stroke="none" d="h2 v1 h-2 v-1" />                                |                           |                 |
-|            | <text x=".4" y="1.85" font-size=".5" fill="black">U</text>                          |                           |                 |
-|            |                                                                                     |                           |                 |
-| S▲W        | cEW → ]W                                                                            | Stairs up Opening East    | <<stairs-up>>   |
-|            | <path fill="pink" stroke="none" d="h1 v2 h-1 v-2" />                                |                           |                 |
-|            | <text x="1.65" y=".75" font-size=".5" fill="black">U</text>                         |                           |                 |
-|            |                                                                                     |                           |                 |
-| S▼N        | cNS ↓ ]N                                                                            | Stairs down Opening North | <<stairs-down>> |
-|            | <path fill="pink" stroke="none" d="h2 v1 h-2 v-1" />                                |                           |                 |
-|            | <text x=".4" y="1.85" font-size=".5" fill="black">D</text>                          |                           |                 |
-|            |                                                                                     |                           |                 |
-| S▼E        | ]E → cEW                                                                            | Stairs down Opening East  | <<stairs-down>> |
-|            | <path fill="pink" stroke="none" d="h1 v2 h-1 v-2" />                                |                           |                 |
-|            | <text x=".1" y=".75" font-size=".5" fill="black">D</text>                           |                           |                 |
-|            |                                                                                     |                           |                 |
-| S▼S        | ]S ↓ cNS                                                                            | Stairs down opening South | <<stairs-down>> |
-|            | <path fill="pink" stroke="none" d="h2 v1 h-2 v-1" />                                |                           |                 |
-|            | <text x=".4" y=".4" font-size=".5" fill="black">D</text>                            |                           |                 |
-|            |                                                                                     |                           |                 |
-| S▼W        | cEW → ]W                                                                            | Stairs down Opening East  | <<stairs-down>> |
-|            | <path fill="pink" stroke="none" d="h1 v2 h-1 v-2" />                                |                           |                 |
-|            | <text x="1.65" y=".75" font-size=".5" fill="black">D</text>                         |                           |                 |
-|            |                                                                                     |                           |                 |
-| R▲E        |                                                                                     | Ramp up extending East    | <<ramp-up>>     |
-| R▲E:!dwarf | cEW → cEW → cEW → cEW → ]W                                                          |                           |                 |
-| R▲E:dwarf  | cEW → cEW → cEW → cEW → ]W                                                          |                           |                 |
-|            | <path fill="pink" stroke="none" d="h5 v1 h-5 v-1" />                                |                           |                 |
-|            | <text x="4.65" y=".75" font-size=".5" fill="black">U</text>                         |                           |                 |
-|            |                                                                                     |                           |                 |
-| R▲S        |                                                                                     | Ramp up extending South   | <<ramp-down>>   |
-| R▲S:!dwarf | cNS ↓ cNS ↓ cNS ↓ cNS ↓ ]N                                                          |                           |                 |
-| R▲S:dwarf  | cNS ↓ cNS ↓ cNS ↓ cNS ↓ ]N                                                          |                           |                 |
-|            | <path fill="pink" stroke="none" d="h1 v5 h-1 v-5" />                                |                           |                 |
-|            | <text x=".4" y="4.85" font-size=".5" fill="black">U</text>                          |                           |                 |
-|            |                                                                                     |                           |                 |
-| R▼E        |                                                                                     | Ramp down extending East  | <<ramp-down>>   |
-| R▼E:!dwarf | cEW → cEW → cEW → cEW → ]W                                                          |                           |                 |
-| R▼E:!dwarf | cEW → cEW → cEW → cEW → ]W                                                          |                           |                 |
-|            | <path fill="pink" stroke="none" d="h5 v1 h-5 v-1" />                                |                           |                 |
-|            | <text x="4.65" y=".75" font-size=".5" fill="black">D</text>                         |                           |                 |
-|            |                                                                                     |                           |                 |
-| R▼S        |                                                                                     | Ramp down extending south | <<ramp-down>>   |
-| R▼S:!dwarf | cNS ↓ cNS ↓ cNS ↓ cNS ↓ ]N                                                          |                           |                 |
-| R▼S:dwarf  | cNS ↓ cNS ↓ cNS ↓ cNS ↓ ]N                                                          |                           |                 |
-|            | <path fill="pink" stroke="none" d="h1 v5 h-1 v-5" />                                |                           |                 |
-|            | <text x=".4" y="4.85" font-size=".5" fill="black">D</text>                          |                           |                 |
-|            |                                                                                     |                           |                 |
-| E*N        | *N ]N                                                                               | Elevator, Door North      | <<elevator>>    |
-|            | <path fill="pink" stroke="none" d="h.43 a,.14,.14,0,0,0,.14,0 h.43 v1 h-1 v-1" />   |                           |                 |
-|            | <text x=".4" y=".65" font-size=".5" fill="blue">E</text>                            |                           |                 |
-|            |                                                                                     |                           |                 |
-| E*E        | *E ]E                                                                               | Elevator, Door East       | <<elevator>>    |
-|            | <path fill="pink" stroke="none" d="h1 v.43 a,.14,.14,0,0,0,0,.14 v.43 h-1 v-1" />   |                           |                 |
-|            | <text x=".4" y=".65" font-size=".5" fill="blue">E</text>                            |                           |                 |
-|            |                                                                                     |                           |                 |
-| E*S        | *S ]S                                                                               | Elevator, Door South      | <<elevator>>    |
-|            | <path fill="pink" stroke="none" d="h1 v1 h-.43 a,.14,.14,0,0,0,-.14,0 h-.43 v-1" /> |                           |                 |
-|            | <text x=".4" y=".65" font-size=".5" fill="blue">E</text>                            |                           |                 |
-|            |                                                                                     |                           |                 |
-| E*W        | *W ]W                                                                               | Elevator, Door West       | <<elevator>>    |
-|            | <path fill="pink" stroke="none" d="h1 v1 h-1 v-.43 a,.14,.14,0,0,0,0,-.14 v-43" />  |                           |                 |
-|            | <text x=".4" y=".65" font-size=".5" fill="blue">E</text>n                           |                           |                 |
-|            |                                                                                     |                           |                 |
+| Tile       | Overlay                                                     | Documentation             | Behavior        |
+|------------+-------------------------------------------------------------+---------------------------+-----------------|
+| S▲N        | <text x=".4" y="1.85" font-size=".5" fill="black">U</text>  | Stairs up Opening North   | <<stairs-up>>   |
+|            |                                                             |                           |                 |
+| S▲E        | <text x=".1" y=".75" font-size=".5" fill="black">U</text>   | Stairs up Opening East    | <<stairs-up>>   |
+|            |                                                             |                           |                 |
+| S▲S        | <text x=".4" y="1.85" font-size=".5" fill="black">U</text>  | Stairs up Opening South   | <<stairs-up>>   |
+|            |                                                             |                           |                 |
+| S▲W        | <text x="1.65" y=".75" font-size=".5" fill="black">U</text> | Stairs up Opening East    | <<stairs-up>>   |
+|            |                                                             |                           |                 |
+| S▼N        | <text x=".4" y="1.85" font-size=".5" fill="black">D</text>  | Stairs down Opening North | <<stairs-down>> |
+|            |                                                             |                           |                 |
+| S▼E        | <text x=".1" y=".75" font-size=".5" fill="black">D</text>   | Stairs down Opening East  | <<stairs-down>> |
+|            |                                                             |                           |                 |
+| S▼S        | <text x=".4" y=".4" font-size=".5" fill="black">D</text>    | Stairs down opening South | <<stairs-down>> |
+|            |                                                             |                           |                 |
+| S▼W        | <text x="1.65" y=".75" font-size=".5" fill="black">D</text> | Stairs down Opening East  | <<stairs-down>> |
+|            |                                                             |                           |                 |
+| R▲E        |                                                             | Ramp up extending East    | <<ramp-up>>     |
+| R▲E:!dwarf |                                                             |                           |                 |
+| R▲E:dwarf  | <text x="4.65" y=".75" font-size=".5" fill="black">U</text> |                           |                 |
+|            |                                                             |                           |                 |
+| R▲S        |                                                             | Ramp up extending South   | <<ramp-down>>   |
+| R▲S:!dwarf |                                                             |                           |                 |
+| R▲S:dwarf  | <text x=".4" y="4.85" font-size=".5" fill="black">U</text>  |                           |                 |
+|            |                                                             |                           |                 |
+| R▼E        |                                                             | Ramp down extending East  | <<ramp-down>>   |
+| R▼E:!dwarf |                                                             |                           |                 |
+| R▼E:!dwarf | <text x="4.65" y=".75" font-size=".5" fill="black">D</text> |                           |                 |
+|            |                                                             |                           |                 |
+| R▼S        |                                                             | Ramp down extending south | <<ramp-down>>   |
+| R▼S:!dwarf | <text x=".4" y="4.85" font-size=".5" fill="black">D</text>  |                           |                 |
+| R▼S:dwarf  |                                                             |                           |                 |
+|            |                                                             |                           |                 |
+| E◦N        | <text x=".4" y=".65" font-size=".5" fill="blue">E</text>    | Elevator, Door North      | <<elevator>>    |
+|            |                                                             |                           |                 |
+| E◦E        | <text x=".4" y=".65" font-size=".5" fill="blue">E</text>    | Elevator, Door East       | <<elevator>>    |
+|            |                                                             |                           |                 |
+| E◦S        | <text x=".4" y=".65" font-size=".5" fill="blue">E</text>    | Elevator, Door South      | <<elevator>>    |
+|            |                                                             |                           |                 |
+| E◦W        | <text x=".4" y=".65" font-size=".5" fill="blue">E</text>    | Elevator, Door West       | <<elevator>>    |
+|            |                                                             |                           |                 |
