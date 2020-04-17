@@ -9,20 +9,20 @@
 
 This file is designed to define the appearance of the various SVG paths used to render the map.
 
-* Styles
+* Map Path Styles
  :PROPERTIES:
    :name: map-styles
    :MAP-FEATURES: t
+   :ETL: Style
  :END:
 
 # #+NAME: Map-Styles
-| Path  | Style-Key    | Style-Value |
+| Style | Key          | Value       |
 |-------+--------------+-------------|
 | path  | fill         | "none"      |
-|       | stroke       | "Black"     |
-|       | stroke-width | "1"         |
+|       | stroke       | "black"     |
+|       | stroke-width | 1           |
 |       |              |             |
-| water | fill         | "Blue"      |
-|       | stroke       | "None"      |
+| water | fill         | "blue"      |
+|       | stroke       | "none"      |
 |       |              |             |
-
