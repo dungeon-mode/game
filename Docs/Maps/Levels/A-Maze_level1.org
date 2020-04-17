@@ -146,7 +146,7 @@ Refer to design.org for more details.
 | 0 | 5 | 10◦E                       |
 | 1 | 5 | cNS◦W                      |
 | 2 | 5 | cNS                        |
-| 3 | 5 | 20◦N-W                     |
+| 3 | 5 | 20◦NW                      |
 | 4 | 5 | (3 . 5)                    |
 | 5 | 5 | cNES                       |
 | 6 | 5 | cNSW◦E                     |
