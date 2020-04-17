@@ -46,7 +46,7 @@ These features are intended to be included as the base and background of every m
 
 These features are intended to be used mostly as parts of compositions and rarely will be the right thing alone.
 
-# #+NAME: private-map-features
+# #+NAME: private-map-tiles
 | Tile    | Path                                                                        | Documentation                   | Behavior |
 |---------+-----------------------------------------------------------------------------+---------------------------------+----------|
 | →       | m1,0                                                                        | Move 1 DU Right                 |          |
@@ -303,19 +303,19 @@ These features are intended to be used mostly as parts of compositions and rarel
 | 10◦S       | ]S ◦S                         | 10x10 chamber, secret door South                                |          |
 | 10◦W       | ]W ◦W                         | 10x10 chamber, secret door West                                 |          |
 |            |                               |                                                                 |          |
-| 20◦N-W     | ‡W ◦N → ‡N ‡E ↓ ‡E ‡S ← ‡S ‡W | 20x20 chamber, Secret door in Western half of nothern wall      |          |
-| 20◦N-E     | ‡W ‡N → ◦N ‡E ↓ ‡E ‡S ← ‡S ‡W | 20x20 chamber, Secret door in Eastern half of nothern wall      |          |
-| 20◦E-N     | ‡W ‡N → ‡N ◦E ↓ ‡E ‡S ← ‡S ‡W | 20x20 chamber, Secret door in Northern half of Eastern Wall     |          |
-| 20◦E-S     | ‡W ‡N → ‡N ‡E ↓ ◦E ‡S ← ‡S ‡W | 20x20 chamber, Secret door in Southern half of Eastern Wall     |          |
-| 20◦S-E     | ‡W ‡N → ‡N ‡E ↓ ‡E ◦S ← ‡S ‡W | 20x20 chamber, Secret door in Eastern half of Southern Wall     |          |
-| 20◦S-W     | ‡W ‡N → ‡N ‡E ↓ ‡E ‡S ← ◦S ‡W | 20x20 chamber, Secret door in Western half of Southern Wall     |          |
-| 20◦W-S     | ‡W ‡N → ‡N ‡E ↓ ‡E ‡S ← ‡S ◦W | 20x20 chamber, Secret door in Southern half of Westrern Wall    |          |
-| 20◦W-N     | ◦W ‡N → ‡N ‡E ↓ ‡E ‡S ← ‡S ‡W | 20x20 chamber, Secret door in Northern half of Western Wall     |          |
+| 20◦NW      | ‡W ◦N → ‡N ‡E ↓ ‡E ‡S ← ‡S ‡W | 20x20 chamber, Secret door in Western half of nothern wall      |          |
+| 20◦NE      | ‡W ‡N → ◦N ‡E ↓ ‡E ‡S ← ‡S ‡W | 20x20 chamber, Secret door in Eastern half of nothern wall      |          |
+| 20◦EN      | ‡W ‡N → ‡N ◦E ↓ ‡E ‡S ← ‡S ‡W | 20x20 chamber, Secret door in Northern half of Eastern Wall     |          |
+| 20◦ES      | ‡W ‡N → ‡N ‡E ↓ ◦E ‡S ← ‡S ‡W | 20x20 chamber, Secret door in Southern half of Eastern Wall     |          |
+| 20◦SE      | ‡W ‡N → ‡N ‡E ↓ ‡E ◦S ← ‡S ‡W | 20x20 chamber, Secret door in Eastern half of Southern Wall     |          |
+| 20◦SW      | ‡W ‡N → ‡N ‡E ↓ ‡E ‡S ← ◦S ‡W | 20x20 chamber, Secret door in Western half of Southern Wall     |          |
+| 20◦WS      | ‡W ‡N → ‡N ‡E ↓ ‡E ‡S ← ‡S ◦W | 20x20 chamber, Secret door in Southern half of Westrern Wall    |          |
+| 20◦WN      | ◦W ‡N → ‡N ‡E ↓ ‡E ‡S ← ‡S ‡W | 20x20 chamber, Secret door in Northern half of Western Wall     |          |
 |            |                               |                                                                 |          |
-| 20◦W-N◦N-W | ◦W ◦N → ‡N ‡E ↓ ‡E ‡S ← ‡S ‡W | 20x20 chamber, Secret doors West (Northern) and North (Western) |          |
+| 20◦WN◦NW   | ◦W ◦N → ‡N ‡E ↓ ‡E ‡S ← ‡S ‡W | 20x20 chamber, Secret doors West (Northern) and North (Western) |          |
 
 
-** Special Chamber Tiles Table
+* Special Chamber Tiles Table
    :PROPERTIES:
    :name: special-chamber-tiles
    :MAP-FEATURES: t
