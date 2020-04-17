@@ -1,0 +1,28 @@
+#+TITLE: Map Styles
+#+PROPERTIES:
+ :Version: 0.01
+ :Author: Erik Elmshauser
+ :Created: 2020/04/16
+ :END:
+
+* Overview
+
+This file is designed to define the appearance of the various SVG paths used to render the map.
+
+* Styles
+ :PROPERTIES:
+   :name: map-styles
+   :MAP-FEATURES: t
+ :END:
+
+# #+NAME: Map-Styles
+| Path  | Style-Key    | Style-Value |
+|-------+--------------+-------------|
+| path  | fill         | "none"      |
+|       | stroke       | "Black"     |
+|       | stroke-width | "1"         |
+|       |              |             |
+| water | fill         | "Blue"      |
+|       | stroke       | "None"      |
+|       |              |             |
+
