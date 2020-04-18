@@ -439,8 +439,8 @@ Refer to design.org for more details.
 |17 |16 | c4                         |
 |18 |16 | cNSE                       |
 |19 |16 | cNS                        |
-|20 |16 | cES                        |
-|21 |16 | cEW                        |
+|20 |16 | cNS                        |
+|21 |16 | cES                        |
 |22 |16 | cEW                        |
 |23 |16 | cW                         |
 |   |   |                            |
