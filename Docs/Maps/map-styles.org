@@ -13,16 +13,25 @@ This file is designed to define the appearance of the various SVG paths used to 
  :PROPERTIES:
    :name: map-styles
    :MAP-FEATURES: t
-   :ETL: Style
+   :ETL: style
  :END:
 
 # #+NAME: Map-Styles
-| Style | Key          | Value       |
-|-------+--------------+-------------|
-| path  | fill         | "none"      |
-|       | stroke       | "black"     |
-|       | stroke-width | 1           |
-|       |              |             |
-| water | fill         | "blue"      |
-|       | stroke       | "none"      |
-|       |              |             |
+| Style       | Key          | Value    |
+|-------------+--------------+----------|
+| path        | fill         | "none"   |
+|             | stroke       | "black"  |
+|             | stroke-width | 1        |
+|             |              |          |
+| water       | fill         | "blue"   |
+|             | stroke       | "none"   |
+|             |              |          |
+| beach       | fill         | "Yellow" |
+|             | stroke       | "none"   |
+|             |              |          |
+| Decorations | fill         | "cyan"   |
+|             | stroke       | "none"   |
+|             |              |          |
+| stairs      | fill         | "Pink"   |
+|             | stroke       | "none"   |
+|             |              |          |
