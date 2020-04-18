@@ -50,11 +50,10 @@
   </g>
 
   <!-- Beach NE corner -->
-  <path fill="none" stroke="black" stroke-width="1" d="M500,100 h300 v200" />
-  <g fill="blue" stroke="none" font-size="50">
-    <path d="M500,100 m0,100 a200,200,0,0,1,200,200 h-200 v-200" />
-    <text x="685" y="215">B</text>
-  </g>
+  <path stroke="none" fill="yellow" fill-opacity=".9" d="M500,100 h300 v300 h-100 a200,200,0,0,1,-200,-200 v-100" />
+  <path fill="none" stroke="black" stroke-width="1" d="M500,100 h100 h43 a7,7,0,0,1,14,0 m-14,0 h157 v43 a7,7,0,0,1,0,14 m0,-14 v57" />
+  <path fill="blue" stroke="none" d="M500,100 m0,100 a200,200,0,0,1,200,200 h-200 v-200" />
+  <text fill="blue" font-size="50" x="685" y="215">B</text>
 
   <!-- River flowing south -->
   <path stroke="none" fill="blue" d="M300,800 h200 v100 h-200 v-100" />
@@ -173,4 +172,7 @@
   <path stroke="none" fill="purple" d="M1000,800 h100 v100 h-100 v-100" />
   <path stroke="none" fill="purple" d="M1000,900 h100 v100 h-100 v-100" />
 
+ <!-- 30 x 30 Area -->
+  <path fill="none" stroke="black" stroke-width="1" d="M1600,100 v100 m0,-100 h100 m100,0 h100 v100 v100 m0,-50 h-30 v130 v-260 m30,180 v100 h-100 m-100,0 h-100 v-150 h30 v130 v-260 m-30,130 v-50" />
+  
 </svg>
