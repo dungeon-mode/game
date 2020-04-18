@@ -102,11 +102,11 @@ These features are intended to be used mostly as parts of compositions and rarel
 |          |                                                                             |                                          |          |
 | ◑SI      |                                                                             | One-Way secret door to the north         |          |
 | ◑SI:!elf | ‡S                                                                          |                                          |          |
-| ◑SI:elf  | ↓ h.43 a.07,.07,0,0,0,.14,0 m-.14,0 h.57 ↖                                  |                                          |          |
+| ◑SI:elf  | ↓ h.43 a.07,.07,0,0,1,.14,0 m-.14,0 h.57 ↖                                  |                                          |          |
 |          |                                                                             |                                          |          |
 | ◑SO      |                                                                             | One-Way secret door to the north         |          |
 | ◑SO:!elf | ‡S                                                                          |                                          |          |
-| ◑SO:elf  | ↓ h.43 a.07,.07,0,0,1,.14,0 m-.14,0 h.57 ↖                                  |                                          |          |
+| ◑SO:elf  | ↓ h.43 a.07,.07,0,0,0,.14,0 m-.14,0 h.57 ↖                                  |                                          |          |
 |          |                                                                             |                                          |          |
 | ◑WI      |                                                                             | One-Way secret door to the north         |          |
 | ◑WI:!elf | ‡W                                                                          |                                          |          |
