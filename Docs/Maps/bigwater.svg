@@ -172,7 +172,8 @@
   <path stroke="none" fill="purple" d="M1000,800 h100 v100 h-100 v-100" />
   <path stroke="none" fill="purple" d="M1000,900 h100 v100 h-100 v-100" />
 
- <!-- 30 x 30 Area -->
-  <path fill="none" stroke="black" stroke-width="1" d="M1600,100 v100 m0,-100 h100 m100,0 h100 v100 v100 m0,-50 h-30 v130 v-260 m30,180 v100 h-100 m-100,0 h-100 v-150 h30 v130 v-260 m-30,130 v-50" />
-  
+  <!-- Clappers -->
+  <path fill="none" stroke="black" stroke-width="1" d="M1600,100 h100 m100,0 h100 v300 h-100 m-100,0 h-100 v-300" />
+  <path fill="none" stroke="black" stroke-width="3" d="M1600,100 m0,150 h30 v130 v-260 m270,130 h-30 v130 v-260" />
+                                                                                            |  
 </svg>
