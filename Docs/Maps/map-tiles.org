@@ -47,65 +47,95 @@ These features are intended to be included as the base and background of every m
 These features are intended to be used mostly as parts of compositions and rarely will be the right thing alone.
 
 # #+NAME: private-map-tiles
-| Tile    | Path                                                                        | Documentation                   | Behavior |
-|---------+-----------------------------------------------------------------------------+---------------------------------+----------|
-| →       | m1,0                                                                        | Move 1 DU Right                 |          |
-| ←       | m-1,0                                                                       | Move 1 DU Left                  |          |
-| ↑       | m0,-1                                                                       | Move 1 DU Up                    |          |
-| ↓       | m0,1                                                                        | Move 1 DU Down                  |          |
-| ↖       | m-1,-1                                                                      | Move 1 DU Up and 1 DU Left      |          |
-| ↗       | m1,-1                                                                       | Move 1 DU Up and 1 DU Right     |          |
-| ↙       | m-1,1                                                                       | Move 1 DU Down and 1 DU Left    |          |
-| ↘       | m1,1                                                                        | Move 1 DU Down and 1 DU right   |          |
-|         |                                                                             |                                 |          |
-| .NE     | m.98,0 h.02 v.02 m-1,-.02                                                   | Corner Dot - North/East corner  |          |
-| .ES     | m1,.98 v.02 h-.02 m-.98,-1                                                  | Corner Dot - East/South corner  |          |
-| .SW     | m.02,1 h-.02 v-.02 m-.98,0                                                  | Corner Dot - South/West corner  |          |
-| .WN     | m0,.02 v-.02 h.02 m-.02,0                                                   | Corner Dot - West/North corner  |          |
-|         |                                                                             |                                 |          |
-| ‡N      | h1 ←                                                                        | North Wall                      |          |
-| ‡E      | → v1 ↖                                                                      | East Wall                       |          |
-| ‡S      | ↓ h1 ↖                                                                      | South Wall                      |          |
-| ‡W      | v1 ↑                                                                        | West Wall                       |          |
-|         |                                                                             |                                 |          |
-| ◦N      |                                                                             | Corridor East/South/West        |          |
-| ◦N:!elf | ‡N                                                                          |                                 |          |
-| ◦N:elf  | h.43 a.07,.07,0,1,1,.14,0 a.07,.07,0,1,1,-.14,0 m.14,0 h.43 ←               | Secret door North               |          |
-|         |                                                                             |                                 |          |
-| ◦E      |                                                                             | Corridor North/South/West       |          |
-| ◦E:!elf | ‡E                                                                          |                                 |          |
-| ◦E:elf  | → v.43 a.07,.07,0,1,1,0,.14 a.07,.07,0,1,1,0,-.14 m0,.14 v.43 ↖             | Secret door East                |          |
-|         |                                                                             |                                 |          |
-| ◦S      |                                                                             | Corridor North/East/West        |          |
-| ◦S:!elf | ‡S                                                                          |                                 |          |
-| ◦S:elf  | ↓ h.43 a.07,.07,0,1,1,.14,0 a.07,.07,0,1,1,-.14,0 m.14,0 h.43 ↖             | Secret door South               |          |
-|         |                                                                             |                                 |          |
-| ◦W      |                                                                             | Corridor North/South/East       |          |
-| ◦W:!elf | ‡W                                                                          |                                 |          |
-| ◦W:elf  | v.43 a.07,.07,0,1,1,0,.14 a.07,.07,0,1,1,0,-.14 m0,.14 v.43 ↑               | Secret door East                |          |
-|         |                                                                             |                                 |          |
-| ◤       | → l1,-1 ↑                                                                   | Half square NW/SE               |          |
-| ◥       | l1,1 ↖                                                                      | Half square NE/SW               |          |
-|         |                                                                             |                                 |          |
-| ◦◤      |                                                                             | Half square NW/SE               |          |
-| ◦◤:!elf | ◤                                                                           |                                 |          |
-| ◦◤:elf  | → l.45,-.45 a.05,.05,0,1,1,.1,-.1 a.05,.05,0,1,1,-.1,.1 m.1,-.1 l.45,-.45 ↑ | with Secret Door                |          |
-|         |                                                                             |                                 |          |
-| ◦◥      |                                                                             | Half square NE/SW               |          |
-| ◦◥:!elf | ◥                                                                           |                                 |          |
-| ◦◥:elf  | l.45,.45 a.05,.05,0,1,1,.1,.1 a.05,.05,0,1,1,-.1,-.1 m.1,.1 l.45,.45 ↖      | with Secret Door                |          |
-|         |                                                                             |                                 |          |
+| Tile     | Path                                                                        | Documentation                            | Behavior |
+|----------+-----------------------------------------------------------------------------+------------------------------------------+----------|
+| →        | m1,0                                                                        | Move 1 DU Right                          |          |
+| ←        | m-1,0                                                                       | Move 1 DU Left                           |          |
+| ↑        | m0,-1                                                                       | Move 1 DU Up                             |          |
+| ↓        | m0,1                                                                        | Move 1 DU Down                           |          |
+| ↖        | m-1,-1                                                                      | Move 1 DU Up and 1 DU Left               |          |
+| ↗        | m1,-1                                                                       | Move 1 DU Up and 1 DU Right              |          |
+| ↙        | m-1,1                                                                       | Move 1 DU Down and 1 DU Left             |          |
+| ↘        | m1,1                                                                        | Move 1 DU Down and 1 DU right            |          |
+|          |                                                                             |                                          |          |
+| .NE      | m.98,0 h.02 v.02 m-1,-.02                                                   | Corner Dot - North/East corner           |          |
+| .ES      | m1,.98 v.02 h-.02 m-.98,-1                                                  | Corner Dot - East/South corner           |          |
+| .SW      | m.02,1 h-.02 v-.02 m-.98,0                                                  | Corner Dot - South/West corner           |          |
+| .WN      | m0,.02 v-.02 h.02 m-.02,0                                                   | Corner Dot - West/North corner           |          |
+|          |                                                                             |                                          |          |
+| ‡N       | h1 ←                                                                        | North Wall                               |          |
+| ‡E       | → v1 ↖                                                                      | East Wall                                |          |
+| ‡S       | ↓ h1 ↖                                                                      | South Wall                               |          |
+| ‡W       | v1 ↑                                                                        | West Wall                                |          |
+|          |                                                                             |                                          |          |
+| ◦N       |                                                                             | Corridor East/South/West                 |          |
+| ◦N:!elf  | ‡N                                                                          |                                          |          |
+| ◦N:elf   | h.43 a.07,.07,0,1,1,.14,0 a.07,.07,0,1,1,-.14,0 m.14,0 h.43 ←               | Secret door North                        |          |
+|          |                                                                             |                                          |          |
+| ◦E       |                                                                             | Corridor North/South/West                |          |
+| ◦E:!elf  | ‡E                                                                          |                                          |          |
+| ◦E:elf   | → v.43 a.07,.07,0,1,1,0,.14 a.07,.07,0,1,1,0,-.14 m0,.14 v.43 ↖             | Secret door East                         |          |
+|          |                                                                             |                                          |          |
+| ◦S       |                                                                             | Corridor North/East/West                 |          |
+| ◦S:!elf  | ‡S                                                                          |                                          |          |
+| ◦S:elf   | ↓ h.43 a.07,.07,0,1,1,.14,0 a.07,.07,0,1,1,-.14,0 m.14,0 h.43 ↖             | Secret door South                        |          |
+|          |                                                                             |                                          |          |
+| ◦W       |                                                                             | Corridor North/South/East                |          |
+| ◦W:!elf  | ‡W                                                                          |                                          |          |
+| ◦W:elf   | v.43 a.07,.07,0,0,1,0,.14 a.07,.07,0,1,1,0,-.14 m0,.14 v.43 ↑               | Secret door East                         |          |
+|          |                                                                             |                                          |          |
+| ◑NI      |                                                                             | One-Way secret door to the north         |          |
+| ◑NI:!elf | ‡N                                                                          |                                          |          |
+| ◑NI:elf  | h.43 a.07,.07,0,0,0,.14,0 m-.14,0 h.57 ←                                    |                                          |          |
+|          |                                                                             |                                          |          |
+| ◑NO      |                                                                             | One-Way secret door to the north         |          |
+| ◑NO:!elf | ‡N                                                                          |                                          |          |
+| ◑NO:elf  | h.43 a.07,.07,0,0,1,.14,0 m-.14,0 h.57 ←                                    |                                          |          |
+|          |                                                                             |                                          |          |
+| ◑EI      |                                                                             | One-Way secret door to the north         |          |
+| ◑EI:!elf | ‡E                                                                          |                                          |          |
+| ◑EI:elf  | → v.43 a.07,.07,0,0,1,0,.14 m0,-.14 v.57 ←                                  |                                          |          |
+|          |                                                                             |                                          |          |
+| ◑EO      |                                                                             | One-Way secret door to the north         |          |
+| ◑EO:!elf | ‡E                                                                          |                                          |          |
+| ◑EO:elf  | → v.43 a.07,.07,0,0,0,0,.14 m0,-.14 v.57 ←                                  |                                          |          |
+|          |                                                                             |                                          |          |
+| ◑SI      |                                                                             | One-Way secret door to the north         |          |
+| ◑SI:!elf | ‡S                                                                          |                                          |          |
+| ◑SI:elf  | ↓ h.43 a.07,.07,0,0,0,.14,0 m-.14,0 h.57 ↖                                  |                                          |          |
+|          |                                                                             |                                          |          |
+| ◑SO      |                                                                             | One-Way secret door to the north         |          |
+| ◑SO:!elf | ‡S                                                                          |                                          |          |
+| ◑SO:elf  | ↓ h.43 a.07,.07,0,0,1,.14,0 m-.14,0 h.57 ↖                                  |                                          |          |
+|          |                                                                             |                                          |          |
+| ◑WI      |                                                                             | One-Way secret door to the north         |          |
+| ◑WI:!elf | ‡W                                                                          |                                          |          |
+| ◑WI:elf  | v.43 a.07,.07,0,0,0,0,.14 m0,-.14 v.57 ↑                                    |                                          |          |
+|          |                                                                             |                                          |          |
+| ◑WO      |                                                                             | One-Way secret door to the north         |          |
+| ◑WO:!elf | ‡W                                                                          |                                          |          |
+| ◑WO:elf  | v.43 a.07,.07,0,0,1,0,.14 m0,-.14 v.57 ←                                    |                                          |          |
+|          |                                                                             |                                          |          |
+| ◤        | → l1,-1 ↑                                                                   | Half square NW/SE                        |          |
+| ◥        | l1,1 ↖                                                                      | Half square NE/SW                        |          |
+|          |                                                                             |                                          |          |
+| ◦◤       |                                                                             | Half square NW/SE                        |          |
+| ◦◤:!elf  | ◤                                                                           |                                          |          |
+| ◦◤:elf   | → l.45,-.45 a.05,.05,0,1,1,.1,-.1 a.05,.05,0,1,1,-.1,.1 m.1,-.1 l.45,-.45 ↑ | with Secret Door                         |          |
+|          |                                                                             |                                          |          |
+| ◦◥       |                                                                             | Half square NE/SW                        |          |
+| ◦◥:!elf  | ◥                                                                           |                                          |          |
+| ◦◥:elf   | l.45,.45 a.05,.05,0,1,1,.1,.1 a.05,.05,0,1,1,-.1,-.1 m.1,.1 l.45,.45 ↖      | with Secret Door                         |          |
+|          |                                                                             |                                          |          |
 
 
 ** Water Tiles Tables
 
-   :PROPERTIES:
-   :name: 10-water-tiles
-   :MAP-FEATURES: t 
-   :ETL: tile
-   :WATER: stroke="none" fill="blue"
-   :DECORATIONS: stroke="none" fill="cyan"
-   :END:
+  :PROPERTIES:
+    :name: 10-water-tiles
+    :MAP-FEATURES: t 
+    :ETL: tile
+  :END:
 # #+NAME: 10-water-Tiles
 | Tile  | Water                                            | Decorations                                         |
 |-------+--------------------------------------------------+-----------------------------------------------------|
@@ -296,23 +326,39 @@ These features are intended to be used mostly as parts of compositions and rarel
    :END:
 
 # #+NAME: chamber-features
-| Tile       | Path                          | Documentation                                                   | Behavior |
-|------------+-------------------------------+-----------------------------------------------------------------+----------|
-| 10◦N       | cN ◦N                         | 10x10 chamber, secret door North                                |          |
-| 10◦E       | cE ◦E                         | 10x10 chamber, secret door East                                 |          |
-| 10◦S       | cS ◦S                         | 10x10 chamber, secret door South                                |          |
-| 10◦W       | cW ◦W                         | 10x10 chamber, secret door West                                 |          |
-|            |                               |                                                                 |          |
-| 20◦NW      | ‡W ◦N → ‡N ‡E ↓ ‡E ‡S ← ‡S ‡W | 20x20 chamber, Secret door in Western half of nothern wall      |          |
-| 20◦NE      | ‡W ‡N → ◦N ‡E ↓ ‡E ‡S ← ‡S ‡W | 20x20 chamber, Secret door in Eastern half of nothern wall      |          |
-| 20◦EN      | ‡W ‡N → ‡N ◦E ↓ ‡E ‡S ← ‡S ‡W | 20x20 chamber, Secret door in Northern half of Eastern Wall     |          |
-| 20◦ES      | ‡W ‡N → ‡N ‡E ↓ ◦E ‡S ← ‡S ‡W | 20x20 chamber, Secret door in Southern half of Eastern Wall     |          |
-| 20◦SE      | ‡W ‡N → ‡N ‡E ↓ ‡E ◦S ← ‡S ‡W | 20x20 chamber, Secret door in Eastern half of Southern Wall     |          |
-| 20◦SW      | ‡W ‡N → ‡N ‡E ↓ ‡E ‡S ← ◦S ‡W | 20x20 chamber, Secret door in Western half of Southern Wall     |          |
-| 20◦WS      | ‡W ‡N → ‡N ‡E ↓ ‡E ‡S ← ‡S ◦W | 20x20 chamber, Secret door in Southern half of Westrern Wall    |          |
-| 20◦WN      | ◦W ‡N → ‡N ‡E ↓ ‡E ‡S ← ‡S ‡W | 20x20 chamber, Secret door in Northern half of Western Wall     |          |
-|            |                               |                                                                 |          |
-| 20◦WN◦NW   | ◦W ◦N → ‡N ‡E ↓ ‡E ‡S ← ‡S ‡W | 20x20 chamber, Secret doors West (Northern) and North (Western) |          |
+| Tile     | Path                          | Documentation                                                   | Behavior |
+|----------+-------------------------------+-----------------------------------------------------------------+----------|
+| 10◦N     | cN ◦N                         | 10x10 chamber, secret door North                                |          |
+| 10◦E     | cE ◦E                         | 10x10 chamber, secret door East                                 |          |
+| 10◦S     | cS ◦S                         | 10x10 chamber, secret door South                                |          |
+| 10◦W     | cW ◦W                         | 10x10 chamber, secret door West                                 |          |
+|          |                               |                                                                 |          |
+| ▥NE      | ◑NI ◑EO ‡S ‡W                 | Stack chamber with entrance to the north                        |          |
+| ▥NS      | ◑NI ‡E ◑SO ‡W                 | Stack chamber with entrance to the north                        |          |
+| ▥NW      | ◑NI ‡E ‡S ◑WO                 | Stack chamber with entrance to the north                        |          |
+|          |                               |                                                                 |          |
+| ▥EN      | ◑NO ◑EI ‡S ‡W                 | Stack chamber with entrance to the north                        |          |
+| ▥ES      | ‡N ◑EI ◑SO ‡W                 | Stack chamber with entrance to the north                        |          |
+| ▥NW      | ‡N ◑EI ‡S ◑WO                 | Stack chamber with entrance to the north                        |          |
+|          |                               |                                                                 |          |
+| ▥SN      | ◑NO ‡E ◑SI ‡W                 | Stack chamber with entrance to the north                        |          |
+| ▥SE      | ‡N ◑EO ◑SI ‡W                 | Stack chamber with entrance to the north                        |          |
+| ▥SW      | ‡N ‡E ◑SI ◑WO                 | Stack chamber with entrance to the north                        |          |
+|          |                               |                                                                 |          |
+| ▥WN      | ◑NO ‡E ‡S ◑WI                 | Stack chamber with entrance to the north                        |          |
+| ▥WE      | ‡N ◑EO ‡S ◑WI                 | Stack chamber with entrance to the north                        |          |
+| ▥WS      | ‡N ‡E ◑SO ◑WI                 | Stack chamber with entrance to the north                        |          |
+|          |                               |                                                                 |          |
+| 20◦NW    | ‡W ◦N → ‡N ‡E ↓ ‡E ‡S ← ‡S ‡W | 20x20 chamber, Secret door in Western half of nothern wall      |          |
+| 20◦NE    | ‡W ‡N → ◦N ‡E ↓ ‡E ‡S ← ‡S ‡W | 20x20 chamber, Secret door in Eastern half of nothern wall      |          |
+| 20◦EN    | ‡W ‡N → ‡N ◦E ↓ ‡E ‡S ← ‡S ‡W | 20x20 chamber, Secret door in Northern half of Eastern Wall     |          |
+| 20◦ES    | ‡W ‡N → ‡N ‡E ↓ ◦E ‡S ← ‡S ‡W | 20x20 chamber, Secret door in Southern half of Eastern Wall     |          |
+| 20◦SE    | ‡W ‡N → ‡N ‡E ↓ ‡E ◦S ← ‡S ‡W | 20x20 chamber, Secret door in Eastern half of Southern Wall     |          |
+| 20◦SW    | ‡W ‡N → ‡N ‡E ↓ ‡E ‡S ← ◦S ‡W | 20x20 chamber, Secret door in Western half of Southern Wall     |          |
+| 20◦WS    | ‡W ‡N → ‡N ‡E ↓ ‡E ‡S ← ‡S ◦W | 20x20 chamber, Secret door in Southern half of Westrern Wall    |          |
+| 20◦WN    | ◦W ‡N → ‡N ‡E ↓ ‡E ‡S ← ‡S ‡W | 20x20 chamber, Secret door in Northern half of Western Wall     |          |
+|          |                               |                                                                 |          |
+| 20◦WN◦NW | ◦W ◦N → ‡N ‡E ↓ ‡E ‡S ← ‡S ‡W | 20x20 chamber, Secret doors West (Northern) and North (Western) |          |
 
 
 ** Special Chamber Tiles Table
@@ -342,10 +388,9 @@ These features are intended to be used mostly as parts of compositions and rarel
    :name: level-change-tiles
    :MAP-FEATURES: t
    :ETL: tile
-   :STAIRS: fill="pink" stroke="none"
    :END:
 
-# #+NAME: level-change-features
+# #+NAME: level-change-tiles
 | Tile       | Path                       | stairs                                       |
 |------------+----------------------------+----------------------------------------------|
 | S▲N        | cNS ↓ cN                   | h2 v1 h-2 v-1                                |
@@ -364,6 +409,10 @@ These features are intended to be used mostly as parts of compositions and rarel
 |            |                            |                                              |
 | S▼W        | cEW → cW                   | h1 v2 h-1 v-2                                |
 |            |                            |                                              |
+| R▲N        |                            |                                              |
+| R▲N:!dwarf | cS ↓ cNS ↓ cNS ↓ cNS ↓ cNS |                                              |
+| R▲N:dwarf  | cS ↓ cNS ↓ cNS ↓ cNS ↓ cNS | v5 h1 v-5 h-1                                |
+|            |                            |                                              |
 | R▲E        |                            |                                              |
 | R▲E:!dwarf | cEW → cEW → cEW → cEW → cW |                                              |
 | R▲E:dwarf  | cEW → cEW → cEW → cEW → cW | h5 v1 h-5 v-1                                |
@@ -372,6 +421,14 @@ These features are intended to be used mostly as parts of compositions and rarel
 | R▲S:!dwarf | cNS ↓ cNS ↓ cNS ↓ cNS ↓ cN |                                              |
 | R▲S:dwarf  | cNS ↓ cNS ↓ cNS ↓ cNS ↓ cN | h1 v5 h-1 v-5                                |
 |            |                            |                                              |
+| R▲W        |                            |                                              |
+| R▲W:!dwarf | cE → cEW → cEW → cEW → cEW |                                              |
+| R▲W:dwarf  | cE → cEW → cEW → cEW → cEW | h5 v1 h-5 v-1                                |
+|            |                            |                                              |
+| R▼N        |                            |                                              |
+| R▼N:!dwarf | cS ↓ cNS ↓ cNS ↓ cNS ↓ cNS |                                              |
+| R▼N:dwarf  | cS ↓ cNS ↓ cNS ↓ cNS ↓ cNS | v5 h1 v-5 h-1                                |
+|            |                            |                                              |
 | R▼E        |                            |                                              |
 | R▼E:!dwarf | cEW → cEW → cEW → cEW → cW |                                              |
 | R▼E:!dwarf | cEW → cEW → cEW → cEW → cW | h5 v1 h-5 v-1                                |
@@ -379,6 +436,10 @@ These features are intended to be used mostly as parts of compositions and rarel
 | R▼S        |                            |                                              |
 | R▼S:!dwarf | cNS ↓ cNS ↓ cNS ↓ cNS ↓ cN |                                              |
 | R▼S:dwarf  | cNS ↓ cNS ↓ cNS ↓ cNS ↓ cN | h1 v5 h-1 v-5                                |
+|            |                            |                                              |
+| R▼W        |                            |                                              |
+| R▼W:!dwarf | cE → cEW → cEW → cEW → cEW |                                              |
+| R▼W:dwarf  | cE → cEW → cEW → cEW → cEW | h5 v1 h-5 v-1                                |
 |            |                            |                                              |
 | E◦N        | ◦N cN                      | h.43 a,.14,.14,0,0,0,.14,0 h.43 v1 h-1 v-1   |
 |            |                            |                                              |
@@ -414,21 +475,29 @@ These features are intended to be used mostly as parts of compositions and rarel
 |            |                                                             |                           |                 |
 | S▼W        | <text x="1.65" y=".75" font-size=".5" fill="black">D</text> | Stairs down Opening East  | <<stairs-down>> |
 |            |                                                             |                           |                 |
+| R▲N        |                                                             | Ramp up extending North   | <<ramp-down>>   |
+| R▲N:dwarf  | <text x=".4" y=".85" font-size=".5" fill="black">U</text>   |                           |                 |
+|            |                                                             |                           |                 |
 | R▲E        |                                                             | Ramp up extending East    | <<ramp-up>>     |
-| R▲E:!dwarf |                                                             |                           |                 |
 | R▲E:dwarf  | <text x="4.65" y=".75" font-size=".5" fill="black">U</text> |                           |                 |
 |            |                                                             |                           |                 |
 | R▲S        |                                                             | Ramp up extending South   | <<ramp-down>>   |
-| R▲S:!dwarf |                                                             |                           |                 |
 | R▲S:dwarf  | <text x=".4" y="4.85" font-size=".5" fill="black">U</text>  |                           |                 |
 |            |                                                             |                           |                 |
+| R▲W        |                                                             | Ramp up extending West    | <<ramp-up>>     |
+| R▲W:dwarf  | <text x=".65" y=".75" font-size=".5" fill="black">U</text>  |                           |                 |
+|            |                                                             |                           |                 |
+| R▼N        |                                                             | Ramp down extending North | <<ramp-down>>   |
+| R▼N:dwarf  | <text x=".4" y=".85" font-size=".5" fill="black">D</text>   |                           |                 |
+|            |                                                             |                           |                 |
 | R▼E        |                                                             | Ramp down extending East  | <<ramp-down>>   |
-| R▼E:!dwarf |                                                             |                           |                 |
-| R▼E:!dwarf | <text x="4.65" y=".75" font-size=".5" fill="black">D</text> |                           |                 |
+| R▼E:dwarf  | <text x="4.65" y=".75" font-size=".5" fill="black">D</text> |                           |                 |
 |            |                                                             |                           |                 |
 | R▼S        |                                                             | Ramp down extending south | <<ramp-down>>   |
-| R▼S:!dwarf | <text x=".4" y="4.85" font-size=".5" fill="black">D</text>  |                           |                 |
-| R▼S:dwarf  |                                                             |                           |                 |
+| R▼S:dwarf  | <text x=".4" y="4.85" font-size=".5" fill="black">D</text>  |                           |                 |
+|            |                                                             |                           |                 |
+| R▼W        |                                                             | Ramp down extending West  | <<ramp-down>>   |
+| R▼W:dwarf  | <text x=".65" y=".75" font-size=".5" fill="black">D</text>  |                           |                 |
 |            |                                                             |                           |                 |
 | E◦N        | <text x=".4" y=".65" font-size=".5" fill="blue">E</text>    | Elevator, Door North      | <<elevator>>    |
 |            |                                                             |                           |                 |
