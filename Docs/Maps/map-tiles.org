@@ -94,11 +94,11 @@ These features are intended to be used mostly as parts of compositions and rarel
 |          |                                                                             |                                          |          |
 | ◑EI      |                                                                             | One-Way secret door to the north         |          |
 | ◑EI:!elf | ‡E                                                                          |                                          |          |
-| ◑EI:elf  | → v.43 a.07,.07,0,0,1,0,.14 m0,-.14 v.57 ←                                  |                                          |          |
+| ◑EI:elf  | → v.43 a.07,.07,0,0,1,0,.14 m0,-.14 v.57 ↖                                   |                                          |          |
 |          |                                                                             |                                          |          |
 | ◑EO      |                                                                             | One-Way secret door to the north         |          |
 | ◑EO:!elf | ‡E                                                                          |                                          |          |
-| ◑EO:elf  | → v.43 a.07,.07,0,0,0,0,.14 m0,-.14 v.57 ←                                  |                                          |          |
+| ◑EO:elf  | → v.43 a.07,.07,0,0,0,0,.14 m0,-.14 v.57 ↖                                   |                                          |          |
 |          |                                                                             |                                          |          |
 | ◑SI      |                                                                             | One-Way secret door to the north         |          |
 | ◑SI:!elf | ‡S                                                                          |                                          |          |
