@@ -304,7 +304,7 @@ Refer to design.org for more details.
 |  7 | 11 | 10◦S                                             |
 |  8 | 11 | 10◦S                                             |
 |  9 | 11 | 10◦S                                             |
-| 10 | 11 | cNS◑WO                                           |
+| 10 | 11 | ‡W ◑EO                                            |
 | 11 | 11 | ▥WE                                              |
 | 12 | 11 | ▥WE                                              |
 | 13 | 11 | ▥WE                                              |
