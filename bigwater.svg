@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="2400" height="2400" xmlns="http://www.w3.org/2000/svg">
+
+  <!-- Define gradients for the map -->
+  <defs>
+    <linearGradient id="vert_ramp" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:white;stop-opacity:0" />
+      <stop offset="50%" style="stop-color:yellow;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+
+  <!-- Background Graph paper -->
+
+  <rect fill="#fffdd0" stroke="none" x="0" y="0" width="100%" height="100%"/>
+
+  <!-- Graph Paper -->
+  <g fill="none" stroke="blue" stroke-width=".2">
+  
+    <!-- Graph paper horizontal lines -->
+    <path d="M0,0 h2400 M0,100 h2400 M0,200 h2400 M0,300 h2400 M0,400 h2400 M0,500 h2400 M0,600 h2400 M0,700 h2400 M0,800 h2400 M0,900 h2400 M0,1000 h2400 M0,1100 h2400 M0,1200 h2400 
+	     M0,1300 h2400 M0,1400 h2400 M0,1500 h2400 M0,1600 h2400 M0,1700 h2400 M0,1800 h2400 M0,1900 h2400 M0,2000 h2400 M0,2100 h2400 M0,2200 h2400 M0,2300 h2400 M0,2400 h2400" />
+
+    <!-- Graph paper Vertical lines -->
+    <path d="M0,0 v2400 M100,0 v2400 M200,0 v2400 M300,0 v2400 M400,0 v2400 M500,0 v2400 M600,0 v2400 M700,0 v2400 M800,0 v2400 M900,0 v2400 M1000,0 v2400 M1100,0 v2400 M1200,0 v2400 
+	     M1300,0 v2400 M1400,0 v2400 M1500,0 v2400 M1600,0 v2400 M1700,0 v2400 M1800,0 v2400 M1900,0 v2400 M2000,0 v2400 M2100,0 v2400 M2200,0 v2400 M2300,0 v2400 M2400,0 v2400" />
+
+  </g>
+
+  <!-- Water features -->
+
+  <!-- Pool -->
+  <path fill="blue" stroke="none" d="M300,200 h200 v200 h-200 v-200" />
+  <path fill="blue" stroke="none" d="M300,400 h200 v200 h-200 v-200" />
+  <path fill="blue" stroke="none" d="M300,600 h200 v200 h-200 v-200" />
+  <path fill="blue" stroke="none" d="M100,400 h200 v200 h-200 v-200" />
+  <path fill="blue" stroke="none" d="M500,400 h200 v200 h-200 v-200" />
+
+  <!-- Beach NW corner -->
+  <path fill="none" stroke="black" stroke-width="1" d="M0,100 v300 m300,-300 h-300" />
+  <g fill="blue" stroke="none" font-size="50">
+    <path d="M0,100 m100,300 a200,200,0,0,1,200,-200 v200 h-200" />
+    <text x="85" y="215">B</text>
+  </g>
+
+  <!-- Beach SW corner -->
+  <path fill="none" stroke="black" stroke-width="1" d="M0,600 v300 h200" />
+  <g fill="blue" stroke="none" font-size="50">
+    <path d="M0,600 m100,0 a200,200,0,0,0,200,200 v-200 h-200" />
+    <text x="85" y="815">B</text>
+  </g>
+
+  <!-- Beach NE corner -->
+  <path stroke="none" fill="yellow" fill-opacity=".9" d="M500,100 h300 v300 h-100 a200,200,0,0,1,-200,-200 v-100" />
+  <path fill="none" stroke="black" stroke-width="1" d="M500,100 h100 h43 a7,7,0,0,1,14,0 m-14,0 h157 v43 a7,7,0,0,1,0,14 m0,-14 v57" />
+  <path fill="blue" stroke="none" d="M500,100 m0,100 a200,200,0,0,1,200,200 h-200 v-200" />
+  <text fill="blue" font-size="50" x="685" y="215">B</text>
+
+  <!-- River flowing south -->
+  <path stroke="none" fill="blue" d="M300,800 h200 v100 h-200 v-100" />
+  <path stroke="none" fill="cyan" d="M300,800 m98,20 h4 v50 h5 l-6,10 l-6,-10 h5 v-50" />
+
+  <!-- River flowing south -->
+  <path stroke="none" fill="blue" d="M300,900 h200 v100 h-200 v-100" />
+  <path stroke="none" fill="cyan" d="M300,900 m98,20 h4 v50 h5 l-6,10 l-6,-10 h5 v-50" />
+
+  <!-- River flowing south -->
+  <path stroke="none" fill="blue" d="M300,1000 h200 v100 h-200 v-100" />
+  <path stroke="none" fill="cyan" d="M300,1000 m98,20 h4 v50 h5 l-6,10 l-6,-10 h5 v-50" />
+
+  <!-- Beach SW corner -->
+  <path fill="none" stroke="black" stroke-width="1" d="M200,1100 v300 h300 m-300,-300" />
+  <g fill="blue" stroke="none" font-size="50">
+    <path d="M200,1100 m100,0 a200,200,0,0,0,200,200 v-200 h-200" />
+    <text x="285" y="1315">B</text>
+  </g>
+
+  <!-- River flowing east -->
+  <path stroke="none" fill="blue" d="M500,1100 h100 v200 h-100 v-200" />
+  <path stroke="none" fill="cyan" d="M500,1100 m75,98 h-50 v2 h50 v5 l10,-6 l-10,-6 v5"	/>
+
+  <!-- River flowing east -->
+  <path stroke="none" fill="blue" d="M600,1100 h100 v200 h-100 v-200" />
+  <path stroke="none" fill="cyan" d="M600,1100 m75,98 h-50 v2 h50 v5 l10,-6 l-10,-6 v5"	/>
+
+  <!-- River flowing east -->
+  <path stroke="none" fill="blue" d="M700,1100 h100 v200 h-100 v-200" />
+  <path stroke="none" fill="cyan" d="M700,1100 m75,98 h-50 v2 h50 v5 l10,-6 l-10,-6 v5"	/>
+
+  <!-- River flowing east -->
+  <path stroke="none" fill="blue" d="M800,1100 h100 v200 h-100 v-200" />
+  <path stroke="none" fill="cyan" d="M800,1100 m75,98 h-50 v2 h50 v5 l10,-6 l-10,-6 v5"	/>
+
+  <!-- River flowing east -->
+  <path stroke="none" fill="blue" d="M900,1100 h100 v200 h-100 v-200" />
+  <path stroke="none" fill="cyan" d="M900,1100 m75,98 h-50 v2 h50 v5 l10,-6 l-10,-6 v5"	/>
+
+  <!-- River flowing east -->
+  <path stroke="none" fill="blue" d="M1000,1100 h100 v200 h-100 v-200" />
+  <path stroke="none" fill="cyan" d="M9100,1100 m75,98 h-50 v2 h50 v5 l10,-6 l-10,-6 v5"	/>
+
+  <!-- Beach SE corner -->
+  <path fill="none" stroke="black" stroke-width="1" d="M1100,1100 m300,0 v300 h-300" />
+  <g fill="blue" stroke="none" font-size="50">
+    <path d="M1100,1100 m0,200 a200,200,0,0,0,200,-200 h-200 v200" />
+    <text x="1285" y="1315">B</text>
+  </g>
+  
+  <!-- River flowing north -->
+  <path stroke="none" fill="blue" d="M1100,1000 h200 v100 h-200 v-100" />
+  <path stroke="none" fill="cyan" d="M1100,1000 m98,80 h2 v-50 h5 l-6,-10 l-6,10 h5 v50" />
+
+  <!-- River flowing north -->
+  <path stroke="none" fill="blue" d="M1100,900 h200 v100 h-200 v-100" />
+  <path stroke="none" fill="cyan" d="M1100,900 m98,80 h2 v-50 h5 l-6,-10 l-6,10 h5 v50" />
+
+  <!-- River flowing north -->
+  <path stroke="none" fill="blue" d="M1100,800 h200 v100 h-200 v-100" />
+  <path stroke="none" fill="cyan" d="M1100,800 m98,80 h2 v-50 h5 l-6,-10 l-6,10 h5 v50" />
+
+  <!-- River flowing north -->
+  <path stroke="none" fill="blue" d="M1100,700 h200 v100 h-200 v-100" />
+  <path stroke="none" fill="cyan" d="M1100,700 m98,80 h2 v-50 h5 l-6,-10 l-6,10 h5 v50" />
+
+  <!-- River flowing north -->
+  <path stroke="none" fill="blue" d="M1100,600 h200 v100 h-200 v-100" />
+  <path stroke="none" fill="cyan" d="M1100,600 m98,80 h2 v-50 h5 l-6,-10 l-6,10 h5 v50" />
+
+  <!-- Beach NE corner -->
+  <path fill="none" stroke="black" stroke-width="1" d="M1100,300 h300 v300" />
+  <g fill="blue" stroke="none" font-size="50">
+    <path d="M1100,300 m200,300 a200,200,0,0,0,-200,-200 v200 h200" />
+    <text x="1285" y="415">B</text>
+  </g>
+  
+  <!-- River flowing west -->
+  <path stroke="none" fill="blue" d="M1000,400 h100 v200 h-100 v-200" />
+  <path stroke="none" fill="cyan" d="M1000,400 m25,98 h50 v2 h-50 v5 l-10,-6 l10,-6 v5"	/>
+
+  <!-- River flowing west -->
+  <path stroke="none" fill="blue" d="M900,400 h100 v200 h-100 v-200" />
+  <path stroke="none" fill="cyan" d="M900,400 m25,98 h50 v2 h-50 v5 l-10,-6 l10,-6 v5"	/>
+
+  <!-- River flowing west -->
+  <path stroke="none" fill="blue" d="M800,400 h100 v200 h-100 v-200" />
+  <path stroke="none" fill="cyan" d="M800,400 m25,98 h50 v2 h-50 v5 l-10,-6 l10,-6 v5"	/>
+
+  <!-- River flowing west -->
+  <path stroke="none" fill="blue" d="M700,400 h100 v200 h-100 v-200" />
+  <path stroke="none" fill="cyan" d="M700,400 m25,98 h50 v2 h-50 v5 l-10,-6 l10,-6 v5"	/>
+
+
+  <!-- Neutronium -->
+  <path stroke="none" fill="purple" d="M500,600 h100 v100 h-100 v-100" />
+  <path stroke="none" fill="purple" d="M600,600 h100 v100 h-100 v-100" />
+  <path stroke="none" fill="purple" d="M700,600 h100 v100 h-100 v-100" />
+  <path stroke="none" fill="purple" d="M800,600 h100 v100 h-100 v-100" />
+  <path stroke="none" fill="purple" d="M900,600 h100 v100 h-100 v-100" />
+  <path stroke="none" fill="purple" d="M1000,600 h100 v100 h-100 v-100" />
+
+  <path stroke="none" fill="purple" d="M500,1000 h100 v100 h-100 v-100" />
+  <path stroke="none" fill="purple" d="M600,1000 h100 v100 h-100 v-100" />
+  <path stroke="none" fill="purple" d="M700,1000 h100 v100 h-100 v-100" />
+  <path stroke="none" fill="purple" d="M800,1000 h100 v100 h-100 v-100" />
+  <path stroke="none" fill="purple" d="M900,1000 h100 v100 h-100 v-100" />
+  <path stroke="none" fill="purple" d="M1000,1000 h100 v100 h-100 v-100" />
+
+  <path stroke="none" fill="purple" d="M500,700 h100 v100 h-100 v-100" />
+  <path stroke="none" fill="purple" d="M500,800 h100 v100 h-100 v-100" />
+  <path stroke="none" fill="purple" d="M500,900 h100 v100 h-100 v-100" />
+
+  <path stroke="none" fill="purple" d="M1000,700 h100 v100 h-100 v-100" />
+  <path stroke="none" fill="purple" d="M1000,800 h100 v100 h-100 v-100" />
+  <path stroke="none" fill="purple" d="M1000,900 h100 v100 h-100 v-100" />
+
+  <!-- Clappers -->
+  <path fill="none" stroke="black" stroke-width="1" d="M1600,100 h100 m100,0 h100 v300 h-100 m-100,0 h-100 v-300" />
+  <path fill="none" stroke="black" stroke-width="3" d="M1600,100 m0,150 h30 v130 v-260 m270,130 h-30 v130 v-260" />
+  
+</svg>
