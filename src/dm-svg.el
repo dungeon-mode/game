@@ -144,3 +144,4 @@ a path element using path-data of DM-SVG. See `add-path-data'."
 
 (provide 'dm-svg)
 ;;; dm-svg.el ends here
+u

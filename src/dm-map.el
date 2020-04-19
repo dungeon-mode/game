@@ -160,6 +160,15 @@ Capture groups:
 
 Scale association may be 0 to use x scaling factor, or 2 for y.")
 
+(defvar dm-map--last-cell nil "While resolving the last cell resolved.")
+
+(defvar dm-map--last-plist nil
+  "While transforming tile tables, the last plist created.")
+
+(defvar dm-map--xml-strings nil
+  "While transforming tile tables, unparsed XML strings.")
+
+
 (defmacro dm-map-cell-defaults ()
   "Return an empty map cell plist."
   `(list ',dm-map-draw-prop nil
@@ -305,11 +314,6 @@ Kick off a new batch for each \"feature\" or \"level\" table found."
 		     (dm-table-batch type)))))))
 	 (or files dm-map-files))))
 
-(defvar dm-map--last-plist nil
-  "While transforming tile tables, the last plist created.")
-(defvar dm-map--xml-strings nil
-  "While transforming tile tables, unparsed XML strings.")
-
 (defun dm-map--xml-attr-to-number (dom-node)
   "Return DOM-NODE with attributes parsed as numbers.
 
@@ -317,10 +321,16 @@ Only consider attributes listed in `dm-map--scale-props'"
   (message "[xml-to-num] arg:%s" dom-node)
   (when (dm-svg-dom-node-p dom-node)
     (message "[xml-to-num] dom-node:%s" (prin1-to-string dom-node))
-    (dolist (attr dm-map--scale-props dom-node)
+    (dolist (attr (mapcar 'car dm-map--scale-props) dom-node)
+      (message "[xml-to-num] before %s -> %s"
+	       attr (dom-attr dom-node attr))
       (when-let ((val (dom-attr dom-node attr)))
-	(dom-set-attribute
-	 dom-node attr (string-to-number val))))))
+	(when (string-match-p "^[0-9.+-]+$" val)
+	  (dom-set-attribute dom-node attr (string-to-number val))
+	  (message "[xml-to-num] after(1) -> %s"
+		   (prin1-to-string (dom-attr dom-node attr))))))
+    (message "[xml-to-num] after ⇒ %s" (prin1-to-string dom-node))
+    dom-node))
 
 (defun dm-map--xml-parse ()
   "Add parsed XML to PLIST and clear `dm-map--xml-strings."
@@ -333,16 +343,10 @@ Only consider attributes listed in `dm-map--scale-props'"
 			(message "[tile-xform] XML %s" (buffer-string))
 			(libxml-parse-xml-region (point-min)
 						 (point-max))))))
-      ;; (dolist (dom-node xml-parts)
-      ;; 	(dolist (attr dm-map--scale-props)
-      ;; 	  (when-let ((val (car (dom-attr dom-node attr))))
-      ;; 	    (setq xml-parts
-      ;; 		  (dom-set-attribute
-      ;; 		   dom-node attr (string-to-number val))))))
       (prog1 (plist-put dm-map--last-plist dm-map-overlay-prop
 			(append (plist-get dm-map--last-plist
 					   dm-map-overlay-prop)
-				xml-parts))
+				(list xml-parts)))
 	(message "[tile-xform] XML-nums %s" (prin1-to-string xml-parts))
 	(setq dm-map--xml-strings nil)))))
 
@@ -421,19 +425,51 @@ Only consider attributes listed in `dm-map--scale-props'"
 
 ;; quick and dirty procedural approach
 
-(cl-defun dm-map--dom-attr-scale-nth (dom-node scale (attr n))
+(cl-defun dm-map--dom-attr-scale-nth (dom-node scale) ;; (attr n)
   "Apply Nth of SCALE to ATTR of DOM-NODE if present."
-  (message "[scale] node:%s scale:%s attr:%s n:%s"
-	   (prin1-to-string dom-node) scale attr n)
-  (when (numberp (car (dom-attr dom-node attr)))
-    (dom-set-attribute dom-node attr (* (nth n scale)
-					(car (dom-attr dom-node attr))))))
-;; (dm-map--dom-attr-scale-nth (dom-node 'foo '((bar 1))) '(2 3 4) '(bar 0))
+  (dolist (attr dm-map--scale-props dom-node)
+    (when-let* ((n (if (listp (cdr attr)) (car (cdr attr)) (cdr attr)))
+		(sl (list (car scale) (cdr scale)))
+		(factor (nth n sl))
+		(attr (car attr))
+		(val (dom-attr dom-node attr)))
+      (when (numberp val)
+	(dom-set-attribute dom-node attr (* factor val))))))
+
+
+;; (dm-map--dom-attr-scale-nth (dom-node 'foo '((bar . 10))) '(2 3 4) '(bar 0))
+;; (dm-map--dom-attr-scale-nth (dom-node 'foo '((x . 10))) '(2 . 4 ))
+
 ;; second test case to figure out looping a list
-;; (let ((dom-node (dom-node 'foo '((text-size 1) (y 1)))))
-;;   (dolist (args '((text-size 0) (x 0) (y 1)) dom-node)
-;;     (dm-map--dom-attr-scale-nth dom-node '(12 23) args))
+;; (let ((dom-node (dom-node 'foo '((font-size . 10) (y . 10)) "content")))
+;;   (dm-map--dom-attr-scale-nth dom-node '(12 23))
 ;;   dom-node)
+
+(cl-defun dm-map--dom-attr-nudge (scale pos dom-node)
+  "Position DOM-NODE by scaling POS then applying SCALE and adding."
+  (message "[nudge] DOMp:%s scale:%s pos:%s node:%s"
+	   (dm-svg-dom-node-p dom-node) scale pos dom-node)
+  (when (dm-svg-dom-node-p dom-node)
+      (when-let ((x-scale (car scale))
+		 (y-scale (if (car-safe (cdr scale))
+			      (cadr scale)
+			    (car scale)))
+		 (x-orig (dom-attr dom-node 'x))
+		 (y-orig (dom-attr dom-node 'y))
+		 (x-new (+ (* x-scale (car pos))
+			   (* x-scale x-orig)))
+		 (y-new (+ (* y-scale (cdr pos))
+			   (* y-scale y-orig))))
+(message "[nudge] x=(%s*%s)+(%s*%s)=%s, y=(%s*%s)+(%s*%s)=%s"
+	 x-scale x-orig x-scale (car pos) x-new
+	 y-scale y-orig y-scale (cdr pos) y-new)
+	(when-let ((font-size (dom-attr dom-node 'font-size)))
+	  (dom-set-attribute dom-node 'font-size (* x-scale font-size)))
+	(dom-set-attribute dom-node 'x x-new)
+	(dom-set-attribute dom-node 'y y-new))
+      dom-node))
+
+(dm-map--dom-attr-nudge '(1 2)  '(4 . 8) (dom-node 'text '((x . 16)(y . 32))))
 
 (defun dm-map-default-scale-function (scale &rest cells)
   "Return CELLS with SCALE applied.
@@ -456,43 +492,48 @@ between 0 and 1 inclusive."
   ;;(message "scale:%s cells:%s" scale cells)
   ;;(let ((cells (copy-tree cells))))
   (dolist (cell cells cells)
-    ;;(message "cell:%s" cell)
-    (cond
-     ((dm-svg-dom-node-p cell 'text)
-      ;;(message "text:%s" cell)
-      (dolist (args dm-map--scale-props)
-	(dm-map--dom-attr-scale-nth cell scale args)))
-     ((consp cell) ;;(message "consp!%s" cell)
-      (pcase cell
-	;; move or line in the form (sym (h v)
-	(`(,(or 'm 'l)
-	   (,(and x (guard (numberp x)))
-	    ,(and y (guard (numberp y)))))
-	 (setcdr cell (list (* x (car scale))
-			    (* y (cdr scale)))))
-
-	;; h and v differ only in which part of scale applies
-	(`(h (,(and d (guard (numberp d)))))
-	 (setcdr cell (list (* d (car scale)))))
-	(`(v (,(and d (guard (numberp d)))))
-	 (setcdr cell (list (* d (cdr scale)))))
-
-	;; arc has tons of args but we only mess with the last two
-	(`(a (,rx ,ry ,x-axis-rotation ,large-arc-flag ,sweep-flag
-		  ,(and x (guard (numberp x)))
-		  ,(and y (guard (numberp y)))))
-	 (setcdr cell (list rx ry x-axis-rotation large-arc-flag sweep-flag
-			    (* x (car scale))
-			    (* y (cdr scale)))))
-
-	;; fall-back to a message
-	;;(_ (message "unhandled %s => %s" (type-of cell) cell))
-	))
+   (pcase cell
+     ;; capital letter means absolutely positioned; ignore
+     (`(,(or 'M 'L 'H 'V 'A) ,_) nil)
+     ;; move or line in the form (sym (h v)
+     (`(,(or 'm 'l)
+	(,(and x (guard (numberp x)))
+	 ,(and y (guard (numberp y)))))
+      (setcdr cell (list (list (* x (car scale))
+			       (* y (cdr scale))))))
+     ;; h and v differ only in which part of scale applies
+     (`(h (,(and d (guard (numberp d)))))
+      (setcdr cell (list (* d (car scale)))))
+     (`(v (,(and d (guard (numberp d)))))
+      (setcdr cell (list (list (* d (cdr scale))))))
+     ;; arc has tons of args but we only mess with the last two
+     (`(a (,rx ,ry ,x-axis-rotation ,large-arc-flag ,sweep-flag
+	       ,(and x (guard (numberp x)))
+	       ,(and y (guard (numberp y)))))
+      (setcdr cell (list (list rx ry x-axis-rotation large-arc-flag sweep-flag
+			       (* x (car scale))
+			       (* y (cdr scale))))))
+     ;; fall-back to a message
+     (_ (message "unhandled %s => %s" (type-of cell) (prin1-to-string cell t)))
      )))
 
-;;(dm-map-default-scale-function '(100 . 1000) (dom-node 'text '((font-size .5)(x .2))) '(h (.1)) '(v (.2))'(m (.3 .4)) '(l (.5 .6)) '(x (.7 .8)) '(a (0.05 0.05 0 1 1 -0.1 0.1)))
+;;      (cond
+;;       ;; ((dm-svg-dom-node-p cell 'text)
+;;       ;;  ;;(message "[scale] text:%s" cell)
+;;       ;;  ;;(dm-map--dom-attr-scale-nth cell scale)
+;;       ;;  (mapcar
+;;       ;; 	(lambda(dom-node)
+;;       ;; 	  (dm-map--dom-attr-nudge dom-node (list (car scale) (cdr scale))))
+;;       ;; 	cell))
+;;       ((consp cell) ;;(message "consp!%s" cell)
+;; )
 
-(dm-map-default-scale-function '(100 . 100) '(text ((x . ".5") (y . "2.25") (font-size . ".6") (fill . "blue")) "General Store"))
+
+;;(dm-map-default-scale-function '(100 . 1000) (dom-node 'text '((font-size . .5)(x . .2))) '(h (.1)) '(v (.2))'(m (.3 .4)) '(l (.5 .6)) '(x (.7 .8)) '(a (0.05 0.05 0 1 1 -0.1 0.1)))
+
+;;(dm-map-default-scale-function '(100 . 100) '(text ((x . .5) (y . 2.25) (font-size . .6) (fill . "blue")) "General Store"))
+;; (dm-map-default-scale-function '(100 . 1000) (dom-node 'text '((font-size . .5)(x . .2))))
+;; (dm-map-default-scale-function '(100 100) (dom-node 'text '((font-size . .5))))
 
 ;; (a (.7 .7 0 1 1 0 .14))
 ;; (a (0.05 0.05 0 1 1 -0.1 0.1))
@@ -521,7 +562,8 @@ addional tiles based on tags."
 		      (append (plist-get plist prop)
 			      (unless inhibit-tags
 				(dm-map-tile-tag-maybe-invert tile))))))
-    (push tile dm-map-current-tiles)
+    (unless (or inhibit-tags (member tile dm-map-current-tiles))
+      (push tile dm-map-current-tiles))
     (mapcan (lambda (stroke)
 	      (let ((stroke stroke))
 ;;(message "[resolver] %s:%s (type: %s)" prop stroke (type-of stroke))
@@ -536,14 +578,17 @@ addional tiles based on tags."
 
 
 (cl-defun dm-map-resolve-cell (cell &optional
-				    no-follow
 				    &key (prop dm-map-draw-prop)
-				    inhibit-collection)
+				    no-follow
+				    inhibit-collection
+				    inhibit-tags)
   "Get draw code for CELL.
 
 PROP is a symbol naming the proppery containing draw code.
 Follow references unless NO-FOLLOW is truthy.  When
-INHIBIT-COLLECTION is truthy, don't collect tiles resolved."
+INHIBIT-COLLECTION is truthy, don't collect tiles resolved.  When
+INHIBIT-TAGS is truthy do not add addional tiles based on tags."
+  (setq dm-map--last-cell cell)
   (when-let* ((plist (gethash cell dm-map-level))
 	      (paths (plist-get plist prop)))
     (mapcan (lambda (stroke)
@@ -552,34 +597,58 @@ INHIBIT-COLLECTION is truthy, don't collect tiles resolved."
 		(pcase stroke
 		  ;; ignore references when drawing a complete level
 		  (`(,(and x (guard (numberp x))). ,(and y (guard (numberp y))))
-		   (if no-follow
-		       nil ;;(message "[draw] ignored ref %s to %d,%d" cell x y)
+		   (unless no-follow
 		     (dm-map-resolve-cell
 		      stroke :prop prop
-		      :inhibit-collection inhibit-collection)))
+		      :inhibit-collection inhibit-collection
+		      :inhibit-tags inhibit-tags)))
 		  ((pred stringp)
 		   (message "[resolve] ignoring svg: %s" stroke))
 		  ((pred symbolp)
 		   (dm-map-resolve
-		    stroke :prop prop :inhibit-collection inhibit-collection))
+		    stroke :prop prop
+		    :inhibit-collection inhibit-collection
+		    :inhibit-tags inhibit-tags))
 		  (_ (list (if (listp stroke) (copy-tree stroke) stroke))))
 		))
 	    paths)))
 
-(defun dm-map-to-string (&rest cells)
+
+;; https://stackoverflow.com/questions/969067/\
+;;   name-of-this-function-in-built-in-emacs-lisp-library
+;; Andrea Fedeli's answer:
+(defun dm--flatten(x)
+  "Return X as a single list colapsing depth."
+  (cond ((null x) nil)
+	((listp x)
+	 (append (dm--flatten (car x))
+		 (when (cdr-safe x)
+		   (dm--flatten (cdr x)))))
+	(t (list x))))
+
+;;(dm--flatten (list "hi" '(m (0 0)) (dom-node 'text '((x . 10)) "content")))
+;;(dm--to-string (dm--flatten (list "hi" '(m (0 0)) (dom-node 'text '((x . 10)) "content"))))
+;;(defun dm--flatten-NEW (obj) "Return OBJ as a single list copying list members recurisvely."  (if obj (if (not (listp obj)) nil (dm--flatten)) nil))
+
+
+(defun dm--to-string (obj)
+  "Return the string representation of OBJ."
+  (when obj
+    (cond ((stringp obj) obj)
+	  ((symbolp obj) (symbol-name obj))
+	  ((listp obj) (concat (dm--to-string (car obj))
+			       (dm--to-string (cdr-safe obj))))
+	  (t (prin1-to-string obj)))))
+
+;; (dm--to-string '("hi" m 0 0 text x 10 "content"))
+;; (dm--to-string (list "hi" '(m (0 0)) (dom-node 'text '((x . 10)) "content")))
+
+(defmacro dm-map-to-string (cells)
   "Return CELLS as a single string."
-  ;;(message "[to-string] cells:%s" cells)
-  (when (listp cells)
-    (apply 'concat
-	   (mapcan
-	     (lambda (stroke)
-;;;(message "[to-string] stroke:%s (%s)" (prin1-to-string stroke) (type-of stroke))
-	       (if (consp stroke)
-		   (mapcar (apply-partially 'format "%s ") stroke)
-		 (format "%s " stroke) ;; (list stroke)
-		 ;;(message "unhandled %s => %s" (type-of cell) cell)
-		 ))
-	     cells))))
+  `(dm--to-string (dm--flatten ,cells)))
+
+(dm-map-to-string (list "hi" '(m (0 0)) (dom-node 'text '((x . 10)) "content")))
+
 
 (defun dm-map--positioned-cell (scale prop cell)
   "Return paths preceded with origin move for CELL.
@@ -597,14 +666,78 @@ property containing draw instructions."
   "Return PATHS as a flatter list removing nil entries."
   (apply 'append (delq nil paths)))
 
-;; https://stackoverflow.com/questions/969067/\
-;;   name-of-this-function-in-built-in-emacs-lisp-library
-;; Andrea Fedeli's answer:
-(defun dm--flatten(x)
-  "Return X as a single list colapsing depth."
-  (cond ((null x) nil)
-    ((listp x) (append (flatten (car x)) (flatten (cdr x))))
-    (t (list x))))
+;; (defun dm-map--cell (tile prop &optional inhibit-tags)
+;;   "Get draw code for PROP of TILE.
+;; When INHIBIT-TAGS is t don't add draw code tagged to TILE."
+;;   (when-let* ((plist (gethash tile dm-map-tiles))
+;; 	      (paths (delq nil (append
+;; 				(plist-get plist prop)
+;; 				(unless inhibit-tags
+;; 				  (dm-map-tile-tag-maybe-invert tile))))))
+;;     (mapcan (lambda (stroke)
+;; 	      (let ((stroke stroke))
+;; 		(if (symbolp stroke) (dm-map--cell stroke prop inhibit-tags)
+;; 		  (list (if (listp stroke) (copy-sequence stroke) stroke)))))
+;; 	    paths)))
+
+
+;; TODO overlay, etc are for tiles only; add support from map-cells
+(defun dm-map-cell (cell &optional follow)
+  "Return plist of draw code for CELL.
+
+When FOLLOW is truthy, follow to the first cell with drawing
+instructions."
+  (let ((plist (dm-map-cell-defaults))
+	dm-map-current-tiles)
+    (when-let ((val (dm-map-resolve-cell cell :no-follow (null follow))))
+      (plist-put plist dm-map-draw-prop val))
+    (when-let ((val (seq-map
+		     (lambda (tile)
+		       (dm-map-resolve tile :prop dm-map-overlay-prop
+				       :inhibit-tags t
+				       :inhibit-collection t))
+		     dm-map-current-tiles)))
+      (plist-put plist dm-map-overlay-prop (delq nil val)))
+    (dolist (prop dm-map-draw-other-props)
+      (when-let ((val (seq-map
+		       (lambda (tile)
+			 (dm-map-resolve tile :prop prop
+					 :inhibit-tags t
+					 :inhibit-collection t))
+		       dm-map-current-tiles)))
+	(plist-put plist prop (delq nil val))))
+    (append (list :cell (copy-tree cell)) plist)))
+
+(defun dm-map-path-string (paths)
+  "Return a list of svg drawing PATHS as a string."
+  (mapconcat
+   'concat
+   (delq nil (mapcar
+	      (lambda (path-part)
+		(pcase path-part
+		  ((pred stringp) path-part)
+		  (`(,cmd ,args)
+		   (mapconcat 'concat (append (list (symbol-name cmd))
+					      (mapcar 'number-to-string
+						      (if (listp args)
+							  args
+							(list args))))
+			      " "))))
+	      paths))
+   " "))
+
+(defun dm-map--cell-paths (cells plist prop scale)
+  "Return paths for PROP from CELLS PLIST, if any.
+
+SCALE is the number of pixels per dungeon unit, used to add
+absolute movement to cell's origin as the first instruction."
+  (apply 'append (delq nil (mapcar
+			    (lambda (paths)
+			      (append
+			       (list (list 'M (list (* scale (car (plist-get plist :cell)))
+						    (* scale (cdr (plist-get plist :cell))))))
+			       paths))
+			    (plist-get plist prop)))))
 
 (cl-defun dm-map-quick-draw (&optional
 			     (cells (when dm-map-level (hash-table-keys dm-map-level)))
@@ -642,47 +775,118 @@ the stylus to the origin (e.g. M0,0) as it's final instruction.
 
 SCALE-FUNCTION may be used to supply custom scaling."
   (setq dm-map-current-tiles nil)
-  (let* ((img (dm-svg :svg (apply 'svg-create
+  (let* (
+	 (maybe-add-abs
+	  (lambda (pos paths)
+	    (when paths (append
+			 (list (list 'M (list
+					 (* scale (car pos))
+					 (* scale (cdr pos)))))
+				paths))))
+	 (draw-code (delq nil (mapcar 'dm-map-cell cells)))
+	  ;; handle main path seperately
+	 (main-path (apply
+		     'append
+		     (mapcar
+		      (lambda (cell)
+			(funcall maybe-add-abs
+				 (plist-get cell :cell)
+				 (plist-get cell dm-map-draw-prop)))
+		      draw-code)))
+	 (main-path  (dm-map-path-string
+		      (apply
+		       (apply-partially scale-function (cons scale scale))
+		       main-path)))
+	 ;; only one SVG XML prop for now, relitively position it
+	 (nudge-svg (apply-partially 'dm-map--dom-attr-nudge
+				     (list scale scale)))
+	 (overlays (delq
+		    nil
+		    (mapcan
+		     (lambda (cell)
+		       (mapcar (apply-partially 'dm-map--dom-attr-nudge
+						(list scale scale)
+						(plist-get cell :cell))
+			       (apply
+				'append
+				(plist-get cell dm-map-overlay-prop))))
+		     draw-code)))
+	 (img (dm-svg :svg (apply 'svg-create
 				  (append (list (car size) (cdr size))
-					  svg-attributes))))
-	 (tiles (seq-map (lambda(x)
-			   (append (list
-				    (list 'M
-					  (* scale (car x))
-					  (* scale (cdr x))))
-				   (dm-map-resolve-cell
-				    x t :prop dm-map-draw-prop)))
-			 cells))
-	 (pstr (apply 'dm-map-to-string
-		      (apply (apply-partially scale-function
-					      (cons scale scale))
-			     (apply 'append (delq nil tiles)))))
-	 (overlays
-	  (delq nil
-		(mapcar
-		 (lambda (tile)
-		   (plist-get (gethash tile dm-map-tiles)
-			      dm-map-overlay-prop))
-		 dm-map-current-tiles)))
+					  svg-attributes))
+		      :path-data (dm-svg-create-path
+				  main-path (plist-get path-attributes
+						       dm-map-draw-prop))))
+	 )
+    ;;(message "[draw] draw-code:%s" (prin1-to-string main-path))
+    (message "[draw] path-props:%s" path-attributes)
+    (message "[draw] XML SVG overlays:%s" (prin1-to-string overlays))
+    (apply (apply-partially 'add-svg-element img) overlays)
+    ;;(defvar dm-dump nil)
+    (setq dm-dump draw-code)
+    img))
+	 ;;(main-path
+	 ;; (dm-map--cell-paths cells draw-code dm-map-draw-prop scale))
+
+
+                     ;; (apply 'dm-map-to-string
+		     ;; 	   (apply (apply-partially scale-function
+		     ;; 				   (cons scale scale))
+		     ;; 		  (apply 'append (delq nil draw-code))))
+
+	 ;;(overlays (apply (apply-partially scale-function (cons scale scale)) overlays))
+
+    ;;(apply (apply-partially 'add-svg-element img) overlays)
+
+
+	 ;; (ostr
+	 ;;  (apply 'dm-map-to-string
+	 ;; 	 (apply (apply-partially scale-function (cons scale scale))
+	 ;; 		(delq nil overlays))))
+    ;;(message "[draw] svg:%s" (prin1-to-string overlays))
+
+	 ;; (tiles
+	 ;;  (mapcar (lambda(x)
+	 ;; 	     (funcall
+	 ;; 	      maybe-add-abs x
+	 ;; 	      (delq nil (dm-map-resolve-cell x t :prop dm-map-draw-prop))))
+	 ;; 	   cells))
+	 ;; (def-tiles
+	 ;;   (mapcar (lambda(x)
+	 ;; 	     (funcall
+	 ;; 	      maybe-add-abs x
+	 ;; 	      (delq nil (dm-map-resolve x :prop dm-map-draw-prop))))
+	 ;; 	   dm-map-extra-tiles))
+	 ;; (pstr (apply 'dm-map-to-string
+	 ;; 	      (apply (apply-partially scale-function
+	 ;; 				      (cons scale scale))
+	 ;; 		     (apply 'append (delq nil (append tiles def-tiles))))))
+	 ;; (overlays
+	 ;;  (mapcar (lambda (tile)
+	 ;; 	    (plist-get (gethash tile dm-map-tiles) dm-map-overlay-prop))
+	 ;; 	  dm-map-current-tiles))
+	 ;;;;;;;;;
+	 ;; (delq nil
+	  ;; 	(mapcar
+	  ;; 	 (lambda (cell)
+	  ;; 	   (apply (apply-partially scale-function (cons scale scale))
+	  ;; 		  (delq nil (dm-map-resolve-cell
+	  ;; 			     cell t :prop dm-map-overlay-prop
+	  ;; 			     :inhibit-collection t
+	  ;; 			     :inhibit-tags t))))
+	  ;; dm-map-current-tiles))
 	  ;; (delq nil (seq-map (lambda (tile)
 	  ;; 		       (dm-map-resolve tile
 	  ;; 				       :prop dm-map-overlay-prop
 	  ;; 				       :inhibit-collection t
 	  ;; 				       :inhibit-tags t))
-	 ;; 		     dm-map-current-tiles))
+	  ;; 		     dm-map-current-tiles)))
 	 ;; (overlays
-	 ;;  (apply
-	 ;;   (apply-partially scale-function (cons scale scale))
+	 ;;  (mapcar
+	 ;;   (lambda (cell)
+	 ;;     (dm-map--dom-attr-nudge cell scale))
 	 ;;   overlays))
-	  )
-	 ;; (ostr
-	 ;;  (apply 'dm-map-to-string
-	 ;; 	 (apply (apply-partially scale-function (cons scale scale))
-	 ;; 		(delq nil overlays))))
-    (message "[draw] svg:%s" (prin1-to-string overlays))
-    (add-path-data img pstr)
-    ;;(apply (apply-partially 'add-svg-element img) overlays)
-    img))
+
 
 ;; (append
 ;; 		   (mapcar (lambda(x)
@@ -750,8 +954,8 @@ SCALE-FUNCTION may be used to supply custom scaling."
   "Major mode for `dugeon-mode' maps.")
 
 ;; (setq dm-map-files '("d:/projects/dungeon-mode/Docs/Maps/map-tiles.org"
-;; 		     "d:/projects/dungeon-mode/Docs/Maps/testmap.org"))
-;;(setq dm-map-tags t)
+;; 		     "d:/projects/dungeon-mode/Docs/Maps/Levels/A-Maze_level1.org"))
+;; (setq dm-map-tags t)
 
 (provide 'dm-map)
 ;;; dm-map.el ends here
