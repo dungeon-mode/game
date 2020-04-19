@@ -320,16 +320,17 @@ Kick off a new batch for each \"feature\" or \"level\" table found."
 Only consider attributes listed in `dm-map--scale-props'"
   (message "[xml-to-num] arg:%s" dom-node)
   (when (dm-svg-dom-node-p dom-node)
-    (message "[xml-to-num] dom-node:%s" (prin1-to-string dom-node))
+    ;;(message "[xml-to-num] dom-node:%s" (prin1-to-string dom-node))
     (dolist (attr (mapcar 'car dm-map--scale-props) dom-node)
-      (message "[xml-to-num] before %s -> %s"
-	       attr (dom-attr dom-node attr))
+      ;; (message "[xml-to-num] before %s -> %s"
+      ;; 	       attr (dom-attr dom-node attr))
       (when-let ((val (dom-attr dom-node attr)))
 	(when (string-match-p "^[0-9.+-]+$" val)
 	  (dom-set-attribute dom-node attr (string-to-number val))
-	  (message "[xml-to-num] after(1) -> %s"
-		   (prin1-to-string (dom-attr dom-node attr))))))
-    (message "[xml-to-num] after ⇒ %s" (prin1-to-string dom-node))
+	  ;; (message "[xml-to-num] after(1) -> %s"
+	  ;; 	   (prin1-to-string (dom-attr dom-node attr)))
+	  )))
+    ;;(message "[xml-to-num] after ⇒ %s" (prin1-to-string dom-node))
     dom-node))
 
 (defun dm-map--xml-parse ()
@@ -340,14 +341,14 @@ Only consider attributes listed in `dm-map--scale-props'"
 			(insert (mapconcat
 				 'identity
 				 (nreverse dm-map--xml-strings) ""))
-			(message "[tile-xform] XML %s" (buffer-string))
+			;;(message "[tile-xform] XML %s" (buffer-string))
 			(libxml-parse-xml-region (point-min)
 						 (point-max))))))
       (prog1 (plist-put dm-map--last-plist dm-map-overlay-prop
 			(append (plist-get dm-map--last-plist
 					   dm-map-overlay-prop)
 				(list xml-parts)))
-	(message "[tile-xform] XML-nums %s" (prin1-to-string xml-parts))
+	;;(message "[tile-xform] XML-nums %s" (prin1-to-string xml-parts))
 	(setq dm-map--xml-strings nil)))))
 
 (defun dm-map-level-transform (table)
@@ -447,29 +448,29 @@ Only consider attributes listed in `dm-map--scale-props'"
 
 (cl-defun dm-map--dom-attr-nudge (scale pos dom-node)
   "Position DOM-NODE by scaling POS then applying SCALE and adding."
-  (message "[nudge] DOMp:%s scale:%s pos:%s node:%s"
-	   (dm-svg-dom-node-p dom-node) scale pos dom-node)
+  ;; (message "[nudge] DOMp:%s scale:%s pos:%s node:%s"
+  ;; 	   (dm-svg-dom-node-p dom-node) scale pos dom-node)
   (when (dm-svg-dom-node-p dom-node)
-      (when-let ((x-scale (car scale))
-		 (y-scale (if (car-safe (cdr scale))
-			      (cadr scale)
-			    (car scale)))
-		 (x-orig (dom-attr dom-node 'x))
-		 (y-orig (dom-attr dom-node 'y))
-		 (x-new (+ (* x-scale (car pos))
-			   (* x-scale x-orig)))
-		 (y-new (+ (* y-scale (cdr pos))
-			   (* y-scale y-orig))))
-(message "[nudge] x=(%s*%s)+(%s*%s)=%s, y=(%s*%s)+(%s*%s)=%s"
-	 x-scale x-orig x-scale (car pos) x-new
-	 y-scale y-orig y-scale (cdr pos) y-new)
-	(when-let ((font-size (dom-attr dom-node 'font-size)))
-	  (dom-set-attribute dom-node 'font-size (* x-scale font-size)))
-	(dom-set-attribute dom-node 'x x-new)
-	(dom-set-attribute dom-node 'y y-new))
-      dom-node))
+    (when-let ((x-scale (car scale))
+	       (y-scale (if (car-safe (cdr scale))
+			    (cadr scale)
+			  (car scale)))
+	       (x-orig (dom-attr dom-node 'x))
+	       (y-orig (dom-attr dom-node 'y))
+	       (x-new (+ (* x-scale (car pos))
+			 (* x-scale x-orig)))
+	       (y-new (+ (* y-scale (cdr pos))
+			 (* y-scale y-orig))))
+      ;; (message "[nudge] x=(%s*%s)+(%s*%s)=%s, y=(%s*%s)+(%s*%s)=%s"
+      ;; 	       x-scale x-orig x-scale (car pos) x-new
+      ;; 	       y-scale y-orig y-scale (cdr pos) y-new)
+      (when-let ((font-size (dom-attr dom-node 'font-size)))
+	(dom-set-attribute dom-node 'font-size (* x-scale font-size)))
+      (dom-set-attribute dom-node 'x x-new)
+      (dom-set-attribute dom-node 'y y-new))
+    dom-node))
 
-(dm-map--dom-attr-nudge '(1 2)  '(4 . 8) (dom-node 'text '((x . 16)(y . 32))))
+;;(dm-map--dom-attr-nudge '(1 2)  '(4 . 8) (dom-node 'text '((x . 16)(y . 32))))
 
 (defun dm-map-default-scale-function (scale &rest cells)
   "Return CELLS with SCALE applied.
@@ -775,8 +776,7 @@ the stylus to the origin (e.g. M0,0) as it's final instruction.
 
 SCALE-FUNCTION may be used to supply custom scaling."
   (setq dm-map-current-tiles nil)
-  (let* (
-	 (maybe-add-abs
+  (let* ((maybe-add-abs
 	  (lambda (pos paths)
 	    (when paths (append
 			 (list (list 'M (list
@@ -793,11 +793,41 @@ SCALE-FUNCTION may be used to supply custom scaling."
 				 (plist-get cell :cell)
 				 (plist-get cell dm-map-draw-prop)))
 		      draw-code)))
+	 ;; now the rest of the path properties
+	 (paths (mapcar
+		 (lambda(prop)
+		   (apply
+		    'append
+		    (mapcar
+		     (lambda (cell)
+		       (funcall maybe-add-abs
+				(plist-get cell :cell)
+				(plist-get cell prop)))
+		     draw-code)))
+		 dm-map-draw-other-props))
+	 ;; scale the main path
 	 (main-path  (dm-map-path-string
 		      (apply
 		       (apply-partially scale-function (cons scale scale))
 		       main-path)))
-	 ;; only one SVG XML prop for now, relitively position it
+	 ;; scale remaining paths
+	 (paths (mapcar
+		 (lambda(o-path)
+		   (dm-map-path-string
+		    (apply
+		     (apply-partially scale-function (cons scale scale))
+		     o-path)))
+		 paths))
+	 ;; make svg path elements
+	 (paths (delq nil (seq-map-indexed
+			   (lambda(path ix)
+			     (when (org-string-nw-p path)
+			       (dm-svg-create-path path
+						   (plist-get
+						    path-attributes
+						    (nth ix dm-map-draw-other-props)))))
+			   paths)))
+	 ;; hack in a single SVG XML prop, for now scale inline
 	 (nudge-svg (apply-partially 'dm-map--dom-attr-nudge
 				     (list scale scale)))
 	 (overlays (delq
@@ -811,18 +841,18 @@ SCALE-FUNCTION may be used to supply custom scaling."
 				'append
 				(plist-get cell dm-map-overlay-prop))))
 		     draw-code)))
-	 (img (dm-svg :svg (apply 'svg-create
-				  (append (list (car size) (cdr size))
-					  svg-attributes))
+	 (img (dm-svg :svg (append (apply 'svg-create
+					  (append (list (car size)
+							(cdr size))
+						  svg-attributes))
+				   (append paths overlays))
 		      :path-data (dm-svg-create-path
 				  main-path (plist-get path-attributes
-						       dm-map-draw-prop))))
-	 )
+						       dm-map-draw-prop)))))
     ;;(message "[draw] draw-code:%s" (prin1-to-string main-path))
-    (message "[draw] path-props:%s" path-attributes)
-    (message "[draw] XML SVG overlays:%s" (prin1-to-string overlays))
-    (apply (apply-partially 'add-svg-element img) overlays)
-    ;;(defvar dm-dump nil)
+    ;;(message "[draw] path-props:%s" path-attributes)
+    ;;(message "[draw] XML SVG overlays:%s" (prin1-to-string overlays))
+    ;;(message "[draw] other paths:%s" (prin1-to-string paths))
     (setq dm-dump draw-code)
     img))
 	 ;;(main-path
