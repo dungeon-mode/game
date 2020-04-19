@@ -81,6 +81,8 @@
 This setting controls the number of actual screen pixes
 assigned (in both dimensions) while drwaing the map."
   :type 'number)
+(defcustom dm-map-nudge `(,dm-map-scale . ,dm-map-scale)
+  "Top and left padding in pixels as a cons cell (X . Y).")
 
 (defvar dm-map-table-var-alist '((cell dm-map-level)
 				 (tile dm-map-tiles))
@@ -446,8 +448,14 @@ Only consider attributes listed in `dm-map--scale-props'"
 ;;   (dm-map--dom-attr-scale-nth dom-node '(12 23))
 ;;   dom-node)
 
-(cl-defun dm-map--dom-attr-nudge (scale pos dom-node)
-  "Position DOM-NODE by scaling POS then applying SCALE and adding."
+(cl-defun dm-map--dom-attr-nudge (nudge scale pos dom-node)
+  "Position and scale DOM-NODE.
+
+Accept any DOM node, consider only X, Y and font-size properties.
+NUDGE, SCALE and POS are cons cells in the form (X . Y).  NUDGE
+gives the canvas padding in pixes while SCALE gives the number of
+pixels per dungeon unit and POS gives the location of the origin
+of the current cell in dungeon units."
   ;; (message "[nudge] DOMp:%s scale:%s pos:%s node:%s"
   ;; 	   (dm-svg-dom-node-p dom-node) scale pos dom-node)
   (when (dm-svg-dom-node-p dom-node)
@@ -457,9 +465,11 @@ Only consider attributes listed in `dm-map--scale-props'"
 			  (car scale)))
 	       (x-orig (dom-attr dom-node 'x))
 	       (y-orig (dom-attr dom-node 'y))
-	       (x-new (+ (* x-scale (car pos))
+	       (x-new (+ (car nudge)
+			 (* x-scale (car pos))
 			 (* x-scale x-orig)))
-	       (y-new (+ (* y-scale (cdr pos))
+	       (y-new (+ (cdr nudge)
+			 (* y-scale (cdr pos))
 			 (* y-scale y-orig))))
       ;; (message "[nudge] x=(%s*%s)+(%s*%s)=%s, y=(%s*%s)+(%s*%s)=%s"
       ;; 	       x-scale x-orig x-scale (car pos) x-new
@@ -746,6 +756,7 @@ absolute movement to cell's origin as the first instruction."
 			     (path-attributes dm-map-draw-attributes)
 			     (scale dm-map-scale)
 			     (scale-function #'dm-map-default-scale-function)
+			     (nudge dm-map-nudge)
 			     (tiles dm-map-tiles)
 			     (level dm-map-level)
 			     (size (cons (* scale (car dm-map-level-size))
@@ -780,8 +791,8 @@ SCALE-FUNCTION may be used to supply custom scaling."
 	  (lambda (pos paths)
 	    (when paths (append
 			 (list (list 'M (list
-					 (* scale (car pos))
-					 (* scale (cdr pos)))))
+					 (+ (car nudge) (* scale (car pos)))
+					 (+ (cdr nudge) (* scale (cdr pos))))))
 				paths))))
 	 (draw-code (delq nil (mapcar 'dm-map-cell cells)))
 	  ;; handle main path seperately
@@ -835,6 +846,7 @@ SCALE-FUNCTION may be used to supply custom scaling."
 		    (mapcan
 		     (lambda (cell)
 		       (mapcar (apply-partially 'dm-map--dom-attr-nudge
+						nudge
 						(list scale scale)
 						(plist-get cell :cell))
 			       (apply
@@ -855,107 +867,6 @@ SCALE-FUNCTION may be used to supply custom scaling."
     ;;(message "[draw] other paths:%s" (prin1-to-string paths))
     (setq dm-dump draw-code)
     img))
-	 ;;(main-path
-	 ;; (dm-map--cell-paths cells draw-code dm-map-draw-prop scale))
-
-
-                     ;; (apply 'dm-map-to-string
-		     ;; 	   (apply (apply-partially scale-function
-		     ;; 				   (cons scale scale))
-		     ;; 		  (apply 'append (delq nil draw-code))))
-
-	 ;;(overlays (apply (apply-partially scale-function (cons scale scale)) overlays))
-
-    ;;(apply (apply-partially 'add-svg-element img) overlays)
-
-
-	 ;; (ostr
-	 ;;  (apply 'dm-map-to-string
-	 ;; 	 (apply (apply-partially scale-function (cons scale scale))
-	 ;; 		(delq nil overlays))))
-    ;;(message "[draw] svg:%s" (prin1-to-string overlays))
-
-	 ;; (tiles
-	 ;;  (mapcar (lambda(x)
-	 ;; 	     (funcall
-	 ;; 	      maybe-add-abs x
-	 ;; 	      (delq nil (dm-map-resolve-cell x t :prop dm-map-draw-prop))))
-	 ;; 	   cells))
-	 ;; (def-tiles
-	 ;;   (mapcar (lambda(x)
-	 ;; 	     (funcall
-	 ;; 	      maybe-add-abs x
-	 ;; 	      (delq nil (dm-map-resolve x :prop dm-map-draw-prop))))
-	 ;; 	   dm-map-extra-tiles))
-	 ;; (pstr (apply 'dm-map-to-string
-	 ;; 	      (apply (apply-partially scale-function
-	 ;; 				      (cons scale scale))
-	 ;; 		     (apply 'append (delq nil (append tiles def-tiles))))))
-	 ;; (overlays
-	 ;;  (mapcar (lambda (tile)
-	 ;; 	    (plist-get (gethash tile dm-map-tiles) dm-map-overlay-prop))
-	 ;; 	  dm-map-current-tiles))
-	 ;;;;;;;;;
-	 ;; (delq nil
-	  ;; 	(mapcar
-	  ;; 	 (lambda (cell)
-	  ;; 	   (apply (apply-partially scale-function (cons scale scale))
-	  ;; 		  (delq nil (dm-map-resolve-cell
-	  ;; 			     cell t :prop dm-map-overlay-prop
-	  ;; 			     :inhibit-collection t
-	  ;; 			     :inhibit-tags t))))
-	  ;; dm-map-current-tiles))
-	  ;; (delq nil (seq-map (lambda (tile)
-	  ;; 		       (dm-map-resolve tile
-	  ;; 				       :prop dm-map-overlay-prop
-	  ;; 				       :inhibit-collection t
-	  ;; 				       :inhibit-tags t))
-	  ;; 		     dm-map-current-tiles)))
-	 ;; (overlays
-	 ;;  (mapcar
-	 ;;   (lambda (cell)
-	 ;;     (dm-map--dom-attr-nudge cell scale))
-	 ;;   overlays))
-
-
-;; (append
-;; 		   (mapcar (lambda(x)
-;; 			     (dm-map-resolve x :prop dm-map-overlay-prop))
-;; 			   dm-map-extra-tiles)
-;; 		   (mapcar (lambda(x)
-;; 			     (dm-map-resolve-cell x :prop dm-map-overlay-prop))
-;; 			   cells))
-
-;; (let* ((img (dm-svg :svg (apply 'svg-create
-  ;; 				  (append (list (car size) (cdr size))
-  ;; 					  svg-attributes))))
-  ;; 	 (fun (apply-partially 'dm-map--positioned-cell
-  ;; 			       scale dm-map-draw-prop))
-  ;; 	 (seq (mapcar fun cells))
-  ;; 	 (scaled (apply (apply-partially scale-function (cons scale scale))
-  ;; 			seq))
-  ;; 	 (flat (dm--flatten scaled))
-  ;; 	 (pstr (apply 'concat
-  ;; 		      (mapcar (apply-partially 'format "%s ") flat))))
-  ;;   ;;(message "[draw] path:%s" pstr)
-  ;;   (add-path-data img pstr)
-  ;;   img)
-
-;; => drop in some SVG path code for testing
-;; (let* ((svg (svg-create 800 800 :stroke-color 'green :stroke-width 10))
-;;        (path '(path (""))
-;;       (pelm  (dm-svg-create-path path)))
-;;   ;;(svg-circle svg 200 200 100 :stroke-color 'red)
-;;   (dom-append-child svg pelm)
-;;   (dm-map-draw-test svg (put-image (svg-image svg) (point-max))))
-
-;; => basic test of quick-draw but manually add an SVG element
-;; (let ((svg (dm-map-quick-draw)))
-;;   (dm-map-draw-test svg
-;;     (add-svg-element svg (dom-node 'circle '((cx . 200) (cy . 200)
-;; 					     (r . 100) (stroke . red)
-;; 					     (stroke-width . 10))))
-;;     (render-and-insert svg)))
 
 
 
