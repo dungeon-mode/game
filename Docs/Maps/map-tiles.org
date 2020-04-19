@@ -132,7 +132,7 @@ These features are intended to be used mostly as parts of compositions and rarel
 | ◑WO:elf:!seen(west 1)   | ◦W                                                                          |                                       |
 | ◑WO:elf:seen(west 1)    | v.43 a.07,.07,0,0,1,0,.14 m0,-.14 v.57 ←                                    |                                       |
 |                         |                                                                             |                                       |
-| ◤                       | → l1,-1 ↑                                                                   | Half square NW/SE                     |
+| ◤                       | → l-1,1 ↑                                                                   | Half square NW/SE                     |
 | ◥                       | l1,1 ↖                                                                      | Half square NE/SW                     |
 |                         |                                                                             |                                       |
 | ◦◤                      |                                                                             | Half square NW/SE                     |
@@ -414,6 +414,7 @@ These features are intended to be used mostly as parts of compositions and rarel
 | ClapEW     | ‡W ‡N → ‡N → ‡N ‡E ↓ ↓ ‡E ‡S ← ‡S ← ‡S ‡W ↑ ↑                    | The Clappers oriented East-West   | <path stroke="black" stroke-width="3" fill="none"                     |
 |            |                                                                  |                                   | d="m150,0 v30 h130 h-260 m130,270 v-30 h130 h-260" />                 |
 |            |                                                                  |                                   |                                                                       |
+
 
 ** Level Change Tiles
    :PROPERTIES:
