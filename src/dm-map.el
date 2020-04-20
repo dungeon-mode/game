@@ -71,25 +71,38 @@
 
 (defgroup dm-map nil
   "Settings for game maps." :group 'dungeon-mode)
+
 (defcustom dm-map-files '()
   "List of files from which load game maps." :type (list 'symbol))
+
 (defcustom dm-map-property "ETL"
   "Property to insepect when finding tables." :type 'string)
+
 (defcustom dm-map-scale 100
   "Number of pixes per \"Dungeon Unit\" when mapping.
 
 This setting controls the number of actual screen pixes
 assigned (in both dimensions) while drwaing the map."
   :type 'number)
+
 (defcustom dm-map-nudge `(,dm-map-scale . ,dm-map-scale)
-  "Top and left padding in pixels as a cons cell (X . Y).")
+  "Top and left padding in pixels as a cons cell (X . Y)."
+  :type 'cons)
+
+(defcustom dm-map-background t
+  "List of SVG `dom-node's or t for dynamic background.
+
+Set to nil to suppress adding any background elements."
+  :type 'list)
 
 (defvar dm-map-table-var-alist '((cell dm-map-level)
 				 (tile dm-map-tiles))
   "Alist mapping table types to variables storing an hash-table for each.")
 
 (defvar dm-map-level nil "Hash-table; draw code for game map levels.")
+
 (defvar dm-map-level-cols '(x y path) "List of colums from feature tables.")
+
 (defvar dm-map-level-key '(cons (string-to-number x) (string-to-number y))
   "Expression to create new keys in `dm-map-tiless'.")
 
@@ -528,24 +541,10 @@ between 0 and 1 inclusive."
      (_ (message "unhandled %s => %s" (type-of cell) (prin1-to-string cell t)))
      )))
 
-;;      (cond
-;;       ;; ((dm-svg-dom-node-p cell 'text)
-;;       ;;  ;;(message "[scale] text:%s" cell)
-;;       ;;  ;;(dm-map--dom-attr-scale-nth cell scale)
-;;       ;;  (mapcar
-;;       ;; 	(lambda(dom-node)
-;;       ;; 	  (dm-map--dom-attr-nudge dom-node (list (car scale) (cdr scale))))
-;;       ;; 	cell))
-;;       ((consp cell) ;;(message "consp!%s" cell)
-;; )
-
-
 ;;(dm-map-default-scale-function '(100 . 1000) (dom-node 'text '((font-size . .5)(x . .2))) '(h (.1)) '(v (.2))'(m (.3 .4)) '(l (.5 .6)) '(x (.7 .8)) '(a (0.05 0.05 0 1 1 -0.1 0.1)))
-
 ;;(dm-map-default-scale-function '(100 . 100) '(text ((x . .5) (y . 2.25) (font-size . .6) (fill . "blue")) "General Store"))
 ;; (dm-map-default-scale-function '(100 . 1000) (dom-node 'text '((font-size . .5)(x . .2))))
 ;; (dm-map-default-scale-function '(100 100) (dom-node 'text '((font-size . .5))))
-
 ;; (a (.7 .7 0 1 1 0 .14))
 ;; (a (0.05 0.05 0 1 1 -0.1 0.1))
 
@@ -625,32 +624,6 @@ INHIBIT-TAGS is truthy do not add addional tiles based on tags."
 	    paths)))
 
 
-;; https://stackoverflow.com/questions/969067/\
-;;   name-of-this-function-in-built-in-emacs-lisp-library
-;; Andrea Fedeli's answer:
-(defun dm--flatten(x)
-  "Return X as a single list colapsing depth."
-  (cond ((null x) nil)
-	((listp x)
-	 (append (dm--flatten (car x))
-		 (when (cdr-safe x)
-		   (dm--flatten (cdr x)))))
-	(t (list x))))
-
-;;(dm--flatten (list "hi" '(m (0 0)) (dom-node 'text '((x . 10)) "content")))
-;;(dm--to-string (dm--flatten (list "hi" '(m (0 0)) (dom-node 'text '((x . 10)) "content"))))
-;;(defun dm--flatten-NEW (obj) "Return OBJ as a single list copying list members recurisvely."  (if obj (if (not (listp obj)) nil (dm--flatten)) nil))
-
-
-(defun dm--to-string (obj)
-  "Return the string representation of OBJ."
-  (when obj
-    (cond ((stringp obj) obj)
-	  ((symbolp obj) (symbol-name obj))
-	  ((listp obj) (concat (dm--to-string (car obj))
-			       (dm--to-string (cdr-safe obj))))
-	  (t (prin1-to-string obj)))))
-
 ;; (dm--to-string '("hi" m 0 0 text x 10 "content"))
 ;; (dm--to-string (list "hi" '(m (0 0)) (dom-node 'text '((x . 10)) "content")))
 
@@ -676,21 +649,6 @@ property containing draw instructions."
 (defun dm-map--flatten-paths (paths)
   "Return PATHS as a flatter list removing nil entries."
   (apply 'append (delq nil paths)))
-
-;; (defun dm-map--cell (tile prop &optional inhibit-tags)
-;;   "Get draw code for PROP of TILE.
-;; When INHIBIT-TAGS is t don't add draw code tagged to TILE."
-;;   (when-let* ((plist (gethash tile dm-map-tiles))
-;; 	      (paths (delq nil (append
-;; 				(plist-get plist prop)
-;; 				(unless inhibit-tags
-;; 				  (dm-map-tile-tag-maybe-invert tile))))))
-;;     (mapcan (lambda (stroke)
-;; 	      (let ((stroke stroke))
-;; 		(if (symbolp stroke) (dm-map--cell stroke prop inhibit-tags)
-;; 		  (list (if (listp stroke) (copy-sequence stroke) stroke)))))
-;; 	    paths)))
-
 
 ;; TODO overlay, etc are for tiles only; add support from map-cells
 (defun dm-map-cell (cell &optional follow)
@@ -865,8 +823,39 @@ SCALE-FUNCTION may be used to supply custom scaling."
     ;;(message "[draw] path-props:%s" path-attributes)
     ;;(message "[draw] XML SVG overlays:%s" (prin1-to-string overlays))
     ;;(message "[draw] other paths:%s" (prin1-to-string paths))
-    (setq dm-dump draw-code)
+    ;;(when (boundp 'dm-dump) (setq dm-dump draw-code))
     img))
+
+(cl-defun dm-map-background (&optional
+			     &key
+			     (scale dm-map-scale)
+			     (size dm-map-level-size)
+			     (nudge dm-map-nudge))
+  "Docstring with SCALE and SIZE and NUDGE."
+  (let ((x-last (* (car size) (car scale)))
+	(y-last (* (cdr size) (cdr scale))))
+    (append
+     (svg-rectangle 0 0 (+ x-step (car nudge))
+		    :stroe-width 0
+		    :stroke-color "#fffdd0")
+     (mapcar
+      (lambda (path-str)
+	(dm-svg-create-path
+	 path-str
+	 '((stroke-width . ".002")
+	   (fill . "none")
+	   (stroke . "blue"))))
+      (list
+       (cl-loop for x
+		from 1
+		to x-last
+		by (car scale)
+		collect (format "M%n,%n H%n" x 0 y-last))
+       (cl-loop for y
+		from 1
+		to y-last
+		by (cdr scale)
+		collect (format "M%n,%n V%n" 0 y y-last)))))))
 
 
 
