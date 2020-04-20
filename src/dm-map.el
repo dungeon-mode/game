@@ -623,17 +623,6 @@ INHIBIT-TAGS is truthy do not add addional tiles based on tags."
 		))
 	    paths)))
 
-
-;; (dm--to-string '("hi" m 0 0 text x 10 "content"))
-;; (dm--to-string (list "hi" '(m (0 0)) (dom-node 'text '((x . 10)) "content")))
-
-(defmacro dm-map-to-string (cells)
-  "Return CELLS as a single string."
-  `(dm--to-string (dm--flatten ,cells)))
-
-(dm-map-to-string (list "hi" '(m (0 0)) (dom-node 'text '((x . 10)) "content")))
-
-
 (defun dm-map--positioned-cell (scale prop cell)
   "Return paths preceded with origin move for CELL.
 
