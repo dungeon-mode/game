@@ -219,14 +219,14 @@ TODO: this can be greatly simplified. macro/inline/remove?"
 (defun dm-map-tile-tag-maybe-invert (tile)
   "Return tags for TILE.
 
-Select amung normal and inverted paths based on `dm-map-tags'."
+Select each amung normal and inverted based on `dm-map-tags'."
   (delq nil (mapcan
 	     (lambda (tag)
 	       (list (if (or (eq t dm-map-tags)
 			     (member (car tag) dm-map-tags))
 			 (and (< 1 (length tag)) (nth 1 tag))
 		       (and (< 2 (length tag)) (nth 2 tag)))))
-	     (plist-get (gethash tile dm-map-tiles) dm-map-tag-prop ))))
+	     (plist-get (gethash tile dm-map-tiles) dm-map-tag-prop))))
 ;;(equal '((◦N:elf) (◦N:elf) (◦N:!elf)) (mapcar (lambda (ts) (let ((dm-map-tags ts)) (dm-map-tile-tag-maybe-invert '◦N))) '(t (:elf) nil)))
 
 (defsubst dm-map-header-to-cols (first-row)
@@ -253,8 +253,7 @@ Select amung normal and inverted paths based on `dm-map-tags'."
 
 CELL is an hash-table key, TABLE is an hash-table (default:
 `dm-map-level'), PROP is a property (default: \"path\")."
-  (if (and (hash-table-p table) (gethash cell table))
-      (plist-get (gethash cell table) prop))
+  (if (hash-table-p table) (plist-get (gethash cell table) prop))
   nil)
 
 (defsubst dm-map-parse-plan-part (word)
@@ -333,7 +332,7 @@ Kick off a new batch for each \"feature\" or \"level\" table found."
   "Return DOM-NODE with attributes parsed as numbers.
 
 Only consider attributes listed in `dm-map--scale-props'"
-  (message "[xml-to-num] arg:%s" dom-node)
+  ;;(message "[xml-to-num] arg:%s" dom-node)
   (when (dm-svg-dom-node-p dom-node)
     ;;(message "[xml-to-num] dom-node:%s" (prin1-to-string dom-node))
     (dolist (attr (mapcar 'car dm-map--scale-props) dom-node)
@@ -363,7 +362,9 @@ Only consider attributes listed in `dm-map--scale-props'"
 			(append (plist-get dm-map--last-plist
 					   dm-map-overlay-prop)
 				(list xml-parts)))
-	;;(message "[tile-xform] XML-nums %s" (prin1-to-string xml-parts))
+	(message "[tile-xform] XML:%s last-plist:%s"
+		 (prin1-to-string xml-parts)
+		 (prin1-to-string dm-map--last-plist))
 	(setq dm-map--xml-strings nil)))))
 
 (defun dm-map-level-transform (table)
@@ -398,10 +399,11 @@ Only consider attributes listed in `dm-map--scale-props'"
 
 		 (setq last-key (intern tile)
 		       dm-map--last-plist (dm-map-table-cell tile :table hash))
+		 (message "[tile-xform] key:%s plist:%s" last-key dm-map--last-plist)
 		 (when (string-match dm-map-tile-tag-re tile)
 		   ;; Tile name contains a tag i.e. "some-tile:some-tag".
-		   ;; Ingore inverted tags ("some-time:!some-tag"). Add others
-		   ;; in last-past as alist of: (KEYWORD TAG-SYM INV-TAG-SYM)
+		   ;; Ingore inverted tags ("some-tile:!some-tag"). Add others
+		   ;; in last-plist as alist of: (KEYWORD TAG-SYM INV-TAG-SYM)
 		   (when-let* ((ref (match-string 1 tile))
 			       (kw (match-string 2 tile))
 			       (tag (intern kw))
@@ -660,6 +662,7 @@ instructions."
       (when-let ((val (seq-map
 		       (lambda (tile)
 			 (dm-map-resolve tile :prop prop
+					 ;; FIXME: commenting crashes render
 					 :inhibit-tags t
 					 :inhibit-collection t))
 		       dm-map-current-tiles)))
@@ -704,6 +707,7 @@ absolute movement to cell's origin as the first instruction."
 			     (scale dm-map-scale)
 			     (scale-function #'dm-map-default-scale-function)
 			     (nudge dm-map-nudge)
+			     (background dm-map-background)
 			     (tiles dm-map-tiles)
 			     (level dm-map-level)
 			     (size (cons (* scale (car dm-map-level-size))
@@ -788,6 +792,13 @@ SCALE-FUNCTION may be used to supply custom scaling."
 	 ;; hack in a single SVG XML prop, for now scale inline
 	 (nudge-svg (apply-partially 'dm-map--dom-attr-nudge
 				     (list scale scale)))
+	 ;; fetch or build background if not disabled
+	 (background
+	  (cond ((equal background t)
+		 (list
+		  (dm-map-background :scale (cons scale scale)
+				     :size size :nudge nudge)))
+		(background)))
 	 (overlays (delq
 		    nil
 		    (mapcan
@@ -804,7 +815,7 @@ SCALE-FUNCTION may be used to supply custom scaling."
 					  (append (list (car size)
 							(cdr size))
 						  svg-attributes))
-				   (append paths overlays))
+				   (append background paths overlays))
 		      :path-data (dm-svg-create-path
 				  main-path (plist-get path-attributes
 						       dm-map-draw-prop)))))
@@ -812,39 +823,77 @@ SCALE-FUNCTION may be used to supply custom scaling."
     ;;(message "[draw] path-props:%s" path-attributes)
     ;;(message "[draw] XML SVG overlays:%s" (prin1-to-string overlays))
     ;;(message "[draw] other paths:%s" (prin1-to-string paths))
+    (message "[draw] background:%s" (prin1-to-string background))
     ;;(when (boundp 'dm-dump) (setq dm-dump draw-code))
     img))
 
 (cl-defun dm-map-background (&optional
 			     &key
-			     (scale dm-map-scale)
-			     (size dm-map-level-size)
-			     (nudge dm-map-nudge))
-  "Docstring with SCALE and SIZE and NUDGE."
-  (let ((x-last (* (car size) (car scale)))
-	(y-last (* (cdr size) (cdr scale))))
-    (append
-     (svg-rectangle 0 0 (+ x-step (car nudge))
-		    :stroe-width 0
-		    :stroke-color "#fffdd0")
-     (mapcar
-      (lambda (path-str)
-	(dm-svg-create-path
-	 path-str
-	 '((stroke-width . ".002")
-	   (fill . "none")
-	   (stroke . "blue"))))
-      (list
-       (cl-loop for x
-		from 1
-		to x-last
-		by (car scale)
-		collect (format "M%n,%n H%n" x 0 y-last))
-       (cl-loop for y
-		from 1
-		to y-last
-		by (cdr scale)
-		collect (format "M%n,%n V%n" 0 y y-last)))))))
+			     (scale (cons dm-map-scale dm-map-scale))
+			     (size (cons (* (car scale) (car dm-map-level-size))
+					 (* (cdr scale) (cdr dm-map-level-size))))
+			     (nudge dm-map-nudge)
+			     (svg (svg-create (+ (* 2 (car nudge)) (car size))
+					      (+ (* 2 (cdr nudge)) (cdr size))))
+			     no-canvas
+			     (canvas (unless no-canvas
+				       (svg-rectangle `(,svg '(())) 0 0
+						      (+ (* 2 (car nudge)) (car size))
+						      (+ (* 2 (cdr nudge)) (cdr size))
+						      :fill "#fffdd0"
+						      :stroke-width  0)))
+			     no-graph
+			     (graph-attr '((fill . "none")
+					   (stroke . "blue")
+					   (stroke-width . ".25"))))
+  "Create a background SVG with SCALE and SIZE and NUDGE."
+  (message "[background] scale:%s size:%s nudge:%s rect:%s"
+	   scale size nudge svg)
+  ;;(append)
+  ;;(mapcar (lambda (path) (dm-svg-create-path path graph-attr)))
+  (prog1 svg
+    (unless no-graph
+      (dom-append-child
+       svg
+       (dm-svg-create-path
+	(mapconcat
+	 'identity
+	 (append
+	  (mapcar*
+	   ;;'identity
+	   (apply-partially 'format "M0,%d h%d")
+	   (number-sequence (cdr nudge) (car size) (car scale))
+	   (make-list (floor (/ (car size) (car scale))) (cdr size)))
+	  (mapcar*
+	   ;;'identity
+	   (apply-partially 'format "M%d,0 v%d")
+	   (number-sequence (car nudge) (cdr size) (cdr scale))
+	   (make-list (floor (/ (cdr size) (cdr scale))) (car size))))
+	 " ")
+	graph-attr)))))
+
+;; (let ((x-scale (car scale))
+;; 	(y-scale (cdr scale))
+;; 	(x-size (car size))
+;; 	(y-size (cdr size)))
+;;     (mapcar
+;;      (lambda (path-str)
+;;        (dm-svg-create-path
+;; 	path-str
+;; 	'((stroke-width . ".002")
+;; 	  (fill . "none")
+;; 	  (stroke . "blue"))))
+;;      (list
+;;       (mapconcat
+;;        'identity
+;;        (cl-loop for x from x-scale to x-size by xscale
+;; 		collect (format "M%d,%d H%d" x 0 y-size))
+;;        " ")
+;;       (mapconcat
+;;        'identity
+;;        (cl-loop for y from y-scale to x-size by y-scale
+;; 		collect (format "M%d,%d V%d" 0 y y-size))
+;;        " "))))
 
 
 
@@ -853,7 +902,9 @@ SCALE-FUNCTION may be used to supply custom scaling."
   (interactive "P")
   (when arg (if dm-map-files (dm-map-load)
 	      (user-error "Draw failed.  No files in `dm-map-files'")))
-  (let ((svg (dm-map-quick-draw ;;'((9 . 5)) ;; (9 . 9) (10 . 11) (10 . 12) (9 . 11)
+  (let ((svg (dm-map-quick-draw
+	      ;;'((17 17))
+	      ;;'((9 . 5)) ;; (9 . 9) (10 . 11) (10 . 12) (9 . 11)
 	      )))
     (dm-map-draw-test svg ;; (oref svg path-data)
       (render-and-insert svg))))
