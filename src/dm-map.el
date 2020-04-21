@@ -137,14 +137,34 @@ See also: `dm-map-draw-other-props'")
 Tags (e.g. \":elf\") allow conditional inclusion of draw code.")
 
 (defvar dm-map-draw-attributes-default '((fill . "none")
-					 (stroke . "green")
+					 (stroke . " #4f4c4c")
 					 (stroke-width . "1"))
   "Default attributes for the main SVG path used for corridor, etc.")
 
-(defvar dm-map-draw-attributes  `(,dm-map-draw-prop
-				  ,dm-map-draw-attributes-default
-				  ,@(mapcan (lambda (x) (list x nil))
-					    dm-map-draw-other-props))
+(defvar dm-map-draw-other-attributes-default
+  '((water ((fill . "blue")
+	    (stroke . "none")
+	    (stroke-width . "1")))
+    (beach ((fill . "yellow")
+	    (stroke . "none")
+	    (stroke-width . "1")))
+    (stairs ((fill . "#FF69B4")
+	     (stroke . "none")
+	     (stroke-width . "1")))
+    (neutronium ((fill . "orange")
+		 (stroke . "#171713")
+		 (stroke-width . "1")))
+    (decorations ((fill . "none")
+		  (stroke . "#3c0545")
+		  (stroke-width . "1"))))
+  "Default attributes for other SVG paths used, stairs, water, etc.")
+
+(defvar dm-map-draw-attributes
+  `(,dm-map-draw-prop
+    ,dm-map-draw-attributes-default
+    ,@(mapcan (lambda (x)
+		(assoc x dm-map-draw-other-attributes-default))
+	      dm-map-draw-other-props))
   "Default attributes for SVG path elements, as a plist.")
 
 (defvar dm-map-cell-defaults `(,dm-map-draw-prop nil
@@ -242,7 +262,7 @@ Select each amung normal and inverted based on `dm-map-tags'."
 				(defaults (dm-map-cell-defaults)))
   "Return value for CELL from TABLE or a default."
   (if (and cell table)
-      (gethash cell table defaults)
+      (gethash (if (symbolp cell) cell (intern cell)) table defaults)
     defaults))
 
 (cl-defsubst dm-map-path (cell
@@ -290,7 +310,7 @@ TILE is an hash-table key, PROP is a property (default: \"path\"."
 (defmacro dm-map-draw-test (svg &rest body)
   "Open (erase) buffer evaluate BODY and dump SVG."
   (declare (indent 1))
-  `(with-current-buffer (pop-to-buffer "**dm-map**")
+  `(with-current-buffer (pop-to-buffer "**dungeon map**")
      (dm-map-mode)
      (erase-buffer)
      (goto-char (point-min))
@@ -392,6 +412,7 @@ Only consider attributes listed in `dm-map--scale-props'"
 	     :hash-symbol hash
 	     :key-symbol last-key
 	     (progn
+;;;(message "[tile-xform] tile:%s key:%s plist:%s" (when (boundp 'tile) tile) last-key dm-map--last-plist)
 	       (when (and (boundp 'tile) (org-string-nw-p tile))
 		 ;; This row includes a new tile-name; process any saved up
 		 ;; XML strings before we overwrite last-key
@@ -399,7 +420,7 @@ Only consider attributes listed in `dm-map--scale-props'"
 
 		 (setq last-key (intern tile)
 		       dm-map--last-plist (dm-map-table-cell tile :table hash))
-		 (message "[tile-xform] key:%s plist:%s" last-key dm-map--last-plist)
+;;;(message "[tile-xform] tile:%s key:%s plist:%s" tile last-key dm-map--last-plist)
 		 (when (string-match dm-map-tile-tag-re tile)
 		   ;; Tile name contains a tag i.e. "some-tile:some-tag".
 		   ;; Ingore inverted tags ("some-tile:!some-tag"). Add others
@@ -744,7 +765,7 @@ SCALE-FUNCTION may be used to supply custom scaling."
 			 (list (list 'M (list
 					 (+ (car nudge) (* scale (car pos)))
 					 (+ (cdr nudge) (* scale (cdr pos))))))
-				paths))))
+			 paths))))
 	 (draw-code (delq nil (mapcar 'dm-map-cell cells)))
 	  ;; handle main path seperately
 	 (main-path (apply
@@ -758,28 +779,34 @@ SCALE-FUNCTION may be used to supply custom scaling."
 	 ;; now the rest of the path properties
 	 (paths (mapcar
 		 (lambda(prop)
-		   (apply
-		    'append
-		    (mapcar
-		     (lambda (cell)
-		       (funcall maybe-add-abs
-				(plist-get cell :cell)
-				(plist-get cell prop)))
-		     draw-code)))
+		   (mapcan
+		    (lambda (cell)
+		      (when-let ((strokes (plist-get cell prop))
+				 (pos (plist-get cell :cell)))
+			(append
+			 (list
+			  (list 'M (list
+				    (+ (car nudge) (* scale (car pos)))
+				    (+ (cdr nudge) (* scale (cdr pos))))))
+			 (apply 'append strokes))))
+		    draw-code))
 		 dm-map-draw-other-props))
 	 ;; scale the main path
-	 (main-path  (dm-map-path-string
-		      (apply
-		       (apply-partially scale-function (cons scale scale))
-		       main-path)))
+	 (main-path (progn
+		      (message "path:%s water:%s" main-path paths)
+		      (dm-map-path-string
+		       (apply
+			(apply-partially scale-function (cons scale scale))
+			main-path))))
 	 ;; scale remaining paths
-	 (paths (mapcar
-		 (lambda(o-path)
-		   (dm-map-path-string
-		    (apply
-		     (apply-partially scale-function (cons scale scale))
-		     o-path)))
-		 paths))
+	 (paths
+	  (mapcar
+	   (lambda(o-path)
+	     (dm-map-path-string
+	      (apply
+	       (apply-partially scale-function (cons scale scale))
+	       o-path)))
+	   paths))
 	 ;; make svg path elements
 	 (paths (delq nil (seq-map-indexed
 			   (lambda(path ix)
@@ -799,31 +826,29 @@ SCALE-FUNCTION may be used to supply custom scaling."
 		  (dm-map-background :scale (cons scale scale)
 				     :size size :nudge nudge)))
 		(background)))
-	 (overlays (delq
-		    nil
-		    (mapcan
-		     (lambda (cell)
-		       (mapcar (apply-partially 'dm-map--dom-attr-nudge
-						nudge
-						(list scale scale)
-						(plist-get cell :cell))
-			       (apply
-				'append
-				(plist-get cell dm-map-overlay-prop))))
-		     draw-code)))
+	 (overlays (mapcan
+		    (lambda (cell)
+		      (mapcar (apply-partially 'dm-map--dom-attr-nudge
+					       nudge
+					       (list scale scale)
+					       (plist-get cell :cell))
+			      (apply
+			       'append
+			       (plist-get cell dm-map-overlay-prop))))
+		    draw-code))
 	 (img (dm-svg :svg (append (apply 'svg-create
-					  (append (list (car size)
-							(cdr size))
+					  (append (list (+ (* 2 (car nudge)) (car size))
+							(+ (* 2 (cdr nudge)) (cdr size)))
 						  svg-attributes))
 				   (append background paths overlays))
 		      :path-data (dm-svg-create-path
 				  main-path (plist-get path-attributes
 						       dm-map-draw-prop)))))
-    ;;(message "[draw] draw-code:%s" (prin1-to-string main-path))
+    (message "[draw] draw-code:%s" (prin1-to-string main-path))
     ;;(message "[draw] path-props:%s" path-attributes)
     ;;(message "[draw] XML SVG overlays:%s" (prin1-to-string overlays))
-    ;;(message "[draw] other paths:%s" (prin1-to-string paths))
-    (message "[draw] background:%s" (prin1-to-string background))
+    (message "[draw] other paths:%s" (prin1-to-string paths))
+    ;;(message "[draw] background:%s" (prin1-to-string background))
     ;;(when (boundp 'dm-dump) (setq dm-dump draw-code))
     img))
 
@@ -833,13 +858,13 @@ SCALE-FUNCTION may be used to supply custom scaling."
 			     (size (cons (* (car scale) (car dm-map-level-size))
 					 (* (cdr scale) (cdr dm-map-level-size))))
 			     (nudge dm-map-nudge)
-			     (svg (svg-create (+ (* 2 (car nudge)) (car size))
-					      (+ (* 2 (cdr nudge)) (cdr size))))
+			     (v-rule-len (+ (car size) (* 2 (car nudge))))
+			     (h-rule-len (+ (cdr size) (* 2 (cdr nudge))))
+			     (svg (svg-create v-rule-len v-rule-len))
 			     no-canvas
 			     (canvas (unless no-canvas
-				       (svg-rectangle `(,svg '(())) 0 0
-						      (+ (* 2 (car nudge)) (car size))
-						      (+ (* 2 (cdr nudge)) (cdr size))
+				       (svg-rectangle `(,svg '(()))
+						      0 0 v-rule-len h-rule-len
 						      :fill "#fffdd0"
 						      :stroke-width  0)))
 			     no-graph
@@ -847,10 +872,7 @@ SCALE-FUNCTION may be used to supply custom scaling."
 					   (stroke . "blue")
 					   (stroke-width . ".25"))))
   "Create a background SVG with SCALE and SIZE and NUDGE."
-  (message "[background] scale:%s size:%s nudge:%s rect:%s"
-	   scale size nudge svg)
-  ;;(append)
-  ;;(mapcar (lambda (path) (dm-svg-create-path path graph-attr)))
+  ;;(message "[background] scale:%s size:%s nudge:%s rect:%s" scale size nudge svg)
   (prog1 svg
     (unless no-graph
       (dom-append-child
@@ -860,40 +882,19 @@ SCALE-FUNCTION may be used to supply custom scaling."
 	 'identity
 	 (append
 	  (mapcar*
-	   ;;'identity
 	   (apply-partially 'format "M0,%d h%d")
-	   (number-sequence (cdr nudge) (car size) (car scale))
-	   (make-list (floor (/ (car size) (car scale))) (cdr size)))
+	   (number-sequence (cdr nudge)
+			    (+ (car size) (cdr nudge))
+			    (car scale))
+	   (make-list (1+ (ceiling (/ (car size) (car scale)))) v-rule-len))
 	  (mapcar*
-	   ;;'identity
 	   (apply-partially 'format "M%d,0 v%d")
-	   (number-sequence (car nudge) (cdr size) (cdr scale))
-	   (make-list (floor (/ (cdr size) (cdr scale))) (car size))))
+	   (number-sequence (car nudge)
+			    (+ (car size) (car nudge))
+			    (cdr scale))
+	   (make-list (1+ (ceiling (/ (cdr size) (cdr scale)))) h-rule-len)))
 	 " ")
 	graph-attr)))))
-
-;; (let ((x-scale (car scale))
-;; 	(y-scale (cdr scale))
-;; 	(x-size (car size))
-;; 	(y-size (cdr size)))
-;;     (mapcar
-;;      (lambda (path-str)
-;;        (dm-svg-create-path
-;; 	path-str
-;; 	'((stroke-width . ".002")
-;; 	  (fill . "none")
-;; 	  (stroke . "blue"))))
-;;      (list
-;;       (mapconcat
-;;        'identity
-;;        (cl-loop for x from x-scale to x-size by xscale
-;; 		collect (format "M%d,%d H%d" x 0 y-size))
-;;        " ")
-;;       (mapconcat
-;;        'identity
-;;        (cl-loop for y from y-scale to x-size by y-scale
-;; 		collect (format "M%d,%d V%d" 0 y y-size))
-;;        " "))))
 
 
 

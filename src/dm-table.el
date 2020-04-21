@@ -100,12 +100,12 @@ The default implemention relies on `dm-coalesce-hash'.")
 Parsing and converison via `org-table-to-lisp', which see."
   ;; (when-let ((coalesce-prop (org-entry-get (point) "coalesce" t)))
   ;;   (setq dm-table-coalesce-args (read coalesce-prop)))
-  (message "[xract] file:%s buffer:%s line:%s pos:%s around:%s"
-	   (buffer-file-name) (buffer-name)
-	   (line-number-at-pos) (point)
-	   (concat (buffer-substring (- (point) 50) (point))
-		   "⧆"
-		   (buffer-substring  (point) (+ (point) 50))))
+  ;; (message "[xract] file:%s buffer:%s line:%s pos:%s around:%s"
+  ;; 	   (buffer-file-name) (buffer-name)
+  ;; 	   (line-number-at-pos) (point)
+  ;; 	   (concat (buffer-substring (- (point) 50) (point))
+  ;; 		   "⧆"
+  ;; 		   (buffer-substring  (point) (+ (point) 50))))
   (list :transform (delq 'hline (org-table-to-lisp))))
 
 (defun dm-table-tranform-table (table)
