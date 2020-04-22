@@ -881,13 +881,13 @@ SCALE-FUNCTION may be used to supply custom scaling."
 	(mapconcat
 	 'identity
 	 (append
-	  (mapcar*
+	  (cl-mapcar
 	   (apply-partially 'format "M0,%d h%d")
 	   (number-sequence (cdr nudge)
 			    (+ (car size) (cdr nudge))
 			    (car scale))
 	   (make-list (1+ (ceiling (/ (car size) (car scale)))) v-rule-len))
-	  (mapcar*
+	  (cl-mapcar
 	   (apply-partially 'format "M%d,0 v%d")
 	   (number-sequence (car nudge)
 			    (+ (car size) (car nudge))
