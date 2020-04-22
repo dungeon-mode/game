@@ -1,0 +1,22 @@
+** Water Tiles Tables
+
+  :PROPERTIES:
+   :name: 10-water-tiles
+    :MAP-FEATURES: t 
+    :WATER: stroke="none" fill="blue"
+    :DECORATIONS: stroke="none" fill="" fill-opacity=".9"
+   :ETL: tile
+  :END:
+# #+NAME: 10-water-Tiles
+| Tile      | Water                                            | Decorations                                         |
+|-----------+--------------------------------------------------+-----------------------------------------------------|
+| pool1     | h1 a1.5,1.5,0,0,1,1,1 v1 a1.5,1.5,0,0,1,-1,1     |                                                     |
+|           | h-1 a1.5,1.5,0,0,1,-1,-1 v-1 a1.5,1.5,0,0,1,1,-1 |                                                     |
+|           |                                                  |                                                     |
+| riv1      | h1 v1 h-1 v-1                                    |                                                     |
+|           |                                                  |                                                     |
+| riv1N     | &riv1                                            | m.49,.80 h.02 v-.5 h.05 l-.06,-.1 l-.06,.1 h.05 v.5 |
+| riv1E     | &riv1                                            | m.75,.49 h-.5 v.02 h.5 v.05 l.1,-.06 l-.1,-.06 v.05 |
+| riv1S     | &riv1                                            | m.49,.2 h.02 v.5 h.05 l-.06,.1 l-.06,-.1 h.05 v-.5  |
+| riv1W     | &riv1                                            | m.25,.49 h.5 v.02 h-.5 v.05 l-.1,-.06 l.1,-.06 v.05 |
+|           |                                                  |                                                     |
