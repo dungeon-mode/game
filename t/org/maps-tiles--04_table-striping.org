@@ -1,0 +1,46 @@
+#+TITLE Test: Missing overlay for some tiles; other paths for all #4
+
+* Tiles
+:PROPERTIES:
+:ETL: tile
+:END:
+
+| tile | overlay          |
+| aaa  | <text x=".80" y="1.65" font-size="1">aaa</text> |
+
+
+| tile | path          |
+| aaa  | h3 v3 h-3 v-3 |
+
+| tile | water                 |
+| aaa  | m.75,.75 h1.5 v1.5 h-1.5 v-1.5 |
+
+
+* Cells
+:PROPERTIES:
+:ETL: cell
+:END:
+
+| x | y | path |
+| 1 | 1 | aaa  |
+
+* Test
+
+#+BEGIN_SRC emacs-lisp
+  (let ((dm-map-files (list (buffer-file-name)))
+        (dm-map-draw-other-props '(water))
+        (dm-map-background '(nil))
+	(dm-map-draw-attributes
+	 '(path ((fill . "none")
+		 (stroke . "green")
+		 (stroke-width . "1"))
+
+	   water ((fill . "none")
+	 	  (stroke . "orange")
+		  (stroke-width . "1")))))
+    (dm-map-draw t)
+    (prin1-to-string (list 'tiles dm-map-tiles 'level dm-map-level)))
+#+END_SRC
+
+#+RESULTS:
+: (tiles #s(hash-table size 65 test equal rehash-size 1.5 rehash-threshold 0.8125 data (aaa (path ((h (3)) (v (3)) (h (-3)) (v (-3))) tag nil overlay ((text ((x . 0.8) (y . 1.65) (font-size . 1)) "aaa")) stairs nil water ((m (0.75 0.75)) (h (1.5)) (v (1.5)) (h (-1.5)) (v (-1.5))) beach nil neutronium nil decorations nil))) level #s(hash-table size 65 test equal rehash-size 1.5 rehash-threshold 0.8125 data ((1 . 1) (path (aaa)))))
