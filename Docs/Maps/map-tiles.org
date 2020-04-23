@@ -378,18 +378,18 @@ These features are intended to be used mostly as parts of compositions and rarel
 |            |                                                                |                                   |                                                                         |
 | throneroom | ‡W ‡N → ‡N → ‡N → ‡N ‡E ↓ ‡E ↓ ‡E ‡S ← ‡S ← ‡S ← ‡S ‡W ↑ ◦W    | The Throne Room                   | <text x=".5" y="1.75" font-size=".6" fill="blue">Throne Room</text>     |
 |            |                                                                |                                   |                                                                         |
-| BalN       | ◤ → ◦N → ◥ ↓ ‡E ↓ ◤ ← ‡S ← ◥ ↑ ‡W                              | Balrog chamber, Secret door North |                                                                         |
+| balN       | ◤ → ◦N → ◥ ↓ ‡E ↓ ◤ ← ‡S ← ◥ ↑ ‡W                              | Balrog chamber, Secret door North |                                                                         |
 |            |                                                                |                                   |                                                                         |
-| BalE       | ◤ → ‡N → ◥ ↓ ◦E ↓ ◤ ← ‡S ← ◥ ↑ ‡W                              | Balrog chamber, Secret door east  |                                                                         |
+| balE       | ◤ → ‡N → ◥ ↓ ◦E ↓ ◤ ← ‡S ← ◥ ↑ ‡W                              | Balrog chamber, Secret door east  |                                                                         |
 |            |                                                                |                                   |                                                                         |
-| BalS       | ◤ → ‡N → ◥ ↓ ‡E ↓ ◤ ← ◦S ← ◥ ↑ ‡W                              | Balrog chamber, Secret door South |                                                                         |
+| balS       | ◤ → ‡N → ◥ ↓ ‡E ↓ ◤ ← ◦S ← ◥ ↑ ‡W                              | Balrog chamber, Secret door South |                                                                         |
 |            |                                                                |                                   |                                                                         |
-| BalW       | ◤ → ‡N → ◥ ↓ ‡E ↓ ◤ ← ‡S ← ◥ ↑ ◦W                              | Balrog chamber, Secret door West  |                                                                         |
+| balW       | ◤ → ‡N → ◥ ↓ ‡E ↓ ◤ ← ‡S ← ◥ ↑ ◦W                              | Balrog chamber, Secret door West  |                                                                         |
 |            |                                                                |                                   |                                                                         |
-| ClapNS     | ‡W ‡N → → ‡N ‡E ↓ ‡E ↓ ‡E ‡S ← ← ‡S ‡W ↑ ‡W ↑                  | The Clappers oriented North-South | <path stroke="black" stroke-width="3" fill="none"                       |
+| clapNS     | ‡W ‡N → → ‡N ‡E ↓ ‡E ↓ ‡E ‡S ← ← ‡S ‡W ↑ ‡W ↑                  | The Clappers oriented North-South | <path stroke="black" stroke-width="3" fill="none"                       |
 |            |                                                                |                                   | d="m0,150 h30 v130 v-260 m270,130 h-30 v130 v-260" />                   |
 |            |                                                                |                                   |                                                                         |
-| ClapEW     | ‡W ‡N → ‡N → ‡N ‡E ↓ ↓ ‡E ‡S ← ‡S ← ‡S ‡W ↑ ↑                  | The Clappers oriented East-West   | <path stroke="black" stroke-width="3" fill="none"                       |
+| clapEW     | ‡W ‡N → ‡N → ‡N ‡E ↓ ↓ ‡E ‡S ← ‡S ← ‡S ‡W ↑ ↑                  | The Clappers oriented East-West   | <path stroke="black" stroke-width="3" fill="none"                       |
 |            |                                                                |                                   | d="m150,0 v30 h130 h-260 m130,270 v-30 h130 h-260" />                   |
 |            |                                                                |                                   |                                                                         |
 
