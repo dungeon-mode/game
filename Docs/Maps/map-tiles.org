@@ -146,7 +146,6 @@ These features are intended to be used mostly as parts of compositions and rarel
 
 
 ** Water Tiles Tables
-
   :PROPERTIES:
     :name: Water Tiles
     :MAP-FEATURES: t 
@@ -161,10 +160,10 @@ These features are intended to be used mostly as parts of compositions and rarel
 |           |                                              |                                                     |
 | riv1      | h1 v1 h-1 v-1                                |                                                     |
 |           |                                              |                                                     |
-| Riv1N     | &riv1                                        | m.49,.80 h.02 v-.5 h.05 l-.06,-.1 l-.06,.1 h.05 v.5 |
-| Riv1E     | &riv1                                        | m.75,.49 h-.5 v.02 h.5 v.05 l.1,-.06 l-.1,-.06 v.05 |
-| Riv1S     | &riv1                                        | m.49,.2 h.02 v.5 h.05 l-.06,.1 l-.06,-.1 h.05 v-.5  |
-| Riv1W     | &riv1                                        | m.25,.49 h.5 v.02 h-.5 v.05 l-.1,-.06 l.1,-.06 v.05 |
+| riv1N     | &riv1                                        | m.49,.80 h.02 v-.5 h.05 l-.06,-.1 l-.06,.1 h.05 v.5 |
+| riv1E     | &riv1                                        | m.75,.49 h-.5 v.02 h.5 v.05 l.1,-.06 l-.1,-.06 v.05 |
+| riv1S     | &riv1                                        | m.49,.2 h.02 v.5 h.05 l-.06,.1 l-.06,-.1 h.05 v-.5  |
+| riv1W     | &riv1                                        | m.25,.49 h.5 v.02 h-.5 v.05 l-.1,-.06 l.1,-.06 v.05 |
 |           |                                              |                                                     |
 | bridge1NS | m.2,0 h.8 v1 h-.8 v-1 m-.2,0                 |                                                     |
 |           |                                              |                                                     |
