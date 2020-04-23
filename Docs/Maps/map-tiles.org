@@ -435,13 +435,13 @@ These features are intended to be used mostly as parts of compositions and rarel
 |            |                            |                                              |
 | S▲W        | cEW → cW                   | h1 v2 h-1 v-2                                |
 |            |                            |                                              |
-| S▼N        | cNS ↓ cN                   | h2 v1 h-2 v-1                                |
+| S▼N        | cNS ↓ cN                   | h1 v2 h-1 v-2                                |
 |            |                            |                                              |
-| S▼E        | cE → cEW                   | h1 v2 h-1 v-2                                |
+| S▼E        | cE → cEW                   | h2 v1 h-2 v-1                                |
 |            |                            |                                              |
-| S▼S        | cS ↓ cNS                   | h2 v1 h-2 v-1                                |
+| S▼S        | cS ↓ cNS                   | h1 v2 h-1 v-2                                |
 |            |                            |                                              |
-| S▼W        | cEW → cW                   | h1 v2 h-1 v-2                                |
+| S▼W        | cEW → cW                   | h2 v1 h-2 v-1                                |
 |            |                            |                                              |
 | R▲N        |                            |                                              |
 | R▲N:!dwarf | cS ↓ cNS ↓ cNS ↓ cNS ↓ cNS |                                              |
@@ -491,53 +491,53 @@ These features are intended to be used mostly as parts of compositions and rarel
    :END:
 
 # #+NAME: level-change-features
-| Tile       | Overlay                                                     | Documentation             | Behavior        |
-|------------+-------------------------------------------------------------+---------------------------+-----------------|
-| S▲N        | <text x=".4" y="1.85" font-size=".5" fill="black">U</text>  | Stairs up Opening North   | <<stairs-up>>   |
-|            |                                                             |                           |                 |
-| S▲E        | <text x=".1" y=".75" font-size=".5" fill="black">U</text>   | Stairs up Opening East    | <<stairs-up>>   |
-|            |                                                             |                           |                 |
-| S▲S        | <text x=".4" y="1.85" font-size=".5" fill="black">U</text>  | Stairs up Opening South   | <<stairs-up>>   |
-|            |                                                             |                           |                 |
-| S▲W        | <text x="1.65" y=".75" font-size=".5" fill="black">U</text> | Stairs up Opening East    | <<stairs-up>>   |
-|            |                                                             |                           |                 |
-| S▼N        | <text x=".4" y="1.85" font-size=".5" fill="black">D</text>  | Stairs down Opening North | <<stairs-down>> |
-|            |                                                             |                           |                 |
-| S▼E        | <text x=".1" y=".75" font-size=".5" fill="black">D</text>   | Stairs down Opening East  | <<stairs-down>> |
-|            |                                                             |                           |                 |
-| S▼S        | <text x=".4" y=".4" font-size=".5" fill="black">D</text>    | Stairs down opening South | <<stairs-down>> |
-|            |                                                             |                           |                 |
-| S▼W        | <text x="1.65" y=".75" font-size=".5" fill="black">D</text> | Stairs down Opening East  | <<stairs-down>> |
-|            |                                                             |                           |                 |
-| R▲N        |                                                             | Ramp up extending North   | <<ramp-down>>   |
-| R▲N:dwarf  | <text x=".4" y=".85" font-size=".5" fill="black">U</text>   |                           |                 |
-|            |                                                             |                           |                 |
-| R▲E        |                                                             | Ramp up extending East    | <<ramp-up>>     |
-| R▲E:dwarf  | <text x="4.65" y=".75" font-size=".5" fill="black">U</text> |                           |                 |
-|            |                                                             |                           |                 |
-| R▲S        |                                                             | Ramp up extending South   | <<ramp-down>>   |
-| R▲S:dwarf  | <text x=".4" y="4.85" font-size=".5" fill="black">U</text>  |                           |                 |
-|            |                                                             |                           |                 |
-| R▲W        |                                                             | Ramp up extending West    | <<ramp-up>>     |
-| R▲W:dwarf  | <text x=".65" y=".75" font-size=".5" fill="black">U</text>  |                           |                 |
-|            |                                                             |                           |                 |
-| R▼N        |                                                             | Ramp down extending North | <<ramp-down>>   |
-| R▼N:dwarf  | <text x=".4" y=".85" font-size=".5" fill="black">D</text>   |                           |                 |
-|            |                                                             |                           |                 |
-| R▼E        |                                                             | Ramp down extending East  | <<ramp-down>>   |
-| R▼E:dwarf  | <text x="4.65" y=".75" font-size=".5" fill="black">D</text> |                           |                 |
-|            |                                                             |                           |                 |
-| R▼S        |                                                             | Ramp down extending south | <<ramp-down>>   |
-| R▼S:dwarf  | <text x=".4" y="4.85" font-size=".5" fill="black">D</text>  |                           |                 |
-|            |                                                             |                           |                 |
-| R▼W        |                                                             | Ramp down extending West  | <<ramp-down>>   |
-| R▼W:dwarf  | <text x=".65" y=".75" font-size=".5" fill="black">D</text>  |                           |                 |
-|            |                                                             |                           |                 |
-| E◦N        | <text x=".4" y=".65" font-size=".5" fill="blue">E</text>    | Elevator, Door North      | <<elevator>>    |
-|            |                                                             |                           |                 |
-| E◦E        | <text x=".4" y=".65" font-size=".5" fill="blue">E</text>    | Elevator, Door East       | <<elevator>>    |
-|            |                                                             |                           |                 |
-| E◦S        | <text x=".4" y=".65" font-size=".5" fill="blue">E</text>    | Elevator, Door South      | <<elevator>>    |
-|            |                                                             |                           |                 |
-| E◦W        | <text x=".4" y=".65" font-size=".5" fill="blue">E</text>    | Elevator, Door West       | <<elevator>>    |
-|            |                                                             |                           |                 |
+| Tile      | Overlay                                                     | Documentation             | Behavior        |
+|-----------+-------------------------------------------------------------+---------------------------+-----------------|
+| S▲N       | <text x=".4" y="1.85" font-size=".5" fill="black">U</text>  | Stairs up Opening North   | <<stairs-up>>   |
+|           |                                                             |                           |                 |
+| S▲E       | <text x=".1" y=".75" font-size=".5" fill="black">U</text>   | Stairs up Opening East    | <<stairs-up>>   |
+|           |                                                             |                           |                 |
+| S▲S       | <text x=".4" y="1.85" font-size=".5" fill="black">U</text>  | Stairs up Opening South   | <<stairs-up>>   |
+|           |                                                             |                           |                 |
+| S▲W       | <text x="1.65" y=".75" font-size=".5" fill="black">U</text> | Stairs up Opening East    | <<stairs-up>>   |
+|           |                                                             |                           |                 |
+| S▼N       | <text x=".4" y="1.85" font-size=".5" fill="black">D</text>  | Stairs down Opening North | <<stairs-down>> |
+|           |                                                             |                           |                 |
+| S▼E       | <text x=".1" y=".75" font-size=".5" fill="black">D</text>   | Stairs down Opening East  | <<stairs-down>> |
+|           |                                                             |                           |                 |
+| S▼S       | <text x=".4" y=".4" font-size=".5" fill="black">D</text>    | Stairs down opening South | <<stairs-down>> |
+|           |                                                             |                           |                 |
+| S▼W       | <text x="1.65" y=".75" font-size=".5" fill="black">D</text> | Stairs down Opening East  | <<stairs-down>> |
+|           |                                                             |                           |                 |
+| R▲N       |                                                             | Ramp up extending North   | <<ramp-down>>   |
+| R▲N:dwarf | <text x=".4" y=".85" font-size=".5" fill="black">U</text>   |                           |                 |
+|           |                                                             |                           |                 |
+| R▲E       |                                                             | Ramp up extending East    | <<ramp-up>>     |
+| R▲E:dwarf | <text x="4.65" y=".75" font-size=".5" fill="black">U</text> |                           |                 |
+|           |                                                             |                           |                 |
+| R▲S       |                                                             | Ramp up extending South   | <<ramp-down>>   |
+| R▲S:dwarf | <text x=".4" y="4.85" font-size=".5" fill="black">U</text>  |                           |                 |
+|           |                                                             |                           |                 |
+| R▲W       |                                                             | Ramp up extending West    | <<ramp-up>>     |
+| R▲W:dwarf | <text x=".65" y=".75" font-size=".5" fill="black">U</text>  |                           |                 |
+|           |                                                             |                           |                 |
+| R▼N       |                                                             | Ramp down extending North | <<ramp-down>>   |
+| R▼N:dwarf | <text x=".4" y=".85" font-size=".5" fill="black">D</text>   |                           |                 |
+|           |                                                             |                           |                 |
+| R▼E       |                                                             | Ramp down extending East  | <<ramp-down>>   |
+| R▼E:dwarf | <text x="4.65" y=".75" font-size=".5" fill="black">D</text> |                           |                 |
+|           |                                                             |                           |                 |
+| R▼S       |                                                             | Ramp down extending south | <<ramp-down>>   |
+| R▼S:dwarf | <text x=".4" y="4.85" font-size=".5" fill="black">D</text>  |                           |                 |
+|           |                                                             |                           |                 |
+| R▼W       |                                                             | Ramp down extending West  | <<ramp-down>>   |
+| R▼W:dwarf | <text x=".65" y=".75" font-size=".5" fill="black">D</text>  |                           |                 |
+|           |                                                             |                           |                 |
+| E◦N       | <text x=".4" y=".65" font-size=".5" fill="blue">E</text>    | Elevator, Door North      | <<elevator>>    |
+|           |                                                             |                           |                 |
+| E◦E       | <text x=".4" y=".65" font-size=".5" fill="blue">E</text>    | Elevator, Door East       | <<elevator>>    |
+|           |                                                             |                           |                 |
+| E◦S       | <text x=".4" y=".65" font-size=".5" fill="blue">E</text>    | Elevator, Door South      | <<elevator>>    |
+|           |                                                             |                           |                 |
+| E◦W       | <text x=".4" y=".65" font-size=".5" fill="blue">E</text>    | Elevator, Door West       | <<elevator>>    |
+|           |                                                             |                           |                 |
