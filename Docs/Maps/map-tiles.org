@@ -148,11 +148,12 @@ These features are intended to be used mostly as parts of compositions and rarel
 ** Water Tiles Tables
 
   :PROPERTIES:
-    :name: 10-water-tiles
+    :name: Water Tiles
     :MAP-FEATURES: t 
-    :WATER: stroke="none" fill="blue"
+
     :ETL: tile
   :END:
+
 # #+NAME: 10-water-Tiles
 | Tile      | Water                                        | Decorations                                         |
 |-----------+----------------------------------------------+-----------------------------------------------------|
@@ -171,13 +172,6 @@ These features are intended to be used mostly as parts of compositions and rarel
 | bridge1EW | m0,.2 h1 v.8 h-1 v-.8 m-.2,0                 |                                                     |
 |           |                                              |                                                     |
 
-   :PROPERTIES:
-   :name: 10-beach-tiles
-   :MAP-FEATURES: t 
-   :ETL: tile
-   :WATER: stroke="none" fill="blue"
-   :BEACH: stroke="none" fill="yellow" fill-opacity=".9"
-   :END:
 # #+NAME: 10-beach tiles
 | Tile | Beach                               | Water                          | Overlay                                        |
 |------+-------------------------------------+--------------------------------+------------------------------------------------|
@@ -190,13 +184,6 @@ These features are intended to be used mostly as parts of compositions and rarel
 | b1NW | h2 v1 a1.5,1.5,0,0,0,-1,1 h-1 v-2   | → ↘ a1.5,1.5,0,0,0,-1,1 h1 v-1 | <text font-size=".5" x=".85" y="1.15">B</text> |
 |      |                                     |                                |                                                |
 
-   :PROPERTIES:
-   :name: 20-water-tiles
-   :MAP-FEATURES: t
-   :ETL: tile
-   :WATER: Stroke="none" fill="blue"
-   :DECORATIONS: stroke="none" fill="cyan"
-   :END:
 # #+NAME: 20-water-tiles
 | Tile | Water         | Decorations                                         |
 |------+---------------+-----------------------------------------------------|
@@ -211,14 +198,6 @@ These features are intended to be used mostly as parts of compositions and rarel
 | rivW | h1 v2 h-1 v-2 | m.25,.98 h.5 v.02 h-.5 v.05 l-.1,-.06 l.1,-.06 v.05 |
 |      |               |                                                     |
 
-   :PROPERTIES:
-   :name: 20-beach-tiles
-   :MAP-FEATURES: t
-   :ETL: tile
-   :WATER: Stroke="none" fill="blue"
-   :DECORATIONS: stroke="none" fill="cyan"
-   :BEACH: stroke="none" fill="yellow" fill-opacity=".9"
-   :END:
 # #+NAME: 20-beach-tiles
 | Tile | Beach                             | Water                              | Overlay                                         |
 |------+-----------------------------------+------------------------------------+-------------------------------------------------|
