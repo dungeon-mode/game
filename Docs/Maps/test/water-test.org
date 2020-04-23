@@ -1,5 +1,4 @@
 * Water Tiles
-
   :PROPERTIES:
    :name: 10-water-tiles
    :MAP-FEATURES: t 
@@ -53,3 +52,29 @@ Refer to design.org for more details.
 | 1 | 3 | &riv1S  |
 | 2 | 3 |         |
 | 3 | 0 |         |
+
+
+* Test
+
+#+BEGIN_SRC emacs-lisp
+  (let ((dm-map-files (list (buffer-file-name)))
+        (dm-map-draw-other-props (list 'water 'decorations))
+        ;;(dm-map-background '(nil))
+	(dm-map-level-size (cons 4 4))
+	(dm-map-nudge (cons 8 8))
+	(dm-map-draw-attributes
+	 '(path ((fill . "none")
+		 (stroke . "red")
+		 (stroke-width . "1"))
+	   water ((fill . "blue")
+	 	  (stroke . "cyan")
+		  (stroke-width . "1"))
+           decorations ((fill . "none")
+	 	  (stroke . "green")
+		  (stroke-width . "1")))))
+    (dm-map-draw t)
+    (prin1-to-string (list 'tiles dm-map-tiles 'level dm-map-level)))
+#+END_SRC
+
+#+RESULTS:
+: (tiles #s(hash-table size 65 test equal rehash-size 1.5 rehash-threshold 0.8125 data (pool1 (path nil tag nil overlay nil stairs nil water ((h (1)) (a (1.5 1.5 0 0 1 1 1)) (v (1)) (a (1.5 1.5 0 0 1 -1 1)) (h (-1)) (a (1.5 1.5 0 0 1 -1 -1)) (v (-1)) (a (1.5 1.5 0 0 1 1 -1))) beach nil neutronium nil decorations nil) riv1 (path nil tag nil overlay nil stairs nil water ((h (1)) (v (1)) (h (-1)) (v (-1))) beach nil neutronium nil decorations nil) riv1N (path nil tag nil overlay nil stairs nil water (riv1) beach nil neutronium nil decorations ((m (0.49 0.8)) (h (0.02)) (v (-0.5)) (h (0.05)) (l (-0.06 -0.1)) (l (-0.06 0.1)) (h (0.05)) (v (0.5)))) riv1E (path nil tag nil overlay nil stairs nil water (riv1) beach nil neutronium nil decorations ((m (0.75 0.49)) (h (-0.5)) (v (0.02)) (h (0.5)) (v (0.05)) (l (0.1 -0.06)) (l (-0.1 -0.06)) (v (0.05)))) riv1S (path nil tag nil overlay nil stairs nil water (riv1) beach nil neutronium nil decorations ((m (0.49 0.2)) (h (0.02)) (v (0.5)) (h (0.05)) (l (-0.06 0.1)) (l (-0.06 -0.1)) (h (0.05)) (v (-0.5)))) riv1W (path nil tag nil overlay nil stairs nil water (riv1) beach nil neutronium nil decorations ((m (0.25 0.49)) (h (0.5)) (v (0.02)) (h (-0.5)) (v (0.05)) (l (-0.1 -0.06)) (l (0.1 -0.06)) (v (0.05)))))) level #s(hash-table size 65 test equal rehash-size 1.5 rehash-threshold 0.8125 data ((0 . 0) (path (pool1)) (1 . 0) (path ((0 . 0))) (2 . 0) (path ((0 . 0))) (3 . 0) (path nil) (0 . 1) (path ((0 . 0))) (1 . 1) (path ((0 . 0))) (2 . 1) (path ((0 . 0))) (0 . 2) (path ((0 . 0))) (1 . 2) (path ((0 . 0))) (2 . 2) (path ((0 . 0))) (0 . 3) (path nil) (1 . 3) (path (riv1S)) (2 . 3) (path nil))))

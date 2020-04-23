@@ -49,7 +49,7 @@
 ;; This imposes limitations in terms, for example, of individually
 ;; styling elements such as secret doors (drawn in-line, currently) but
 ;; seems a good starting point in terms of establishing a baseline for
-;; the performance rendering SVG maps on-demand within Emacs.
+;; the performance rendering SVG maps on-demand within Emacs.cl-defsubst
 
 ;;; Requirements:
 
@@ -256,7 +256,8 @@ Select each amung normal and inverted based on `dm-map-tags'."
      (intern (downcase label)))
    first-row))
 
-(cl-defsubst dm-map-table-cell (cell
+
+(cl-defun dm-map-table-cell (cell
 				&optional &key
 				(table dm-map-level)
 				(defaults (dm-map-cell-defaults)))
@@ -382,9 +383,9 @@ Only consider attributes listed in `dm-map--scale-props'"
 			(append (plist-get dm-map--last-plist
 					   dm-map-overlay-prop)
 				(list xml-parts)))
-	(message "[tile-xform] XML:%s last-plist:%s"
-		 (prin1-to-string xml-parts)
-		 (prin1-to-string dm-map--last-plist))
+	;; (message "[tile-xform] XML:%s last-plist:%s"
+	;; 	 (prin1-to-string xml-parts)
+	;; 	 (prin1-to-string dm-map--last-plist))
 	(setq dm-map--xml-strings nil)))))
 
 (defun dm-map-level-transform (table)
@@ -589,24 +590,25 @@ PROP is a symbol naming the proppery containing draw code.  When
 INHIBIT-COLLECTION is truthy, don't collect tiles resolved into
 'dm-map-resolve'.  When INHIBIT-TAGS is truthy do not add
 addional tiles based on tags."
-  (when-let* ((plist (gethash tile dm-map-tiles))
-	      (paths (delq
-		      nil
-		      (append (plist-get plist prop)
-			      (unless inhibit-tags
-				(dm-map-tile-tag-maybe-invert tile))))))
+  (when-let ((plist (gethash tile dm-map-tiles)))
     (unless (or inhibit-tags (member tile dm-map-current-tiles))
       (push tile dm-map-current-tiles))
-    (mapcan (lambda (stroke)
-	      (let ((stroke stroke))
-;;(message "[resolver] %s:%s (type: %s)" prop stroke (type-of stroke))
-		(if (symbolp stroke)
-		    (dm-map-resolve
-		     stroke
-		     :inhibit-collection inhibit-collection
-		     :inhibit-tags inhibit-tags)
-		  ;;(list stroke)
-		  (list (if (listp stroke) (copy-tree stroke) stroke))))) paths)))
+    (when-let (paths
+	       (delq
+		nil
+		(append (plist-get plist prop)
+			(unless inhibit-tags
+			  (dm-map-tile-tag-maybe-invert tile)))))
+      (mapcan (lambda (stroke)
+		(let ((stroke stroke))
+		  ;;(message "[resolver] %s:%s (type: %s)" prop stroke (type-of stroke))
+		  (if (symbolp stroke)
+		      (dm-map-resolve
+		       stroke
+		       :inhibit-collection inhibit-collection
+		       :inhibit-tags inhibit-tags)
+		    ;;(list stroke)
+		    (list (if (listp stroke) (copy-tree stroke) stroke))))) paths))))
 ;;(not (equal (dm-map-resolve '◦N) (let ((dm-map-tags nil)) (dm-map-resolve '◦N))))
 
 
@@ -793,7 +795,6 @@ SCALE-FUNCTION may be used to supply custom scaling."
 		 dm-map-draw-other-props))
 	 ;; scale the main path
 	 (main-path (progn
-		      (message "path:%s water:%s" main-path paths)
 		      (dm-map-path-string
 		       (apply
 			(apply-partially scale-function (cons scale scale))
@@ -844,10 +845,10 @@ SCALE-FUNCTION may be used to supply custom scaling."
 		      :path-data (dm-svg-create-path
 				  main-path (plist-get path-attributes
 						       dm-map-draw-prop)))))
-    (message "[draw] draw-code:%s" (prin1-to-string main-path))
+    ;;(message "[draw] draw-code:%s" (prin1-to-string draw-code))
     ;;(message "[draw] path-props:%s" path-attributes)
     ;;(message "[draw] XML SVG overlays:%s" (prin1-to-string overlays))
-    (message "[draw] other paths:%s" (prin1-to-string paths))
+    ;;(message "[draw] other paths:%s" (prin1-to-string paths))
     ;;(message "[draw] background:%s" (prin1-to-string background))
     ;;(when (boundp 'dm-dump) (setq dm-dump draw-code))
     img))
@@ -856,7 +857,8 @@ SCALE-FUNCTION may be used to supply custom scaling."
 			     &key
 			     (scale (cons dm-map-scale dm-map-scale))
 			     (size (cons (* (car scale) (car dm-map-level-size))
-					 (* (cdr scale) (cdr dm-map-level-size))))
+			      (message "path:%s water:%s" main-path paths)
+				 (* (cdr scale) (cdr dm-map-level-size))))
 			     (nudge dm-map-nudge)
 			     (v-rule-len (+ (car size) (* 2 (car nudge))))
 			     (h-rule-len (+ (cdr size) (* 2 (cdr nudge))))

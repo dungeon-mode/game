@@ -138,7 +138,7 @@ header labels in the first table row, take the first column as key."
   "Apply `dm-table-load-table-fun' to `dm-table-load-table-var' and TABLE.
 
 Return a terminating form."
-  (message "[load] fun:%s var:%s" dm-table-load-table-fun dm-table-load-table-var)
+  ;;(message "[load] fun:%s var:%s" dm-table-load-table-fun dm-table-load-table-var)
   (list nil (set dm-table-load-table-var table)))
 
 ;; (dm-table-load-table (cdr (apply 'dm-table-tranform-table (cdr (dm-table-extract-table 'map)))) '(map))
@@ -165,11 +165,10 @@ SCOPE is a symbol.  STEP is a keyword symbol amung :extract
   ;; 	   (or step (car-safe (cdr-safe (assq scope dm-table-states))))
   ;; 	   (car-safe (cdr-safe (plist-get (cdr-safe (assq scope dm-table-states))
   ;; 					  (or step (car-safe (cdr-safe (assq scope dm-table-states))))))))
-  (message "[step] scope:%s step:%s" scope step)
   (when-let* ((scope-states (cdr-safe (assoc scope dm-table-states 'equal)))
 	      (next-step (or step (car-safe scope-states)))
 	      (step-func (plist-get scope-states next-step)))
-    (message "[step] fun:%s next:%s states:%s" step-func next-step scope-states)
+    ;;(message "[step] fun:%s next:%s states:%s" step-func next-step scope-states)
     (if (functionp step-func) step-func
       (eval step-func))))
 
@@ -192,12 +191,12 @@ being carried forward, if any."
   (let ((step-func (funcall dm-table-step-function scope step data))
 	(result (cons t data)))
     (while (and (car-safe result) step-func)
-      (message "[batch] before func:%s data:%s" step-func data)
+      ;;(message "[batch] before func:%s data:%s" step-func data)
       (setq result (apply step-func (cdr result)))
       ;;(message "[batch] result:%s" result)
       (when (car-safe result)
 	(setq step-func (funcall dm-table-step-function scope (car result)))
-	(message "[batch] newfunc:%s" step-func)
+	;;(message "[batch] newfunc:%s" step-func)
 	step-func)))
   ;;(message "var:%s eval:%s" dm-table-load-table-var (eval dm-table-load-table-var))
   dm-table-load-table-var)

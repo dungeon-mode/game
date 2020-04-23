@@ -139,24 +139,24 @@ key by interning the value of KEY-SYMBOL."
 					`(progn ,@body-form))
 				,after)
 			    (progn ,@body-form))))))
-    (prin1 symbol-bindings)
+    ;;(prin1 symbol-bindings)
     ;;(prin1 '(hash hash-table))
     `(let* ((,hash-symbol ,hash-table) ,row-symbol ,result-symbol)
        (mapcar ,row-form (quote ,strings))
        ,hash-symbol)))
 
 
-(let ((h (dm-coalesce-hash (("h1" "H2" "H3")
-				  ("r1" "V12" "V13")
-				  ("r2" "V22" "V23")
-				  ("r3" "V32" "V33"))
-	     (id h2)
-	   :hash-table #s(hash-table size 30 test equal)
-	   :start-column 1
-	   (list 'id id 'h2 h2))))
-  (print h)
-  h)
-(dm-coalesce-hash((1 "a")(2 "b"))(_) :after(puthash(nth 0 row)(cdr row)hash))
+;; (let ((h (dm-coalesce-hash (("h1" "H2" "H3")
+;; 				  ("r1" "V12" "V13")
+;; 				  ("r2" "V22" "V23")
+;; 				  ("r3" "V32" "V33"))
+;; 	     (id h2)
+;; 	   :hash-table #s(hash-table size 30 test equal)
+;; 	   :start-column 1
+;; 	   (list 'id id 'h2 h2))))
+;;   (print h)
+;;   h)
+;; (dm-coalesce-hash((1 "a")(2 "b"))(_) :after(puthash(nth 0 row)(cdr row)hash))
 
 
 (provide 'dm-util)
