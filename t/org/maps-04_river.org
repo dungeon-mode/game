@@ -1,0 +1,50 @@
+#+TITLE Test: Map Cells with Paths
+# d:/projects/dungeon-mode/t/org/maps-03_svg.org
+
+This tests map rendering using a tile and cell containing an SVG/XML element.
+
+* Tiles
+:PROPERTIES:
+:ETL: tile
+:END:
+
+| Tile  | Water         | Decorations                                         |
+| riv1  | h1 v1 h-1 v-1 |                                                     |
+| riv1N | riv1          | m.49,.80 h.02 v-.5 h.05 l-.06,-.1 l-.06,.1 h.05 v.5 |
+
+# | Tile  | Water         | Decorations                                         |
+# | riv1N | h1 v1 h-1 v-1 | m.49,.80 h.02 v-.5 h.05 l-.06,-.1 l-.06,.1 h.05 v.5 |
+
+
+
+* Cells
+:PROPERTIES:
+:ETL: cell
+:END:
+
+| X | Y | Path  |
+|---+---+-------|
+| 0 | 0 | riv1N |
+
+* Test
+
+#+BEGIN_SRC emacs-lisp
+  (let (dm-map-tiles dm-map-cells
+        (dm-map-files (list (buffer-file-name)))
+        (dm-map-level-size (cons 5 5))
+        (dm-map-background '(nil))
+	(dm-map-draw-other-props (list 'water 'beach 'stairs 'decorations))
+	(dm-map-draw-attributes
+	 '(decorations ((fill . "#00f")
+		    (stroke . "#00f")
+		    (stroke-width . "1"))
+          water ((fill . "#ff0")
+		 (stroke . "#ff0")
+		 (stroke-width . "1")))))
+    (prin1-to-string (list 'image (dm-map-draw t)
+                           'tiles dm-map-tiles
+			   'level dm-map-level)))
+#+END_SRC
+
+#+RESULTS:
+: (image #s(dm-svg (svg ((width . 385) (height . 385) (version . "1.1") (xmlns . "http://www.w3.org/2000/svg") (stroke . white) (stroke-width . 1) (:image . #<marker at 50 in **dungeon map**>)) nil (path ((d . "M 100 100 m 18 30 h 1 v -18.5 h 2 l -2 -4 l -2 4 h 2 v 18.5") (fill . "#00f") (stroke . "#00f") (stroke-width . "1"))) (path ((d . "")))) (path ((d . "")))) tiles #s(hash-table size 65 test equal rehash-size 1.5 rehash-threshold 0.8125 data (riv1 (path nil tag nil overlay nil water ((h (1)) (v (1)) (h (-1)) (v (-1))) beach nil stairs nil decorations nil) riv1N (path nil tag nil overlay nil water (riv1) beach nil stairs nil decorations ((m (0.49 0.8)) (h (0.02)) (v (-0.5)) (h (0.05)) (l (-0.06 -0.1)) (l (-0.06 0.1)) (h (0.05)) (v (0.5)))))) level #s(hash-table size 65 test equal rehash-size 1.5 rehash-threshold 0.8125 data ((0 . 0) (path (riv1N)))))

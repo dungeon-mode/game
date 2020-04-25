@@ -1,0 +1,40 @@
+#+TITLE Test: Map Cells with Paths
+# d:/projects/dungeon-mode/t/org/maps-03_svg.org
+
+This tests map rendering using a tile and cell containing an SVG/XML element.
+
+* Tiles
+:PROPERTIES:
+:ETL: tile
+:END:
+
+| tile | overlay                                    |
+| aaa  | <text x="1" y="1" font-size="1">aaa</text> |
+
+
+* Cells
+:PROPERTIES:
+:ETL: cell
+:END:
+
+| x | y | path                                                                     |
+| 1 | 1 | aaa |
+
+* Test
+
+#+BEGIN_SRC emacs-lisp
+  (let ((dm-map-files (list (buffer-file-name)))
+        (dm-map-level-size (cons 5 5))
+        (dm-map-draw-other-props nil)
+        (dm-map-background '(nil))
+	(dm-map-draw-attributes
+	 '(overlay ((fill . "#00f")
+		    (stroke . "#ff0")
+		    (stroke-width . "1")))))
+    (prin1-to-string (list 'image (dm-map-draw t)
+                           'tiles dm-map-tiles
+			   'level dm-map-level)))
+#+END_SRC
+
+#+RESULTS:
+: (image #s(dm-svg (svg ((width . 385) (height . 385) (version . "1.1") (xmlns . "http://www.w3.org/2000/svg") (stroke . white) (stroke-width . 1) (:image . #<marker at 49 in **dungeon map**>)) nil (path ((d . "M 137 137 <text x=\"1\" y=\"1\" font-size=\"1\">aaa</text>")))) (path ((d . "M 137 137 <text x=\"1\" y=\"1\" font-size=\"1\">aaa</text>")))) tiles #s(hash-table size 65 test equal rehash-size 1.5 rehash-threshold 0.8125 data (aaa (path ("<text x=\"1\" y=\"1\" font-size=\"1\">aaa</text>") tag nil overlay nil stairs nil water nil beach nil neutronium nil decorations nil))) level #s(hash-table size 65 test equal rehash-size 1.5 rehash-threshold 0.8125 data ((1 . 1) (path (aaa)))))

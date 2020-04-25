@@ -63,6 +63,7 @@
 
 ;; DEVEL hack: prefer version from CWD, if any
 (let ((load-path (append '(".") load-path)))
+  (require 'dungeon-mode)
   (require 'dm-util)
   (require 'dm-svg)
   (require 'dm-table))
@@ -70,10 +71,16 @@
 ;;; Code:
 
 (defgroup dm-map nil
-  "Settings for game maps." :group 'dungeon-mode)
+  "Mapping settings.
 
-(defcustom dm-map-files '()
-  "List of files from which load game maps." :type (list 'symbol))
+These settings control display of game maps."
+  :group 'dungeon-mode)
+
+(defcustom dm-map-files (append (dm-files-select :map-tiles)
+				(dm-files-select :map-cells))
+  "List of files from which load game maps."
+  :type (list 'symbol)
+  :group (list 'dm-files 'dm-map))
 
 (defcustom dm-map-property "ETL"
   "Property to insepect when finding tables." :type 'string)
@@ -251,7 +258,7 @@ Select each amung normal and inverted based on `dm-map-tags'."
 
 (defsubst dm-map-header-to-cols (first-row)
   "Create column identifier from FIRST-ROW of a table."
-  (seq-map
+  (mapcar
    (lambda (label)
      (intern (downcase label)))
    first-row))
@@ -309,7 +316,7 @@ TILE is an hash-table key, PROP is a property (default: \"path\"."
   `(dm-map-path ,tile :table dm-map-tiles :prop ',prop))
 
 (defmacro dm-map-draw-test (svg &rest body)
-  "Open (erase) buffer evaluate BODY and dump SVG."
+  "Open (erase) buffer evaluate BODY, dump and return SVG."
   (declare (indent 1))
   `(with-current-buffer (pop-to-buffer "**dungeon map**")
      (dm-map-mode)
@@ -421,7 +428,7 @@ Only consider attributes listed in `dm-map--scale-props'"
 
 		 (setq last-key (intern tile)
 		       dm-map--last-plist (dm-map-table-cell tile :table hash))
-;;;(message "[tile-xform] tile:%s key:%s plist:%s" tile last-key dm-map--last-plist)
+(message "[tile-xform] tile:%s key:%s plist:%s" tile last-key dm-map--last-plist)
 		 (when (string-match dm-map-tile-tag-re tile)
 		   ;; Tile name contains a tag i.e. "some-tile:some-tag".
 		   ;; Ingore inverted tags ("some-tile:!some-tag"). Add others
@@ -449,7 +456,7 @@ Only consider attributes listed in `dm-map--scale-props'"
 		     (delq nil'(,dm-map-draw-prop ,@dm-map-draw-other-props)))
 	       (when (and (boundp (quote ,dm-map-overlay-prop)) ,dm-map-overlay-prop)
 		 (push ,dm-map-overlay-prop dm-map--xml-strings))
-;;;(message "[tile-xform] %s ⇒ lkey:%s lpath:%s" tile last-key dm-map--last-plist)
+(message "[tile-xform] %s ⇒ lkey:%s lpath:%s" tile last-key dm-map--last-plist)
 	       dm-map--last-plist)))
 	 (result
 	  (prog1
@@ -547,11 +554,11 @@ between 0 and 1 inclusive."
      (`(,(or 'm 'l)
 	(,(and x (guard (numberp x)))
 	 ,(and y (guard (numberp y)))))
-      (setcdr cell (list (list (* x (car scale))
-			       (* y (cdr scale))))))
+      (setcdr cell (list (list (round (* x (car scale)))
+			       (round (* y (cdr scale)))))))
      ;; h and v differ only in which part of scale applies
      (`(h (,(and d (guard (numberp d)))))
-      (setcdr cell (list (* d (car scale)))))
+      (setcdr cell (list (round (* d (car scale))))))
      (`(v (,(and d (guard (numberp d)))))
       (setcdr cell (list (list (* d (cdr scale))))))
      ;; arc has tons of args but we only mess with the last two
@@ -559,8 +566,8 @@ between 0 and 1 inclusive."
 	       ,(and x (guard (numberp x)))
 	       ,(and y (guard (numberp y)))))
       (setcdr cell (list (list rx ry x-axis-rotation large-arc-flag sweep-flag
-			       (* x (car scale))
-			       (* y (cdr scale))))))
+			       (round (* x (car scale)))
+			       (round (* y (cdr scale)))))))
      ;; fall-back to a message
      (_ (message "unhandled %s => %s" (type-of cell) (prin1-to-string cell t)))
      )))
@@ -671,7 +678,8 @@ property containing draw instructions."
 When FOLLOW is truthy, follow to the first cell with drawing
 instructions."
   (let ((plist (dm-map-cell-defaults))
-	dm-map-current-tiles)
+	dm-map-current-tiles
+	)
     (when-let ((val (dm-map-resolve-cell cell :no-follow (null follow))))
       (plist-put plist dm-map-draw-prop val))
     (when-let ((val (seq-map
@@ -874,7 +882,8 @@ SCALE-FUNCTION may be used to supply custom scaling."
 					   (stroke . "blue")
 					   (stroke-width . ".25"))))
   "Create a background SVG with SCALE and SIZE and NUDGE."
-  ;;(message "[background] scale:%s size:%s nudge:%s rect:%s" scale size nudge svg)
+  (dm-msg :file "map" :fun "background" :args
+	  (list :scale scale :size size :nudge nudge :svg svg))
   (prog1 svg
     (unless no-graph
       (dom-append-child
@@ -909,8 +918,9 @@ SCALE-FUNCTION may be used to supply custom scaling."
 	      ;;'((17 17))
 	      ;;'((9 . 5)) ;; (9 . 9) (10 . 11) (10 . 12) (9 . 11)
 	      )))
+    (prog1 svg
     (dm-map-draw-test svg ;; (oref svg path-data)
-      (render-and-insert svg))))
+	(render-and-insert svg)))))
 
 ;; global key binding
 (global-set-key (kbd "<f9>") 'dm-map-draw)
