@@ -145,7 +145,7 @@ See also: `dm-map-draw-other-props'")
 Tags (e.g. \":elf\") allow conditional inclusion of draw code.")
 
 (defvar dm-map-draw-attributes-default '((fill . "none")
-					 (stroke . " #4f4c4c")
+					 (stroke . "black")
 					 (stroke-width . "1"))
   "Default attributes for the main SVG path used for corridor, etc.")
 
@@ -160,7 +160,7 @@ Tags (e.g. \":elf\") allow conditional inclusion of draw code.")
 	     (stroke . "none")
 	     (stroke-width . "1")))
     (neutronium ((fill . "orange")
-		 (stroke . "#171713")
+		 (stroke . "orange")
 		 (stroke-width . "1")))
     (decorations ((fill . "none")
 		  (stroke . "#3c0545")
@@ -920,7 +920,7 @@ SCALE-FUNCTION may be used to supply custom scaling."
 	      ;;'((9 . 5)) ;; (9 . 9) (10 . 11) (10 . 12) (9 . 11)
 	      )))
     (prog1 svg
-    (dm-map-draw-test svg ;; (oref svg path-data)
+      (dm-map-draw-test svg ;; (oref svg path-data)
 	(render-and-insert svg)))))
 
 ;; global key binding

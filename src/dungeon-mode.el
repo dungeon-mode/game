@@ -1,4 +1,4 @@
-;;; dungeon-mode.el --- create and play turn-based multi-player RPG style games  -*- lexical-binding: t; -*-
+;; dungeon-mode.el --- create and play turn-based multi-player RPG style games  -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2020  Corwin Brust
 
@@ -89,6 +89,12 @@ modified.  When set to another non-nil value it is a function to
 perform the expansion, replacing the default
 `dm-files-select-impl'.")
 
+(defcustom dm-files-pattern ".*"
+  "This Emacs Lisp regex controls which files are considere.
+
+This controls which files may be passed to the filters employ by
+`dm-files-select'.  The default value \".*\" selects all files.")
+
 (defcustom dm-files-writable nil
   "A list of writable game source paths.
 
@@ -138,12 +144,7 @@ cosidered after `dm-files-select-impl' but before any supplied in
 
 (defun dm-files-select-impl (file)
   "Turn FILE into a list, recursively find all when FILE is a directory."
-  (if file
-      ;; FIXME we absolutely require the trailing slash to ID folders
-      (if (directory-name-p file)
-	  (directory-files-recursively file ".*" t nil t)
-	(if (file-readable-p file) (list file) nil))
-    nil))
+  (if (and file (file-readable-p file)) t nil))
 
 (defun dm-files-select (&optional keyword for-writing)
   "Return the files that may be read.
@@ -159,11 +160,14 @@ which may be written to."
 				      (member x dm-files-writable))))
 			    dm-files-select-hook
 			    (when keyword
-		              (cdr (assoc keyword dm-files-alist))))))
+			      (cdr (assoc keyword dm-files-alist))))))
     (while (setq this-file (pop files))
       (if (directory-name-p this-file)
 	  (setq files
-		(append files (directory-files-recursively this-file ".*" t)))
+		(append files (directory-files-recursively
+			       this-file
+			       dm-files-pattern
+			       dm-files-expand)))
 	(if (run-hook-with-args-until-failure 'dm-files-select-hook this-file)
 	  (push this-file results))))
     results))
@@ -184,6 +188,7 @@ message plist.  Key are potentially any value but must strictly
 match a key from the plist from the message being formatted,
 otherwise the empty string is subsitiuted instead."
   :type 'string)
+
 
 (defcustom dm-msg-props (list :file :fun :msg :args)
   "List of known message properties."
@@ -209,6 +214,25 @@ ARGS are the message arguments suitable for a call to apply
 message or t to display the message (when not otherwise
 inhibited, e.g. by `dm-msg-enabled').  See `dm-msg'.")
 
+(defun dm-msg-format-args (arg-plist)
+  "Return ARG-PLIST as a string.
+
+Any leading \":\" from key is moved to the end, value is converted
+to string using `prin1-to-string', results are joined with space."
+  (mapconcat 'identity
+	     (delq
+	      nil
+	      (seq-map-indexed
+	       (lambda (x ix)
+		 (when (eq 0 (% ix 2))
+		   (apply 'concat
+			  (list (if (keywordp x)
+				    (concat (substring (symbol-name x) 1) ":")
+				  x)
+				(prin1-to-string (nth (1+ ix) arg-plist))))))
+	       arg-plist))
+	     " "))
+
 (defun dm-msg-impl (&rest plist)
   "Implement message display.
 
@@ -216,42 +240,42 @@ Keys of PLIST are replaced into `dm-msg-format' where they
 appear.  Keys of PLIST mentioned in `dm-msg-arg-props' are
 appended to the end along with associated values."
   (let* ((result (or (plist-get plist :fmt) dm-msg-format))
-	(plist (copy-sequence plist))
-	(keys (seq-uniq (append (seq-filter 'keywordp plist)
-				dm-msg-props dm-msg-arg-props)))
-	(re (apply
-	     'concat
-	     (list
-	      "$\\("
-	      (mapconcat (lambda (key)
-			   (if (keywordp key)
-			       (let ((nm (symbol-name key)))
-				 (substring nm 1 (length nm)))
-			     key))
-			 keys
-			 "\\|") "\\)"))))
-    (unless (plist-member plist :args)
-      (plist-put plist :args dm-msg-arg-props))
-    (when-let ((args (plist-get plist :args)))
-      (plist-put plist :args
-		 (prin1-to-string
-		  (mapcar
-		   (lambda (arg)
-		     (cons arg (plist-get plist arg)))
-		   (plist-get plist :args))
-		  t)))
+	 (plist (copy-sequence plist))
+	 (args (plist-get plist :args))
+	 (keys (seq-uniq (append (seq-filter 'keywordp plist)
+				 (when args (seq-filter 'keywordp args))
+				 dm-msg-props dm-msg-arg-props)))
+	 (re (apply 'concat
+		    (list
+		     "$\\(?:"
+		     (mapconcat (lambda (key)
+				  (if (keywordp key)
+				      (let ((nm (symbol-name key)))
+					(substring nm 1 (length nm)))
+				    key))
+				keys
+				"\\|") "\\)"))))
+    ;; seperate to-string implemention for args, if any
+    (when args (plist-put plist :args (dm-msg-format-args args)))
+    ;; transform all properties to string.  Each value is from input
+    ;; plist or :args of the input plist, or else the empty string
     (mapc (lambda (prop)
-	    (plist-put plist prop (format "%s" (or (plist-get plist prop) ""))))
+	    (plist-put plist prop (format "%s" (or (plist-get plist prop)
+						   (and args (plist-get args prop))
+						   ""))))
 	  keys)
-    (unless (plist-member plist :args) (plist-put plist :args dm-msg-arg-props))
+    ;; interpolate. replace "$" with ":" and intern to find a replacement.
+    ;; Take replacement from input plist or :args of input plist or use "".
     (when (and re result)
       (replace-regexp-in-string
        re
        (lambda (x)
 	 (let ((sym-name (intern (concat ":" (substring x 1)))))
-	   (or (plist-get plist sym-name) "")))
+	   (or (plist-get plist sym-name)
+	       (plist-get args sym-name)
+	       "")))
        result))))
-;;(dm-msg-impl (list :fmt "$file:$bar" :file "foo" :bar "baz" :args (list :bar))
+;;(dm-msg-impl :fmt "$file:$bar $args" :file "foo" :bar "baz" :args (list :bar ))
 
 (defun dm-msg (&rest args)
   "Maybe display a message.
@@ -268,17 +292,26 @@ sending the \":args\" keyword within a particular message."
 	 (message (if (equal t result) (apply 'dm-msg-impl args)
 		    result)))))
 
-(defmacro dm-msg-enable-for-impl (plist)
-  "Create a filter function to match messages per PLIST."
+(defmacro dm-msg-enable-impl (plist)
+  "Create a filter function to match messages per PLIST.
+
+Keys are keyword symbols matching those passed to `dm-maps'.
+When values are atoms test with `equal', when lists `member'.
+Values may match key in the message or a message argument."
   `(lambda (args)
      (if (and ,@(mapcar
 		 (lambda (arg)
-		   `(equal ,(plist-get plist arg)
-			   (plist-get args ,arg)))
+		   (when-let ((field (list 'or
+					   (list 'plist-get (list 'plist-get 'args :args)  arg)
+					   (list 'plist-get 'args arg)))
+			      (wanted (plist-get plist arg)))
+		     (if (listp wanted)
+			 `(progn (message "args:%s" args) (member ,field (list ,@wanted)))
+		       `(progn (message "args:%s" args) (equal ,wanted ,field)))))
 		 (seq-filter 'keywordp plist)))
 	 t nil)))
 
-(defun dm-msg-enable-for (&rest plist)
+(defun dm-msg-enable (&rest plist)
   "Enable messages per PLIST.
 
 PLIST provides constrains to enable messages.  Keys are keyword
@@ -287,7 +320,7 @@ symbols as for `dm-msg' and values are literals to match."
   (add-to-list 'dm-msg-filter-hook
 	       (if (null plist)
 		   (lambda (&rest _) t)
-		 (eval `(dm-msg-enable-for-impl ,plist)))))
+		 (eval `(dm-msg-enable-impl ,plist)))))
 
 ;; (defun dm-mag-enable (&optional arg)
 ;;   "Enable messages from `dungeon-mode'.
