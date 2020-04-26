@@ -80,7 +80,8 @@ These settings control display of game maps."
 				(dm-files-select :map-cells))
   "List of files from which load game maps."
   :type (list 'symbol)
-  :group (list 'dm-files 'dm-map))
+  :group 'dm-files
+  :group 'dm-map)
 
 (defcustom dm-map-property "ETL"
   "Property to insepect when finding tables." :type 'string)

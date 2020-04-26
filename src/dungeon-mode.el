@@ -34,11 +34,13 @@
 (eval-when-compile (require 'cl-lib))
 (require 'seq)
 
+;; Use this in other libraries but avoid linking
+;; in any but utilities/macros from this file:
 ;; DEVEL hack: prefer version from CWD, if any
-(let ((load-path (append (list ".") load-path)))
-  (require 'dm-util)
-  (require 'dm-table)
-  (require 'dm-map))
+;; (let ((load-path (append (list ".") load-path)))
+;;   (require 'dm-util)
+;;   (require 'dm-table)
+;;   (require 'dm-map))
 
 (defgroup dungeon-mode nil
   "Settings for RPG Gameplay and Authoring.
@@ -74,7 +76,8 @@ This ia a list of files or folders `dungeon-mode' can open,
 looking for game sources, your character sheets, and eveything
 else it needs.  Files in this list are not implicitly writable;
 see `dm-files-writable'."
-  :group (list 'dungeon-mode 'dm-files)
+  :group 'dungeon-mode
+  :group 'dm-files
   :type 'list)
 
 (defcustom dm-files-expand t
@@ -138,7 +141,7 @@ cosidered after `dm-files-select-impl' but before any supplied in
   (if file
       ;; FIXME we absolutely require the trailing slash to ID folders
       (if (directory-name-p file)
-	  (directory-files-recursively file ".*" t)
+	  (directory-files-recursively file ".*" t nil t)
 	(if (file-readable-p file) (list file) nil))
     nil))
 
