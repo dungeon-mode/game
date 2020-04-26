@@ -52,8 +52,8 @@ We want to:
      people's content and when we share content, especially online.
   3. Learn from self-documenting software and heuristic features that
      maximize universal design opportunities improve RPG accessibility.
-  4. Evangelize open-source and GNU and drive adaptation by gamers by
-     providing a single open source platform e.g., whether for
+  4. Evangelize Free Software and GNU and drive adaptation by gamers
+     by providing a single free platform e.g., whether for
      interactively joining a shared world across a network connection
      or at a table or while preparing a commercial work for binding.
   5. Play and create with the fewest possible assumptions, for example
@@ -67,7 +67,7 @@ We want to:
      repository will include neither user supplied content nor game
      sources except for the "Default Dungeon" which source materials
      share the copyright and licensing terms of the of the project.
-  8. If otherwise successful, enhance the GNU open-source tool-chain
+  8. If otherwise successful, enhance the GNU tool-chain of Free Software
      with additional audio and video conferencing capabilities
      especially for gaming and empower users to manage such streams
      from GNU Emacs and, e.g. while playing.  While these would likely
