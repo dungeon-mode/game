@@ -229,7 +229,7 @@ to string using `prin1-to-string', results are joined with space."
 			  (list (if (keywordp x)
 				    (concat (substring (symbol-name x) 1) ":")
 				  x)
-				(prin1-to-string (nth (1+ ix) arg-plist))))))
+				(prin1-to-string (nth (1+ ix) arg-plist) t)))))
 	       arg-plist))
 	     " "))
 
@@ -306,8 +306,8 @@ Values may match key in the message or a message argument."
 					   (list 'plist-get 'args arg)))
 			      (wanted (plist-get plist arg)))
 		     (if (listp wanted)
-			 `(progn (message "args:%s" args) (member ,field (list ,@wanted)))
-		       `(progn (message "args:%s" args) (equal ,wanted ,field)))))
+			 `(member ,field (list ,@wanted))
+		       `(equal ,wanted ,field))))
 		 (seq-filter 'keywordp plist)))
 	 t nil)))
 

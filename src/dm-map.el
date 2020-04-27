@@ -326,7 +326,7 @@ TILE is an hash-table key, PROP is a property (default: \"path\"."
      (insert (format-time-string "%D %-I:%M:%S %p on %A, %B %e, %Y\n"))
      ,@body
      ;;(insert (format "\n\n[SVG CODE]:\n%s" (dom-pp (oref  svg))))
-     (insert (format "\n\n[SVG DUMP]:\n%s" ,svg))
+     ;;(insert (format "\n\n[SVG DUMP]:\n%s" ,svg))
      (beginning-of-buffer)))
 
 (defun dm-map-load (&rest files)
@@ -338,7 +338,7 @@ Kick off a new batch for each \"feature\" or \"level\" table found."
   (list nil
 	(seq-map
 	 (lambda (this-file)
-	   (message "[map-load] file:%s" this-file)
+	   (dm-msg :file "dm-map" :fun "load" :args (list :file this-file))
 	   (with-temp-buffer
 	     (insert-file-contents this-file)
 	     ;; (org-macro-initialize-templates)
@@ -429,7 +429,8 @@ Only consider attributes listed in `dm-map--scale-props'"
 
 		 (setq last-key (intern tile)
 		       dm-map--last-plist (dm-map-table-cell tile :table hash))
-(message "[tile-xform] tile:%s key:%s plist:%s" tile last-key dm-map--last-plist)
+		 (dm-msg :file "dm-map" :fun "tiles-transform"
+			 :args (list :tile tile :key last-key :plist dm-map--last-plist))
 		 (when (string-match dm-map-tile-tag-re tile)
 		   ;; Tile name contains a tag i.e. "some-tile:some-tag".
 		   ;; Ingore inverted tags ("some-tile:!some-tag"). Add others
@@ -457,7 +458,8 @@ Only consider attributes listed in `dm-map--scale-props'"
 		     (delq nil'(,dm-map-draw-prop ,@dm-map-draw-other-props)))
 	       (when (and (boundp (quote ,dm-map-overlay-prop)) ,dm-map-overlay-prop)
 		 (push ,dm-map-overlay-prop dm-map--xml-strings))
-(message "[tile-xform] %s ⇒ lkey:%s lpath:%s" tile last-key dm-map--last-plist)
+	       (dm-msg :file "dm-map" :fun "tile-transform"
+		       :args (list :tile tile :key last-key :plist dm-map--last-plist))
 	       dm-map--last-plist)))
 	 (result
 	  (prog1
@@ -570,7 +572,7 @@ between 0 and 1 inclusive."
 			       (round (* x (car scale)))
 			       (round (* y (cdr scale)))))))
      ;; fall-back to a message
-     (_ (message "unhandled %s => %s" (type-of cell) (prin1-to-string cell t)))
+     (_ (warn "Can't scale SVG path %s => %s " (type-of cell) (prin1-to-string cell t)))
      )))
 
 ;;(dm-map-default-scale-function '(100 . 1000) (dom-node 'text '((font-size . .5)(x . .2))) '(h (.1)) '(v (.2))'(m (.3 .4)) '(l (.5 .6)) '(x (.7 .8)) '(a (0.05 0.05 0 1 1 -0.1 0.1)))
@@ -646,7 +648,7 @@ INHIBIT-TAGS is truthy do not add addional tiles based on tags."
 		      :inhibit-collection inhibit-collection
 		      :inhibit-tags inhibit-tags)))
 		  ((pred stringp)
-		   (message "[resolve] ignoring svg: %s" stroke))
+		   (warn "XML found in paths from %s ignoring %s" cell stroke))
 		  ((pred symbolp)
 		   (dm-map-resolve
 		    stroke :prop prop
@@ -866,8 +868,7 @@ SCALE-FUNCTION may be used to supply custom scaling."
 			     &key
 			     (scale (cons dm-map-scale dm-map-scale))
 			     (size (cons (* (car scale) (car dm-map-level-size))
-			      (message "path:%s water:%s" main-path paths)
-				 (* (cdr scale) (cdr dm-map-level-size))))
+					 (* (cdr scale) (cdr dm-map-level-size))))
 			     (nudge dm-map-nudge)
 			     (v-rule-len (+ (car size) (* 2 (car nudge))))
 			     (h-rule-len (+ (cdr size) (* 2 (cdr nudge))))
@@ -883,7 +884,7 @@ SCALE-FUNCTION may be used to supply custom scaling."
 					   (stroke . "blue")
 					   (stroke-width . ".25"))))
   "Create a background SVG with SCALE and SIZE and NUDGE."
-  (dm-msg :file "map" :fun "background" :args
+  (dm-msg :file "dm-map" :fun "background" :args
 	  (list :scale scale :size size :nudge nudge :svg svg))
   (prog1 svg
     (unless no-graph
