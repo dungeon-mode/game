@@ -229,7 +229,10 @@ to string using `prin1-to-string', results are joined with space."
 			  (list (if (keywordp x)
 				    (concat (substring (symbol-name x) 1) ":")
 				  x)
-				(prin1-to-string (nth (1+ ix) arg-plist) t)))))
+				(prin1-to-string
+				 (replace-regexp-in-string
+				  "[%]" "%%" (or (nth (1+ ix) arg-plist) " "))
+				 t)))))
 	       arg-plist))
 	     " "))
 
@@ -260,9 +263,10 @@ appended to the end along with associated values."
     ;; transform all properties to string.  Each value is from input
     ;; plist or :args of the input plist, or else the empty string
     (mapc (lambda (prop)
-	    (plist-put plist prop (format "%s" (or (plist-get plist prop)
-						   (and args (plist-get args prop))
-						   ""))))
+	    (let ((val (or(plist-get plist prop)
+			  (and args (plist-get args prop))
+			  "")))
+	      (plist-put plist prop (if (stringp val) val (format "%s" val)))))
 	  keys)
     ;; interpolate. replace "$" with ":" and intern to find a replacement.
     ;; Take replacement from input plist or :args of input plist or use "".

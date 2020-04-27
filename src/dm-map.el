@@ -421,7 +421,10 @@ Only consider attributes listed in `dm-map--scale-props'"
 	     :hash-symbol hash
 	     :key-symbol last-key
 	     (progn
-;;;(message "[tile-xform] tile:%s key:%s plist:%s" (when (boundp 'tile) tile) last-key dm-map--last-plist)
+	       (dm-msg :file "dm-map" :fun "tiles-transform"
+		       :args (list :tile (when (boundp 'tile) tile)
+				   :key last-key
+				   :plist dm-map--last-plist))
 	       (when (and (boundp 'tile) (org-string-nw-p tile))
 		 ;; This row includes a new tile-name; process any saved up
 		 ;; XML strings before we overwrite last-key
@@ -440,7 +443,10 @@ Only consider attributes listed in `dm-map--scale-props'"
 			       (tag (intern kw))
 			       (ref-sym (intern ref))
 			       (referent (gethash ref-sym hash)))
-;;;(message "[tile-xform] tag %s ⇒ %s (target: %s)" tag ref-sym referent)
+		     (dm-msg :file "dm-map" :fun "tiles-transform"
+			     :args (list  :tag tag
+					  :reference ref-sym
+					  :referent referent))
 		     (unless (or (match-string 3 tile)
 				 (assoc kw (plist-get referent ',dm-map-tag-prop)))
 		       (plist-put referent ',dm-map-tag-prop
@@ -462,9 +468,7 @@ Only consider attributes listed in `dm-map--scale-props'"
 		       :args (list :tile tile :key last-key :plist dm-map--last-plist))
 	       dm-map--last-plist)))
 	 (result
-	  (prog1
-;;;(message "[tile-xform] macro ⇒ %s" (prin1-to-string cform))
-	      (eval `(list :load ,cform))
+	  (prog1 (eval `(list :load ,cform))
 	    ;; process any overlay XML from last row
 	    (dm-map--xml-parse))))))
 
@@ -611,7 +615,9 @@ addional tiles based on tags."
 			  (dm-map-tile-tag-maybe-invert tile)))))
       (mapcan (lambda (stroke)
 		(let ((stroke stroke))
-		  ;;(message "[resolver] %s:%s (type: %s)" prop stroke (type-of stroke))
+		  (dm-msg :file "dm-map" :fun "resolve"
+			  :args (list :prop prop :stroke stroke
+				      :stroke-type (type-of stroke)))
 		  (if (symbolp stroke)
 		      (dm-map-resolve
 		       stroke
@@ -638,7 +644,9 @@ INHIBIT-TAGS is truthy do not add addional tiles based on tags."
 	      (paths (plist-get plist prop)))
     (mapcan (lambda (stroke)
 	      (let ((stroke stroke))
-;;(message "[resolver] stroke:%s (type: %s)" stroke (type-of stroke))
+		(dm-msg :file "dm-map" :fun "resolve-cell"
+			:args (list :prop prop :stroke stroke
+				    :stroke-type (type-of stroke)))
 		(pcase stroke
 		  ;; ignore references when drawing a complete level
 		  (`(,(and x (guard (numberp x))). ,(and y (guard (numberp y))))
