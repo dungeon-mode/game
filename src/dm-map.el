@@ -56,9 +56,11 @@
 (eval-when-compile (require 'eieio)
 		   (require 'cl-lib)
 		   (require 'subr-x)
+		   (require 'pixel-scroll)
 		   ;;(require 'subr)
 		   )
 
+(require 'image-mode)
 (require 'org-element)
 
 ;; DEVEL hack: prefer version from CWD, if any
@@ -96,6 +98,17 @@ assigned (in both dimensions) while drwaing the map."
 (defcustom dm-map-nudge `(,dm-map-scale . ,dm-map-scale)
   "Top and left padding in pixels as a cons cell (X . Y)."
   :type 'cons)
+
+(defcustom dm-map-scale-nudge 5
+  "Map scale nudge factor in pixels.
+
+Controls amount by which func `dm-map-scale' adjusts var
+`dm-map-scale' when called with a prefix argument."
+  :type 'integer)
+
+(defcustom dm-map-scroll-nudge 2
+  "Map scrolling nudge factor in pixels."
+  :type 'integer)
 
 (defcustom dm-map-background t
   "List of SVG `dom-node's or t for dynamic background.
@@ -320,14 +333,24 @@ TILE is an hash-table key, PROP is a property (default: \"path\"."
   "Open (erase) buffer evaluate BODY, dump and return SVG."
   (declare (indent 1))
   `(with-current-buffer (pop-to-buffer "**dungeon map**")
-     (dm-map-mode)
-     (erase-buffer)
-     (goto-char (point-min))
-     (insert (format-time-string "%D %-I:%M:%S %p on %A, %B %e, %Y\n"))
-     ,@body
-     ;;(insert (format "\n\n[SVG CODE]:\n%s" (dom-pp (oref  svg))))
-     ;;(insert (format "\n\n[SVG DUMP]:\n%s" ,svg))
-     (beginning-of-buffer)))
+     (let ((image-transform-resize 1))
+       (cl-letf (((symbol-function 'message) #'format)
+		 ;;((symbol-function 'image-fit-to-window) (lambda (_) nil))
+		 )
+	 (when (image-get-display-property)
+	   (image-mode-as-text)
+	   (erase-buffer)
+	   (beginning-of-buffer))
+	 ;;(let ((inhibit-read-only t)))
+	 ;;(insert (format-time-string "%D %-I:%M:%S %p on %A, %B %e, %Y\n"))
+	 ;;(insert (format "\n\n[SVG CODE]:\n%s" (dom-pp (oref  svg))))
+	 ;;(insert (format "\n\n[SVG DUMP]:\n%s" ,svg))
+	 ,@body
+	 (dm-map-mode)
+	 ;;(pixel-scroll-mode t)
+	 ;;(image-transform-set-scale 1)
+	 (image-toggle-display-image)
+	 ))))
 
 (defun dm-map-load (&rest files)
   "Truncate and replace `dm-map-tiless' and `dm-map-levels' from FILES.
@@ -373,6 +396,8 @@ Only consider attributes listed in `dm-map--scale-props'"
 	  ;; (message "[xml-to-num] after(1) -> %s"
 	  ;; 	   (prin1-to-string (dom-attr dom-node attr)))
 	  )))
+    (dolist (child (dom-children dom-node))
+      (dm-map--xml-attr-to-number child))
     ;;(message "[xml-to-num] after ⇒ %s" (prin1-to-string dom-node))
     dom-node))
 
@@ -381,19 +406,25 @@ Only consider attributes listed in `dm-map--scale-props'"
   (when (and dm-map--last-plist dm-map--xml-strings)
     (let ((xml-parts (dm-map--xml-attr-to-number
 		      (with-temp-buffer
-			(insert (mapconcat
+			(insert "<g>"
+				(mapconcat
 				 'identity
-				 (nreverse dm-map--xml-strings) ""))
-			;;(message "[tile-xform] XML %s" (buffer-string))
+				 (reverse dm-map--xml-strings) "")
+				"</g>")
+			(dm-msg :file "dm-map" :fun "-xml-parse"
+				:args (list :in dm-map--xml-strings
+					    :plist dm-map--last-plist
+					    :string (buffer-string)))
 			(libxml-parse-xml-region (point-min)
 						 (point-max))))))
-      (prog1 (plist-put dm-map--last-plist dm-map-overlay-prop
-			(append (plist-get dm-map--last-plist
-					   dm-map-overlay-prop)
-				(list xml-parts)))
-	;; (message "[tile-xform] XML:%s last-plist:%s"
-	;; 	 (prin1-to-string xml-parts)
-	;; 	 (prin1-to-string dm-map--last-plist))
+      (prog2 (dm-msg :file "dm-map" :fun "-xml-parse"
+		     :args (list :in dm-map--xml-strings
+				 :out xml-parts
+				 :plist dm-map--last-plist))
+	  (plist-put dm-map--last-plist dm-map-overlay-prop
+		     (append (plist-get dm-map--last-plist
+					dm-map-overlay-prop)
+			     (list xml-parts)))
 	(setq dm-map--xml-strings nil)))))
 
 (defun dm-map-level-transform (table)
@@ -421,18 +452,24 @@ Only consider attributes listed in `dm-map--scale-props'"
 	     :hash-symbol hash
 	     :key-symbol last-key
 	     (progn
-	       (dm-msg :file "dm-map" :fun "tiles-transform"
-		       :args (list :tile (when (boundp 'tile) tile)
-				   :key last-key
-				   :plist dm-map--last-plist))
+	       (dm-msg :msg "start" :file "dm-map" :fun "tiles-transform"
+		       :args (list :tile (if (boundp 'tile) tile "#unbound")
+				   :key (if (boundp 'last-key) last-key "#unbound")
+				   :plist dm-map--last-plist
+				   :string dm-map--xml-strings))
 	       (when (and (boundp 'tile) (org-string-nw-p tile))
+		 (dm-msg :msg "old-tile" :file "dm-map" :fun "tiles-transform"
+			 :string dm-map--xml-strings
+			 :args (list :tile tile :plist dm-map--last-plist
+				     :key (if (boundp 'last-key) last-key "#unbound")))
 		 ;; This row includes a new tile-name; process any saved up
 		 ;; XML strings before we overwrite last-key
 		 (dm-map--xml-parse)
 
 		 (setq last-key (intern tile)
 		       dm-map--last-plist (dm-map-table-cell tile :table hash))
-		 (dm-msg :file "dm-map" :fun "tiles-transform"
+		 (dm-msg :msg "new-tile" :file "dm-map" :fun "tiles-transform"
+			 :string dm-map--xml-strings
 			 :args (list :tile tile :key last-key :plist dm-map--last-plist))
 		 (when (string-match dm-map-tile-tag-re tile)
 		   ;; Tile name contains a tag i.e. "some-tile:some-tag".
@@ -443,8 +480,8 @@ Only consider attributes listed in `dm-map--scale-props'"
 			       (tag (intern kw))
 			       (ref-sym (intern ref))
 			       (referent (gethash ref-sym hash)))
-		     (dm-msg :file "dm-map" :fun "tiles-transform"
-			     :args (list  :tag tag
+		     (dm-msg :msg "tags" :file "dm-map" :fun "tiles-transform"
+			     :args (list  :tag tag :key (if (boundp 'last-key) last-key "#unbound")
 					  :reference ref-sym
 					  :referent referent))
 		     (unless (or (match-string 3 tile)
@@ -463,12 +500,26 @@ Only consider attributes listed in `dm-map--scale-props'"
 					   (dm-map-parse-plan-part (symbol-value `,prop))))))
 		     (delq nil'(,dm-map-draw-prop ,@dm-map-draw-other-props)))
 	       (when (and (boundp (quote ,dm-map-overlay-prop)) ,dm-map-overlay-prop)
-		 (push ,dm-map-overlay-prop dm-map--xml-strings))
-	       (dm-msg :file "dm-map" :fun "tile-transform"
-		       :args (list :tile tile :key last-key :plist dm-map--last-plist))
+		 (push ,dm-map-overlay-prop dm-map--xml-strings)
+		 (dm-msg :msg "push-xml-string" :file "dm-map" :fun "tile-transform"
+			 :args (list :tile tile
+				     :key (if (boundp 'last-key) last-key "#unbound")
+				     :prop dm-map-overlay-prop
+				     :val ,dm-map-overlay-prop
+				     :string dm-map--xml-strings)))
+	       (dm-msg :msg "end" :file "dm-map" :fun "tile-transform"
+		       :string dm-map--xml-strings
+		       :args (list :tile tile
+				   :key (if (boundp 'last-key) last-key "#unbound")
+				   :plist dm-map--last-plist))
 	       dm-map--last-plist)))
 	 (result
-	  (prog1 (eval `(list :load ,cform))
+	  (prog2 (dm-msg :msg "eval" :file "dm-map" :fun "tiles-transform"
+			 :args (list :form cform
+				     :key (if (boundp 'last-key) last-key "#unbound")
+				     :plist dm-map--last-plist
+				     :string dm-map--xml-strings))
+	      (eval `(list :load ,cform))
 	    ;; process any overlay XML from last row
 	    (dm-map--xml-parse))))))
 
@@ -529,6 +580,9 @@ of the current cell in dungeon units."
 	(dom-set-attribute dom-node 'font-size (* x-scale font-size)))
       (dom-set-attribute dom-node 'x x-new)
       (dom-set-attribute dom-node 'y y-new))
+    ;; process child nodes
+    (dolist (child (dom-children dom-node))
+      (dm-map--dom-attr-nudge nudge scale pos child))
     dom-node))
 
 ;;(dm-map--dom-attr-nudge '(1 2)  '(4 . 8) (dom-node 'text '((x . 16)(y . 32))))
@@ -616,7 +670,7 @@ addional tiles based on tags."
       (mapcan (lambda (stroke)
 		(let ((stroke stroke))
 		  (dm-msg :file "dm-map" :fun "resolve"
-			  :args (list :prop prop :stroke stroke
+			  :args (list :tile tile :prop prop :stroke stroke
 				      :stroke-type (type-of stroke)))
 		  (if (symbolp stroke)
 		      (dm-map-resolve
@@ -919,6 +973,18 @@ SCALE-FUNCTION may be used to supply custom scaling."
 
 
 
+;; commands and major mode
+
+(defun dm-map-kill-buffer (&rest _)
+  "Remove the dungeon-mode map buffer."
+  (interactive)
+  (let (kill-buffer-query-functions) (kill-buffer)))
+
+(defun dm-map-quit (&rest _)
+  "Remove the map buffer any window it created."
+  (interactive)
+  (quit-restore-window nil 'kill))
+
 (defun dm-map-draw (&optional arg)
   "Draw all from `dm-map-level'.  With prefix ARG, reload first."
   (interactive "P")
@@ -930,20 +996,118 @@ SCALE-FUNCTION may be used to supply custom scaling."
 	      )))
     (prog1 svg
       (dm-map-draw-test svg ;; (oref svg path-data)
-	(render-and-insert svg)))))
+	(render-and-insert-string svg)))))
+
+;; (defun dm-map-center (&optional x y)
+;;   "Center map buffer, on POS when given.
+
+;; Interactively, prompt for a new center location or use the
+;; physical center of the image.  X and Y locaton of the target cell
+;; in Dungeon units."
+;;   (interactive "nCenter (cell x):\nnCenter (cell y):")
+;;   (let ((lx (car dm-map-level-size))
+;; 	(ly (cdr dm-map-level-size))
+;; 	(frame (window-frame (selected-window)))
+;; 	(wx (window-body-width nil t))
+;; 	(wy (window-body-height nil t)))
+;;     (let ((nx (cond ((< x 0) 0)
+;; 		    ((> x (- lx 2)) (1- lx))
+;; 		    (t (1- x))))
+;; 	  (ny (cond ((< y 0) 0)
+;; 		    ((> y (- ly 2)) (1- ly))
+;; 		    (t y)))
+;; 	  (dx (/ wx dm-map-scale))
+;; 	  (dy (/ wy dm-map-scale))
+;; 	  (cw (frame-char-width frame)))
+;;       (let ((sx (* dx nx))
+;; 	    (sy (* dy ny)))
+;; 	(message "x:%s/%s at %s ea (%s), y:%s/%s at %s ea. (%s)"
+;; 		 sx wx dx nx sy wy dy ny)))))
+
+(defun dm-map-scale (&optional arg)
+  "Set mapping scale to ARG pixels per dungeon-unit."
+  (interactive
+   (list
+    (string-to-number
+     (read-string (format "Scale (in pixels, currently %s): " dm-map-scale)
+		  nil nil dm-map-scale ))))
+  ;;(interactive "NEnter map scale (pixels):")
+  (let ((win (selected-window)))
+    (let ((width (frame-char-width (window-frame win))))
+      (let ((hscroll (* (window-hscroll win) width))
+	    (vscroll (window-vscroll win t))
+	    (oscale dm-map-scale))
+	(when (not (eql oscale arg))
+	  (setq dm-map-scale arg)
+	  (dm-map-draw)
+	  (set-window-hscroll win (round (/ (* hscroll arg) oscale width)))
+	  (set-window-vscroll win (round (/ (* vscroll arg) oscale)) t))))))
+
+(defun dm-map-scale-nudge (&optional arg)
+  "Adjust scale ARG increments of var `dm-map-scale-nudge'.
+
+ARG is the factor for applying 'dm-map-scale-nudge' to `dm-map-scale'."
+  (interactive "p")
+  (dm-map-scale (+ dm-map-scale (* dm-map-scale-nudge arg))))
+
+(defun dm-map-scale-nudge-invert (&optional arg)
+  "Inverse of `dm-map-scale-nudge'; ARG is inverted."
+  (interactive "p")
+  (dm-map-scale-nudge (- arg)))
+
+  ;; (let ((nudge (if (< 0 arg) )
+  ;; 	 (cond ((and (numberp arg) (> 0 arg)) (* arg dm-map-scale-nudge))
+  ;; 	       ((and (numberp arg)) (- 0 (* arg dm-map-scale-nudge)))
+  ;; 	       ((and arg (symbolp arg)) (- 0 dm-map-scale-nudge))
+  ;; 	       ((eq (car-safe arg) 16) "")
+  ;; 	       (arg "")))
+  ;; 	))
+
+(defun dm-map-scroll (&optional arg)
+  "Scroll the map by ARG or `dm-map-scroll-nudge'."
+  (interactive "p")
+  (scroll-down-line (or dm-map-scroll-nudge
+			(* dm-map-scale (cdr dm-map-nudge)))))
+
+(defun dm-map-scroll-invert (&optional arg)
+  "Scroll the map by - ARG or `dm-map-scroll-nudge'."
+  (interactive "p")
+  (scroll-up-line (or dm-map-scroll-nudge
+		   (* dm-map-scale (car dm-map-nudge)))))
+
+(defun dm-map-hscroll (&optional arg)
+  "Scroll the map horizontally by ARG or `dm-map-scroll-nudge'."
+  (interactive "p")
+  (scroll-left (or dm-map-scroll-nudge
+		   (* dm-map-scale (car dm-map-nudge)))))
+
+(defun dm-map-hscroll-invert (&optional arg)
+  "Scroll the map by - ARG or `dm-map-scroll-nudge'."
+  (interactive "p")
+  (scroll-right (or dm-map-scroll-nudge
+		   (* dm-map-scale (car dm-map-nudge)))))
 
 ;; global key binding
 (global-set-key (kbd "<f9>") 'dm-map-draw)
 
-
 ;; basic major mode for viewing maps
 (defvar dm-map-mode-map
   (let ((map (make-sparse-keymap)))
-    (define-key map (kbd "q") 'kill-buffer-and-window)
-    (define-key map (kbd "x") 'kill-buffer)
+    (define-key map (kbd "+") 'dm-map-scale-nudge)
+    (define-key map (kbd "-") 'dm-map-scale-nudge-invert)
+    ;; (define-key map (kbd "<up>") 'dm-map-scroll)
+    ;; (define-key map (kbd "<down>") 'dm-map-scroll-invert)
+    ;; (define-key map (kbd "<right>") 'dm-map-hscroll)
+    ;; (define-key map (kbd "<left>") 'dm-map-hscroll-invert)
+    (define-key map (kbd "d") 'dm-map-draw)
+    (define-key map (kbd "g") 'dm-map-draw)
+    (define-key map (kbd "k") 'dm-map-kill-buffer)
+    (define-key map (kbd "q") 'dm-map-quit)
+    (define-key map (kbd "r") 'dm-map-draw)
+    (define-key map (kbd "s") 'dm-map-scale)
     map))
 
-(define-derived-mode dm-map-mode fundamental-mode "MAP"
+(define-derived-mode dm-map-mode image-mode "MAP"
   "Major mode for `dugeon-mode' maps.")
 
 ;; (setq dm-map-files '("d:/projects/dungeon-mode/Docs/Maps/map-tiles.org"

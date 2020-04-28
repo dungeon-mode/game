@@ -142,5 +142,16 @@ a path element using path-data of DM-SVG. See `add-path-data'."
       ;;(with-temp-file "out.svg" (set-buffer-multibyte nil) (svg-print svg))
       (svg-insert-image svg)))
 
+(cl-defmethod render-and-insert-string ((object dm-svg))
+  "Render and insert `svg' from a DM-SVG.
+
+Image is inserted to `current-buffer' at `point' after appending
+a path element using path-data of DM-SVG. See `add-path-data'."
+  (with-slots (svg path-data) object
+      (dom-append-child svg path-data)
+      ;;(with-temp-file "out.svg" (set-buffer-multibyte nil) (svg-print svg))
+      ;;(svg-insert-image svg)
+      (svg-print svg)))
+
 (provide 'dm-svg)
 ;;; dm-svg.el ends here

@@ -229,12 +229,11 @@ to string using `prin1-to-string', results are joined with space."
 			  (list (if (keywordp x)
 				    (concat (substring (symbol-name x) 1) ":")
 				  x)
-				(prin1-to-string
-				 (replace-regexp-in-string
-				  "[%]" "%%" (or (nth (1+ ix) arg-plist) " "))
-				 t)))))
-	       arg-plist))
-	     " "))
+				(replace-regexp-in-string
+				 "%" "%%" (prin1-to-string (nth (1+ ix) arg-plist)  t)
+				 t t)))))
+		 arg-plist))
+	      " "))
 
 (defun dm-msg-impl (&rest plist)
   "Implement message display.
@@ -293,38 +292,64 @@ sending the \":args\" keyword within a particular message."
   (and dm-msg-enabled args
        (let ((result (run-hook-with-args-until-success
 		      'dm-msg-filter-hook args)))
-	 (message (if (equal t result) (apply 'dm-msg-impl args)
-		    result)))))
+	 (if result
+	     (message (if (equal t result) (apply 'dm-msg-impl args)
+			result))
+	   nil))))
 
-(defmacro dm-msg-enable-impl (plist)
+(defmacro dm-msg-enable-impl (invert plist)
   "Create a filter function to match messages per PLIST.
 
 Keys are keyword symbols matching those passed to `dm-maps'.
 When values are atoms test with `equal', when lists `member'.
-Values may match key in the message or a message argument."
+Values may match key in the message or a message argument.
+When INVERT is truthy invert predicates."
   `(lambda (args)
-     (if (and ,@(mapcar
-		 (lambda (arg)
-		   (when-let ((field (list 'or
-					   (list 'plist-get (list 'plist-get 'args :args)  arg)
-					   (list 'plist-get 'args arg)))
-			      (wanted (plist-get plist arg)))
-		     (if (listp wanted)
-			 `(member ,field (list ,@wanted))
-		       `(equal ,wanted ,field))))
-		 (seq-filter 'keywordp plist)))
+     (if (,(if invert 'or 'and)
+	  ,@(mapcar
+	     (lambda (arg)
+	       (let* ((field (list 'or
+				   (list 'plist-get (list 'plist-get 'args :args)  arg)
+				   (list 'plist-get 'args arg)))
+		      (wanted (plist-get plist arg))
+		      (form
+		       (pcase wanted
+			 ('nil `(null ,field))
+			 ('t `(not (null ,field)))
+			 (`(,(and ':let) ,var ,_) `(let ((,var ,field))
+						     ,@(cddr wanted)))
+			 ((pred listp) `(member ,field '(,@wanted)))
+			 (_ `(equal ,field
+				    ,(if (symbolp wanted)
+					 `(quote ,wanted)
+				       wanted))))))
+		 (if invert `(not ,form) `,form)))
+	     (seq-filter 'keywordp plist)))
 	 t nil)))
 
 (defun dm-msg-enable (&rest plist)
   "Enable messages per PLIST.
 
 PLIST provides constrains to enable messages.  Keys are keyword
-symbols as for `dm-msg' and values are literals to match."
+symbols as for `dm-msg' and values are literals to match.  When
+PLIST is nil enable all messages.  Set `dm-msg-enable' to t."
   (setq dm-msg-enabled t)
   (add-to-list 'dm-msg-filter-hook
 	       (if (null plist)
 		   (lambda (&rest _) t)
-		 (eval `(dm-msg-enable-impl ,plist)))))
+		 (eval `(dm-msg-enable-impl nil ,plist)))))
+
+(defun dm-msg-disable (&rest plist)
+  "Disable messages per PLIST.
+
+ PLIST providesconstrains to enable messages.  Keys are keyword
+symbols as for `dm-msg' and values are literals to match.  When
+PLIST is nill disable all messages, otherwise don't change
+`dm-msg-enabled'."
+  (add-to-list 'dm-msg-filter-hook
+	       (if (null plist)
+		   (setq dm-msg-enabled t)
+		 (eval `(dm-msg-enable-impl t ,plist)))))
 
 ;; (defun dm-mag-enable (&optional arg)
 ;;   "Enable messages from `dungeon-mode'.
