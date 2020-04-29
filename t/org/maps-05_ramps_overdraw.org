@@ -9,6 +9,14 @@ This tests map rendering using a tile and cell containing a only path commands..
 :END:
 
 | Tile       | Path                       | stairs        |
+| cEW        | ‡N ‡S                      |               |
+| cW         | h1 v1 h-1 ↑                |               |
+| ‡N         | h1                         |               |
+| ‡S         | ↓ h1                       |               |
+| →          | m1,0                       |               |
+| ←          | m-1,0                      |               |
+| ↑          | m0,-1                      |               |
+| ↓          | m0,1                       |               |
 | R▲E        |                            |               |
 | R▲E:!dwarf | cEW → cEW → cEW → cEW → cW |               |
 | R▲E:dwarf  | cEW → cEW → cEW → cEW → cW | h5 v1 h-5 v-1 |
