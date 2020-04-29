@@ -309,23 +309,23 @@ These features are intended to be used mostly as parts of compositions and rarel
    :END:
 
 # #+NAME: area-features
-| Tile | Overlay                                                     | Documentation                       | Behavior |
-|------+-------------------------------------------------------------+-------------------------------------+----------|
-| A2   | <text x=".80" y="1.15" font-size=".5" fill="red">A</text>   | Mark 20x20 area with a text tag     |          |
-|      |                                                             |                                     |          |
-| A3   | <text x="1.3" y="1.65" font-size=".5" fill="red">A</text>   | Mark 30x30 area with a text tag     |          |
-|      |                                                             |                                     |          |
-| F2   | <text x=".80" y="1.15" font-size=".5" fill="red">F</text>   | Mark 20x20 Fountain with a text tag |          |
-|      |                                                             |                                     |          |
-| F3   | <text x="1.3" y="1.65" font-size=".5" fill="red">F</text>   | Mark 30x30 Fountain with a text tag |          |
-|      |                                                             |                                     |          |
-| C2   | <text x="1.85" y="1.65" font-size=".5" fill="blue">C</text> | Mark 30x40 Compulsion with C        |          |
-|      | <text x=".4" y=".25" font-size=".35" fill="blue">1</text>   |                                     |          |
-|      | <text x="3.8" y="1.6" font-size=".35" fill="blue">2</text>  |                                     |          |
-|      | <text x="2.45" y="2.9" font-size=".35" fill="blue">3</text> |                                     |          |
-|      | <text x="1.35" y="2.9" font-size=".35" fill="blue">4</text> |                                     |          |
-|      | <text x=".05" y="2.6" font-size=".35" fill="blue">5</text>  |                                     |          |
-|      | <text x=".05" y=".6" font-size=".35" fill="blue">6</text>   |                                     |          |
+| Tile | Overlay                                                                   | Documentation                       | Behavior |
+|------+---------------------------------------------------------------------------+-------------------------------------+----------|
+| A2   | <text x=".80" y="1.15" font-size=".5" stroke="red" fill="red">A</text>    | Mark 20x20 area with a text tag     |          |
+|      |                                                                           |                                     |          |
+| A3   | <text x="1.3" y="1.65" font-size=".5" stroke="red" fill="red">A</text>    | Mark 30x30 area with a text tag     |          |
+|      |                                                                           |                                     |          |
+| F2   | <text x=".80" y="1.15" font-size=".5" stroke="red" fill="red">F</text>    | Mark 20x20 Fountain with a text tag |          |
+|      |                                                                           |                                     |          |
+| F3   | <text x="1.3" y="1.65" font-size=".5" stroke="red" fill="red">F</text>    | Mark 30x30 Fountain with a text tag |          |
+|      |                                                                           |                                     |          |
+| C2   | <text x="1.85" y="1.65" font-size=".5" stroke="blue" fill="blue">C</text> | Mark 30x40 Compulsion with C        |          |
+|      | <text x=".4" y=".25" font-size=".35" stroke="blue" fill="blue">1</text>   |                                     |          |
+|      | <text x="3.8" y="1.6" font-size=".35" stroke="blue" fill="blue">2</text>  |                                     |          |
+|      | <text x="2.45" y="2.9" font-size=".35" stroke="blue" fill="blue">3</text> |                                     |          |
+|      | <text x="1.35" y="2.9" font-size=".35" stroke="blue" fill="blue">4</text> |                                     |          |
+|      | <text x=".05" y="2.6" font-size=".35" stroke="blue" fill="blue">5</text>  |                                     |          |
+|      | <text x=".05" y=".6" font-size=".35" stroke="blue" fill="blue">6</text>   |                                     |          |
 
 
 ** Chamber Tiles Table
@@ -379,26 +379,26 @@ These features are intended to be used mostly as parts of compositions and rarel
    :END:
 
 # #+NAME: special-chamber-tiles
-| Tile       | Path                                                           | Documentation                     | Overlay                                                                 |
-|------------+----------------------------------------------------------------+-----------------------------------+-------------------------------------------------------------------------|
-| GS         | ‡W ‡N → ‡N ‡E ↘ ‡N ‡E ↓ ‡E ↓ ‡E ‡S ← ‡S ← ← ‡S ‡W ↑ ‡W ↑ ‡W ‡N | General Store                     | <text x="-.65" y="2.25" font-size=".6" fill="blue">General Store</text> |
-|            |                                                                |                                   |                                                                         |
-| throneroom | ‡W ‡N → ‡N → ‡N → ‡N ‡E ↓ ‡E ↓ ‡E ‡S ← ‡S ← ‡S ← ‡S ‡W ↑ ◦W    | The Throne Room                   | <text x=".5" y="1.75" font-size=".6" fill="blue">Throne Room</text>     |
-|            |                                                                |                                   |                                                                         |
-| balN       | ◤ → ◦N → ◥ ↓ ‡E ↓ ◤ ← ‡S ← ◥ ↑ ‡W                              | Balrog chamber, Secret door North |                                                                         |
-|            |                                                                |                                   |                                                                         |
-| balE       | ◤ → ‡N → ◥ ↓ ◦E ↓ ◤ ← ‡S ← ◥ ↑ ‡W                              | Balrog chamber, Secret door east  |                                                                         |
-|            |                                                                |                                   |                                                                         |
-| balS       | ◤ → ‡N → ◥ ↓ ‡E ↓ ◤ ← ◦S ← ◥ ↑ ‡W                              | Balrog chamber, Secret door South |                                                                         |
-|            |                                                                |                                   |                                                                         |
-| balW       | ◤ → ‡N → ◥ ↓ ‡E ↓ ◤ ← ‡S ← ◥ ↑ ◦W                              | Balrog chamber, Secret door West  |                                                                         |
-|            |                                                                |                                   |                                                                         |
-| clapNS     | ‡W ‡N → → ‡N ‡E ↓ ‡E ↓ ‡E ‡S ← ← ‡S ‡W ↑ ‡W ↑                  | The Clappers oriented North-South | <path stroke="black" stroke-width="3" fill="none"                       |
-|            |                                                                |                                   | d="m0,150 h30 v130 v-260 m270,130 h-30 v130 v-260" />                   |
-|            |                                                                |                                   |                                                                         |
-| clapEW     | ‡W ‡N → ‡N → ‡N ‡E ↓ ↓ ‡E ‡S ← ‡S ← ‡S ‡W ↑ ↑                  | The Clappers oriented East-West   | <path stroke="black" stroke-width="3" fill="none"                       |
-|            |                                                                |                                   | d="m150,0 v30 h130 h-260 m130,270 v-30 h130 h-260" />                   |
-|            |                                                                |                                   |                                                                         |
+| Tile       | Path                                                           | Documentation                     | Overlay                                                                               |
+|------------+----------------------------------------------------------------+-----------------------------------+---------------------------------------------------------------------------------------|
+| GS         | ‡W ‡N → ‡N ‡E ↘ ‡N ‡E ↓ ‡E ↓ ‡E ‡S ← ‡S ← ← ‡S ‡W ↑ ‡W ↑ ‡W ‡N | General Store                     | <text x="-.65" y="2.25" font-size=".6" stroke="blue" fill="blue">General Store</text> |
+|            |                                                                |                                   |                                                                                       |
+| throneroom | ‡W ‡N → ‡N → ‡N → ‡N ‡E ↓ ‡E ↓ ‡E ‡S ← ‡S ← ‡S ← ‡S ‡W ↑ ◦W    | The Throne Room                   | <text x=".5" y="1.75" font-size=".6" stroke="blue" fill="blue">Throne Room</text>     |
+|            |                                                                |                                   |                                                                                       |
+| balN       | ◤ → ◦N → ◥ ↓ ‡E ↓ ◤ ← ‡S ← ◥ ↑ ‡W                              | Balrog chamber, Secret door North |                                                                                       |
+|            |                                                                |                                   |                                                                                       |
+| balE       | ◤ → ‡N → ◥ ↓ ◦E ↓ ◤ ← ‡S ← ◥ ↑ ‡W                              | Balrog chamber, Secret door east  |                                                                                       |
+|            |                                                                |                                   |                                                                                       |
+| balS       | ◤ → ‡N → ◥ ↓ ‡E ↓ ◤ ← ◦S ← ◥ ↑ ‡W                              | Balrog chamber, Secret door South |                                                                                       |
+|            |                                                                |                                   |                                                                                       |
+| balW       | ◤ → ‡N → ◥ ↓ ‡E ↓ ◤ ← ‡S ← ◥ ↑ ◦W                              | Balrog chamber, Secret door West  |                                                                                       |
+|            |                                                                |                                   |                                                                                       |
+| clapNS     | ‡W ‡N → → ‡N ‡E ↓ ‡E ↓ ‡E ‡S ← ← ‡S ‡W ↑ ‡W ↑                  | The Clappers oriented North-South | <path stroke="black" stroke-width="3" fill="none"                                     |
+|            |                                                                |                                   | d="m0,150 h30 v130 v-260 m270,130 h-30 v130 v-260" />                                 |
+|            |                                                                |                                   |                                                                                       |
+| clapEW     | ‡W ‡N → ‡N → ‡N ‡E ↓ ↓ ‡E ‡S ← ‡S ← ‡S ‡W ↑ ↑                  | The Clappers oriented East-West   | <path stroke="black" stroke-width="3" fill="none"                                     |
+|            |                                                                |                                   | d="m150,0 v30 h130 h-260 m130,270 v-30 h130 h-260" />                                 |
+|            |                                                                |                                   |                                                                                       |
 
 
 ** Level Change Tiles
@@ -475,53 +475,53 @@ These features are intended to be used mostly as parts of compositions and rarel
    :END:
 
 # #+NAME: level-change-features
-| Tile      | Overlay                                                     | Documentation             | Behavior        |
-|-----------+-------------------------------------------------------------+---------------------------+-----------------|
-| S▲N       | <text x=".4" y="1.85" font-size=".5" fill="black">U</text>  | Stairs up Opening North   | <<stairs-up>>   |
-|           |                                                             |                           |                 |
-| S▲E       | <text x=".1" y=".75" font-size=".5" fill="black">U</text>   | Stairs up Opening East    | <<stairs-up>>   |
-|           |                                                             |                           |                 |
-| S▲S       | <text x=".4" y="1.85" font-size=".5" fill="black">U</text>  | Stairs up Opening South   | <<stairs-up>>   |
-|           |                                                             |                           |                 |
-| S▲W       | <text x="1.65" y=".75" font-size=".5" fill="black">U</text> | Stairs up Opening East    | <<stairs-up>>   |
-|           |                                                             |                           |                 |
-| S▼N       | <text x=".4" y="1.85" font-size=".5" fill="black">D</text>  | Stairs down Opening North | <<stairs-down>> |
-|           |                                                             |                           |                 |
-| S▼E       | <text x=".1" y=".75" font-size=".5" fill="black">D</text>   | Stairs down Opening East  | <<stairs-down>> |
-|           |                                                             |                           |                 |
-| S▼S       | <text x=".4" y=".4" font-size=".5" fill="black">D</text>    | Stairs down opening South | <<stairs-down>> |
-|           |                                                             |                           |                 |
-| S▼W       | <text x="1.65" y=".75" font-size=".5" fill="black">D</text> | Stairs down Opening East  | <<stairs-down>> |
-|           |                                                             |                           |                 |
-| R▲N       |                                                             | Ramp up extending North   | <<ramp-down>>   |
-| R▲N:dwarf | <text x=".4" y=".85" font-size=".5" fill="black">U</text>   |                           |                 |
-|           |                                                             |                           |                 |
-| R▲E       |                                                             | Ramp up extending East    | <<ramp-up>>     |
-| R▲E:dwarf | <text x="4.65" y=".75" font-size=".5" fill="black">U</text> |                           |                 |
-|           |                                                             |                           |                 |
-| R▲S       |                                                             | Ramp up extending South   | <<ramp-down>>   |
-| R▲S:dwarf | <text x=".4" y="4.85" font-size=".5" fill="black">U</text>  |                           |                 |
-|           |                                                             |                           |                 |
-| R▲W       |                                                             | Ramp up extending West    | <<ramp-up>>     |
-| R▲W:dwarf | <text x=".65" y=".75" font-size=".5" fill="black">U</text>  |                           |                 |
-|           |                                                             |                           |                 |
-| R▼N       |                                                             | Ramp down extending North | <<ramp-down>>   |
-| R▼N:dwarf | <text x=".4" y=".85" font-size=".5" fill="black">D</text>   |                           |                 |
-|           |                                                             |                           |                 |
-| R▼E       |                                                             | Ramp down extending East  | <<ramp-down>>   |
-| R▼E:dwarf | <text x="4.65" y=".75" font-size=".5" fill="black">D</text> |                           |                 |
-|           |                                                             |                           |                 |
-| R▼S       |                                                             | Ramp down extending south | <<ramp-down>>   |
-| R▼S:dwarf | <text x=".4" y="4.85" font-size=".5" fill="black">D</text>  |                           |                 |
-|           |                                                             |                           |                 |
-| R▼W       |                                                             | Ramp down extending West  | <<ramp-down>>   |
-| R▼W:dwarf | <text x=".65" y=".75" font-size=".5" fill="black">D</text>  |                           |                 |
-|           |                                                             |                           |                 |
-| E◦N       | <text x=".4" y=".65" font-size=".5" fill="blue">E</text>    | Elevator, Door North      | <<elevator>>    |
-|           |                                                             |                           |                 |
-| E◦E       | <text x=".4" y=".65" font-size=".5" fill="blue">E</text>    | Elevator, Door East       | <<elevator>>    |
-|           |                                                             |                           |                 |
-| E◦S       | <text x=".4" y=".65" font-size=".5" fill="blue">E</text>    | Elevator, Door South      | <<elevator>>    |
-|           |                                                             |                           |                 |
-| E◦W       | <text x=".4" y=".65" font-size=".5" fill="blue">E</text>    | Elevator, Door West       | <<elevator>>    |
-|           |                                                             |                           |                 |
+| Tile      | Overlay                                                                    | Documentation             | Behavior        |
+|-----------+----------------------------------------------------------------------------+---------------------------+-----------------|
+| S▲N       | <text x=".4" y="1.85" font-size=".5" stroke="black" fill="black">U</text>  | Stairs up Opening North   | <<stairs-up>>   |
+|           |                                                                            |                           |                 |
+| S▲E       | <text x=".1" y=".75" font-size=".5" stroke="black" fill="black">U</text>   | Stairs up Opening East    | <<stairs-up>>   |
+|           |                                                                            |                           |                 |
+| S▲S       | <text x=".4" y="1.85" font-size=".5" stroke="black" fill="black">U</text>  | Stairs up Opening South   | <<stairs-up>>   |
+|           |                                                                            |                           |                 |
+| S▲W       | <text x="1.65" y=".75" font-size=".5" stroke="black" fill="black">U</text> | Stairs up Opening East    | <<stairs-up>>   |
+|           |                                                                            |                           |                 |
+| S▼N       | <text x=".4" y="1.85" font-size=".5" stroke="black" fill="black">D</text>  | Stairs down Opening North | <<stairs-down>> |
+|           |                                                                            |                           |                 |
+| S▼E       | <text x=".1" y=".75" font-size=".5" stroke="black" fill="black">D</text>   | Stairs down Opening East  | <<stairs-down>> |
+|           |                                                                            |                           |                 |
+| S▼S       | <text x=".4" y=".4" font-size=".5" stroke="black" fill="black">D</text>    | Stairs down opening South | <<stairs-down>> |
+|           |                                                                            |                           |                 |
+| S▼W       | <text x="1.65" y=".75" font-size=".5" stroke="black" fill="black">D</text> | Stairs down Opening East  | <<stairs-down>> |
+|           |                                                                            |                           |                 |
+| R▲N       |                                                                            | Ramp up extending North   | <<ramp-down>>   |
+| R▲N:dwarf | <text x=".4" y=".85" font-size=".5" stroke="black" fill="black">U</text>   |                           |                 |
+|           |                                                                            |                           |                 |
+| R▲E       |                                                                            | Ramp up extending East    | <<ramp-up>>     |
+| R▲E:dwarf | <text x="4.65" y=".75" font-size=".5" stroke="black" fill="black">U</text> |                           |                 |
+|           |                                                                            |                           |                 |
+| R▲S       |                                                                            | Ramp up extending South   | <<ramp-down>>   |
+| R▲S:dwarf | <text x=".4" y="4.85" font-size=".5" stroke="black" fill="black">U</text>  |                           |                 |
+|           |                                                                            |                           |                 |
+| R▲W       |                                                                            | Ramp up extending West    | <<ramp-up>>     |
+| R▲W:dwarf | <text x=".65" y=".75" font-size=".5" stroke="black" fill="black">U</text>  |                           |                 |
+|           |                                                                            |                           |                 |
+| R▼N       |                                                                            | Ramp down extending North | <<ramp-down>>   |
+| R▼N:dwarf | <text x=".4" y=".85" font-size=".5" stroke="black" fill="black">D</text>   |                           |                 |
+|           |                                                                            |                           |                 |
+| R▼E       |                                                                            | Ramp down extending East  | <<ramp-down>>   |
+| R▼E:dwarf | <text x="4.65" y=".75" font-size=".5" stroke="black" fill="black">D</text> |                           |                 |
+|           |                                                                            |                           |                 |
+| R▼S       |                                                                            | Ramp down extending south | <<ramp-down>>   |
+| R▼S:dwarf | <text x=".4" y="4.85" font-size=".5" stroke="black" fill="black">D</text>  |                           |                 |
+|           |                                                                            |                           |                 |
+| R▼W       |                                                                            | Ramp down extending West  | <<ramp-down>>   |
+| R▼W:dwarf | <text x=".65" y=".75" font-size=".5" stroke="black" fill="black">D</text>  |                           |                 |
+|           |                                                                            |                           |                 |
+| E◦N       | <text x=".4" y=".65" font-size=".5" stroke="black" fill="black">E</text>   | Elevator, Door North      | <<elevator>>    |
+|           |                                                                            |                           |                 |
+| E◦E       | <text x=".4" y=".65" font-size=".5" stroke="black" fill="black">E</text>   | Elevator, Door East       | <<elevator>>    |
+|           |                                                                            |                           |                 |
+| E◦S       | <text x=".4" y=".65" font-size=".5" stroke="black" fill="black">E</text>   | Elevator, Door South      | <<elevator>>    |
+|           |                                                                            |                           |                 |
+| E◦W       | <text x=".4" y=".65" font-size=".5" stroke="black" fill="black">E</text>   | Elevator, Door West       | <<elevator>>    |
+|           |                                                                            |                           |                 |
