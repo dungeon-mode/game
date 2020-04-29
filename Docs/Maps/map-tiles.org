@@ -409,72 +409,66 @@ These features are intended to be used mostly as parts of compositions and rarel
    :END:
 
 # #+NAME: level-change-tiles
-| Tile       | Path                       | stairs                                      |
-|------------+----------------------------+---------------------------------------------|
-| S▲N        | cNS ↓ cN                   | h2 v1 h-2 v-1                               |
-|            |                            |                                             |
-| S▲E        | cE → cEW                   | h1 v2 h-1 v-2                               |
-|            |                            |                                             |
-| S▲S        | cS ↓ cNS                   | h2 v1 h-2 v-1                               |
-|            |                            |                                             |
-| S▲W        | cEW → cW                   | h1 v2 h-1 v-2                               |
-|            |                            |                                             |
-| S▼N        | cNS ↓ cN                   | h1 v2 h-1 v-2                               |
-|            |                            |                                             |
-| S▼E        | cE → cEW                   | h2 v1 h-2 v-1                               |
-|            |                            |                                             |
-| S▼S        | cS ↓ cNS                   | h1 v2 h-1 v-2                               |
-|            |                            |                                             |
-| S▼W        | cEW → cW                   | h2 v1 h-2 v-1                               |
-|            |                            |                                             |
-| R▲N        |                            |                                             |
-| R▲N:!dwarf | cS ↓ cNS ↓ cNS ↓ cNS ↓ cNS |                                             |
-| R▲N:dwarf  | cS ↓ cNS ↓ cNS ↓ cNS ↓ cNS | v5 h1 v-5 h-1                               |
-|            |                            |                                             |
-| R▲E        |                            |                                             |
-| R▲E:!dwarf | cEW → cEW → cEW → cEW → cW |                                             |
-| R▲E:dwarf  | cEW → cEW → cEW → cEW → cW | h5 v1 h-5 v-1                               |
-|            |                            |                                             |
-| R▲S        |                            |                                             |
-| R▲S:!dwarf | cNS ↓ cNS ↓ cNS ↓ cNS ↓ cN |                                             |
-| R▲S:dwarf  | cNS ↓ cNS ↓ cNS ↓ cNS ↓ cN | h1 v5 h-1 v-5                               |
-|            |                            |                                             |
-| R▲W        |                            |                                             |
-| R▲W:!dwarf | cE → cEW → cEW → cEW → cEW |                                             |
-| R▲W:dwarf  | cE → cEW → cEW → cEW → cEW | h5 v1 h-5 v-1                               |
-|            |                            |                                             |
-| R▼N        |                            |                                             |
-| R▼N:!dwarf | cS ↓ cNS ↓ cNS ↓ cNS ↓ cNS |                                             |
-| R▼N:dwarf  | cS ↓ cNS ↓ cNS ↓ cNS ↓ cNS | v5 h1 v-5 h-1                               |
-|            |                            |                                             |
-| R▼E        |                            |                                             |
-| R▼E:!dwarf | cEW → cEW → cEW → cEW → cW |                                             |
-| R▼E:dwarf  | cEW → cEW → cEW → cEW → cW | h5 v1 h-5 v-1                               |
-|            |                            |                                             |
-| R▼S        |                            |                                             |
-| R▼S:!dwarf | cNS ↓ cNS ↓ cNS ↓ cNS ↓ cN |                                             |
-| R▼S:dwarf  | cNS ↓ cNS ↓ cNS ↓ cNS ↓ cN | h1 v5 h-1 v-5                               |
-|            |                            |                                             |
-| R▼W        |                            |                                             |
-| R▼W:!dwarf | cE → cEW → cEW → cEW → cEW |                                             |
-| R▼W:dwarf  | cE → cEW → cEW → cEW → cEW | h5 v1 h-5 v-1                               |
-|            |                            |                                             |
-| E◦N        | ◦N cN                      | h.43 a.14,.14,0,0,0,.14,0 h.43 v1 h-1 v-1   |
-|            |                            |                                             |
-| E◦E        | ◦E cE                      | h1 v.43 a.14,.14,0,0,0,0,.14 v.43 h-1 v-1   |
-|            |                            |                                             |
-| E◦S        | ◦S cS                      | h1 v1 h-.43 a.14,.14,0,0,0,-.14,0 h-.43 v-1 |
-|            |                            |                                             |
-| E◦W        | ◦W cW                      | h1 v1 h-1 v-.43 a.14,.14,0,0,0,0,-.14 v-43  |
-|            |                            |                                             |
+| Tile       | Path                               | stairs                                      |
+|------------+------------------------------------+---------------------------------------------|
+| S▲N        | cNS ↓ cN                           | h2 v1 h-2 v-1                               |
+|            |                                    |                                             |
+| S▲E        | cE → cEW                           | h1 v2 h-1 v-2                               |
+|            |                                    |                                             |
+| S▲S        | cS ↓ cNS                           | h2 v1 h-2 v-1                               |
+|            |                                    |                                             |
+| S▲W        | cEW → cW                           | h1 v2 h-1 v-2                               |
+|            |                                    |                                             |
+| S▼N        | cNS ↓ cN                           | h1 v2 h-1 v-2                               |
+|            |                                    |                                             |
+| S▼E        | cE → cEW                           | h2 v1 h-2 v-1                               |
+|            |                                    |                                             |
+| S▼S        | cS ↓ cNS                           | h1 v2 h-1 v-2                               |
+|            |                                    |                                             |
+| S▼W        | cEW → cW                           | h2 v1 h-2 v-1                               |
+|            |                                    |                                             |
+| R▲N        |                                    |                                             |
+| R▲N:!dwarf | cS ↓ cNS ↓ cNS ↓ cNS ↓ cNS         |                                             |
+| R▲N:dwarf  | cS ↓ cNS ↓ cNS ↓ cNS ↓ cNS         | v5 h1 v-5 h-1                               |
+|            |                                    |                                             |
+| R▲E        |                                    |                                             |
+| R▲E:!dwarf | cEW → cEW → cEW → cEW → cW         |                                             |
+| R▲E:dwarf  | cEW → cEW → cEW → cEW → cW         | h5 v1 h-5 v-1                               |
+|            |                                    |                                             |
+| R▲S        |                                    |                                             |
+| R▲S:!dwarf | cNS ↓ cNS ↓ cNS ↓ cNS ↓ cN         |                                             |
+| R▲S:dwarf  | cNS ↓ cNS ↓ cNS ↓ cNS ↓ cN         | h1 v5 h-1 v-5                               |
+|            |                                    |                                             |
+| R▲W        |                                    |                                             |
+| R▲W:!dwarf | cE → cEW → cEW → cEW → cEW         |                                             |
+| R▲W:dwarf  | cE → cEW → cEW → cEW → cEW         | h5 v1 h-5 v-1                               |
+|            |                                    |                                             |
+| R▼N        |                                    |                                             |
+| R▼N:!dwarf | cS ↓ cNS ↓ cNS ↓ cNS ↓ cNS         |                                             |
+| R▼N:dwarf  | cS ↓ cNS ↓ cNS ↓ cNS ↓ cNS         | v5 h1 v-5 h-1                               |
+|            |                                    |                                             |
+| R▼E        |                                    |                                             |
+| R▼E:!dwarf | cEW → cEW → cEW → cEW → cW         |                                             |
+| R▼E:dwarf  | cEW → cEW → cEW → cEW → cW         | h5 v1 h-5 v-1                               |
+|            |                                    |                                             |
+| R▼S        |                                    |                                             |
+| R▼S:!dwarf | cNS ↓ cNS ↓ cNS ↓ cNS ↓ cN         |                                             |
+| R▼S:dwarf  | cNS ↓ cNS ↓ cNS ↓ cNS ↓ cN ↑ ↑ ↑ ↑ | h1 v5 h-1 v-5                               |
+|            |                                    |                                             |
+| R▼W        |                                    |                                             |
+| R▼W:!dwarf | cE → cEW → cEW → cEW → cEW         |                                             |
+| R▼W:dwarf  | cE → cEW → cEW → cEW → cEW         | h5 v1 h-5 v-1                               |
+|            |                                    |                                             |
+| E◦N        | ◦N cN                              | h.43 a.14,.14,0,0,0,.14,0 h.43 v1 h-1 v-1   |
+|            |                                    |                                             |
+| E◦E        | ◦E cE                              | h1 v.43 a.14,.14,0,0,0,0,.14 v.43 h-1 v-1   |
+|            |                                    |                                             |
+| E◦S        | ◦S cS                              | h1 v1 h-.43 a.14,.14,0,0,0,-.14,0 h-.43 v-1 |
+|            |                                    |                                             |
+| E◦W        | ◦W cW                              | h1 v1 h-1 v-.43 a.14,.14,0,0,0,0,-.14 v-43  |
+|            |                                    |                                             |
 
-   :PROPERTIES:
-   :name: level-change-tiles
-   :MAP-FEATURES: t
-   :ETL: tile
-   :END:
-
-# #+NAME: level-change-features
+# #+NAME: level-change-tiles-2
 | Tile      | Overlay                                                                    | Documentation             | Behavior        |
 |-----------+----------------------------------------------------------------------------+---------------------------+-----------------|
 | S▲N       | <text x=".4" y="1.85" font-size=".5" stroke="black" fill="black">U</text>  | Stairs up Opening North   | <<stairs-up>>   |
