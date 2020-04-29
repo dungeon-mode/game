@@ -1,0 +1,42 @@
+#+TITLE Test: Map Cells with Paths
+# d:/projects/dungeon-mode/t/org/maps-01_tile-path.org
+
+This tests map rendering using a tile and cell containing a only path commands..
+
+* Tiles
+:PROPERTIES:
+:ETL: tile
+:END:
+
+| Tile       | Path                       | stairs        |
+| R▲E        |                            |               |
+| R▲E:!dwarf | cEW → cEW → cEW → cEW → cW |               |
+| R▲E:dwarf  | cEW → cEW → cEW → cEW → cW | h5 v1 h-5 v-1 |
+|            |                            |               |
+
+* Cells
+:PROPERTIES:
+:ETL: cell
+:END:
+
+| X | Y | Path |
+| 0 | 0 | R▲E  |
+
+* Test
+
+#+BEGIN_SRC emacs-lisp
+  (let ((dm-map-files (list (buffer-file-name)))
+        (dm-map-level-size (cons 3 3))
+        (dm-map-draw-other-props nil)
+        (dm-map-background '(nil))
+	(dm-map-draw-attributes
+	 '(path ((fill . "none")
+		 (stroke . "#0f0")
+		 (stroke-width . "1")))))
+    (prin1-to-string (list 'image (dm-map-draw t)
+                           'tiles dm-map-tiles
+			   'level dm-map-level)))
+#+END_SRC
+
+#+RESULTS:
+: (image #s(dm-svg (svg ((width . 311) (height . 311) (version . "1.1") (xmlns . "http://www.w3.org/2000/svg") (stroke . white) (stroke-width . 1) (:image . #<marker at 49 in **dungeon map**>)) nil (path ((d . "M 137 137 v 15.91 a 0.07 0.07 0 0 1 0 5 a 0.07 0.07 0 1 1 0 -5 m 0 5 v 15.91 h 37 v -37 h -26") (fill . "none") (stroke . "#0f0") (stroke-width . "1")))) (path ((d . "M 137 137 v 15.91 a 0.07 0.07 0 0 1 0 5 a 0.07 0.07 0 1 1 0 -5 m 0 5 v 15.91 h 37 v -37 h -26") (fill . "none") (stroke . "#0f0") (stroke-width . "1")))) tiles #s(hash-table size 65 test equal rehash-size 1.5 rehash-threshold 0.8125 data (aaa (path ((v (0.43)) (a (0.07 0.07 0 0 1 0 0.14)) (a (0.07 0.07 0 1 1 0 -0.14)) (m (0 0.14)) (v (0.43)) (h (1)) (v (-1)) m -\.3\,0 (h (-0.7))) tag nil overlay nil stairs nil water nil beach nil neutronium nil decorations nil))) level #s(hash-table size 65 test equal rehash-size 1.5 rehash-threshold 0.8125 data ((1 . 1) (path (aaa)))))

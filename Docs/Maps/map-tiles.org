@@ -449,7 +449,7 @@ These features are intended to be used mostly as parts of compositions and rarel
 |            |                            |                                             |
 | R▼E        |                            |                                             |
 | R▼E:!dwarf | cEW → cEW → cEW → cEW → cW |                                             |
-| R▼E:!dwarf | cEW → cEW → cEW → cEW → cW | h5 v1 h-5 v-1                               |
+| R▼E:dwarf  | cEW → cEW → cEW → cEW → cW | h5 v1 h-5 v-1                               |
 |            |                            |                                             |
 | R▼S        |                            |                                             |
 | R▼S:!dwarf | cNS ↓ cNS ↓ cNS ↓ cNS ↓ cN |                                             |
