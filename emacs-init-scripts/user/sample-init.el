@@ -1,31 +1,52 @@
+;;; sample-init.el --- setup emacs with use-package the load dungeon-mode  -*- lexical-binding: t; -*-
+
+;; Copyright (C) 2020  Corwin Brust
+
+;; Author: Corwin Brust <corwin@bru.st>
+;; Keywords: games, convenience
+
+;; This program is free software; you can redistribute it and/or modify
+;; it under the terms of the GNU General Public License as published by
+;; the Free Software Foundation, either version 3 of the License, or
+;; (at your option) any later version.
+
+;; This program is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU General Public License for more details.
+
+;; You should have received a copy of the GNU General Public License
+;; along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+;;; Commentary:
+
+;; This is an example Emacs configuration file that sets up various
+;; packages from MELPA are repository of features generally neither
+;; provided nor supported by GNU.  Likewise the authors of
+;; dungeon-mode cannot explicitly vouch for these packages except to
+;; say that we, ourselves, use them and, as users, recommend them.
+
+;;; Code:
 ;; Added by Package.el.  This must come before configurations of
 ;; installed packages.  Don't delete this line.  If you don't want it,
 ;; just comment it out by adding a semicolon to the start of the line.
 ;; You may delete these explanatory comments.
-(require 'package)
-(add-to-list 'package-archives '("MELPA" . "https://melpa.org/packages/") t)
-(when (version< emacs-version "27.0")(package-initialize))
-(require 'use-package)
 
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(ansi-color-faces-vector
-   [default default default italic underline success warning error])
- '(ansi-color-names-vector
-   ["black" "red3" "ForestGreen" "yellow3" "blue" "magenta3" "DeepSkyBlue" "gray50"])
- '(custom-enabled-themes (quote (manoj-dark)))
- '(package-selected-packages
-   (quote
-    (flycheck emojify smart-hungry-delete which-key powershell rainbow-delimiters diminish use-package powerline helpful company-box company-emoji company-math company-posframe company-quickhelp company smex magit))))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(default ((t (:family "Courier New" :foundry "outline" :slant normal :weight normal :height 181 :width normal)))))
+;; Hard-coding the path to init-dm seem to be enough for now.
+;; this will be used in a load-library call at the end of the script
+(defvar my:dungeon-mode-init-path
+  "d:/Projects/dungeon-mode/emacs-init-scripts/user/init-dm.el"
+  "Location for the `dungeon-mode' init-dm.el script.")
+
+(require 'package)
+(add-to-list 'package-archives
+	     '("MELPA" . "https://melpa.org/packages/") t)
+(when (version< emacs-version "27.0")
+  (package-initialize))
+
+;; !ALERT! This script requires and does not attempt attempt to
+;; !ALERT! bootstrap use-package.  Please install manually.
+(require use-package)
 
 (use-package diminish :ensure t)
 
@@ -236,5 +257,7 @@
 
 
 ;; Added by Erik Elmshauser to enable dungeon-mode at emacs launch
-(load-library "d:/Projects/dungeon-mode/emacs-init-scripts/user/init-dm.el")
+(load-library my:dungeon-mode-init-path)
 
+(provide 'sample-init)
+;;; sample-init.el ends here
