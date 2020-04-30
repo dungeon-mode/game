@@ -1,0 +1,64 @@
+#+TITLE Test: Map Cells with Paths
+# d:/projects/dungeon-mode/t/org/maps-01_tile-path.org
+
+This tests map rendering using a tile and cell containing a only path commands..
+
+* Tiles
+:PROPERTIES:
+:ETL: tile
+:END:
+| Tile | Beach                              | Water                          | Overlay                                        |
+|------+------------------------------------+--------------------------------+------------------------------------------------|
+| b1NE | h2 v2 h-1 a1.5,1.5,0,0,0,-1,-1 v-1 | m1,2 a1.5,1.5,0,0,0,-1,-1 v1 h1 | <text font-size=".5" x=".85" y="1.15">B</text> |
+
+
+| Tile   | Water         |
+| water1 | h1 v1 h-1 v-1 |
+
+* Cells
+:PROPERTIES:
+:ETL: cell
+:END:
+
+| X | Y | Path |
+| 0 | 0 | b1NE |
+| 1 | 0 |      |
+| 2 | 0 | b1NE |
+| 0 | 1 |      |
+| 1 | 1 |      |
+| 2 | 1 |      |
+| 0 | 2 |      |
+| 1 | 2 | b1NE |
+| 2 | 2 |      |
+
+
+* Test
+
+#+BEGIN_SRC emacs-lisp
+  (let ((dm-map-files (list (buffer-file-name)))
+        (dm-map-level-size (cons 7 7))
+        (dm-map-draw-other-props nil)
+;        (dm-map-background '(nil))
+        (dm-map-draw-attributes
+	'((water ((fill . "blue")
+                  (stroke . "none")
+                  (stroke-width . "1")))
+	 (beach ((fill . "yellow")
+                 (stroke . "none")
+                 (stroke-width . "1")))
+         (stairs ((fill . "#FF69B4")
+                  (stroke . "none")
+                  (stroke-width . "1")))
+         (neutronium ((fill . "orange")
+                      (stroke . "orange")
+                      (stroke-width . "1")))
+         (decorations ((fill . "none")
+                       (stroke . "#3c0545")
+                       (stroke-width . "1"))))))
+    (prin1-to-string (list 'image (dm-map-draw t)
+                           'tiles dm-map-tiles
+			   'level dm-map-level)))
+#+END_SRC
+
+#+RESULTS:
+: (image #s(dm-svg (svg ((width . 480) (height . 480) (version . "1.1") (xmlns . "http://www.w3.org/2000/svg") (stroke . white) (stroke-width . 1)) (svg ((width . 480) (height . 480) (version . "1.1") (xmlns . "http://www.w3.org/2000/svg")) (rect ((width . 480) (height . 480) (x . 0) (y . 0) (fill . "#fffdd0") (stroke-width . 0))) (path ((d . "M0,100 h480 M0,140 h480 M0,180 h480 M0,220 h480 M0,260 h480 M0,300 h480 M0,340 h480 M0,380 h480 M100,0 v480 M140,0 v480 M180,0 v480 M220,0 v480 M260,0 v480 M300,0 v480 M340,0 v480 M380,0 v480") (fill . "none") (stroke . "blue") (stroke-width . ".25")))) (g nil (text ((font-size . 20.0) (x . 134.0) (y . 146.0)) "B")) (g nil (text ((font-size . 20.0) (x . 214.0) (y . 146.0)) "B")) (g nil (text ((font-size . 20.0) (x . 174.0) (y . 226.0)) "B")) (path ((d . "")))) (path ((d . "")))) tiles #s(hash-table size 65 test equal rehash-size 1.5 rehash-threshold 0.8125 data (b1NE (path nil tag nil overlay ((g nil (text ((font-size . 0.5) (x . 0.85) (y . 1.15)) "B"))) stairs nil water nil beach nil neutronium nil decorations nil) water1 (path nil tag nil overlay nil stairs nil water nil beach nil neutronium nil decorations nil))) level #s(hash-table size 65 test equal rehash-size 1.5 rehash-threshold 0.8125 data ((0 . 0) (path (b1NE)) (1 . 0) (path nil) (2 . 0) (path (b1NE)) (0 . 1) (path nil) (1 . 1) (path nil) (2 . 1) (path nil) (0 . 2) (path nil) (1 . 2) (path (b1NE)) (2 . 2) (path nil))))
