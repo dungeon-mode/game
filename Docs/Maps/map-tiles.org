@@ -166,16 +166,18 @@ These features are intended to be used mostly as parts of compositions and rarel
 |           |                                          |                                                     |
 
 #+NAME: 10-beach tiles
-| Tile | Beach                               | Water                          | Overlay                                                                    |
-|------+-------------------------------------+--------------------------------+----------------------------------------------------------------------------|
-| b1NE | h2 v2 h-1 a1.5,1.5,0,0,0,-1,-1 v-1  | ↓ ↘ a1.5,1.5,0,0,0,-1,-1 v1 h1 | <text stroke="black" fill="black" font-size=".5" x="1.25" y=".75">B</text> |
-|      |                                     |                                |                                                                            |
-| b1SE | → h1 v2 h-2 v-1 a1.5,1.5,0,0,0,1,-1 | v1 a1.5,1.5,0,0,0,1,-1 h-1     | <text stroke="black" fill="black" font-size=".5" x="1.25" y="1.65">B</text> |
-|      |                                     |                                |                                                                            |
-| b1SW | h1 a1.5,1.5,0,0,0,1,1 v1 h-2 v-2    | → a1.5,1.5,0,0,0,1,1 v-1 h-1   | <text stroke="black" fill="black" font-size=".5" x=".35" y="1.65">B</text> |
-|      |                                     |                                |                                                                            |
-| b1NW | h2 v1 a1.5,1.5,0,0,0,-1,1 h-1 v-2   | → ↘ a1.5,1.5,0,0,0,-1,1 h1 v-1 | <text stroke="black" fill="black" font-size=".5" x=".35" y=".75">B</text> |
-|      |                                     |                                |                                                                            |
+| Tile   | Beach                               | Water                          | Overlay                                                                     |
+|--------+-------------------------------------+--------------------------------+-----------------------------------------------------------------------------|
+| b1NE   | h2 v2 h-1 a1.5,1.5,0,0,0,-1,-1 v-1  | ↓ ↘ a1.5,1.5,0,0,0,-1,-1 v1 h1 | <text stroke="black" fill="black" font-size=".5" x="1.25" y=".75">B</text>  |
+|        |                                     |                                |                                                                             |
+| b1SE   | → h1 v2 h-2 v-1 a1.5,1.5,0,0,0,1,-1 | v1 a1.5,1.5,0,0,0,1,-1 h-1     | <text stroke="black" fill="black" font-size=".5" x="1.25" y="1.65">B</text> |
+|        |                                     |                                |                                                                             |
+| b1SW   | h1 a1.5,1.5,0,0,0,1,1 v1 h-2 v-2    | → a1.5,1.5,0,0,0,1,1 v-1 h-1   | <text stroke="black" fill="black" font-size=".5" x=".35" y="1.65">B</text>  |
+|        |                                     |                                |                                                                             |
+| b1inSW | h1 a1.5,1.5,0,0,1,1,1 v1 h-2 v-2    | → a1.5,1.5,0,0,1,1,1 v-1 h-1   | <text stroke="black" fill="black" font-size=".5" x=".35" y="1.65">B</text>  |
+|        |                                     |                                |                                                                             |
+| b1NW   | h2 v1 a1.5,1.5,0,0,0,-1,1 h-1 v-2   | → ↘ a1.5,1.5,0,0,0,-1,1 h1 v-1 | <text stroke="black" fill="black" font-size=".5" x=".35" y=".75">B</text>   |
+|        |                                     |                                |                                                                             |
 
 #+NAME: 20-water-tiles
 | Tile | Water         | Decorations                                         |

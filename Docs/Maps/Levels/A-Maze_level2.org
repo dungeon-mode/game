@@ -184,7 +184,7 @@ Refer to design.org for more details.
 | 12 |  6 | cW                                                      |
 | 13 |  6 | cE◦S                                                    |
 | 14 |  6 | cW                                                      |
-| 15 |  6 | b1SW                                                    |
+| 15 |  6 | b1inSW                                                  |
 | 16 |  6 | (15 . 6)                                                |
 | 17 |  6 | riv1N                                                   |
 | 18 |  6 | cNS                                                     |
