@@ -30,6 +30,8 @@ Refer to design.org for more details.
 |  8 | 0 | cEW     |
 |  9 | 0 | b1NE    |
 | 10 | 0 |         |
+| 11 | 0 | ◑SI     |
+|    |   |         |
 |    |   |         |
 |  0 | 1 | water1  |
 |  1 | 1 | water1  |
@@ -42,6 +44,7 @@ Refer to design.org for more details.
 |  8 | 1 | water1  |
 |  9 | 1 |         |
 | 10 | 1 |         |
+| 11 | 1 | ▥SN     |
 |    |   |         |
 |  0 | 2 | cNS     |
 |  1 | 2 | water1  |
