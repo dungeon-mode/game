@@ -1,9 +1,9 @@
 #+TITLE: Alpha Map Level 3
 #+PROPERTIES:
- :Version: 0.02
+ :Version: 0.05
  :Author: Jon Lincicum
  :Created: 2020/04/19
- :Modified: 2020/05/01
+ :Modified: 2020/05/02
  :END:
 
 * Test Map - Level 3
@@ -19,8 +19,8 @@ Refer to design.org for more details.
 
 |  X |  Y | Path                                         |
 |----+----+----------------------------------------------|
-|  0 |  0 | 20◦SW                                        |
-|  1 |  0 | (0 . 0)                                      |
+|  0 |  0 | (1 . 0)                                      |
+|  1 |  0 | ‡N ‡E ↓ ‡E ‡S ← ◦S ‡W ↑ ‡N ‡W                |
 |  2 |  0 | 20◦SW                                        |
 |  3 |  0 | (2 . 0)                                      |
 |  4 |  0 | 20◦SE                                        |
@@ -44,8 +44,8 @@ Refer to design.org for more details.
 | 22 |  0 | cEW◦S                                        |
 | 23 |  0 | cW                                           |
 |    |    |                                              |
-|  0 |  1 | (0 . 0)                                      |
-|  1 |  1 | (0 . 0)                                      |
+|  0 |  1 | (1 . 0)                                      |
+|  1 |  1 | (1 . 0)                                      |
 |  2 |  1 | (2 . 0)                                      |
 |  3 |  1 | (2 . 0)                                      |
 |  4 |  1 | (4 . 0)                                      |
@@ -69,7 +69,7 @@ Refer to design.org for more details.
 | 22 |  1 | 20◦NW                                        |
 | 23 |  1 | (22 . 1)                                     |
 |    |    |                                              |
-|  0 |  2 | cES                                          |
+|  0 |  2 | cES◦N                                         |
 |  1 |  2 | cEW                                          |
 |  2 |  2 | &A2 ◦N → ‡N ↓ ‡E ‡S ← ‡S ‡W                  |
 |  3 |  2 | (2 . 2)                                      |
