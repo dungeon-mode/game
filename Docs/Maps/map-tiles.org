@@ -435,36 +435,36 @@ These features are intended to be used mostly as parts of compositions and rarel
 | S▼W        | cEW → cW                           | h2 v1 h-2 v-1                               |
 |            |                                    |                                             |
 | R▲N        |                                    |                                             |
-| R▲N:!dwarf | cS ↓ cNS ↓ cNS ↓ cNS ↓ cNS         |                                             |
-| R▲N:dwarf  | cS ↓ cNS ↓ cNS ↓ cNS ↓ cNS         | v5 h1 v-5 h-1                               |
+| R▲N:!dwarf | cNS ↓ cNS ↓ cNS ↓ cNS ↓ cN         |                                             |
+| R▲N:dwarf  | cNS ↓ cNS ↓ cNS ↓ cNS ↓ cN ↑ ↑ ↑ ↑ | h1 v5 h-1 v-5                               |
+|            |                                    |                                             |
+| R▼N        |                                    |                                             |
+| R▼N:!dwarf | cNS ↓ cNS ↓ cNS ↓ cNS ↓ cN         |                                             |
+| R▼N:dwarf  | cNS ↓ cNS ↓ cNS ↓ cNS ↓ cN ↑ ↑ ↑ ↑ | h1 v5 h-1 v-5                               |
 |            |                                    |                                             |
 | R▲E        |                                    |                                             |
-| R▲E:!dwarf | cEW → cEW → cEW → cEW → cW         |                                             |
-| R▲E:dwarf  | cEW → cEW → cEW → cEW → cW         | h5 v1 h-5 v-1                               |
+| R▲E:!dwarf | cE → cEW → cEW → cEW → cEW         |                                             |
+| R▲E:dwarf  | cE → cEW → cEW → cEW → cEW ↑ ↑ ↑ ↑ | h5 v1 h-5 v-1                               |
+|            |                                    |                                             |
+| R▼E        |                                    |                                             |
+| R▼E:!dwarf | cE → cEW → cEW → cEW → cEW         |                                             |
+| R▼E:dwarf  | cE → cEW → cEW → cEW → cEW ↑ ↑ ↑ ↑ | h5 v1 h-5 v-1                               |
 |            |                                    |                                             |
 | R▲S        |                                    |                                             |
 | R▲S:!dwarf | cS ↓ cNS ↓ cNS ↓ cNS ↓ cNS         |                                             |
-| R▲S:dwarf  | cS ↓ cNS ↓ cNS ↓ cNS ↓ cNS ↑ ↑ ↑ ↑ | h1 v5 h-1 v-5                               |
-|            |                                    |                                             |
-| R▲W        |                                    |                                             |
-| R▲W:!dwarf | cE → cEW → cEW → cEW → cEW         |                                             |
-| R▲W:dwarf  | cE → cEW → cEW → cEW → cEW         | h5 v1 h-5 v-1                               |
-|            |                                    |                                             |
-| R▼N        |                                    |                                             |
-| R▼N:!dwarf | cS ↓ cNS ↓ cNS ↓ cNS ↓ cNS         |                                             |
-| R▼N:dwarf  | cS ↓ cNS ↓ cNS ↓ cNS ↓ cNS         | v5 h1 v-5 h-1                               |
-|            |                                    |                                             |
-| R▼E        |                                    |                                             |
-| R▼E:!dwarf | cEW → cEW → cEW → cEW → cW         |                                             |
-| R▼E:dwarf  | cEW → cEW → cEW → cEW → cW         | h5 v1 h-5 v-1                               |
+| R▲S:dwarf  | cS ↓ cNS ↓ cNS ↓ cNS ↓ cNS ↑ ↑ ↑ ↑ | v5 h1 v-5 h-1                               |
 |            |                                    |                                             |
 | R▼S        |                                    |                                             |
-| R▼S:!dwarf | cNS ↓ cNS ↓ cNS ↓ cNS ↓ cN         |                                             |
-| R▼S:dwarf  | cNS ↓ cNS ↓ cNS ↓ cNS ↓ cN ↑ ↑ ↑ ↑ | h1 v5 h-1 v-5                               |
+| R▼S:!dwarf | cS ↓ cNS ↓ cNS ↓ cNS ↓ cNS         |                                             |
+| R▼S:dwarf  | cS ↓ cNS ↓ cNS ↓ cNS ↓ cNS ↑ ↑ ↑ ↑ | h1 v5 h-1 v-5                               |
+|            |                                    |                                             |
+| R▲W        |                                    |                                             |
+| R▲W:!dwarf | cEW → cEW → cEW → cEW → cW         |                                             |
+| R▲W:dwarf  | cEW → cEW → cEW → cEW → cW ↑ ↑ ↑ ↑ | v5 h1 v-5 h-1                               |
 |            |                                    |                                             |
 | R▼W        |                                    |                                             |
-| R▼W:!dwarf | cE → cEW → cEW → cEW → cEW         |                                             |
-| R▼W:dwarf  | cE → cEW → cEW → cEW → cEW         | h5 v1 h-5 v-1                               |
+| R▼W:!dwarf | cEW → cEW → cEW → cEW → cW         |                                             |
+| R▼W:dwarf  | cEW → cEW → cEW → cEW → cW ↑ ↑ ↑ ↑ | h5 v1 h-5 v-1                               |
 |            |                                    |                                             |
 | E◦N        | ◦N cN                              | h.43 a.14,.14,0,0,0,.14,0 h.43 v1 h-1 v-1   |
 |            |                                    |                                             |
