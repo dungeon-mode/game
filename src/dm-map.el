@@ -463,7 +463,7 @@ Only consider attributes listed in `dm-map--scale-props'"
 			       (ref-sym (intern ref))
 			       (referent (gethash ref-sym hash)))
 		     (unless (or (match-string 3 tile)
-				 (assoc kw (plist-get referent ',dm-map-tag-prop)))
+				 (assoc tag (plist-get referent ',dm-map-tag-prop)))
 		       (plist-put referent ',dm-map-tag-prop
 				  (append
 				   (plist-get referent ',dm-map-tag-prop)
