@@ -151,19 +151,20 @@ These features are intended to be used mostly as parts of compositions and rarel
   :END:
 
 #+NAME: 10-water-Tiles
-| Tile      | Water                                    | Decorations                                         |
-|-----------+------------------------------------------+-----------------------------------------------------|
-| water1    | h1 v1 h-1 v-1                            |                                                     |
-|           |                                          |                                                     |
-| riv1N     | h1 v1 h-1 v-1                            | m.49,.80 h.02 v-.5 h.05 l-.06,-.1 l-.06,.1 h.05 v.5 |
-| riv1E     | h1 v1 h-1 v-1                            | m.75,.49 h-.5 v.02 h.5 v.05 l.1,-.06 l-.1,-.06 v.05 |
-| riv1S     | h1 v1 h-1 v-1                            | m.49,.2 h.02 v.5 h.05 l-.06,.1 l-.06,-.1 h.05 v-.5  |
-| riv1W     | h1 v1 h-1 v-1                            | m.25,.49 h.5 v.02 h-.5 v.05 l-.1,-.06 l.1,-.06 v.05 |
-|           |                                          |                                                     |
-| bridge1NS | m.2,0 h.8 v1 h-.8 v-1 m-.2,0             |                                                     |
-|           |                                          |                                                     |
-| bridge1EW | m0,.2 h1 v.8 h-1 v-.8 m-.2,0             |                                                     |
-|           |                                          |                                                     |
+| Tile      | Water                        | Decorations                                         |
+|-----------+------------------------------+-----------------------------------------------------|
+| water1    | h1 v1 h-1 v-1                |                                                     |
+| pool1     | h1 v1 h-1 v-1                |                                                     |
+|           |                              |                                                     |
+| riv1N     | h1 v1 h-1 v-1                | m.49,.80 h.02 v-.5 h.05 l-.06,-.1 l-.06,.1 h.05 v.5 |
+| riv1E     | h1 v1 h-1 v-1                | m.75,.49 h-.5 v.02 h.5 v.05 l.1,-.06 l-.1,-.06 v.05 |
+| riv1S     | h1 v1 h-1 v-1                | m.49,.2 h.02 v.5 h.05 l-.06,.1 l-.06,-.1 h.05 v-.5  |
+| riv1W     | h1 v1 h-1 v-1                | m.25,.49 h.5 v.02 h-.5 v.05 l-.1,-.06 l.1,-.06 v.05 |
+|           |                              |                                                     |
+| bridge1NS | m.2,0 h.8 v1 h-.8 v-1 m-.2,0 |                                                     |
+|           |                              |                                                     |
+| bridge1EW | m0,.2 h1 v.8 h-1 v-.8 m-.2,0 |                                                     |
+|           |                              |                                                     |
 
 #+NAME: 10-beach tiles
 | Tile   | Beach                               | Water                          | Overlay                                                                     |
@@ -171,6 +172,8 @@ These features are intended to be used mostly as parts of compositions and rarel
 | b1NE   | h2 v2 h-1 a1.5,1.5,0,0,0,-1,-1 v-1  | ↓ ↘ a1.5,1.5,0,0,0,-1,-1 v1 h1 | <text stroke="black" fill="black" font-size=".5" x="1.25" y=".75">B</text>  |
 |        |                                     |                                |                                                                             |
 | b1SE   | → h1 v2 h-2 v-1 a1.5,1.5,0,0,0,1,-1 | v1 a1.5,1.5,0,0,0,1,-1 h-1     | <text stroke="black" fill="black" font-size=".5" x="1.25" y="1.65">B</text> |
+|        |                                     |                                |                                                                             |
+| b1inSE | → h1 v2 h-2 v-1 a1.5,1.5,0,0,1,1,-1 | v1 a1.5,1.5,0,0,1,1,-1 h-1    | <text stroke="black" fill="black" font-size=".5" x="1.25" y="1.65">B</text> |
 |        |                                     |                                |                                                                             |
 | b1SW   | h1 a1.5,1.5,0,0,0,1,1 v1 h-2 v-2    | → a1.5,1.5,0,0,0,1,1 v-1 h-1   | <text stroke="black" fill="black" font-size=".5" x=".35" y="1.65">B</text>  |
 |        |                                     |                                |                                                                             |

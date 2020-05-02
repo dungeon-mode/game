@@ -124,9 +124,9 @@ Refer to design.org for more details.
 |  2 |  4 | cES                                          |
 |  3 |  4 | cSW                                          |
 |  4 |  4 | (4 . 3)                                      |
-|  5 |  4 | pool                                         |
-|  6 |  4 | (5 . 4)                                      |
-|  7 |  4 | (5 . 4)                                      |
+|  5 |  4 | (4 . 3)                                      |
+|  6 |  4 | pool1                                        |
+|  7 |  4 | (7 . 3)                                      |
 |  8 |  4 | (7 . 3)                                      |
 |  9 |  4 | (9 . 3)                                      |
 | 10 |  4 | (9 . 3)                                      |
@@ -149,9 +149,9 @@ Refer to design.org for more details.
 |  2 |  5 | cNW◦S                                        |
 |  3 |  5 | cNS                                          |
 |  4 |  5 | cNS                                          |
-|  5 |  5 | (5 . 4)                                      |
-|  6 |  5 | (5 . 4)                                      |
-|  7 |  5 | (5 . 4)                                      |
+|  5 |  5 | pool1                                        |
+|  6 |  5 | pool1                                        |
+|  7 |  5 | pool1                                        |
 |  8 |  5 | cNS                                          |
 |  9 |  5 | ‡N ‡W → ‡N ‡E ↓ ◦E ↓ ‡E ‡S ← ‡S ‡W ↑ ‡W      |
 | 10 |  5 | (9 . 5)                                      |
@@ -173,11 +173,11 @@ Refer to design.org for more details.
 |  1 |  6 | cEW◦N                                        |
 |  2 |  6 | cW◦N                                         |
 |  3 |  6 | cNS                                          |
-|  4 |  6 | b1SE                                         |
-|  5 |  6 | (5 . 4)                                      |
-|  6 |  6 | (5 . 4)                                      |
-|  7 |  6 | (5 . 4)                                      |
-|  8 |  6 | b1SE                                         |
+|  4 |  6 | b1SW                                         |
+|  5 |  6 | (4 . 6)                                      |
+|  6 |  6 | pool1                                        |
+|  7 |  6 | b1SE                                         |
+|  8 |  6 | (7 . 6)                                      |
 |  9 |  6 | (9 . 5)                                      |
 | 10 |  6 | (9 . 5)                                      |
 | 11 |  6 | cNS◦W                                        |
@@ -200,7 +200,7 @@ Refer to design.org for more details.
 |  3 |  7 | cNW◦S                                        |
 |  4 |  7 | (4 . 6)                                      |
 |  5 |  7 | (4 . 6)                                      |
-|  6 |  7 | rivS                                         |
+|  6 |  7 | riv1S                                        |
 |  7 |  7 | (8 . 6)                                      |
 |  8 |  7 | (8 . 6)                                      |
 |  9 |  7 | (9 . 5)                                      |
@@ -225,7 +225,7 @@ Refer to design.org for more details.
 |  3 |  8 | cE◦N                                         |
 |  4 |  8 | cW                                           |
 |  5 |  8 | cNS                                          |
-|  6 |  8 | rivS                                         |
+|  6 |  8 | riv1S                                        |
 |  7 |  8 | cNS                                          |
 |  8 |  8 | cE                                           |
 |  9 |  8 | cEW                                          |
@@ -250,7 +250,7 @@ Refer to design.org for more details.
 |  3 |  9 | cEW◦S                                        |
 |  4 |  9 | b1inNW                                       |
 |  5 |  9 | (4 . 9)                                      |
-|  6 |  9 | rivS                                         |
+|  6 |  9 | riv1S                                        |
 |  7 |  9 | cNS                                          |
 |  8 |  9 | cE                                           |
 |  9 |  9 | cEW                                          |
@@ -275,7 +275,7 @@ Refer to design.org for more details.
 |  3 | 10 | 10◦N                                         |
 |  4 | 10 | (4 . 9)                                      |
 |  5 | 10 | (4 . 9)                                      |
-|  6 | 10 | rivS                                         |
+|  6 | 10 | riv1S                                        |
 |  7 | 10 | cNS                                          |
 |  8 | 10 | cE                                           |
 |  9 | 10 | cEW                                          |
@@ -297,9 +297,9 @@ Refer to design.org for more details.
 |  0 | 11 | cNS                                          |
 |  1 | 11 | (1 . 12)                                     |
 |  2 | 11 | (1 . 12)                                     |
-|  3 | 11 | rivW                                         |
-|  4 | 11 | rivW                                         |
-|  5 | 11 | rivW                                         |
+|  3 | 11 | riv1W                                        |
+|  4 | 11 | riv1W                                        |
+|  5 | 11 | riv1W                                        |
 |  6 | 11 | b1SE                                         |
 |  7 | 11 | (6 . 11)                                     |
 |  8 | 11 | cE                                           |
@@ -321,7 +321,7 @@ Refer to design.org for more details.
 |    |    |                                              |
 |  0 | 12 | cNS◦E                                        |
 |  1 | 12 | 10◦W                                         |
-|  2 | 12 | rivS                                         |
+|  2 | 12 | riv1S                                        |
 |  3 | 12 | b1inSE                                       |
 |  4 | 12 | (3 . 12)                                     |
 |  5 | 12 | cEW                                          |
@@ -346,7 +346,7 @@ Refer to design.org for more details.
 |    |    |                                              |
 |  0 | 13 | cNS◦E                                        |
 |  1 | 13 | 10◦W                                         |
-|  2 | 13 | rivS                                         |
+|  2 | 13 | riv1S                                        |
 |  3 | 13 | (3 . 12)                                     |
 |  4 | 13 | (3 . 12)                                     |
 |  5 | 13 | cE                                           |
@@ -371,7 +371,7 @@ Refer to design.org for more details.
 |    |    |                                              |
 |  0 | 14 | b1NW                                         |
 |  1 | 14 | (0 . 14)                                     |
-|  2 | 14 | rivS                                         |
+|  2 | 14 | riv1S                                        |
 |  3 | 14 | b1NE                                         |
 |  4 | 14 | (3 . 14)                                     |
 |  5 | 14 | cES                                          |
@@ -395,9 +395,9 @@ Refer to design.org for more details.
 | 23 | 14 | cNS                                          |
 |    |    |                                              |
 |  0 | 15 | (0 . 14)                                     |
-|  1 | 15 | pool                                         |
-|  2 | 15 | (2 . 15)                                     |
-|  3 | 15 | (2 . 15)                                     |
+|  1 | 15 | (0 . 14)                                     |
+|  2 | 15 | pool1                                        |
+|  3 | 15 | (4 . 14)                                     |
 |  4 | 15 | (4 . 14)                                     |
 |  5 | 15 | cNS                                          |
 |  6 | 15 | 10◦S                                         |
@@ -420,10 +420,10 @@ Refer to design.org for more details.
 | 23 | 15 | cNS                                          |
 |    |    |                                              |
 |  0 | 16 | cNS                                          |
-|  1 | 16 | (1 . 15)                                     |
-|  2 | 16 | (1 . 15)                                     |
-|  3 | 16 | (1 . 15)                                     |
-|  4 | 16 | cNES                                         |
+|  1 | 16 | pool1                                        |
+|  2 | 16 | pool1                                        |
+|  3 | 16 | pool1                                        |
+| `  | 16 | cNES                                         |
 |  5 | 16 | cNEW◦S                                       |
 |  6 | 16 | cEW◦N                                        |
 |  7 | 16 | cEW◦N                                        |
@@ -445,10 +445,10 @@ Refer to design.org for more details.
 | 23 | 16 | cNS                                          |
 |    |    |                                              |
 |  0 | 17 | b1SW                                         |
-|  1 | 17 | (1 . 15)                                     |
-|  2 | 17 | (1 . 15)                                     |
-|  3 | 17 | (1 . 15)                                     |
-|  4 | 17 | b1SE                                         |
+|  1 | 17 | (0 . 17)                                     |
+|  2 | 17 | pool1                                        |
+|  3 | 17 | b1SE                                         |
+|  4 | 17 | (4 . 17)                                     |
 |  5 | 17 | cS◦N                                         |
 |  6 | 17 | cES                                          |
 |  7 | 17 | cEW                                          |
@@ -461,7 +461,7 @@ Refer to design.org for more details.
 | 15 | 17 | cNE                                          |
 | 16 | 17 | cSW                                          |
 | 17 | 17 | cS◦E                                         |
-| 18 | 17 | 20◦WN ↘ ◦E                                  |
+| 18 | 17 | 20◦WN ↘ ◦E                                   |
 | 19 | 17 | (19 . 16)                                    |
 | 20 | 17 | (19 . 16)                                    |
 | 21 | 17 | cE                                           |
