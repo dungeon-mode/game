@@ -73,16 +73,23 @@ See `dm-coalesce-hash."
 				(start-column 0)
 				(result-symbol 'result)
 				enable-after-nil
-				(after `(when (and ,key-symbol
-						   ,hash-symbol
-						   (or ,enable-after-nil
-						       ,result-symbol)
-						   (hash-table-p ,hash-symbol))
-					  (puthash (if (stringp ,key-symbol)
-						       (intern ,key-symbol)
-						     ,key-symbol)
-						   ,result-symbol
-						   ,hash-symbol)))
+				enable-blank-rows
+				(after `(progn
+					  ;; (message "[hash:after] k:%s r:%s"
+					  ;; 	   ,key-symbol ,result-symbol)
+					  (when (and ,key-symbol
+						     ,hash-symbol
+						     (or ,enable-after-nil
+							 ,result-symbol)
+						     (hash-table-p ,hash-symbol))
+					    (prog1 (puthash (if (stringp ,key-symbol)
+								(intern ,key-symbol)
+							      ,key-symbol)
+							    ,result-symbol
+							    ,hash-symbol)
+					      ;; (message "[hash:after] k:%s r:%s" ,key-symbol
+					      ;; 	       (gethash ,key-symbol ,hash-symbol))
+					      ))))
 				&allow-other-keys)
   "Build HASH by repeatedly applying BINDINGS to STRINGS for BODY.
 
@@ -101,13 +108,15 @@ written in HASH by the default AFTER implementation; it defaults
 to to the first of BINDINGS.  START-COLUMN (default: 0) allows
 specifying the first column index for BINDINGS.
 RESULT-SYMBOL (default: \"result\") exposes the result of BODY
-after each evaluation.  When ENABLE-AFTER-NIL is nil (the
-default) AFTER is not executed unless FORMS returns a nil value.
-When AFTER expression is non-nill it is evaluated after BODY in
-the same context given either BODY result or ENABLE-AFTER-NILL is
-not nil.  The default AFTER implementation inserts the value of
-RESULT-SYMBOL into the hash identified by HASH-SYMBOL creating a
-key by interning the value of KEY-SYMBOL."
+after each evaluation.  When ENABLE-BLANK-ROWS do not skip
+STRINGS when inner list contains no non-empty values.  When
+ENABLE-AFTER-NIL is nil (the default) AFTER is not executed
+unless FORMS returns a nil value.  When AFTER expression is
+non-nill it is evaluated after BODY in the same context given
+either BODY result or ENABLE-AFTER-NILL is not nil.  The default
+AFTER implementation inserts the value of RESULT-SYMBOL into the
+hash identified by HASH-SYMBOL creating a key by interning the
+value of KEY-SYMBOL."
   (declare (indent 2))
   (let* ((column-count start-column)
 	 (body-form (or (dm--remove-keywords body)
@@ -125,22 +134,23 @@ key by interning the value of KEY-SYMBOL."
 			   (setq column-count (1+ column-count))))
 		       bindings)))
 	 (row-form `(lambda (,row-symbol)
-		      ,(if (and symbol-bindings (length symbol-bindings))
-			   `(let (,@symbol-bindings)
-			      (prog1 ,(if result-symbol
-					  `(setq ,result-symbol
-						 (progn ,@body-form))
-					`(progn ,@body-form))
-				,(when after after)))
-			 `(if ,after
-			      (prog1 ,(if result-symbol
-					  `(setq ,result-symbol
-						 (progn ,@body-form))
-					`(progn ,@body-form))
-				,after)
-			    (progn ,@body-form))))))
-    ;;(prin1 symbol-bindings)
-    ;;(prin1 '(hash hash-table))
+		      (when (or ,enable-blank-rows (seq-filter 'org-string-nw-p
+							       ,row-symbol))
+			,(if (and symbol-bindings (length symbol-bindings))
+			     `(let (,@symbol-bindings)
+				(prog1 ,(if result-symbol
+					    `(setq ,result-symbol
+						   (progn ,@body-form))
+					  `(progn ,@body-form))
+				  ,(when after after)))
+			   `(if ,after
+				(prog1 ,(if result-symbol
+					    `(setq ,result-symbol
+						   (progn ,@body-form))
+					  `(progn ,@body-form))
+				  ,after)
+			      (progn ,@body-form)))))))
+    ;;(prin1 symbol-bindings) ;;(prin1 '(hash hash-table))
     `(let* ((,hash-symbol ,hash-table) ,row-symbol ,result-symbol)
        (mapcar ,row-form (quote ,strings))
        ,hash-symbol)))
