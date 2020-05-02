@@ -78,8 +78,9 @@
 These settings control display of game maps."
   :group 'dungeon-mode)
 
-(defcustom dm-map-files (append (dm-files-select :map-tiles)
-				(dm-files-select :map-cells))
+(defcustom dm-map-files nil
+  ;; (append (dm-files-select :map-tiles)
+  ;; (dm-files-select :map-cells))
   "List of files from which load game maps."
   :type (list 'symbol)
   :group 'dm-files
@@ -176,7 +177,7 @@ Tags (e.g. \":elf\") allow conditional inclusion of draw code.")
     (neutronium ((fill . "orange")
 		 (stroke . "orange")
 		 (stroke-width . "1")))
-    (decorations ((fill . "none")
+    (decorations ((fill . "cyan")
 		  (stroke . "cyan")
 		  (stroke-width . "1"))))
   "Default attributes for other SVG paths used, stairs, water, etc.")
@@ -944,12 +945,19 @@ SCALE-FUNCTION may be used to supply custom scaling."
 (defun dm-map-draw (&optional arg)
   "Draw all from `dm-map-level'.  With prefix ARG, reload first."
   (interactive "P")
-  (when arg (if dm-map-files (dm-map-load)
-	      (user-error "Draw failed.  No files in `dm-map-files'")))
-  (let ((svg (dm-map-quick-draw
-	      ;;'((17 17))
-	      ;;'((9 . 5)) ;; (9 . 9) (10 . 11) (10 . 12) (9 . 11)
-	      )))
+  (when arg ;; prompt if no files or neg prefix arg
+    (if (or (not dm-map-files) (equal '- arg))
+	(setq dm-map-files (completing-read-multiple
+			    "Files:"
+			    (append (dm-files-select :map-tiles)
+				    (dm-files-select :map-cells))
+			    nil t ;; no prediecate, require match
+			    (mapconcat 'identity dm-map-files ",")
+			    ))
+      ;;(user-error "Draw failed.  No files in `dm-map-files'")
+      nil)
+    (dm-map-load)) ;; any prefix arg causes reload from files
+  (let ((svg (dm-map-quick-draw)))
     (prog1 svg
       (dm-map-draw-test svg ;; (oref svg path-data)
 	(render-and-insert-string svg)))))
