@@ -22,7 +22,7 @@
 
 ;;; require core
 (require 'eieio)
-(require 'subr)
+(require 'subr-x)
 (require 'seq)
 
 ;; use format sequences to stringify objects for use with `org-mode'
@@ -45,7 +45,7 @@
 
 
 
-(defvar dm-object-to-org:keyword-alist
+(defvar dm-object-to-org-keyword-alist
   '((:h* dm-object-to-org--format-h*)
     (:begin_src   "\n#+BEGIN_SRC")
     (:end_src     "\n#+END_SRC\n")
@@ -138,10 +138,9 @@ not such a keyword is found which does not appear in
 		     (t (format "%s" fmt)))) seq)))
     ))
 
-(dm-object-to-org (my-class) :h1 "hi" :h3 "hi back" :begin_src :h4 'my-foo)
-
-(defun my-foo (&rest args) "Docstring using ARGS." (ignore args) "Hi")
-(defclass my-class () ((foo :initform "bar" :initarg :foo)))
+;;(defclass my-class () ((foo :initform "bar" :initarg :foo)))
+;;(defun my-foo (&rest args) "Docstring using ARGS." (ignore args) "Hi")
+;;(dm-object-to-org (my-class) :h1 "hi" :h3 "hi back" :begin_src :h4 'my-foo)
 
 (provide 'dm-object-to-org)
 ;;; dm-object-to-org.el ends here
