@@ -264,7 +264,7 @@ Refer to design.org for more details.
 | 17 |  9 | cEW◦NS                                       |
 | 18 |  9 | cW◦S                                         |
 | 19 |  9 | 10◦E                                         |
-| 10 |  9 | cNS◦W                                        |
+| 20 |  9 | cNS◦W                                        |
 | 21 |  9 | cNS                                          |
 | 22 |  9 | ▥SN                                          |
 | 23 |  9 | ▥NS                                          |
@@ -460,7 +460,7 @@ Refer to design.org for more details.
 | 14 | 17 | cNE                                          |
 | 15 | 17 | cSW                                          |
 | 16 | 17 | cS◦E                                         |
-| 17 | 17 | 20◦WN ↘ ◦E                                  |
+| 17 | 17 | 20◦WN ↘ ◦E                                   |
 | 18 | 17 | (17 . 17)                                    |
 | 19 | 17 | (19 . 16)                                    |
 | 20 | 17 | (19 . 16)                                    |
@@ -533,7 +533,7 @@ Refer to design.org for more details.
 | 12 | 20 | cW◦N                                         |
 | 13 | 20 | cE                                           |
 | 14 | 20 | cW◦N                                         |
-| 15 | 20 | &A2 ‡N ‡W ↘ ‡E ‡S ← ‡S                      |
+| 15 | 20 | &A2 ‡N ‡W ↘ ‡E ‡S ← ‡S                       |
 | 16 | 20 | (15 . 20)                                    |
 | 17 | 20 | cSW◦N                                        |
 | 18 | 20 | 10◦S                                         |
