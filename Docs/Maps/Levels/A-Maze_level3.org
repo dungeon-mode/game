@@ -1,6 +1,6 @@
 
 #+PROPERTIES:
- :Version: 0.01
+ :Version: 0.02
  :Author: Jon Lincicum
  :Created: 2020/04/19
  :Modified: 2020/05/01
@@ -12,7 +12,7 @@
 :ETL: cell
 :END:
 
-#+NAME:test-map-level2
+#+NAME:test-map-level3
 
 This is a sample map used to develop and test map features and rendering code.
 Refer to design.org for more details.
@@ -254,7 +254,7 @@ Refer to design.org for more details.
 |  7 |  9 | cNS                                          |
 |  8 |  9 | cE                                           |
 |  9 |  9 | cEW                                          |
-| 10 |  9 | cw◦E                                         |
+| 10 |  9 | cW◦E                                         |
 | 11 |  9 | cNS◦W                                        |
 | 12 |  9 | cNES                                         |
 | 13 |  9 | cEW◦NS                                       |
@@ -369,10 +369,10 @@ Refer to design.org for more details.
 | 22 | 13 | cE ◑NO                                       |
 | 23 | 13 | cSW                                          |
 |    |    |                                              |
-|  0 | 14 | b1NW                                         |
+|  0 | 14 | b1NW ‡W ↓ ‡W                                 |
 |  1 | 14 | (0 . 14)                                     |
 |  2 | 14 | riv1S                                        |
-|  3 | 14 | b1NE                                         |
+|  3 | 14 | b1NE → ‡N ‡E ↓ ‡E                            |
 |  4 | 14 | (3 . 14)                                     |
 |  5 | 14 | cES                                          |
 |  6 | 14 | cEW◦N                                        |
@@ -444,7 +444,7 @@ Refer to design.org for more details.
 | 22 | 16 | cW◦N                                         |
 | 23 | 16 | cNS                                          |
 |    |    |                                              |
-|  0 | 17 | b1SW                                         |
+|  0 | 17 | b1SW ‡W ↓ ‡W ‡S                              |
 |  1 | 17 | (0 . 17)                                     |
 |  2 | 17 | pool1                                        |
 |  3 | 17 | b1SE                                         |
@@ -464,11 +464,15 @@ Refer to design.org for more details.
 | 18 | 17 | (17 . 17)                                    |
 | 19 | 17 | (19 . 16)                                    |
 | 20 | 17 | (19 . 16)                                    |
-| 21 | 17 | cE                                           |
-| 22 | 17 | cEW                                          |
+| 21 | 17 | ‡W ‡N doorL                                  |
+| 22 | 17 | ‡N doorR                                     |
 | 23 | 17 | cNW                                          |
 |    |    |                                              |
+<<<<<<< HEAD
+|  0 | 18 | (0 . 17)                                     |
+=======
 |  0 | 18 | ‡W ‡S                                        |
+>>>>>>> 5d0d54e2d30272375de3ba09b8816f3828c1f5e9
 |  1 | 18 | ‡S                                           |
 |  2 | 18 | cEW                                          |
 |  3 | 18 | (3 . 17)                                     |
@@ -488,7 +492,11 @@ Refer to design.org for more details.
 | 17 | 18 | (17 . 17)                                    |
 | 18 | 18 | (17 . 17)                                    |
 | 19 | 18 | cNS◦W                                        |
+<<<<<<< HEAD
+| 20 | 18 | keychamber                                   |
+=======
 | 20 | 18 | key                                          |
+>>>>>>> 5d0d54e2d30272375de3ba09b8816f3828c1f5e9
 | 21 | 18 | (20 . 18)                                    |
 | 22 | 18 | (20 . 18)                                    |
 | 23 | 18 | (20 . 18)                                    |
@@ -551,8 +559,13 @@ Refer to design.org for more details.
 |  5 | 21 | cW◦S                                         |
 |  6 | 21 | (6 . 19)                                     |
 |  7 | 21 | (6 . 19)                                     |
+<<<<<<< HEAD
+|  8 | 21 | &A2 → ‡E ↓ ‡E ‡S ← ‡S                        |
+|  9 | 21 | (8 . 21)                                     |
+=======
 |  8 | 21 | (6 . 19)                                     |
 |  9 | 21 | &A2 ‡E ↓ ‡E ‡S ← ‡S                          |
+>>>>>>> 5d0d54e2d30272375de3ba09b8816f3828c1f5e9
 | 10 | 21 | 20◦ES                                        |
 | 11 | 21 | (10 . 21)                                    |
 | 12 | 21 | cES                                          |
@@ -576,8 +589,13 @@ Refer to design.org for more details.
 |  5 | 22 | 20◦NW                                        |
 |  6 | 22 | (5 . 22)                                     |
 |  7 | 22 | cES                                          |
+<<<<<<< HEAD
+|  8 | 22 | (8 . 21)                                     |
+|  9 | 22 | (8 . 21)                                     |
+=======
 |  8 | 22 | (9 . 21)                                     |
 |  9 | 22 | (9 . 21)                                     |
+>>>>>>> 5d0d54e2d30272375de3ba09b8816f3828c1f5e9
 | 10 | 22 | (10 . 21)                                    |
 | 11 | 22 | (10 . 21)                                    |
 | 12 | 22 | cNS◦EW                                       |
