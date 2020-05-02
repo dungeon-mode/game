@@ -1,9 +1,9 @@
-#+TITLE: Test Map
+#+TITLE: Alpha Map Level 1
 #+PROPERTIES:
- :Version: 0.03
+ :Version: 0.05
  :Author: Erik Elmshauser, Jon Lincicum
  :Created: 2020/01/26
- :Modified: 2020/04/17
+ :Modified: 2020/05/02
  :END:
 
 * Test Map
@@ -12,15 +12,16 @@
 :ETL: cell
 :END:
 
-#+NAME:test-map-level
+#+NAME:test-map-level1
 
 This is a sample map used to develop and test map features and rendering code.
 Refer to design.org for more details.
 
 |  X |  Y | Path                                             |
 |----+----+--------------------------------------------------|
-|  0 |  0 | 20◦SE                                            |
-|  1 |  0 | (0 . 0)                                          |
+|    |    |                                                  |
+|  0 |  0 | (1 . 0)                                          |
+|  1 |  0 | ‡N ‡E ↓ ‡E ◦S ← ‡S ‡W ↑ ‡N ‡W                    |
 |  2 |  0 | 20◦SE                                            |
 |  3 |  0 | (2 . 0)                                          |
 |  4 |  0 | 20◦SW                                            |
@@ -44,8 +45,8 @@ Refer to design.org for more details.
 | 22 |  0 | cEW◦S                                            |
 | 23 |  0 | cSW                                              |
 |    |    |                                                  |
-|  0 |  1 | (0 . 0)                                          |
-|  1 |  1 | (0 . 0)                                          |
+|  0 |  1 | (1 . 0)                                          |
+|  1 |  1 | (1 . 0)                                          |
 |  2 |  1 | (2 . 0)                                          |
 |  3 |  1 | (2 . 0)                                          |
 |  4 |  1 | (4 . 0)                                          |
