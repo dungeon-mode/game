@@ -482,17 +482,17 @@ These features are intended to be used mostly as parts of compositions and rarel
 |           |                                                                            |                           |                 |
 | S▲E       | <text x=".1" y=".75" font-size=".5" stroke="black" fill="black">U</text>   | Stairs up Opening East    | <<stairs-up>>   |
 |           |                                                                            |                           |                 |
-| S▲S       | <text x=".4" y=".5" font-size=".5" stroke="black" fill="black">U</text> | Stairs up Opening South   | <<stairs-up>>   |
+| S▲S       | <text x=".4" y=".5" font-size=".5" stroke="black" fill="black">U</text>    | Stairs up Opening South   | <<stairs-up>>   |
 |           |                                                                            |                           |                 |
-| S▲W       | <text x="1.65" y=".75" font-size=".5" stroke="black" fill="black">U</text> | Stairs up Opening East    | <<stairs-up>>   |
+| S▲W       | <text x="1.5" y=".75" font-size=".5" stroke="black" fill="black">U</text>  | Stairs up Opening East    | <<stairs-up>>   |
 |           |                                                                            |                           |                 |
 | S▼N       | <text x=".4" y="1.85" font-size=".5" stroke="black" fill="black">D</text>  | Stairs down Opening North | <<stairs-down>> |
 |           |                                                                            |                           |                 |
 | S▼E       | <text x=".1" y=".75" font-size=".5" stroke="black" fill="black">D</text>   | Stairs down Opening East  | <<stairs-down>> |
 |           |                                                                            |                           |                 |
-| S▼S       | <text x=".4" y=".5" font-size=".5" stroke="black" fill="black">D</text>   | Stairs down opening South | <<stairs-down>> |
+| S▼S       | <text x=".4" y=".5" font-size=".5" stroke="black" fill="black">D</text>    | Stairs down opening South | <<stairs-down>> |
 |           |                                                                            |                           |                 |
-| S▼W       | <text x="1.65" y=".75" font-size=".5" stroke="black" fill="black">D</text> | Stairs down Opening East  | <<stairs-down>> |
+| S▼W       | <text x="1.5" y=".75" font-size=".5" stroke="black" fill="black">D</text>  | Stairs down Opening East  | <<stairs-down>> |
 |           |                                                                            |                           |                 |
 | R▲N       |                                                                            | Ramp up extending North   | <<ramp-down>>   |
 | R▲N:dwarf | <text x=".4" y=".85" font-size=".5" stroke="black" fill="black">U</text>   |                           |                 |
@@ -501,7 +501,7 @@ These features are intended to be used mostly as parts of compositions and rarel
 | R▲E:dwarf | <text x="4.65" y=".75" font-size=".5" stroke="black" fill="black">U</text> |                           |                 |
 |           |                                                                            |                           |                 |
 | R▲S       |                                                                            | Ramp up extending South   | <<ramp-down>>   |
-| R▲S:dwarf | <text x=".4" y=".75" font-size=".5" stroke="black" fill="black">U</text> |                           |                 |
+| R▲S:dwarf | <text x=".4" y=".75" font-size=".5" stroke="black" fill="black">U</text>   |                           |                 |
 |           |                                                                            |                           |                 |
 | R▲W       |                                                                            | Ramp up extending West    | <<ramp-up>>     |
 | R▲W:dwarf | <text x=".65" y=".75" font-size=".5" stroke="black" fill="black">U</text>  |                           |                 |
