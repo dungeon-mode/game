@@ -3,6 +3,11 @@
 
 This tests map rendering using a single table and column.
 
+This file is a part of dungeon-mode.  It is not a part of GNU Emacs.
+This softare is released under the GNU Public Licence version three
+or, at your disgression, any newer version of the GNU Public
+License.  For specific terms please see [[LICENSE]] at end-of-file.
+
 * Cells
 :PROPERTIES:
 :ETL: cell
@@ -29,3 +34,18 @@ This tests map rendering using a single table and column.
 
 #+RESULTS:
 : (image #s(dm-svg (svg ((width . 311) (height . 311) (version . "1.1") (xmlns . "http://www.w3.org/2000/svg") (stroke . white) (stroke-width . 1) (:image . #<marker at 49 in **dungeon map**>)) nil (path ((d . "M 137 137 h 37 v 15.91 a 0.07 0.07 0 1 1 0 5 a 0.07 0.07 0 1 1 0 -5 m 0 5 v 15.91 m -37 0 v -37") (fill . "none") (stroke . "#f0f") (stroke-width . "1")))) (path ((d . "M 137 137 h 37 v 15.91 a 0.07 0.07 0 1 1 0 5 a 0.07 0.07 0 1 1 0 -5 m 0 5 v 15.91 m -37 0 v -37") (fill . "none") (stroke . "#f0f") (stroke-width . "1")))) tiles #s(hash-table size 65 test equal rehash-size 1.5 rehash-threshold 0.8125 data ()) level #s(hash-table size 65 test equal rehash-size 1.5 rehash-threshold 0.8125 data ((1 . 1) (path ((h (1)) (v (0.43)) (a (0.07 0.07 0 1 1 0 0.14)) (a (0.07 0.07 0 1 1 0 -0.14)) (m (0 0.14)) (v (0.43)) (m (-1 0)) (v (-1)))))))
+
+* LICENSE
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
