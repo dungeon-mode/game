@@ -124,7 +124,8 @@ Set to nil to suppress adding any background elements."
 
 (defvar dm-map-level-cols '(x y path) "List of colums from feature tables.")
 
-(defvar dm-map-level-key '(cons (string-to-number x) (string-to-number y))
+(defvar dm-map-level-key '(when (and (boundp 'x) (boundp' y))
+			    (cons (string-to-number x) (string-to-number y)))
   "Expression to create new keys in `dm-map-tiless'.")
 
 (defvar dm-map-level-size '(24 . 24)
@@ -169,14 +170,14 @@ Tags (e.g. \":elf\") allow conditional inclusion of draw code.")
     (beach ((fill . "yellow")
 	    (stroke . "none")
 	    (stroke-width . "1")))
-    (stairs ((fill . "#FF69B4")
+    (stairs ((fill . "#FF69B4") ;; pink
 	     (stroke . "none")
 	     (stroke-width . "1")))
     (neutronium ((fill . "orange")
 		 (stroke . "orange")
 		 (stroke-width . "1")))
     (decorations ((fill . "none")
-		  (stroke . "#3c0545")
+		  (stroke . "cyan")
 		  (stroke-width . "1"))))
   "Default attributes for other SVG paths used, stairs, water, etc.")
 
@@ -364,8 +365,8 @@ Kick off a new batch for each \"feature\" or \"level\" table found."
 	   (dm-msg :file "dm-map" :fun "load" :args (list :file this-file))
 	   (with-temp-buffer
 	     (insert-file-contents this-file)
-	     ;; (org-macro-initialize-templates)
-	     ;; (org-macro-replace-all org-macro-templates)
+	     (org-macro-initialize-templates)
+	     (org-macro-replace-all org-macro-templates)
 	     (org-element-map (org-element-parse-buffer) 'table
 	       (lambda (table)
 		 (save-excursion
@@ -411,20 +412,12 @@ Only consider attributes listed in `dm-map--scale-props'"
 				 'identity
 				 (reverse dm-map--xml-strings) "")
 				"</g>")
-			(dm-msg :file "dm-map" :fun "-xml-parse"
-				:args (list :in dm-map--xml-strings
-					    :plist dm-map--last-plist
-					    :string (buffer-string)))
 			(libxml-parse-xml-region (point-min)
 						 (point-max))))))
-      (prog2 (dm-msg :file "dm-map" :fun "-xml-parse"
-		     :args (list :in dm-map--xml-strings
-				 :out xml-parts
-				 :plist dm-map--last-plist))
-	  (plist-put dm-map--last-plist dm-map-overlay-prop
-		     (append (plist-get dm-map--last-plist
-					dm-map-overlay-prop)
-			     (list xml-parts)))
+      (prog1 (plist-put dm-map--last-plist dm-map-overlay-prop
+			(append (plist-get dm-map--last-plist
+					   dm-map-overlay-prop)
+				(list xml-parts)))
 	(setq dm-map--xml-strings nil)))))
 
 (defun dm-map-level-transform (table)
@@ -452,25 +445,13 @@ Only consider attributes listed in `dm-map--scale-props'"
 	     :hash-symbol hash
 	     :key-symbol last-key
 	     (progn
-	       (dm-msg :msg "start" :file "dm-map" :fun "tiles-transform"
-		       :args (list :tile (if (boundp 'tile) tile "#unbound")
-				   :key (if (boundp 'last-key) last-key "#unbound")
-				   :plist dm-map--last-plist
-				   :string dm-map--xml-strings))
 	       (when (and (boundp 'tile) (org-string-nw-p tile))
-		 (dm-msg :msg "old-tile" :file "dm-map" :fun "tiles-transform"
-			 :string dm-map--xml-strings
-			 :args (list :tile tile :plist dm-map--last-plist
-				     :key (if (boundp 'last-key) last-key "#unbound")))
 		 ;; This row includes a new tile-name; process any saved up
 		 ;; XML strings before we overwrite last-key
 		 (dm-map--xml-parse)
 
 		 (setq last-key (intern tile)
 		       dm-map--last-plist (dm-map-table-cell tile :table hash))
-		 (dm-msg :msg "new-tile" :file "dm-map" :fun "tiles-transform"
-			 :string dm-map--xml-strings
-			 :args (list :tile tile :key last-key :plist dm-map--last-plist))
 		 (when (string-match dm-map-tile-tag-re tile)
 		   ;; Tile name contains a tag i.e. "some-tile:some-tag".
 		   ;; Ingore inverted tags ("some-tile:!some-tag"). Add others
@@ -480,10 +461,6 @@ Only consider attributes listed in `dm-map--scale-props'"
 			       (tag (intern kw))
 			       (ref-sym (intern ref))
 			       (referent (gethash ref-sym hash)))
-		     (dm-msg :msg "tags" :file "dm-map" :fun "tiles-transform"
-			     :args (list  :tag tag :key (if (boundp 'last-key) last-key "#unbound")
-					  :reference ref-sym
-					  :referent referent))
 		     (unless (or (match-string 3 tile)
 				 (assoc kw (plist-get referent ',dm-map-tag-prop)))
 		       (plist-put referent ',dm-map-tag-prop
@@ -494,32 +471,17 @@ Only consider attributes listed in `dm-map--scale-props'"
 					  (intern (concat (match-string 1 tile)
 							  ":!" (match-string 4 tile)))))))))))
 	       (mapc (lambda (prop)
-		       (when (boundp `,prop)
-			 (plist-put dm-map--last-plist `,prop
-				    (nconc (plist-get dm-map--last-plist `,prop)
-					   (dm-map-parse-plan-part (symbol-value `,prop))))))
+		       (when  (boundp `,prop)
+			 (prog1
+			  (plist-put dm-map--last-plist `,prop
+				     (nconc (plist-get dm-map--last-plist `,prop)
+					    (dm-map-parse-plan-part (symbol-value `,prop)))))))
 		     (delq nil'(,dm-map-draw-prop ,@dm-map-draw-other-props)))
 	       (when (and (boundp (quote ,dm-map-overlay-prop)) ,dm-map-overlay-prop)
-		 (push ,dm-map-overlay-prop dm-map--xml-strings)
-		 (dm-msg :msg "push-xml-string" :file "dm-map" :fun "tile-transform"
-			 :args (list :tile tile
-				     :key (if (boundp 'last-key) last-key "#unbound")
-				     :prop dm-map-overlay-prop
-				     :val ,dm-map-overlay-prop
-				     :string dm-map--xml-strings)))
-	       (dm-msg :msg "end" :file "dm-map" :fun "tile-transform"
-		       :string dm-map--xml-strings
-		       :args (list :tile tile
-				   :key (if (boundp 'last-key) last-key "#unbound")
-				   :plist dm-map--last-plist))
+		 (push ,dm-map-overlay-prop dm-map--xml-strings))
 	       dm-map--last-plist)))
 	 (result
-	  (prog2 (dm-msg :msg "eval" :file "dm-map" :fun "tiles-transform"
-			 :args (list :form cform
-				     :key (if (boundp 'last-key) last-key "#unbound")
-				     :plist dm-map--last-plist
-				     :string dm-map--xml-strings))
-	      (eval `(list :load ,cform))
+	  (prog1 (eval `(list :load ,cform))
 	    ;; process any overlay XML from last row
 	    (dm-map--xml-parse))))))
 
@@ -669,9 +631,6 @@ addional tiles based on tags."
 			  (dm-map-tile-tag-maybe-invert tile)))))
       (mapcan (lambda (stroke)
 		(let ((stroke stroke))
-		  (dm-msg :file "dm-map" :fun "resolve"
-			  :args (list :tile tile :prop prop :stroke stroke
-				      :stroke-type (type-of stroke)))
 		  (if (symbolp stroke)
 		      (dm-map-resolve
 		       stroke
@@ -698,9 +657,6 @@ INHIBIT-TAGS is truthy do not add addional tiles based on tags."
 	      (paths (plist-get plist prop)))
     (mapcan (lambda (stroke)
 	      (let ((stroke stroke))
-		(dm-msg :file "dm-map" :fun "resolve-cell"
-			:args (list :prop prop :stroke stroke
-				    :stroke-type (type-of stroke)))
 		(pcase stroke
 		  ;; ignore references when drawing a complete level
 		  (`(,(and x (guard (numberp x))). ,(and y (guard (numberp y))))

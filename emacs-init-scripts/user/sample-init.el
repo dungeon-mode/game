@@ -26,11 +26,18 @@
 ;; dungeon-mode cannot explicitly vouch for these packages except to
 ;; say that we, ourselves, use them and, as users, recommend them.
 
+;; This is not a Emacs starter kit.
+
+;; No options are provided, for example to enable, disable, or
+;; otherwise configure the specific features this script incorperates.
+;; While you are oncourgaged to customize this script to that end,
+;; this script is a subset of the configuration used by the
+;; dungeon-mode development team, and is thus what we are generally
+;; recommending as we welcome team members new to both the project and
+;; GNU Emacs.   https://www.gnu.org/software/emacs
+
 ;;; Code:
-;; Added by Package.el.  This must come before configurations of
-;; installed packages.  Don't delete this line.  If you don't want it,
-;; just comment it out by adding a semicolon to the start of the line.
-;; You may delete these explanatory comments.
+
 
 ;; Hard-coding the path to init-dm seem to be enough for now.
 ;; this will be used in a load-library call at the end of the script
