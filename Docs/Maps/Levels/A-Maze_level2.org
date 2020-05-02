@@ -66,7 +66,7 @@ Refer to design.org for more details.
 | 19 |  1 | cEW                                                     |
 | 20 |  1 | cESW                                                    |
 | 21 |  1 | cEW                                                     |
-| 22 |  1 | cW◦S                                                    |
+| 22 |  1 | cEW◦S                                                   |
 | 23 |  1 | cSW                                                     |
 |    |    |                                                         |
 |  0 |  2 | (0 . 0)                                                 |
@@ -242,7 +242,7 @@ Refer to design.org for more details.
 | 20 |  8 | cNSW                                                    |
 | 21 |  8 | (21 . 7)                                                |
 | 22 |  8 | (21 . 7)                                                |
-| 23 |  8 | cNS                                                     |
+| 23 |  8 | cN◦S                                                    |
 |    |    |                                                         |
 |  0 |  9 | cES                                                     |
 |  1 |  9 | cEW ◑SI                                                 |
@@ -267,7 +267,7 @@ Refer to design.org for more details.
 | 20 |  9 | cNE                                                     |
 | 21 |  9 | cEW                                                     |
 | 22 |  9 | cEW◦N                                                   |
-| 23 |  9 | cSW                                                     |
+| 23 |  9 | cSW◦N                                                   |
 |    |    |                                                         |
 |  0 | 10 | cNS                                                     |
 |  1 | 10 | ▥SN                                                     |
@@ -423,7 +423,7 @@ Refer to design.org for more details.
 |  1 | 16 | cEW ◑NO                                                 |
 |  2 | 16 | cNEW                                                    |
 |  3 | 16 | cSW◦N                                                   |
-|  4 | 16 | cW◦WS                                                   |
+|  4 | 16 | cW◦ES                                                   |
 |  5 | 16 | (5 . 14)                                                |
 |  6 | 16 | (5 . 14)                                                |
 |  7 | 16 | (5 . 14)                                                |
@@ -448,7 +448,7 @@ Refer to design.org for more details.
 |  1 | 17 | (0 . 17)                                                |
 |  2 | 17 | cE◦W                                                    |
 |  3 | 17 | cNSW                                                    |
-|  4 | 17 | ‡◦ ‡W → ‡N ‡E ↓ ◦E ‡S ← ‡S ‡W                           |
+|  4 | 17 | ◦N ‡W → ‡N ‡E ↓ ◦E ‡S ← ‡S ‡W                           |
 |  5 | 17 | (4 . 17)                                                |
 |  6 | 17 | cS                                                      |
 |  7 | 17 | cNS                                                     |
