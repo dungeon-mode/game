@@ -109,7 +109,8 @@ Parsing and converison via `org-table-to-lisp', which see."
 		      :buffer (buffer-name)
 		      :line (line-number-at-pos)
 		      :pos (point))
-	   :context (concat (buffer-substring (- (point) 150) (point))
+	  :context (concat (buffer-substring (if (< 150 (point)) (- (point) 150)
+					       (point-min)) (point))
 			    "⧆"
 			    (buffer-substring  (point) (+ (point) 10))))
   (list :transform (delq 'hline (org-table-to-lisp))))

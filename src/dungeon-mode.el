@@ -280,7 +280,7 @@ appended to the end along with associated values."
        result))))
 ;;(dm-msg-impl :fmt "$file:$bar $args" :file "foo" :bar "baz" :args (list :bar ))
 
-(defun dm-msg (&rest args)
+(defsubst dm-msg (&rest args)
   "Maybe display a message.
 
 ARGS form a plist used to filter messages for display as well as
@@ -289,13 +289,13 @@ Add filters to `dm-msg-filter-hook'.  The output format is
 control by `dm-msg-format'.  A list of additional \"argument\"
 keys can be provided either by binding `dm-msg-arg-props' or by
 sending the \":args\" keyword within a particular message."
-  (and dm-msg-enabled args
-       (let ((result (run-hook-with-args-until-success
-		      'dm-msg-filter-hook args)))
-	 (if result
-	     (message (if (equal t result) (apply 'dm-msg-impl args)
-			result))
-	   nil))))
+  (if dm-msg-enabled
+      (let ((msg-filter-result
+	     (run-hook-with-args-until-success 'dm-msg-filter-hook args)))
+	   (if msg-filter-result (message (if (equal t msg-filter-result)
+					      (apply 'dm-msg-impl args)
+					    msg-filter-result))
+	     nil)) nil))
 
 (defmacro dm-msg-enable-impl (invert plist)
   "Create a filter function to match messages per PLIST.
@@ -351,20 +351,38 @@ PLIST is nill disable all messages, otherwise don't change
 		   (setq dm-msg-enabled t)
 		 (eval `(dm-msg-enable-impl t ,plist)))))
 
-;; (defun dm-mag-enable (&optional arg)
-;;   "Enable messages from `dungeon-mode'.
-;; With a prefix ARG, first clear existing message filters.  PLIST
-;; controls which messages are displayed.  Interactively, create
-;; PLIST by prompting in turn first for a key, then for a value
-;; until given a blank entry.  An empty PLIST enables all messages."
-;;   (interactive ;; load-library@1041c:/emacs26.3/share/emacs/26.3/lisp/files.el
-;;    (let ((last-key)
-;; 	 (args (seq-uniq (append dm-msg-props dm-msg-arg-props))))
-;;      (list (completing-read (format "Filter (%s): " (if last-key "value" "key"))
-;; 			    args
-;; 			    (lambda(f) (string-match-p ".elc?$" f))))
-;;      (message "args:%s" args)
-;;      args)))
+(defun dm-mag-filter (&optional bind-vars arg)
+  "Enable or disable messages from `dungeon-mode'.
+
+By default only warnings or errors are show to the user.  This
+interactive command controls which messages dungeon-mode should
+display.  The variables and subroutines involved behind the
+scenes are highly subject to change; please use this interface.
+
+BIND-VARS is alist of the form accepted by `let':
+
+  (VAR EXPR)
+
+VAR is a keyword symbol matching a message property.  EXPR is an
+Emacs Lisp expression or t meaning accept values.  When VAL is
+nil apply EXPR to all properties.  When expr is nil show/hide all
+messages with a non-nil VAL.  When EXPR and VAL are both nill
+display/ignore all messages.  When nemberic prefix ARG is
+positive enable, otherwise disable.  EXPR (e.g. cdrs with
+BIND-VARS) are ignored in this case.  With two prefix arguments
+ignore all, with three (or more) globally display all.
+
+Interactively, alternatingly prompt for VAR and EXPR until the
+first blank entry.  Maintain seperate history and complete
+keywords at either prompt."
+  (interactive ;; load-library@1041c:/emacs26.3/share/emacs/26.3/lisp/files.el
+   (let ((last-key)
+	 (args (seq-uniq (append dm-msg-props dm-msg-arg-props))))
+     (list (completing-read (format "Filter (%s): " (if last-key "value" "key"))
+			    args
+			    (lambda(f) (string-match-p ".elc?$" f))))
+     (message "args:%s" args)
+     args)))
 
 (provide 'dungeon-mode)
 ;;; dungeon-mode.el ends here
