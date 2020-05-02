@@ -1,4 +1,4 @@
-
+#+TITLE: Alpha Map Level 2
 #+PROPERTIES:
  :Version: 0.03
  :Author: Jon Lincicum
@@ -62,7 +62,7 @@ Refer to design.org for more details.
 | 15 |  1 | (14 . 0)                                                |
 | 16 |  1 | (16 . 0)                                                |
 | 17 |  1 | (16 . 0)                                                |
-| 18 |  1 | cNE                                                     |
+| 18 |  1 | cNE◦W                                                   |
 | 19 |  1 | cEW                                                     |
 | 20 |  1 | cESW                                                    |
 | 21 |  1 | cEW                                                     |
@@ -97,7 +97,7 @@ Refer to design.org for more details.
 |  0 |  3 | &A2 ‡W ◦N → ‡N → ‡N ◦E ↓ ‡E ‡S ← ‡S ← ‡S ‡W             |
 |  1 |  3 | (0 . 3)                                                 |
 |  2 |  3 | (0 . 3)                                                 |
-|  3 |  3 | 20◦WN                                                   |
+|  3 |  3 | ‡N ◦W → ‡N ◦E ↓ ‡E ‡S ← ‡S ‡W                           |
 |  4 |  3 | (3 . 3)                                                 |
 |  5 |  3 | &A2 ‡N ◦W → ‡N ‡E ↓ ‡E  ← ‡S ‡W                         |
 |  6 |  3 | (5 . 3)                                                 |
@@ -112,7 +112,7 @@ Refer to design.org for more details.
 | 15 |  3 | cNS                                                     |
 | 16 |  3 | cES                                                     |
 | 17 |  3 | cNEW                                                    |
-| 18 |  3 | S▼W                                                   |
+| 18 |  3 | S▼W                                                     |
 | 19 |  3 | (15 . 3)                                                |
 | 20 |  3 | cNS                                                     |
 | 21 |  3 | (21 . 2)                                                |
@@ -224,7 +224,7 @@ Refer to design.org for more details.
 |  2 |  8 | cNE                                                     |
 |  3 |  8 | cSW                                                     |
 |  4 |  8 | 10◦E                                                    |
-|  5 |  8 | cNE                                                     |
+|  5 |  8 | cNE◦W                                                   |
 |  6 |  8 | cEW                                                     |
 |  7 |  8 | cSW◦E                                                   |
 |  8 |  8 | cE◦W                                                    |
@@ -253,7 +253,7 @@ Refer to design.org for more details.
 |  6 |  9 | cEW                                                     |
 |  7 |  9 | cNW                                                     |
 |  8 |  9 | cS                                                      |
-|  9 |  9 | 20◦NW                                                   |
+|  9 |  9 | ◦N ‡W → ‡N ‡E ↓ ‡E ‡S ← ◦S ‡W                           |
 | 10 |  9 | (9 . 9)                                                 |
 | 11 |  9 | cES                                                     |
 | 12 |  9 | cEW                                                     |
@@ -448,7 +448,7 @@ Refer to design.org for more details.
 |  1 | 17 | (0 . 17)                                                |
 |  2 | 17 | cE◦W                                                    |
 |  3 | 17 | cNSW                                                    |
-|  4 | 17 | 20◦NW                                                   |
+|  4 | 17 | ‡◦ ‡W → ‡N ‡E ↓ ◦E ‡S ← ‡S ‡W                           |
 |  5 | 17 | (4 . 17)                                                |
 |  6 | 17 | cS                                                      |
 |  7 | 17 | cNS                                                     |
@@ -494,13 +494,13 @@ Refer to design.org for more details.
 | 22 | 18 | (21 . 18)                                               |
 | 23 | 18 | cNS                                                     |
 |    |    |                                                         |
-|  0 | 19 | cE                                                      |
+|  0 | 19 | cE◦S                                                    |
 |  1 | 19 | cEW                                                     |
 |  2 | 19 | cEW                                                     |
 |  3 | 19 | cNW                                                     |
-|  4 | 19 | S▼E                                                    |
+|  4 | 19 | S▼E                                                     |
 |  5 | 19 | (4 . 19)                                                |
-|  6 | 19 | cESW                                                    |
+|  6 | 19 | cESW◦N                                                  |
 |  7 | 19 | cNW                                                     |
 |  8 | 19 | cNS                                                     |
 |  9 | 19 | (9 . 18)                                                |
@@ -519,11 +519,11 @@ Refer to design.org for more details.
 | 22 | 19 | (21 . 18)                                               |
 | 23 | 19 | cNS                                                     |
 |    |    |                                                         |
-|  0 | 20 | 20◦NW                                                   |
+|  0 | 20 | ◦N ‡W → ‡N ‡E ↓ ‡E ‡S ← ◦S ‡W                           |
 |  1 | 20 | (0 . 20)                                                |
-|  2 | 20 | 20◦ES                                                   |
+|  2 | 20 | ‡N ‡W → ‡N ‡E ↓ ◦E ‡S ← ◦S ‡W                           |
 |  3 | 20 | (2 . 20)                                                |
-|  4 | 20 | 20◦SW                                                   |
+|  4 | 20 | ‡N ‡W → ‡N ‡E ↓ ‡E ‡S ← ◦S ◦W                           |
 |  5 | 20 | (4 . 20)                                                |
 |  6 | 20 | cNS                                                     |
 |  7 | 20 | cS                                                      |
@@ -539,7 +539,7 @@ Refer to design.org for more details.
 | 17 | 20 | cES                                                     |
 | 18 | 20 | cNW                                                     |
 | 19 | 20 | cNE                                                     |
-| 20 | 20 | cSW                                                     |
+| 20 | 20 | cSW◦E                                                   |
 | 21 | 20 | 20◦WN                                                   |
 | 22 | 20 | (21 . 20)                                               |
 | 23 | 20 | cNS                                                     |
@@ -558,7 +558,7 @@ Refer to design.org for more details.
 | 11 | 21 | cEW                                                     |
 | 12 | 21 | cEW                                                     |
 | 13 | 21 | cW◦E                                                    |
-| 14 | 21 | 20◦EN                                                   |
+| 14 | 21 | 20◦WN                                                   |
 | 15 | 21 | (14 . 21)                                               |
 | 16 | 21 | cNS                                                     |
 | 17 | 21 | cNS                                                     |
@@ -569,9 +569,9 @@ Refer to design.org for more details.
 | 22 | 21 | (21 . 20)                                               |
 | 23 | 21 | cN◦S                                                    |
 |    |    |                                                         |
-|  0 | 22 | 20◦EN                                                   |
+|  0 | 22 | ◦N ‡W → ‡N ◦E ↓ ‡E ‡S ← ‡S ‡W                           |
 |  1 | 22 | (0 . 22)                                                |
-|  2 | 22 | 20◦WN                                                   |
+|  2 | 22 | ◦N ◦W → ‡N ‡E ↓ ‡E ‡S ← ‡S ‡W                           |
 |  3 | 22 | (2 . 22)                                                |
 |  4 | 22 | cE◦N                                                    |
 |  5 | 22 | cEW◦S                                                   |
