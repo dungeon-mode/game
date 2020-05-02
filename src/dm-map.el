@@ -594,11 +594,15 @@ between 0 and 1 inclusive."
       (setcdr cell (list (round (* d (car scale))))))
      (`(v (,(and d (guard (numberp d)))))
       (setcdr cell (list (list (* d (cdr scale))))))
-     ;; arc has tons of args but we only mess with the last two
-     (`(a (,rx ,ry ,x-axis-rotation ,large-arc-flag ,sweep-flag
-	       ,(and x (guard (numberp x)))
-	       ,(and y (guard (numberp y)))))
-      (setcdr cell (list (list rx ry x-axis-rotation large-arc-flag sweep-flag
+     ;; arc, scale x and y radii and pos, leave flags alone
+     (`(a (,(and rx (guard (numberp rx)))
+	   ,(and ry (guard (numberp ry)))
+	   ,x-axis-rotation ,large-arc-flag ,sweep-flag
+	   ,(and x (guard (numberp x)))
+	   ,(and y (guard (numberp y)))))
+      (setcdr cell (list (list (round (* rx (car scale)))
+			       (round (* ry (cdr scale)))
+			       x-axis-rotation large-arc-flag sweep-flag
 			       (round (* x (car scale)))
 			       (round (* y (cdr scale)))))))
      ;; fall-back to a message
