@@ -90,13 +90,11 @@ These features are intended to be used mostly as parts of compositions and rarel
 |                         |                                                                             |                                       |
 | ◑NO                     |                                                                             | One-Way secret door out to the north  |
 | ◑NO:!elf                | ‡N                                                                          |                                       |
-| ◑NO:elf                 |                                                                             |                                       |
 | ◑NO:elf:!seen(:north 1) | ◦N                                                                          |                                       |
-| ◑NO:elf:seen(:north 1) | h.43 a.07,.07,0,0,0,.14,0 m-.14,0 h.57 ←                                    |                                       |
+| ◑NO:elf:seen(:north 1)  | h.43 a.07,.07,0,0,0,.14,0 m-.14,0 h.57 ←                                    |                                       |
 |                         |                                                                             |                                       |
 | ◑EI                     |                                                                             | One-Way secret door In from the East  |
 | ◑EI:!elf                | ‡E                                                                          |                                       |
-| ◑EI:elf                 |                                                                             |                                       |
 | ◑EI:elf:!seen(:west 1)  | ‡E                                                                          |                                       |
 | ◑EI:elf:seen(:west 1)   | → v.43 a.07,.07,0,0,1,0,.14 m0,-.14 v.57 ↖                                  |                                       |
 |                         |                                                                             |                                       |
@@ -391,9 +389,9 @@ These features are intended to be used mostly as parts of compositions and rarel
 |            |                                                                                              |                                   |                                                                                       |
 | doorL      | ↓ h.5 v-.1 h.5 m0,.2 h-.5 v-.1 m-.5,0 ↑                                                      |                                   |                                                                                       |
 |            |                                                                                              |                                   |                                                                                       |
-| doorR      | ↘ h-.5 v-.1 h-.5 m0,.2 h.5 v-.1 m-.5,0 ↑                                                    |                                   |                                                                                       |
+| doorR      | ↘ h-.5 v-.1 h-.5 m0,.2 h.5 v-.1 m-.5,0 ↑                                                     |                                   |                                                                                       |
 |            |                                                                                              |                                   |                                                                                       |
-| keychamber | h1.5 v-.1 h1 v.2 h-1 v-.1 m1,0 h1.5 v6 h-4 v-6                                               |                                   |                                                                                       |
+| keychamber | h1.5 v-.1 h1 v.2 h-1 v-.1 m1,0 h1.5 v6 h-4 v-6                                               |                                   | <text x=".4" y="4.75" font-size=".6" stroke="blue" fill="blue">Key Chamber</text>  |
 |            |                                                                                              |                                   |                                                                                       |
 | balN       | ◤ → ◦N → ◥ ↓ ‡E ↓ ◤ ← ‡S ← ◥ ↑ ‡W                                                            | Balrog chamber, Secret door North |                                                                                       |
 |            |                                                                                              |                                   |                                                                                       |
