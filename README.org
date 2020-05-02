@@ -2,21 +2,6 @@ dungeon-mode - synchronous and asynchronous world sharing and change resolution
 
 #+CATEGORY: Dungeon
 
-* Project Status
-
-#+BEGIN_QUOTE
-TL;DR We are actively but slowly working on this.
-
-We welcome your interest and participation!
-
-We are doing analysis and head-first conceptual development to create
-a Minimum Play-Testable Product (MPTP).
-#+END_QUOTE
-
-Please open an issue to request commit access or share your thoughts.
-
-More both general and detailed status in [[Community and Outreach][Community and Outreach]], below.
-
 * SYNOPSYS
 
 An hack-and-slash style mult-player dungeon crawl blending the
@@ -25,6 +10,13 @@ Dungeon (Minneapolis Dungeon, Larry's Maze, et. al.).
 
 Requires GNU Emacs 26.3 or later, available here for most platforms:
   http://gnu.org/software/emacs
+
+#+BEGIN_QUOTE
+This file is a part of dungeon-mode.  It is not a part of GNU Emacs.
+This softare is released under the GNU Public Licence version three
+or, at your disgression, any newer version of the GNU Public
+License.  For specific terms please see [[LICENSE]] at end-of-file.
+#+END_QUOTE
 
 * STATUS
 
@@ -485,3 +477,18 @@ are also welcomed. We draw the line and point and jeering.  Get your
 own discord/irc channel for that please.
 
 #  LocalWords:  MPTP POC EOF Org svg tigersbite mplsCorwin
+
+* LICENSE
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.

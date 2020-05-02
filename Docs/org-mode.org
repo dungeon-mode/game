@@ -3,6 +3,11 @@
 
 Most game sources (e.g. maps, treasure tables, etc) as well as some game play information (character sheets, the battle board giving the party's order of battle, and so forth) are written as ~[[https://org-mode.org][org-mode]]~ files to one or more users' file-system.  While these files are "hand-editable" ~dungeon-mode~ provides additional domain specific tools to supplement those of ~org-mode~ and other components of GNU Emacs.  The rest of this file describes those tools and chronicles their development.
 
+This file is a part of dungeon-mode.  It is not a part of GNU Emacs.
+This softare is released under the GNU Public Licence version three
+or, at your disgression, any newer version of the GNU Public
+License.  For specific terms please see [[LICENSE]] at end-of-file.
+
 * ABSTRACT
 
 
@@ -336,3 +341,18 @@ Most game sources (e.g. maps, treasure tables, etc) as well as some game play in
      a production of a BNF grammar is when-let bound successfully.
 
   *
+
+* LICENSE
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.

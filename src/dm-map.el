@@ -520,7 +520,10 @@ Accept any DOM node, consider only X, Y and font-size properties.
 NUDGE, SCALE and POS are cons cells in the form (X . Y).  NUDGE
 gives the canvas padding in pixes while SCALE gives the number of
 pixels per dungeon unit and POS gives the location of the origin
-of the current cell in dungeon units."
+of the current cell in dungeon units.
+
+For \"text\" elements, also scale \"font-size\".  For \"path\"
+elements prepend an absolute movement command to path-data."
   ;; (message "[nudge] DOMp:%s scale:%s pos:%s node:%s"
   ;; 	   (dm-svg-dom-node-p dom-node) scale pos dom-node)
   (when (dm-svg-dom-node-p dom-node)
@@ -541,6 +544,12 @@ of the current cell in dungeon units."
       ;; 	       y-scale y-orig y-scale (cdr pos) y-new)
       (when-let ((font-size (dom-attr dom-node 'font-size)))
 	(dom-set-attribute dom-node 'font-size (* x-scale font-size)))
+      (when-let ((path-data (dom-attr dom-node 'd)))
+	(dom-set-attribute
+	 dom-node 'd (concat
+		      "M" (number-to-string (car pos))
+		      "," (number-to-string (cdr pos))
+		      " " path-data)))
       (dom-set-attribute dom-node 'x x-new)
       (dom-set-attribute dom-node 'y y-new))
     ;; process child nodes
@@ -585,11 +594,15 @@ between 0 and 1 inclusive."
       (setcdr cell (list (round (* d (car scale))))))
      (`(v (,(and d (guard (numberp d)))))
       (setcdr cell (list (list (* d (cdr scale))))))
-     ;; arc has tons of args but we only mess with the last two
-     (`(a (,rx ,ry ,x-axis-rotation ,large-arc-flag ,sweep-flag
-	       ,(and x (guard (numberp x)))
-	       ,(and y (guard (numberp y)))))
-      (setcdr cell (list (list rx ry x-axis-rotation large-arc-flag sweep-flag
+     ;; arc, scale x and y radii and pos, leave flags alone
+     (`(a (,(and rx (guard (numberp rx)))
+	   ,(and ry (guard (numberp ry)))
+	   ,x-axis-rotation ,large-arc-flag ,sweep-flag
+	   ,(and x (guard (numberp x)))
+	   ,(and y (guard (numberp y)))))
+      (setcdr cell (list (list (round (* rx (car scale)))
+			       (round (* ry (cdr scale)))
+			       x-axis-rotation large-arc-flag sweep-flag
 			       (round (* x (car scale)))
 			       (round (* y (cdr scale)))))))
      ;; fall-back to a message

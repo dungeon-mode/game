@@ -5,6 +5,11 @@
  :Created: 2020/01/11
  :END:
 
+This file is a part of dungeon-mode.  It is not a part of GNU Emacs.
+This softare is released under the GNU Public Licence version three
+or, at your disgression, any newer version of the GNU Public
+License.  For specific terms please see [[LICENSE]] at end-of-file.
+
 * Chamber Baddies
 
 + This table is the Main baddies table used in chambhers and "normal" encounters
@@ -82,3 +87,18 @@
 | 03B   | 3 | Werejackel      | SIMEANS |    12 | 2 on 8 for 2*        |                      | *Bite makes you a werejackel                               |  9 |  9 |  9 |  9 |    5 |    10 |                           |
 | 03B   | 4 | Giant Brain     | ALIENS  |     1 | 1 on dbl for special |                      | Stupify ray gives brain control of character for 1D rounds |  7 |  7 |  7 |  7 |    5 |    10 |                           |
 | 03B   | 5 | Freezing Sphere | DEAMONS |     1 | 1 on dbl for special |                      | 1D Freezing Damage                                         |  7 |  7 |  7 |  7 |   10 |    20 | DoD Ice Blast when killed |
+
+* LICENSE
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.

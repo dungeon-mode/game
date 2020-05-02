@@ -6,6 +6,12 @@
    :DECORATIONS: stroke="none" fill="" fill-opacity=".9"
    :ETL: tile
   :END:
+  
+This file is a part of dungeon-mode.  It is not a part of GNU Emacs.
+This softare is released under the GNU Public Licence version three
+or, at your disgression, any newer version of the GNU Public
+License.  For specific terms please see [[LICENSE]] at end-of-file.
+  
 # #+NAME: 10-water-Tiles
 | Tile      | Water                                            | Decorations                                         |
 |-----------+--------------------------------------------------+-----------------------------------------------------|
@@ -78,3 +84,18 @@ Refer to design.org for more details.
 
 #+RESULTS:
 : (tiles #s(hash-table size 65 test equal rehash-size 1.5 rehash-threshold 0.8125 data (pool1 (path nil tag nil overlay nil stairs nil water ((h (1)) (a (1.5 1.5 0 0 1 1 1)) (v (1)) (a (1.5 1.5 0 0 1 -1 1)) (h (-1)) (a (1.5 1.5 0 0 1 -1 -1)) (v (-1)) (a (1.5 1.5 0 0 1 1 -1))) beach nil neutronium nil decorations nil) riv1 (path nil tag nil overlay nil stairs nil water ((h (1)) (v (1)) (h (-1)) (v (-1))) beach nil neutronium nil decorations nil) riv1N (path nil tag nil overlay nil stairs nil water (riv1) beach nil neutronium nil decorations ((m (0.49 0.8)) (h (0.02)) (v (-0.5)) (h (0.05)) (l (-0.06 -0.1)) (l (-0.06 0.1)) (h (0.05)) (v (0.5)))) riv1E (path nil tag nil overlay nil stairs nil water (riv1) beach nil neutronium nil decorations ((m (0.75 0.49)) (h (-0.5)) (v (0.02)) (h (0.5)) (v (0.05)) (l (0.1 -0.06)) (l (-0.1 -0.06)) (v (0.05)))) riv1S (path nil tag nil overlay nil stairs nil water (riv1) beach nil neutronium nil decorations ((m (0.49 0.2)) (h (0.02)) (v (0.5)) (h (0.05)) (l (-0.06 0.1)) (l (-0.06 -0.1)) (h (0.05)) (v (-0.5)))) riv1W (path nil tag nil overlay nil stairs nil water (riv1) beach nil neutronium nil decorations ((m (0.25 0.49)) (h (0.5)) (v (0.02)) (h (-0.5)) (v (0.05)) (l (-0.1 -0.06)) (l (0.1 -0.06)) (v (0.05)))))) level #s(hash-table size 65 test equal rehash-size 1.5 rehash-threshold 0.8125 data ((0 . 0) (path (pool1)) (1 . 0) (path ((0 . 0))) (2 . 0) (path ((0 . 0))) (3 . 0) (path nil) (0 . 1) (path ((0 . 0))) (1 . 1) (path ((0 . 0))) (2 . 1) (path ((0 . 0))) (0 . 2) (path ((0 . 0))) (1 . 2) (path ((0 . 0))) (2 . 2) (path ((0 . 0))) (0 . 3) (path nil) (1 . 3) (path (riv1S)) (2 . 3) (path nil))))
+
+* LICENSE
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.

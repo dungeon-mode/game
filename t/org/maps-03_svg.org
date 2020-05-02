@@ -3,6 +3,11 @@
 
 This tests map rendering using a tile and cell containing an SVG/XML element.
 
+This file is a part of dungeon-mode.  It is not a part of GNU Emacs.
+This softare is released under the GNU Public Licence version three
+or, at your disgression, any newer version of the GNU Public
+License.  For specific terms please see [[LICENSE]] at end-of-file.
+
 * Tiles
 :PROPERTIES:
 :ETL: tile
@@ -38,3 +43,18 @@ This tests map rendering using a tile and cell containing an SVG/XML element.
 
 #+RESULTS:
 : (image #s(dm-svg (svg ((width . 385) (height . 385) (version . "1.1") (xmlns . "http://www.w3.org/2000/svg") (stroke . white) (stroke-width . 1) (:image . #<marker at 49 in **dungeon map**>)) nil (path ((d . "M 137 137 <text x=\"1\" y=\"1\" font-size=\"1\">aaa</text>")))) (path ((d . "M 137 137 <text x=\"1\" y=\"1\" font-size=\"1\">aaa</text>")))) tiles #s(hash-table size 65 test equal rehash-size 1.5 rehash-threshold 0.8125 data (aaa (path ("<text x=\"1\" y=\"1\" font-size=\"1\">aaa</text>") tag nil overlay nil stairs nil water nil beach nil neutronium nil decorations nil))) level #s(hash-table size 65 test equal rehash-size 1.5 rehash-threshold 0.8125 data ((1 . 1) (path (aaa)))))
+
+* LICENSE
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
