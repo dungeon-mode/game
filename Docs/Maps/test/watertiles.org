@@ -7,6 +7,12 @@
     :DECORATIONS: stroke="none" fill="" fill-opacity=".9"
    :ETL: tile
   :END:
+  
+This file is a part of dungeon-mode.  It is not a part of GNU Emacs.
+This softare is released under the GNU Public Licence version three
+or, at your disgression, any newer version of the GNU Public
+License.  For specific terms please see [[LICENSE]] at end-of-file.
+  
 # #+NAME: 10-water-Tiles
 | Tile      | Water                                            | Decorations                                         |
 |-----------+--------------------------------------------------+-----------------------------------------------------|
@@ -20,3 +26,18 @@
 | riv1S     | &riv1                                            | m.49,.2 h.02 v.5 h.05 l-.06,.1 l-.06,-.1 h.05 v-.5  |
 | riv1W     | &riv1                                            | m.25,.49 h.5 v.02 h-.5 v.05 l-.1,-.06 l.1,-.06 v.05 |
 |           |                                                  |                                                     |
+
+* LICENSE
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
