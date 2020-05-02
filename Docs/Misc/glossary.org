@@ -5,6 +5,11 @@
  :Created: 2020/01/11
  :END:
 
+This file is a part of dungeon-mode.  It is not a part of GNU Emacs.
+This softare is released under the GNU Public Licence version three
+or, at your disgression, any newer version of the GNU Public
+License.  For specific terms please see [[LICENSE]] at end-of-file.
+
 * Glossary
 
 + This table contains information about treasure items and abilities explaining how they work.
@@ -17,7 +22,7 @@
 | Levitation                         | Any      | you float in the air, can not fall or drown while levitating                                                                                                                                     |
 | Magic Amulet                       | Any      | Each character may wear one magic amulet at a time                                                                                                                                               |
 | Magic Rings                        | Any      | Each character may wear one magic ring at a time                                                                                                                                                 |
-| Explosive Damage                   | Combat   | Explosive Damage spreads in all directions to other baddies inverse to their distance (Adjacent gets ½; next gets 1/3; next gets ¼; last gets 1/5)                                               |
+| Explosive Damage                   | Combat   | Explosive Damage spreads in all directions to other baddies inverse to their distance (Adjacent gets Â½; next gets 1/3; next gets Â¼; last gets 1/5)                                               |
 | Corridor (4-way) and areas         | Map      | Roll on baddies table; beat my roll for treasure                                                                                                                                                 |
 | Fountain                           | Map      | Roll on beach table; beat my roll for treasure                                                                                                                                                   |
 | Bless                              | Priest   | Bless effects everything in combat; Party members get +1 / X1 bonus, Baddies get -1 to hit                                                                                                       |
@@ -41,7 +46,7 @@
 | Clever                             | Treasure | Always roll on the boxcars table.                                                                                                                                                                |
 | Blade, Living                      | Treasure | Is alive, Eats 10% experience, may save your life or do magic when you are in need                                                                                                               |
 | Blade, Lethal                      | Treasure | each time it hits on Dbl it delivers an instant kill.                                                                                                                                            |
-| Berserker                          | Warrior  | Gain +4 X3 for duration of battle (current or next) and take only 10% experience; After battle become incapacitated for rest of decent. If awakened somehow, -2 x½ for rest of decent.           |
+| Berserker                          | Warrior  | Gain +4 X3 for duration of battle (current or next) and take only 10% experience; After battle become incapacitated for rest of decent. If awakened somehow, -2 xÂ½ for rest of decent.           |
 | Charge before Battle               | Warrior  | At the start of a battle you may use a single charge from inventory before the start of combat.                                                                                                  |
 | Extra Swing                        | Warrior  | May attack twice in a single action                                                                                                                                                              |
 | Fast Switch                        | Warrior  | Does  not take an attack to switch weapons                                                                                                                                                       |
@@ -79,3 +84,18 @@
 | BoxCars                            | combat   | Critical success; typically allows you to roll on the special boxcars table                                                                                                                      |
 | Snakeyes                           | Combat   | Critical fumble; typically requires that you roll on the special SnakeEyes table.                                                                                                                |
 | Impregnate                         | Baddie   | Hug: You become incapacitated for 1d rounds (or rest of battle).  Each battle thereafter is a dbl chance a baby alien will emerge                                                                |
+
+* LICENSE
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
