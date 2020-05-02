@@ -541,6 +541,12 @@ of the current cell in dungeon units."
       ;; 	       y-scale y-orig y-scale (cdr pos) y-new)
       (when-let ((font-size (dom-attr dom-node 'font-size)))
 	(dom-set-attribute dom-node 'font-size (* x-scale font-size)))
+      (when-let ((path-data (dom-attr dom-node 'd)))
+	(dom-set-attribute
+	 dom-node 'd (concat
+		      "M" (number-to-string (car pos))
+		      "," (number-to-string (cdr pos))
+		      " " path-data)))
       (dom-set-attribute dom-node 'x x-new)
       (dom-set-attribute dom-node 'y y-new))
     ;; process child nodes
