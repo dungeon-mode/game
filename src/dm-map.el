@@ -520,7 +520,10 @@ Accept any DOM node, consider only X, Y and font-size properties.
 NUDGE, SCALE and POS are cons cells in the form (X . Y).  NUDGE
 gives the canvas padding in pixes while SCALE gives the number of
 pixels per dungeon unit and POS gives the location of the origin
-of the current cell in dungeon units."
+of the current cell in dungeon units.
+
+For \"text\" elements, also scale \"font-size\".  For \"path\"
+elements prepend an absolute movement command to path-data."
   ;; (message "[nudge] DOMp:%s scale:%s pos:%s node:%s"
   ;; 	   (dm-svg-dom-node-p dom-node) scale pos dom-node)
   (when (dm-svg-dom-node-p dom-node)
