@@ -96,8 +96,8 @@ This setting controls the number of actual screen pixes
 assigned (in both dimensions) while drwaing the map."
   :type 'number)
 
-(defcustom dm-map-nudge `(,dm-map-scale . ,dm-map-scale)
-  "Top and left padding in pixels as a cons cell (X . Y)."
+(defcustom dm-map-nudge (1 . 1)
+  "Top and left padding in dungeon units as a cons cell (X . Y)."
   :type 'cons)
 
 (defcustom dm-map-scale-nudge 5
@@ -531,12 +531,12 @@ elements prepend an absolute movement command to path-data."
 	       (y-scale (if (car-safe (cdr scale))
 			    (cadr scale)
 			  (car scale)))
-	       (x-orig (dom-attr dom-node 'x))
-	       (y-orig (dom-attr dom-node 'y))
-	       (x-new (+ (car nudge)
+	       (x-orig (or (dom-attr dom-node 'x) 0))
+	       (y-orig (or (dom-attr dom-node 'y) 0))
+	       (x-new (+ (* x-scale (car nudge))
 			 (* x-scale (car pos))
 			 (* x-scale x-orig)))
-	       (y-new (+ (cdr nudge)
+	       (y-new (+ (* y-scale (cdr nudge))
 			 (* y-scale (cdr pos))
 			 (* y-scale y-orig))))
       ;; (message "[nudge] x=(%s*%s)+(%s*%s)=%s, y=(%s*%s)+(%s*%s)=%s"
@@ -547,8 +547,8 @@ elements prepend an absolute movement command to path-data."
       (when-let ((path-data (dom-attr dom-node 'd)))
 	(dom-set-attribute
 	 dom-node 'd (concat
-		      "M" (number-to-string (car pos))
-		      "," (number-to-string (cdr pos))
+		      "M" (number-to-string (+ (* x-scale (car nudge)) (car pos)))
+		      "," (number-to-string (+ (* y-scale (cdr nudge)) (cdr pos)))
 		      " " path-data)))
       (dom-set-attribute dom-node 'x x-new)
       (dom-set-attribute dom-node 'y y-new))
@@ -557,7 +557,8 @@ elements prepend an absolute movement command to path-data."
       (dm-map--dom-attr-nudge nudge scale pos child))
     dom-node))
 
-;;(dm-map--dom-attr-nudge '(1 2)  '(4 . 8) (dom-node 'text '((x . 16)(y . 32))))
+;;(dm-map--dom-attr-nudge '(1 . 2) '(4 8) '(0 . 0) (dom-node 'text '((x . 16)(y . 32))))
+;;(dm-map--dom-attr-nudge '(1 . 1) '(2 2) '(3 . 3) (dom-node 'path '((d . "h1 v1 h-1 v-1"))))
 
 (defun dm-map-default-scale-function (scale &rest cells)
   "Return CELLS with SCALE applied.
@@ -808,8 +809,8 @@ SCALE-FUNCTION may be used to supply custom scaling."
 	  (lambda (pos paths)
 	    (when paths (append
 			 (list (list 'M (list
-					 (+ (car nudge) (* scale (car pos)))
-					 (+ (cdr nudge) (* scale (cdr pos))))))
+					 (+ (* scale (car nudge)) (* scale (car pos)))
+					 (+ (* scale (cdr nudge)) (* scale (cdr pos))))))
 			 paths))))
 	 (draw-code (delq nil (mapcar 'dm-map-cell cells)))
 	  ;; handle main path seperately
@@ -831,8 +832,8 @@ SCALE-FUNCTION may be used to supply custom scaling."
 			(append
 			 (list
 			  (list 'M (list
-				    (+ (car nudge) (* scale (car pos)))
-				    (+ (cdr nudge) (* scale (cdr pos))))))
+				    (+ (* scale (car nudge)) (* scale (car pos)))
+				    (+ (* scale (cdr nudge)) (* scale (cdr pos))))))
 			 (apply 'append strokes))))
 		    draw-code))
 		 dm-map-draw-other-props))
@@ -881,8 +882,8 @@ SCALE-FUNCTION may be used to supply custom scaling."
 			       (plist-get cell dm-map-overlay-prop))))
 		    draw-code))
 	 (img (dm-svg :svg (append (apply 'svg-create
-					  (append (list (+ (* 2 (car nudge)) (car size))
-							(+ (* 2 (cdr nudge)) (cdr size)))
+					  (append (list (+ (* (car nudge) scale 2) (car size))
+							(+ (* (cdr nudge) scale 2) (cdr size)))
 						  svg-attributes))
 				   (append background paths overlays))
 		      :path-data (dm-svg-create-path
@@ -902,8 +903,8 @@ SCALE-FUNCTION may be used to supply custom scaling."
 			     (size (cons (* (car scale) (car dm-map-level-size))
 					 (* (cdr scale) (cdr dm-map-level-size))))
 			     (nudge dm-map-nudge)
-			     (v-rule-len (+ (car size) (* 2 (car nudge))))
-			     (h-rule-len (+ (cdr size) (* 2 (cdr nudge))))
+			     (v-rule-len (+ (car size) (* (car scale) (car nudge) 2)))
+			     (h-rule-len (+ (cdr size) (* (cdr scale) (cdr nudge) 2)))
 			     (svg (svg-create v-rule-len v-rule-len))
 			     no-canvas
 			     (canvas (unless no-canvas
@@ -940,7 +941,6 @@ SCALE-FUNCTION may be used to supply custom scaling."
 	   (make-list (1+ (ceiling (/ (cdr size) (cdr scale)))) h-rule-len)))
 	 " ")
 	graph-attr)))))
-
 
 
 ;; commands and major mode
@@ -1017,8 +1017,8 @@ SCALE-FUNCTION may be used to supply custom scaling."
 	(when (not (eql oscale arg))
 	  (setq dm-map-scale arg)
 	  (dm-map-draw)
-	  (set-window-hscroll win (round (/ (* hscroll arg) oscale width)))
-	  (set-window-vscroll win (round (/ (* vscroll arg) oscale)) t))))))
+	  (set-window-hscroll win (round (/ (* hscroll arg) arg width)))
+	  (set-window-vscroll win (round (/ (* vscroll arg) arg)) t))))))
 
 (defun dm-map-scale-nudge (&optional arg)
   "Adjust scale ARG increments of var `dm-map-scale-nudge'.
@@ -1064,6 +1064,42 @@ ARG is the factor for applying 'dm-map-scale-nudge' to `dm-map-scale'."
   (scroll-right (or dm-map-scroll-nudge
 		   (* dm-map-scale (car dm-map-nudge)))))
 
+(defun dm-map--pos-pixels-to-cell (x y)
+  "Return map cell under the given X Y position in pixels."
+  (let* ((win (selected-window))
+	 (nudge-X (ceiling (* dm-map-scale (car dm-map-nudge))))
+	 (nudge-Y (ceiling (* dm-map-scale (cdr dm-map-nudge))))
+	 (du-X (/ (- x nudge-X) dm-map-scale))
+	 (du-Y  (/ (- y nudge-Y) dm-map-scale))
+	 ;; account for any cells scrolled out of window
+	 ;; hscroll is in characters; calc using frame char width
+	 (char-width (frame-char-width (window-frame win)))
+	 (scroll-X (* (window-hscroll win) char-width))
+	 (scroll-Y (window-vscroll win t))
+	 (du-scroll-X  (/ scroll-X dm-map-scale))
+	 (du-scroll-Y  (/ scroll-Y dm-map-scale)))
+    (message "cell: %s" (cons (+ du-X du-scroll-X)
+			      (+ du-Y du-scroll-Y)))))
+
+(require 'mouse)
+
+(defun dm-map-pos ()
+  "Return map cell under mouse."
+  (interactive "@")
+  (let* ((mpos (mouse-pixel-position))
+	 (wpos (caddr
+		(posn-at-x-y (cadr mpos) (cddr mpos)
+			     (selected-frame)))))
+    (message "%s" (dm-map--pos-pixels-to-cell (car wpos) (cdr wpos)))))
+
+(defun dm-map-pos-pixels ()
+  "Return map cell under mouse."
+  (interactive "@")
+  (let* ((mpos (mouse-pixel-position))
+	 (wpos (posn-at-x-y (cadr mpos) (cddr mpos)
+			    (selected-frame) t)))
+    (message "%s" (caddr wpos))))
+
 ;; global key binding
 (global-set-key (kbd "<f9>") 'dm-map-draw)
 
@@ -1082,6 +1118,10 @@ ARG is the factor for applying 'dm-map-scale-nudge' to `dm-map-scale'."
     (define-key map (kbd "q") 'dm-map-quit)
     (define-key map (kbd "r") 'dm-map-draw)
     (define-key map (kbd "s") 'dm-map-scale)
+    (define-key map (kbd ".") 'dm-map-pos)
+    (define-key map (kbd ",") 'dm-map-pos-pixels)
+    (define-key map [mouse-2] 'dm-map-pos)
+    (define-key map [mouse-2] 'dm-map-pos-pixels)
     map))
 
 (define-derived-mode dm-map-mode image-mode "MAP"
