@@ -62,6 +62,7 @@
 
 (require 'image-mode)
 (require 'org-element)
+(require 'mouse)
 
 ;; DEVEL hack: prefer version from CWD, if any
 (let ((load-path (append '(".") load-path)))
@@ -350,8 +351,8 @@ TILE is an hash-table key, PROP is a property (default: \"path\"."
 	 (dm-map-mode)
 	 ;;(pixel-scroll-mode t)
 	 ;;(image-transform-set-scale 1)
-	 (image-toggle-display-image)
-	 ))))
+	 (image-toggle-display-image)))
+     svg))
 
 (defun dm-map-load (&rest files)
   "Truncate and replace `dm-map-tiless' and `dm-map-levels' from FILES.
@@ -969,7 +970,12 @@ SCALE-FUNCTION may be used to supply custom scaling."
   (let ((svg (dm-map-quick-draw)))
     (prog1 svg
       (dm-map-draw-test svg ;; (oref svg path-data)
-	(render-and-insert-string svg)))))
+	(render-and-insert-string svg))
+      (with-current-buffer "**dungeon map**"
+	(let ((inhibit-read-only t)
+	      (start (point-min))
+	      (end (point-max)))
+	  (put-text-property start end 'help-echo #'dm-map--pos-impl))))))
 
 ;; (defun dm-map-center (&optional x y)
 ;;   "Center map buffer, on POS when given.
@@ -1076,22 +1082,23 @@ ARG is the factor for applying 'dm-map-scale-nudge' to `dm-map-scale'."
 	 (scroll-Y (window-vscroll win t))
 	 (du-scroll-X  (/ scroll-X dm-map-scale))
 	 (du-scroll-Y  (/ scroll-Y dm-map-scale)))
-    (message "cell: %s" (cons (+ du-X du-scroll-X)
-			      (+ du-Y du-scroll-Y)))))
+    (cons (+ du-X du-scroll-X) (+ du-Y du-scroll-Y))))
 
-(require 'mouse)
-
-(defun dm-map-pos ()
-  "Return map cell under mouse."
-  (interactive "@")
+(defun dm-map--pos-impl (&rest _)
+  "Return map cell under mouse as a string."
   (let* ((mpos (mouse-pixel-position))
 	 (wpos (caddr
 		(posn-at-x-y (cadr mpos) (cddr mpos)
 			     (selected-frame)))))
-    (message "%s" (dm-map--pos-pixels-to-cell (car wpos) (cdr wpos)))))
+    (format "%s" (dm-map--pos-pixels-to-cell (car wpos) (cdr wpos)))))
+
+(defun dm-map-pos ()
+  "Display the map cell under mouse."
+  (interactive "@")
+  (message "cell: %s" (dm-map--pos-impl)))
 
 (defun dm-map-pos-pixels ()
-  "Return map cell under mouse."
+  "Display window pos under mouse in pixels."
   (interactive "@")
   (let* ((mpos (mouse-pixel-position))
 	 (wpos (posn-at-x-y (cadr mpos) (cddr mpos)
@@ -1121,6 +1128,23 @@ ARG is the factor for applying 'dm-map-scale-nudge' to `dm-map-scale'."
     (define-key map [mouse-1] 'dm-map-pos)
     (define-key map [mouse-2] 'dm-map-pos-pixels)
     map))
+
+(defun dm-map--menus-list-files (&rest _)
+  "Create menu options from available map files."
+  (mapcar
+   (lambda (map-file)
+     `[,(file-name-nondirectory map-file)
+       (add-to-list 'dm-map-files ,map-file)
+       :style toggle :selected (member ,map-file dm-map-files)])
+   (append (dm-files-select :map-tiles)
+	   (dm-files-select :map-cells))))
+
+(defconst dm-map-mode-menus
+  '("Dungeon Mode"
+    :help "Toggle map files"
+    :filter dm-map--menus-list-files))
+
+(easy-menu-define dm-map-menu dm-map-mode-map "Dungeon-mode menus" dm-map-mode-menus)
 
 (define-derived-mode dm-map-mode image-mode "MAP"
   "Major mode for `dugeon-mode' maps.")
