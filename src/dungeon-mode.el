@@ -107,7 +107,7 @@ for example to save campaign notes during gameplay.  Note,
   (list
    (list :map-cells
 	 (apply-partially #'dm-files-filter-by-re
-			  "Docs/Maps/levels/A-Maze_level[[:digit:]]+.org$"))
+			  "Docs/Maps/levels/[AB]-Maze_level[[:digit:]]+.org$"))
    (list :map-tiles (apply-partially #'dm-files-filter-by-re
 				     "Docs/Maps/map-tiles.org$")))
   "Alist mapping game features to file filter functions.

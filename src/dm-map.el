@@ -78,9 +78,8 @@
 These settings control display of game maps."
   :group 'dungeon-mode)
 
-(defcustom dm-map-files nil
-  ;; (append (dm-files-select :map-tiles)
-  ;; (dm-files-select :map-cells))
+(defcustom dm-map-files (append (dm-files-select :map-tiles)
+				(list (car-safe (dm-files-select :map-cells))))
   "List of files from which load game maps."
   :type (list 'symbol)
   :group 'dm-files
@@ -427,11 +426,13 @@ Only consider attributes listed in `dm-map--scale-props'"
   (let* ((cols (or dm-map-level-cols
 		   (seq-map (lambda (label) (intern (downcase label)))
 			    (car table))))
+	 (last-key (gensym))
 	 (cform
 	  `(dm-coalesce-hash ,(cdr table) ,cols
 	     ,@(when dm-map-level-key `(:key-symbol ,dm-map-level-key))
 	     :hash-table dm-map-level
 	     (when (and (boundp 'path) path)
+	       (setq dm-map-level-size ,dm-map-level-key)
 	       (list 'path (dm-map-parse-plan-part path)))))
 	 (result (eval `(list :load ,cform))))))
 
@@ -898,7 +899,7 @@ SCALE-FUNCTION may be used to supply custom scaling."
 			     (nudge dm-map-nudge)
 			     (h-rule-len (+ (car size) (* (car scale) (car nudge) 2)))
 			     (v-rule-len (+ (cdr size) (* (cdr scale) (cdr nudge) 2)))
-			     (svg (svg-create h-rule-len h-rule-len))
+			     (svg (svg-create h-rule-len v-rule-len))
 			     no-canvas
 			     (canvas (unless no-canvas
 				       (svg-rectangle `(,svg '(()))
@@ -923,15 +924,15 @@ SCALE-FUNCTION may be used to supply custom scaling."
 	  (cl-mapcar
 	   (apply-partially 'format "M0,%d h%d")
 	   (number-sequence (car nudge)
-			    (+ (car size) (car nudge))
+			    (+ (cdr size) (cdr nudge))
 			    (car scale))
-	   (make-list (1+ (ceiling (/ (car size) (car scale)))) h-rule-len))
+	   (make-list (1+ (ceiling (/ (cdr size) (cdr scale)))) h-rule-len))
 	  (cl-mapcar
 	   (apply-partially 'format "M%d,0 v%d")
 	   (number-sequence (cdr nudge)
-			    (+ (cdr size) (cdr nudge))
+			    (+ (car size) (car nudge))
 			    (cdr scale))
-	   (make-list (1+ (ceiling (/ (cdr size) (cdr scale)))) v-rule-len)))
+	   (make-list (1+ (ceiling (/ (car size) (car scale)))) v-rule-len)))
 	 " ")
 	graph-attr)))))
 
