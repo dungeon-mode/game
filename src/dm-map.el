@@ -415,6 +415,7 @@ Only consider attributes listed in `dm-map--scale-props'"
 				"</g>")
 			(libxml-parse-xml-region (point-min)
 						 (point-max))))))
+      ;;(message "XML string:%s plist:" xml-parts dm-map--last-plist)
       (prog1 (plist-put dm-map--last-plist dm-map-overlay-prop
 			(append (plist-get dm-map--last-plist
 					   dm-map-overlay-prop)
@@ -480,6 +481,7 @@ Only consider attributes listed in `dm-map--scale-props'"
 		     (delq nil'(,dm-map-draw-prop ,@dm-map-draw-other-props)))
 	       (when (and (boundp (quote ,dm-map-overlay-prop)) ,dm-map-overlay-prop)
 		 (push ,dm-map-overlay-prop dm-map--xml-strings))
+	       ;;(message "tile:%s plist:%s" last-key dm-map--last-plist)
 	       dm-map--last-plist)))
 	 (result
 	  (prog1 (eval `(list :load ,cform))
@@ -493,27 +495,7 @@ Only consider attributes listed in `dm-map--scale-props'"
 
 ;; quick and dirty procedural approach
 
-(cl-defun dm-map--dom-attr-scale-nth (dom-node scale) ;; (attr n)
-  "Apply Nth of SCALE to ATTR of DOM-NODE if present."
-  (dolist (attr dm-map--scale-props dom-node)
-    (when-let* ((n (if (listp (cdr attr)) (car (cdr attr)) (cdr attr)))
-		(sl (list (car scale) (cdr scale)))
-		(factor (nth n sl))
-		(attr (car attr))
-		(val (dom-attr dom-node attr)))
-      (when (numberp val)
-	(dom-set-attribute dom-node attr (* factor val))))))
-
-
-;; (dm-map--dom-attr-scale-nth (dom-node 'foo '((bar . 10))) '(2 3 4) '(bar 0))
-;; (dm-map--dom-attr-scale-nth (dom-node 'foo '((x . 10))) '(2 . 4 ))
-
-;; second test case to figure out looping a list
-;; (let ((dom-node (dom-node 'foo '((font-size . 10) (y . 10)) "content")))
-;;   (dm-map--dom-attr-scale-nth dom-node '(12 23))
-;;   dom-node)
-
-(cl-defun dm-map--dom-attr-nudge (nudge scale pos dom-node)
+(cl-defun dm-map--dom-attr-nudge (path-fun nudge scale pos dom-node)
   "Position and scale DOM-NODE.
 
 Accept any DOM node, consider only X, Y and font-size properties.
@@ -523,22 +505,24 @@ pixels per dungeon unit and POS gives the location of the origin
 of the current cell in dungeon units.
 
 For \"text\" elements, also scale \"font-size\".  For \"path\"
-elements prepend an absolute movement command to path-data."
+elements prepend an absolute movement command to path-data.  Call
+PATH-FUN to scale the parsed command data of any path elements
+found."
   ;; (message "[nudge] DOMp:%s scale:%s pos:%s node:%s"
   ;; 	   (dm-svg-dom-node-p dom-node) scale pos dom-node)
   (when (dm-svg-dom-node-p dom-node)
-    (when-let ((x-scale (car scale))
-	       (y-scale (if (car-safe (cdr scale))
-			    (cadr scale)
-			  (car scale)))
-	       (x-orig (or (dom-attr dom-node 'x) 0))
-	       (y-orig (or (dom-attr dom-node 'y) 0))
-	       (x-new (+ (* x-scale (car nudge))
-			 (* x-scale (car pos))
-			 (* x-scale x-orig)))
-	       (y-new (+ (* y-scale (cdr nudge))
-			 (* y-scale (cdr pos))
-			 (* y-scale y-orig))))
+    (when-let* ((x-scale (car scale))
+		(y-scale (if (car-safe (cdr scale))
+			     (cadr scale)
+			   (car scale)))
+		(x-orig (or (dom-attr dom-node 'x) 0))
+		(y-orig (or (dom-attr dom-node 'y) 0))
+		(x-new (+ (* x-scale (car nudge))
+			  (* x-scale (car pos))
+			  (* x-scale x-orig)))
+		(y-new (+ (* y-scale (cdr nudge))
+			  (* y-scale (cdr pos))
+			  (* y-scale y-orig))))
       ;; (message "[nudge] x=(%s*%s)+(%s*%s)=%s, y=(%s*%s)+(%s*%s)=%s"
       ;; 	       x-scale x-orig x-scale (car pos) x-new
       ;; 	       y-scale y-orig y-scale (cdr pos) y-new)
@@ -546,19 +530,27 @@ elements prepend an absolute movement command to path-data."
 	(dom-set-attribute dom-node 'font-size (* x-scale font-size)))
       (when-let ((path-data (dom-attr dom-node 'd)))
 	(dom-set-attribute
-	 dom-node 'd (concat
-		      "M" (number-to-string (+ (* x-scale (car nudge)) (car pos)))
-		      "," (number-to-string (+ (* y-scale (cdr nudge)) (cdr pos)))
-		      " " path-data)))
+	 dom-node 'd
+	 (concat
+	  "M" (number-to-string (+ (* x-scale (car nudge))
+				   (* x-scale (car pos))))
+	  "," (number-to-string (+ (* y-scale (cdr nudge))
+				   (* y-scale (cdr pos))))
+	  " " (dm-map-path-string
+	       (apply (apply-partially path-fun
+				       (cons x-scale y-scale))
+		      (if (listp path-data) path-data
+			(dm-map-parse-plan-part path-data)))))
+	 ))
       (dom-set-attribute dom-node 'x x-new)
       (dom-set-attribute dom-node 'y y-new))
     ;; process child nodes
     (dolist (child (dom-children dom-node))
-      (dm-map--dom-attr-nudge nudge scale pos child))
+      (dm-map--dom-attr-nudge path-fun nudge scale pos child))
     dom-node))
 
-;;(dm-map--dom-attr-nudge '(1 . 2) '(4 8) '(0 . 0) (dom-node 'text '((x . 16)(y . 32))))
-;;(dm-map--dom-attr-nudge '(1 . 1) '(2 2) '(3 . 3) (dom-node 'path '((d . "h1 v1 h-1 v-1"))))
+;;(dm-map--dom-attr-nudge dm-map-default-scale-function '(1 . 2) '(4 8) '(0 . 0) (dom-node 'text '((x . 16)(y . 32))))
+;(dm-map--dom-attr-nudge #'dm-map-default-scale-function '(1 . 1) '(2 2) '(3 . 3) (dom-node 'path '((d . "h1 v1 h-1 v-1"))))
 
 (defun dm-map-default-scale-function (scale &rest cells)
   "Return CELLS with SCALE applied.
@@ -734,6 +726,8 @@ instructions."
 					 :inhibit-collection t))
 		       dm-map-current-tiles)))
 	(plist-put plist prop (delq nil val))))
+    ;; (when (equal (cons 10 11) cell)
+    ;;   (message "cell:%s" (list :cell (copy-tree cell) :plist plist)))
     (append (list :cell (copy-tree cell)) plist)))
 
 (defun dm-map-path-string (paths)
@@ -862,18 +856,10 @@ SCALE-FUNCTION may be used to supply custom scaling."
 						    (nth ix dm-map-draw-other-props)))))
 			   paths)))
 	 ;; hack in a single SVG XML prop, for now scale inline
-	 (nudge-svg (apply-partially 'dm-map--dom-attr-nudge
-				     (list scale scale)))
-	 ;; fetch or build background if not disabled
-	 (background
-	  (cond ((equal background t)
-		 (list
-		  (dm-map-background :scale (cons scale scale)
-				     :size size :nudge nudge)))
-		(background)))
 	 (overlays (mapcan
 		    (lambda (cell)
 		      (mapcar (apply-partially 'dm-map--dom-attr-nudge
+					       scale-function
 					       nudge
 					       (list scale scale)
 					       (plist-get cell :cell))
@@ -881,6 +867,13 @@ SCALE-FUNCTION may be used to supply custom scaling."
 			       'append
 			       (plist-get cell dm-map-overlay-prop))))
 		    draw-code))
+	 ;; fetch or build background if not disabled
+	 (background
+	  (cond ((equal background t)
+		 (list
+		  (dm-map-background :scale (cons scale scale)
+				     :size size :nudge nudge)))
+		(background)))
 	 (img (dm-svg :svg (append (apply 'svg-create
 					  (append (list (+ (* (car nudge) scale 2) (car size))
 							(+ (* (cdr nudge) scale 2) (cdr size)))
@@ -903,13 +896,13 @@ SCALE-FUNCTION may be used to supply custom scaling."
 			     (size (cons (* (car scale) (car dm-map-level-size))
 					 (* (cdr scale) (cdr dm-map-level-size))))
 			     (nudge dm-map-nudge)
-			     (v-rule-len (+ (car size) (* (car scale) (car nudge) 2)))
-			     (h-rule-len (+ (cdr size) (* (cdr scale) (cdr nudge) 2)))
-			     (svg (svg-create v-rule-len v-rule-len))
+			     (h-rule-len (+ (car size) (* (car scale) (car nudge) 2)))
+			     (v-rule-len (+ (cdr size) (* (cdr scale) (cdr nudge) 2)))
+			     (svg (svg-create h-rule-len h-rule-len))
 			     no-canvas
 			     (canvas (unless no-canvas
 				       (svg-rectangle `(,svg '(()))
-						      0 0 v-rule-len h-rule-len
+						      0 0 h-rule-len v-rule-len
 						      :fill "#fffdd0"
 						      :stroke-width  0)))
 			     no-graph
@@ -929,16 +922,16 @@ SCALE-FUNCTION may be used to supply custom scaling."
 	 (append
 	  (cl-mapcar
 	   (apply-partially 'format "M0,%d h%d")
-	   (number-sequence (cdr nudge)
-			    (+ (car size) (cdr nudge))
-			    (car scale))
-	   (make-list (1+ (ceiling (/ (car size) (car scale)))) v-rule-len))
-	  (cl-mapcar
-	   (apply-partially 'format "M%d,0 v%d")
 	   (number-sequence (car nudge)
 			    (+ (car size) (car nudge))
+			    (car scale))
+	   (make-list (1+ (ceiling (/ (car size) (car scale)))) h-rule-len))
+	  (cl-mapcar
+	   (apply-partially 'format "M%d,0 v%d")
+	   (number-sequence (cdr nudge)
+			    (+ (cdr size) (cdr nudge))
 			    (cdr scale))
-	   (make-list (1+ (ceiling (/ (cdr size) (cdr scale)))) h-rule-len)))
+	   (make-list (1+ (ceiling (/ (cdr size) (cdr scale)))) v-rule-len)))
 	 " ")
 	graph-attr)))))
 
@@ -1005,9 +998,11 @@ SCALE-FUNCTION may be used to supply custom scaling."
   "Set mapping scale to ARG pixels per dungeon-unit."
   (interactive
    (list
-    (string-to-number
-     (read-string (format "Scale (in pixels, currently %s): " dm-map-scale)
-		  nil nil dm-map-scale ))))
+    (let ((raw
+	   (or (read-string (format "Scale (in pixels, currently %s): " dm-map-scale)
+			    nil nil dm-map-scale )
+	       0)))
+      (if (numberp raw) raw (string-to-number raw)))))
   ;;(interactive "NEnter map scale (pixels):")
   (let ((win (selected-window)))
     (let ((width (frame-char-width (window-frame win))))
