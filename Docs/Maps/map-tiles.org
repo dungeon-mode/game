@@ -21,27 +21,6 @@ See Design.org for details about the formatting of these tables.
 
 
 * Tiles
-** Automatic Features Table
-   :PROPERTIES:
-   :name: Automatic-map-features
-   :MAP-FEATURES: t
-   :ETL: tile
-   :END:
-
-These features are intended to be included as the base and background of every map
-
-# #+NAME: automatic-map-features
-| Tile       | Overlay                                                                                                                          |
-|------------+----------------------------------------------------------------------------------------------------------------------------------+
-| Background | <rect fill="#fffdd0" stroke="none" x="0" y="0" width="100%" height="100%"/>                                                      |
-| Graphpaper | <g fill="none" stroke="blue" stroke-width=".002">                                                                                |
-|            | <path d="M0,0 h24 M0,1 h24 M0,2 h24 M0,3 h24 M0,4 h24 M0,5 h24 M0,6 h24 M0,7 h24 M0,8 h24 M0,9 h24 M0,10 h24 M0,11 h24 M0,12 h24 |
-|            | M0,13 h24 M0,14 h24 M0,15 h24 M0,16 h24 M0,17 h24 M0,18 h24 M0,19 h24 M0,20 h24 M0,21 h24 M0,22 h24 M0,23 h24 M0,24 h24" />      |
-|            | <path d="M0,0 v24 M1,0 v24 M2,0 v24 M3,0 v24 M4,0 v24 M5,0 v24 M6,0 v24 M7,0 v24 M8,0 v24 M9,0 v24 M10,0 v24 M11,0 v24 M12,0 v24 |
-|            | M13,0 v24 M14,0 v24 M15,0 v24 M16,0 v24 M17,0 v24 M18,0 v24 M19,0 v24 M20,0 v24 M21,0 v24 M22,0 v24 M23,0 v24 M24,0 v24" />      |
-|            | </g>                                                                                                                             |
-
-
 ** Private Tiles Tables
    :PROPERTIES:
    :name: private-map-features
@@ -408,7 +387,7 @@ These features are intended to be used mostly as parts of compositions and rarel
 |            |                                                                |                                   |                                                                                                         |   |
 | clapNS     | ‡W ‡N → → ‡N ‡E ↓ ‡E ↓ ‡E ‡S ← ← ‡S ‡W ↑ ‡W ↑                  | The Clappers oriented North-South | <path stroke="black" stroke-width="3" fill="none" d="m0,1.5 h.3 v1.3 v-2.6 m2.7,1.3 h-.3 v1.3 v-2.6" /> |   |
 |            |                                                                |                                   |                                                                                                         |   |
-| clapEW     | ‡W ‡N → ‡N → ‡N ‡E ↓ ↓ ‡E ‡S ← ‡S ← ‡S ‡W ↑ ↑                  | The Clappers oriented East-West   | <path stroke="black" stroke-width="3" fill="none" d="m150,0 v30 h130 h-260 m130,270 v-30 h130 h-260" /> |   |
+| clapEW     | ‡W ‡N → ‡N → ‡N ‡E ↓ ↓ ‡E ‡S ← ‡S ← ‡S ‡W ↑ ↑                  | The Clappers oriented East-West   | <path stroke="black" stroke-width="3" fill="none"d="m150,0 v30 h130 h-260 m130,270 v-30 h130 h-260" /> |   |
 |            |                                                                |                                   |                                                                                                         |   |
 
 
@@ -531,6 +510,22 @@ These features are intended to be used mostly as parts of compositions and rarel
 |           |                                                                            |                           |                 |
 | E◦W       | <text x=".4" y=".65" font-size=".5" stroke="black" fill="black">E</text>   | Elevator, Door West       | <<elevator>>    |
 |           |                                                                            |                           |                 |
+
+
+
+
+** Tower Tiles
+   :PROPERTIES:
+   :name: tower-tiles
+   :MAP-FEATURES: t
+   :ETL: tile
+   :END:
+
+# #+NAME: Tower-tiles
+| Tile | Neutronium    | Overlay |
+|------+---------------+---------|
+| █    | h1 v1 h-1 v-1 |         |
+|      |               |         |
 
 
 * LICENSE
