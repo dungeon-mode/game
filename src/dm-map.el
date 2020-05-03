@@ -1120,7 +1120,7 @@ ARG is the factor for applying 'dm-map-scale-nudge' to `dm-map-scale'."
     (define-key map (kbd "s") 'dm-map-scale)
     (define-key map (kbd ".") 'dm-map-pos)
     (define-key map (kbd ",") 'dm-map-pos-pixels)
-    (define-key map [mouse-2] 'dm-map-pos)
+    (define-key map [mouse-1] 'dm-map-pos)
     (define-key map [mouse-2] 'dm-map-pos-pixels)
     map))
 
