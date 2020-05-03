@@ -872,8 +872,9 @@ SCALE-FUNCTION may be used to supply custom scaling."
 	 (background
 	  (cond ((equal background t)
 		 (list
-		  (dm-map-background :scale (cons scale scale)
-				     :size size :nudge nudge)))
+		  (dm-map-background :size size :scale (cons scale scale)
+				     :x-nudge (* scale (car nudge))
+				     :y-nudge (* scale (cdr nudge)))))
 		(background)))
 	 (img (dm-svg :svg (append (apply 'svg-create
 					  (append (list (+ (* (car nudge) scale 2) (car size))
@@ -896,9 +897,10 @@ SCALE-FUNCTION may be used to supply custom scaling."
 			     (scale (cons dm-map-scale dm-map-scale))
 			     (size (cons (* (car scale) (car dm-map-level-size))
 					 (* (cdr scale) (cdr dm-map-level-size))))
-			     (nudge dm-map-nudge)
-			     (h-rule-len (+ (car size) (* (car scale) (car nudge) 2)))
-			     (v-rule-len (+ (cdr size) (* (cdr scale) (cdr nudge) 2)))
+			     (x-nudge (* (car scale) (car dm-map-nudge)))
+			     (y-nudge (* (cdr scale) (cdr dm-map-nudge)))
+			     (h-rule-len (+ (car size) (* (car scale) x-nudge 2)))
+			     (v-rule-len (+ (cdr size) (* (cdr scale) y-nudge 2)))
 			     (svg (svg-create h-rule-len v-rule-len))
 			     no-canvas
 			     (canvas (unless no-canvas
@@ -911,8 +913,8 @@ SCALE-FUNCTION may be used to supply custom scaling."
 					   (stroke . "blue")
 					   (stroke-width . ".25"))))
   "Create a background SVG with SCALE and SIZE and NUDGE."
-  (dm-msg :file "dm-map" :fun "background" :args
-	  (list :scale scale :size size :nudge nudge :svg svg))
+  ;; (dm-msg :file "dm-map" :fun "background" :args
+  ;; 	  (list :scale scale :size size :nudge nudge :svg svg))
   (prog1 svg
     (unless no-graph
       (dom-append-child
@@ -923,14 +925,14 @@ SCALE-FUNCTION may be used to supply custom scaling."
 	 (append
 	  (cl-mapcar
 	   (apply-partially 'format "M0,%d h%d")
-	   (number-sequence (car nudge)
-			    (+ (cdr size) (cdr nudge))
+	   (number-sequence y-nudge
+			    (+ (cdr size) y-nudge)
 			    (car scale))
 	   (make-list (1+ (ceiling (/ (cdr size) (cdr scale)))) h-rule-len))
 	  (cl-mapcar
 	   (apply-partially 'format "M%d,0 v%d")
-	   (number-sequence (cdr nudge)
-			    (+ (car size) (car nudge))
+	   (number-sequence x-nudge
+			    (+ (car size) x-nudge)
 			    (cdr scale))
 	   (make-list (1+ (ceiling (/ (car size) (car scale)))) v-rule-len)))
 	 " ")
