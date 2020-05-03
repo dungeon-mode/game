@@ -1,4 +1,4 @@
-#+TITLE: Beta Map Level 1
+#+TITLE: Beta Map Level N
 #+PROPERTIES:
  :Version: 0.01
  :Author: Erik Elmshauser
@@ -8,13 +8,13 @@
 
 * Beta Maze
 :PROPERTIES:
-:NAME: B-Maze_level_1
+:NAME: B-Maze_level_N
 :ETL: cell
 :END:
 
 B-Maze is the second Map for Dungeon-Mode and the first original map designed in the software.  It is intended to be larger than A-Maze and use all of the tiles developed thus far, specifically including the larger water a tower.
 
-#+NAME:B-Maze-map-level-1
+#+NAME:B-Maze-map-level-N
 |  X |  Y | Path |
 |----+----+------|
 |  0 |  0 |      |
