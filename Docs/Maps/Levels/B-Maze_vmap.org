@@ -1,0 +1,43 @@
+#+TITLE: Beta Map Verticle map
+#+PROPERTIES:
+ :Version: 0.01
+ :Author: Erik Elmshauser
+ :Created: 2020/05/02
+ :Modified: 2020/05/02
+ :END:
+
+* Beta Maze
+B-Maze is the second Map for Dungeon-Mode and the first original map designed in the software.  It is intended to be larger than A-Maze and use all of the tiles developed thus far, specifically including the larger water a tower.
+
+#+NAME:B-Maze-map-levels
+| Level | description                 | Level concept                                                         |
+|-------+-----------------------------+-----------------------------------------------------------------------|
+| 0     | Surface                     | Starting point - general store, multiple dungeon entrances            |
+| 1     | First puzzle 1              | Basic maze                                                            |
+| 2     | First puzzle 2              | Basic maze                                                            |
+| 3     | First puzzle 3              | Basic maze - choke point, must solve a puzzle to progress deeper      |
+| 4     | Second puzzle 1             | basic maze                                                            |
+| 5     | Second puzzle 2             | basic maze                                                            |
+| 6     | Second puzzle 3             | basic maze                                                            |
+| 7     | Second puzzle 4             | basic maze - Choke point, must solve puzzle 2 to progress             |
+| 8     | Third Puzzle 1              | basic Maze                                                            |
+| 9     | Third Puzzle 2              | basic Maze                                                            |
+| 10    | Third Puzzle 3              | basic Maze - Choke point, must solve puzzle 2 to progress             |
+| 1T    | Tower on level 10 / Tower 1 | Tower Maze - begin ascent inside towers                               |
+| 2T    | Tower on level 9 / Tower 2  | Tower Maze                                                            |
+| 3T    | Tower on level 8 Tower 3    | Tower Maze                                                            |
+| 4T    | Tower on level 7 Tower 4    | Tower Maze                                                            |
+| 5T    | Tower on level 6 Tower 5    | Tower Maze                                                            |
+| 6T    | Tower on level 5 Tower 6    | Tower Maze                                                            |
+| 7T    | Tower on level 4 Tower 7    | Tower Maze                                                            |
+| 8T    | Tower on level 3 Tower 8    | Tower Maze                                                            |
+| 9T    | Tower on level 2 Tower 9    | Tower Maze                                                            |
+| 10T   | Tower on level 1 Tower 10   | Tower Maze                                                            |
+| 11T   | Tower on level 0 Tower 11   | Tower Maze                                                            |
+| 12T   | Tower on level -1 Tower 12  | Tower Maze - towers fork (each tower has 2 paths up and are divided ) |
+| 13T   | Tower on level -2 Tower 13  | Tower Maze - towers cross (One pair of tower branches cross)          |
+| 14T   | Tower on level -3 Tower 14  | Tower Maze - towers cross (Other pair of tower branches cross)        |
+| 15T   | Tower on level -4 Tower 15  | Tower Maze                                                            |
+| 16T   | Tower on level -5 Tower 16  | Tower Maze - choke point requires keys from all 4 tower branches      |
+| 17T   | Tower on level -6 Tower 17  | Tower Maze - Final Goal                                               |
+|       |                             |                                                                       |
