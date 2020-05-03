@@ -63,6 +63,7 @@
 (require 'image-mode)
 (require 'org-element)
 (require 'mouse)
+(require 'sgml-mode)
 
 ;; DEVEL hack: prefer version from CWD, if any
 (let ((load-path (append '(".") load-path)))
@@ -85,6 +86,21 @@ These settings control display of game maps."
   :type (list 'symbol)
   :group 'dm-files
   :group 'dm-map)
+
+(defcustom dm-map-menus-file-style 'radio
+  "How to display file menus; raidio or toggle."
+  :group 'dm-map
+  :type (list 'or 'radio 'toggle))
+
+(defcustom dm-map-menus-file-redraw t
+  "How to display file menus; raidio or toggle."
+  :group 'dm-map
+  :type 'boolean)
+
+(defcustom dm-map-preview-buffer-name "**dungeon map**"
+  "The name of the buffer created when previewing the map."
+  :group 'dm-map
+  :type 'string)
 
 (defcustom dm-map-property "ETL"
   "Property to insepect when finding tables." :type 'string)
@@ -331,28 +347,36 @@ TODO implement leading & as a quoting operator for tile refs"
 TILE is an hash-table key, PROP is a property (default: \"path\"."
   `(dm-map-path ,tile :table dm-map-tiles :prop ',prop))
 
-(defmacro dm-map-draw-test (svg &rest body)
-  "Open (erase) buffer evaluate BODY, dump and return SVG."
-  (declare (indent 1))
-  `(with-current-buffer (pop-to-buffer "**dungeon map**")
+(defmacro dm-map-with-map-erased (&rest body)
+  "Erase the map buffer evaluate BODY the restore the image."
+  `(with-current-buffer (pop-to-buffer dm-map-preview-buffer-name)
      (let ((image-transform-resize 1))
-       (cl-letf (((symbol-function 'message) #'format)
-		 ;;((symbol-function 'image-fit-to-window) (lambda (_) nil))
-		 )
-	 (when (image-get-display-property)
-	   (image-mode-as-text)
+       (cl-letf (((symbol-function 'message) #'format))
+	 (unless (derived-mode-p 'dm-map-mode) (dm-map-mode))
+	 (let ((inhibit-read-only t))
+	   ;; (if (image-get-display-property)
+	   ;;     (image-mode-as-text)
+	   ;;   (when (eq major-mode 'hexl-mode)
+	   ;;     (image-mode-as-text)))
 	   (erase-buffer)
-	   (beginning-of-buffer))
-	 ;;(let ((inhibit-read-only t)))
-	 ;;(insert (format-time-string "%D %-I:%M:%S %p on %A, %B %e, %Y\n"))
-	 ;;(insert (format "\n\n[SVG CODE]:\n%s" (dom-pp (oref  svg))))
-	 ;;(insert (format "\n\n[SVG DUMP]:\n%s" ,svg))
-	 ,@body
-	 (dm-map-mode)
-	 ;;(pixel-scroll-mode t)
-	 ;;(image-transform-set-scale 1)
-	 (image-toggle-display-image)))
-     svg))
+	   ,@body
+	   (unless (derived-mode-p 'dm-map-mode) (dm-map-mode))
+	   (unless (image-get-display-property) (image-toggle-display-image))
+	   (beginning-of-buffer))))))
+
+(defmacro dm-map-with-map-source (&rest body)
+  "Erase the map buffer evaluate BODY the restore the image."
+  `(with-current-buffer (pop-to-buffer dm-map-preview-buffer-name)
+     (let ((image-transform-resize 1))
+       (cl-letf (((symbol-function 'message) #'format))
+	 (unless (derived-mode-p 'dm-map-mode) (dm-map-mode))
+	 (let ((inhibit-read-only t))
+	   (if (image-get-display-property)
+	       (image-mode-as-text)
+	     (when (eq major-mode 'hexl-mode)
+	       (image-mode-as-text)))
+	   ,@body
+	   (beginning-of-buffer))))))
 
 (defun dm-map-load (&rest files)
   "Truncate and replace `dm-map-tiless' and `dm-map-levels' from FILES.
@@ -927,13 +951,13 @@ SCALE-FUNCTION may be used to supply custom scaling."
 	  (cl-mapcar
 	   (apply-partially 'format "M0,%d h%d")
 	   (number-sequence y-nudge
-			    (+ (cdr size) y-nudge)
+			    (+ (cdr size) y-nudge y-nudge)
 			    (car scale))
 	   (make-list (1+ (ceiling (/ (cdr size) (cdr scale)))) h-rule-len))
 	  (cl-mapcar
 	   (apply-partially 'format "M%d,0 v%d")
 	   (number-sequence x-nudge
-			    (+ (car size) x-nudge)
+			    (+ (car size) x-nudge x-nudge)
 			    (cdr scale))
 	   (make-list (1+ (ceiling (/ (car size) (car scale)))) v-rule-len)))
 	 " ")
@@ -945,12 +969,16 @@ SCALE-FUNCTION may be used to supply custom scaling."
 (defun dm-map-kill-buffer (&rest _)
   "Remove the dungeon-mode map buffer."
   (interactive)
-  (let (kill-buffer-query-functions) (kill-buffer)))
+  (when-let ((buf (get-buffer dm-map-preview-buffer-name)))
+    (when (buffer-live-p buf)
+      (let (kill-buffer-query-functions) (kill-buffer buf)))))
 
 (defun dm-map-quit (&rest _)
   "Remove the map buffer any window it created."
   (interactive)
-  (quit-restore-window nil 'kill))
+  (when-let ((buf (get-buffer dm-map-preview-buffer-name)))
+    (when (buffer-live-p buf)
+      (with-current-buffer buf (quit-restore-window (get-buffer-window buf t) 'kill)))))
 
 (defun dm-map-draw (&optional arg)
   "Draw all from `dm-map-level'.  With prefix ARG, reload first."
@@ -969,9 +997,8 @@ SCALE-FUNCTION may be used to supply custom scaling."
     (dm-map-load)) ;; any prefix arg causes reload from files
   (let ((svg (dm-map-quick-draw)))
     (prog1 svg
-      (dm-map-draw-test svg ;; (oref svg path-data)
-	(render-and-insert-string svg))
-      (with-current-buffer "**dungeon map**"
+      (dm-map-with-map-erased (render-and-insert-string svg))
+      (with-current-buffer dm-map-preview-buffer-name
 	(let ((inhibit-read-only t)
 	      (start (point-min))
 	      (end (point-max)))
@@ -1105,8 +1132,97 @@ ARG is the factor for applying 'dm-map-scale-nudge' to `dm-map-scale'."
 			    (selected-frame) t)))
     (message "%s" (caddr wpos))))
 
-;; global key binding
-(global-set-key (kbd "<f9>") 'dm-map-draw)
+(defun dm-map-view-source (&rest _)
+  "Display the SVG source of the map."
+  (interactive)
+  (when-let ((buf (get-buffer dm-map-preview-buffer-name)))
+    ;; (with-current-buffer buf
+    ;;   (fundamental-mode)
+    ;;   (sgml-pretty-print (point-min) (point-max))
+    ;;   (indent-region (point-min) (point-max))
+    ;;   (dm-map-source-mode)
+    ;;   (goto-char (point-min)))
+    (dm-map-with-map-source
+      (fundamental-mode)
+      (sgml-pretty-print (point-min) (point-max))
+      (indent-region (point-min) (point-max))
+      (dm-map-source-mode)
+      (goto-char (point-min)))
+    ))
+
+(defun dm-map-menus-toggle-file-style (&optional arg)
+  "Toggle map file menus between  \"toggle\" and \"radio\".
+
+When prefix ARG is positive always use \"toggle\", when negitive
+always use \"raidio\"."
+  (interactive "p")
+  (setq dm-map-menus-file-style
+	(if (or (and arg (< 0 arg))
+		(equal 'radio dm-map-menus-file-style))
+	    'toggle
+	  'radio)))
+
+(defun dm-map-menus-toggle-file (file)
+  "Toggle membership of FILE in `dm-map-files'."
+  (message "file toggle %s ⇒ %s" file dm-map-files)
+  (if (member file dm-map-files)
+      (setq dm-map-files (seq-filter
+			  (lambda (cur-file)
+			    (not (equal cur-file file)))
+			  dm-map-files))
+    (add-to-list 'dm-map-files file))
+  (when dm-map-menus-file-redraw (dm-map-draw 1)))
+
+(defun dm-map-menus-toggle-tag (files-select-tag file)
+  "Make FILE the only member of FILES-SELECT-TAG in `dm-map-files'."
+  (let ((fileset (dm-files-select files-select-tag)))
+    (message "file toggle %s ⇒ %s" file dm-map-files)
+    (setq dm-map-files
+	  (seq-filter
+	   (lambda (cur-file)
+	     (message "file toggle %s ⇒ %s" file fileset)
+	     (or (equal cur-file file)
+		 (not (member cur-file fileset))))
+	   (append (list file) dm-map-files))))
+  (when dm-map-menus-file-redraw (dm-map-draw 1)))
+
+(defun dm-map-menus-files-impl (files-select-tag)
+  "Create menu options for FILES-SELECT-TAG."
+  (mapcar
+   (lambda (map-file)
+     (let ((tagged-files
+	    (pcase dm-map-menus-file-style
+	      ('radio (list 'dm-map-menus-toggle-tag files-select-tag map-file))
+	      (_ (list 'dm-map-menus-toggle-file map-file)))))
+       `[,(file-name-nondirectory map-file)
+	 ,tagged-files
+	 :help ,map-file
+	 :style ,dm-map-menus-file-style
+	 :selected (member ,map-file dm-map-files)]))
+   (append (dm-files-select files-select-tag))))
+
+(defun dm-map-menus-files (&rest _)
+  "Create menu options for tile files."
+  (append (append (list "Tile-sets"
+			(append (list "Mapping Documents")
+				(dm-map-menus-files-impl :map-tiles))
+			(append (list "Dungeon Levels")
+				(dm-map-menus-files-impl :map-cells))))
+	  (list "-" "Settings")
+	  (list '["Exclusive selections"
+		  (setq dm-map-menus-file-style
+			(if (equal 'toggle dm-map-menus-file-style)
+			    'radio
+			  'toggle))
+		  :style toggle
+		  :selected (equal 'radio dm-map-menus-file-style)
+		  :help "Select one or several files from each category."])
+	  (list '["Redraw when selecting"
+		  (when (setq dm-map-menus-file-redraw
+			      (not dm-map-menus-file-redraw))
+		    (dm-map-draw 1))
+		  :style toggle :selected dm-map-menus-file-redraw
+		  :help "Control whether selecting files will redraw the map."])))
 
 ;; basic major mode for viewing maps
 (defvar dm-map-mode-map
@@ -1125,26 +1241,41 @@ ARG is the factor for applying 'dm-map-scale-nudge' to `dm-map-scale'."
     (define-key map (kbd "s") 'dm-map-scale)
     (define-key map (kbd ".") 'dm-map-pos)
     (define-key map (kbd ",") 'dm-map-pos-pixels)
+    (define-key map (kbd ";") 'dm-map-view-source)
     (define-key map [mouse-1] 'dm-map-pos)
     (define-key map [mouse-2] 'dm-map-pos-pixels)
-    map))
-
-(defun dm-map--menus-list-files (&rest _)
-  "Create menu options from available map files."
-  (mapcar
-   (lambda (map-file)
-     `[,(file-name-nondirectory map-file)
-       (add-to-list 'dm-map-files ,map-file)
-       :style toggle :selected (member ,map-file dm-map-files)])
-   (append (dm-files-select :map-tiles)
-	   (dm-files-select :map-cells))))
+    (define-key map "\C-c\C-c" 'dm-map-source-toggle)
+    (define-key map "\C-c\C-x" 'ignore)
+    map)
+  "Mode keymap for `dm-map-mode'.")
 
 (defconst dm-map-mode-menus
   '("Dungeon Mode"
     :help "Toggle map files"
-    :filter dm-map--menus-list-files))
+    :filter dm-map-menus-files))
 
-(easy-menu-define dm-map-menu dm-map-mode-map "Dungeon-mode menus" dm-map-mode-menus)
+(easy-menu-define dm-map-menu
+  dm-map-mode-map "Dungeon-mode menus" dm-map-mode-menus)
+
+(defun dm-map-source-toggle (&rest _)
+  "Toggle map between graphical and source views."
+  (interactive)
+  (with-current-buffer (get-buffer dm-map-preview-buffer-name)
+    (if (image-get-display-property)
+	(image-mode-as-text)
+      (if (eq major-mode 'hexl-mode)
+	  (image-mode-as-text)
+	(dm-map-mode)))))
+
+;; based on share/emacs/27.0.90_2/lisp/image-mode.el
+(defvar dm-map-source-mode-map
+  (let ((map (make-sparse-keymap)))
+    (define-key map "\C-c\C-c" 'dm-map-source-toggle)
+    map)
+  "Mode keymap for `dm-map-source-mode'.")
+
+(define-derived-mode dm-map-source-mode xml-mode "MAP (source)"
+  "Minor mode for `dungeon-mode' map source.")
 
 (define-derived-mode dm-map-mode image-mode "MAP"
   "Major mode for `dugeon-mode' maps.")
@@ -1152,6 +1283,11 @@ ARG is the factor for applying 'dm-map-scale-nudge' to `dm-map-scale'."
 ;; (setq dm-map-files '("d:/projects/dungeon-mode/Docs/Maps/map-tiles.org"
 ;; 		     "d:/projects/dungeon-mode/Docs/Maps/Levels/A-Maze_level1.org"))
 ;; (setq dm-map-tags t)
+
+
+;; DEVEL: give us a global key binding precious
+(global-set-key (kbd "<f9>") 'dm-map-draw)
+;;(global-set-key (kbd "M-<f9>") 'dm-map-view-source)
 
 (provide 'dm-map)
 ;;; dm-map.el ends here
