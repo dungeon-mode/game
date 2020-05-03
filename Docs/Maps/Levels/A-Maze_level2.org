@@ -162,7 +162,7 @@ Refer to design.org for more details.
 | 15 |  5 | &riv1W                                            |
 | 16 |  5 | &riv1W                                            |
 | 17 |  5 | (17 . 4)                                          |
-| 18 |  5 | cNS                                               |
+| 18 |  5 | (17 . 4)                                          |
 | 19 |  5 | cNS                                               |
 | 20 |  5 | cS◦E                                              |
 | 21 |  5 | (21 . 4)                                          |

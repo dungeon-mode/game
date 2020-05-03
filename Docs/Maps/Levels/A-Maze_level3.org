@@ -69,7 +69,7 @@ Refer to design.org for more details.
 | 22 |  1 | 20◦NW                                        |
 | 23 |  1 | (22 . 1)                                     |
 |    |    |                                              |
-|  0 |  2 | cES◦N                                         |
+|  0 |  2 | cES◦N                                        |
 |  1 |  2 | cEW                                          |
 |  2 |  2 | &A2 ◦N → ‡N ↓ ‡E ‡S ← ‡S ‡W                  |
 |  3 |  2 | (2 . 2)                                      |
