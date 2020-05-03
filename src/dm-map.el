@@ -96,7 +96,7 @@ This setting controls the number of actual screen pixes
 assigned (in both dimensions) while drwaing the map."
   :type 'number)
 
-(defcustom dm-map-nudge (1 . 1)
+(defcustom dm-map-nudge '(1 . 1)
   "Top and left padding in dungeon units as a cons cell (X . Y)."
   :type 'cons)
 
