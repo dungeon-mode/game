@@ -412,9 +412,9 @@ Kick off a new batch for each \"feature\" or \"level\" table found."
   "Return DOM-NODE with attributes parsed as numbers.
 
 Only consider attributes listed in `dm-map--scale-props'"
-  (message "[xml-to-num] arg:%s" dom-node)
+  ;;(message "[xml-to-num] arg:%s" dom-node)
   (when (dm-svg-dom-node-p dom-node)
-    (message "[xml-to-num] dom-node:%s" (prin1-to-string dom-node))
+    ;;(message "[xml-to-num] dom-node:%s" (prin1-to-string dom-node))
     (dolist (attr (mapcar 'car dm-map--scale-props) dom-node)
       ;; (message "[xml-to-num] before %s -> %s"
       ;; 	       attr (dom-attr dom-node attr))
