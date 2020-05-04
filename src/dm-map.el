@@ -365,7 +365,7 @@ TILE is an hash-table key, PROP is a property (default: \"path\"."
 	   (beginning-of-buffer))))))
 
 (defmacro dm-map-with-map-source (&rest body)
-  "Erase the map buffer evaluate BODY the restore the image."
+  "With the map source buffer current, evaluate BODY."
   `(with-current-buffer (pop-to-buffer dm-map-preview-buffer-name)
      (let ((image-transform-resize 1))
        (cl-letf (((symbol-function 'message) #'format))
@@ -902,8 +902,8 @@ SCALE-FUNCTION may be used to supply custom scaling."
 				     :y-nudge (* scale (cdr nudge)))))
 		(background)))
 	 (img (dm-svg :svg (append (apply 'svg-create
-					  (append (list (+ (* (car nudge) scale 2) (car size))
-							(+ (* (cdr nudge) scale 2) (cdr size)))
+					  (append (list (+ (* (car nudge) scale 2) (car size) dm-map-scale)
+							(+ (* (cdr nudge) scale 2) (cdr size) dm-map-scale))
 						  svg-attributes))
 				   (append background paths overlays))
 		      :path-data (dm-svg-create-path
@@ -913,7 +913,7 @@ SCALE-FUNCTION may be used to supply custom scaling."
     ;;(message "[draw] path-props:%s" path-attributes)
     ;;(message "[draw] XML SVG overlays:%s" (prin1-to-string overlays))
     ;;(message "[draw] other paths:%s" (prin1-to-string paths))
-    ;;(message "[draw] background:%s" (prin1-to-string background))
+    (message "[draw] background:%s" (prin1-to-string background))
     ;;(when (boundp 'dm-dump) (setq dm-dump draw-code))
     img))
 
@@ -924,8 +924,8 @@ SCALE-FUNCTION may be used to supply custom scaling."
 					 (* (cdr scale) (cdr dm-map-level-size))))
 			     (x-nudge (* (car scale) (car dm-map-nudge)))
 			     (y-nudge (* (cdr scale) (cdr dm-map-nudge)))
-			     (h-rule-len (+ (car size) (* (car scale) x-nudge 2)))
-			     (v-rule-len (+ (cdr size) (* (cdr scale) y-nudge 2)))
+			     (h-rule-len (+ (* (car scale) x-nudge 2) (car size)))
+			     (v-rule-len (+ (* (cdr scale) y-nudge 2) (cdr size)))
 			     (svg (svg-create h-rule-len v-rule-len))
 			     no-canvas
 			     (canvas (unless no-canvas
@@ -1146,8 +1146,7 @@ ARG is the factor for applying 'dm-map-scale-nudge' to `dm-map-scale'."
       (fundamental-mode)
       (sgml-pretty-print (point-min) (point-max))
       (indent-region (point-min) (point-max))
-      (dm-map-source-mode)
-      (goto-char (point-min)))
+      (dm-map-source-mode))
     ))
 
 (defun dm-map-menus-toggle-file-style (&optional arg)
@@ -1178,12 +1177,13 @@ always use \"raidio\"."
   (let ((fileset (dm-files-select files-select-tag)))
     (message "file toggle %s ⇒ %s" file dm-map-files)
     (setq dm-map-files
-	  (seq-filter
-	   (lambda (cur-file)
-	     (message "file toggle %s ⇒ %s" file fileset)
-	     (or (equal cur-file file)
-		 (not (member cur-file fileset))))
-	   (append (list file) dm-map-files))))
+	  (seq-uniq
+	   (seq-filter
+	    (lambda (cur-file)
+	      (message "file toggle %s ⇒ %s" file fileset)
+	      (or (equal cur-file file)
+		  (not (member cur-file fileset))))
+	    (append (list file) dm-map-files)))))
   (when dm-map-menus-file-redraw (dm-map-draw 1)))
 
 (defun dm-map-menus-files-impl (files-select-tag)
