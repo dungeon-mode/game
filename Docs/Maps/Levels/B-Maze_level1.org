@@ -17,23 +17,23 @@ B-Maze is the second Map for Dungeon-Mode and the first original map designed in
 #+NAME:B-Maze-map-level-1
 |  X |  Y | Path                                          |
 |----+----+-----------------------------------------------|
-|  0 |  0 | █                                             |
-|  1 |  0 | █                                             |
-|  2 |  0 | █                                             |
-|  3 |  0 | █                                             |
-|  4 |  0 | █                                             |
-|  5 |  0 | █                                             |
-|  6 |  0 | █                                             |
-|  7 |  0 | █                                             |
-|  8 |  0 | █                                             |
-|  9 |  0 | █                                             |
-| 10 |  0 | █                                             |
-| 11 |  0 | █                                             |
-| 12 |  0 | █                                             |
-| 13 |  0 | █                                             |
-| 14 |  0 | █                                             |
-| 15 |  0 | █                                             |
-| 16 |  0 | █                                             |
+|  0 |  0 |                                               |
+|  1 |  0 |                                               |
+|  2 |  0 |                                               |
+|  3 |  0 |                                               |
+|  4 |  0 |                                               |
+|  5 |  0 |                                               |
+|  6 |  0 |                                               |
+|  7 |  0 |                                               |
+|  8 |  0 |                                               |
+|  9 |  0 |                                               |
+| 10 |  0 |                                               |
+| 11 |  0 |                                               |
+| 12 |  0 |                                               |
+| 13 |  0 |                                               |
+| 14 |  0 |                                               |
+| 15 |  0 |                                               |
+| 16 |  0 |                                               |
 | 17 |  0 | █                                             |
 | 18 |  0 |                                               |
 | 19 |  0 |                                               |
@@ -66,7 +66,7 @@ B-Maze is the second Map for Dungeon-Mode and the first original map designed in
 | 46 |  0 | 20◦WN                                         |
 | 47 |  0 | (46 . 0)                                      |
 |----+----+-----------------------------------------------|
-|  0 |  1 | █                                             |
+|  0 |  1 |                                               |
 |  1 |  1 |                                               |
 |  2 |  1 |                                               |
 |  3 |  1 |                                               |
@@ -115,7 +115,7 @@ B-Maze is the second Map for Dungeon-Mode and the first original map designed in
 | 46 |  1 | (46 . 0)                                      |
 | 47 |  1 | (46 . 0)                                      |
 |----+----+-----------------------------------------------|
-|  0 |  2 | █                                             |
+|  0 |  2 |                                               |
 |  1 |  2 |                                               |
 |  2 |  2 |                                               |
 |  3 |  2 |                                               |
@@ -144,8 +144,8 @@ B-Maze is the second Map for Dungeon-Mode and the first original map designed in
 | 26 |  2 |                                               |
 | 27 |  2 |                                               |
 | 28 |  2 |                                               |
-| 29 |  2 |                                               |
-| 30 |  2 |                                               |
+| 29 |  2 | S▼W                                           |
+| 30 |  2 | (29 . 2)                                      |
 | 31 |  2 | cES◦N                                         |
 | 32 |  2 | cNW                                           |
 | 33 |  2 | (33 . 0)                                      |
@@ -164,7 +164,7 @@ B-Maze is the second Map for Dungeon-Mode and the first original map designed in
 | 46 |  2 | cEW◦                                          |
 | 47 |  2 | 10◦W                                          |
 |----+----+-----------------------------------------------|
-|  0 |  3 | █                                             |
+|  0 |  3 |                                               |
 |  1 |  3 |                                               |
 |  2 |  3 |                                               |
 |  3 |  3 |                                               |
@@ -213,7 +213,7 @@ B-Maze is the second Map for Dungeon-Mode and the first original map designed in
 | 46 |  3 | 20◦WS                                         |
 | 47 |  3 | (46 . 3)                                      |
 |----+----+-----------------------------------------------|
-|  0 |  4 | █                                             |
+|  0 |  4 |                                               |
 |  1 |  4 |                                               |
 |  2 |  4 |                                               |
 |  3 |  4 |                                               |
@@ -262,7 +262,7 @@ B-Maze is the second Map for Dungeon-Mode and the first original map designed in
 | 46 |  4 | (46 . 3)                                      |
 | 47 |  4 | (46 . 3)                                      |
 |----+----+-----------------------------------------------|
-|  0 |  5 | █                                             |
+|  0 |  5 |                                               |
 |  1 |  5 |                                               |
 |  2 |  5 |                                               |
 |  3 |  5 |                                               |
@@ -311,7 +311,7 @@ B-Maze is the second Map for Dungeon-Mode and the first original map designed in
 | 46 |  5 | 20◦WN                                         |
 | 47 |  5 | (46 . 5)                                      |
 |----+----+-----------------------------------------------|
-|  0 |  6 | █                                             |
+|  0 |  6 |                                               |
 |  1 |  6 |                                               |
 |  2 |  6 |                                               |
 |  3 |  6 |                                               |
@@ -360,7 +360,7 @@ B-Maze is the second Map for Dungeon-Mode and the first original map designed in
 | 46 |  6 | (46 . 5)                                      |
 | 47 |  6 | (46 . 5)                                      |
 |----+----+-----------------------------------------------|
-|  0 |  7 | █                                             |
+|  0 |  7 |                                               |
 |  1 |  7 |                                               |
 |  2 |  7 |                                               |
 |  3 |  7 |                                               |
@@ -409,7 +409,7 @@ B-Maze is the second Map for Dungeon-Mode and the first original map designed in
 | 46 |  7 | cEW                                           |
 | 47 |  7 | cSW                                           |
 |----+----+-----------------------------------------------|
-|  0 |  8 | █                                             |
+|  0 |  8 |                                               |
 |  1 |  8 |                                               |
 |  2 |  8 |                                               |
 |  3 |  8 |                                               |
@@ -458,7 +458,7 @@ B-Maze is the second Map for Dungeon-Mode and the first original map designed in
 | 46 |  8 | (45 . 8)                                      |
 | 47 |  8 | cNS                                           |
 |----+----+-----------------------------------------------|
-|  0 |  9 | █                                             |
+|  0 |  9 |                                               |
 |  1 |  9 |                                               |
 |  2 |  9 |                                               |
 |  3 |  9 |                                               |
@@ -507,7 +507,7 @@ B-Maze is the second Map for Dungeon-Mode and the first original map designed in
 | 46 |  9 | (45 . 8)                                      |
 | 47 |  9 | cNS◦W                                         |
 |----+----+-----------------------------------------------|
-|  0 | 10 | █                                             |
+|  0 | 10 |                                               |
 |  1 | 10 |                                               |
 |  2 | 10 |                                               |
 |  3 | 10 |                                               |
@@ -872,7 +872,7 @@ B-Maze is the second Map for Dungeon-Mode and the first original map designed in
 | 19 | 17 |                                               |
 | 20 | 17 |                                               |
 | 21 | 17 |                                               |
-| 22 | 17 |                                               |
+| 22 | 17 | S▼S                                           |
 | 23 | 17 | 10◦E                                          |
 | 24 | 17 | cNS◦EW                                        |
 | 25 | 17 | 10◦W                                          |
@@ -921,7 +921,7 @@ B-Maze is the second Map for Dungeon-Mode and the first original map designed in
 | 19 | 18 |                                               |
 | 20 | 18 |                                               |
 | 21 | 18 |                                               |
-| 22 | 18 |                                               |
+| 22 | 18 | (22 . 17)                                     |
 | 23 | 18 | 10◦E                                          |
 | 24 | 18 | cNS◦EW                                        |
 | 25 | 18 | 10◦W                                          |
@@ -1173,7 +1173,7 @@ B-Maze is the second Map for Dungeon-Mode and the first original map designed in
 | 26 | 23 | (25 . 22)                                     |
 | 27 | 23 | (27 . 22)                                     |
 | 28 | 23 | (27 . 22)                                     |
-| 29 | 23 | cNS◦W                                         |
+| 29 | 23 | cN◦W                                          |
 | 30 | 23 | cNE                                           |
 | 31 | 23 | cEW◦N                                         |
 | 32 | 23 | cEW                                           |
