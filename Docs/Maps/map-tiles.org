@@ -202,10 +202,11 @@ These features are intended to be used mostly as parts of compositions and rarel
    :ETL: tile
    :END:
 
-# #+NAME: corridor-tiles
+#+NAME: corridor-tiles
 | Tile   | Path            | Documentation                                    |
 |--------+-----------------+--------------------------------------------------|
 | c4     | .NE .SE .SW .NW | Corridor Four Way (No Walls)                     |
+|        |                 |                                                  |
 |        |                 |                                                  |
 | cESW   | ‡N .SE .SW      | Corridor East/South/West                         |
 | cESW◦N | ◦N .SE .SW      | Corridor East/South/West                         |
@@ -244,9 +245,9 @@ These features are intended to be used mostly as parts of compositions and rarel
 | cSW◦E  | ‡N ◦E           | Corridor South/West, Secret Door East            |
 | cSW◦NE | ◦N ◦E           | Corridor South/West, Secret Doors North/East     |
 |        |                 |                                                  |
-| cNW   | ‡E ‡S           | Corridor West/North                              |
-| cNW◦E | ◦E ‡S           | Corridor West/North, Secret Door East            |
-| cNW◦S | ‡E ◦S           | Corridor West/North, Secret Door South           |
+| cNW    | ‡E ‡S           | Corridor West/North                              |
+| cNW◦E  | ◦E ‡S           | Corridor West/North, Secret Door East            |
+| cNW◦S  | ‡E ◦S           | Corridor West/North, Secret Door South           |
 | cNW◦ES | ◦E ◦S           | Corridor West/North, Secret Doors South/West     |
 |        |                 |                                                  |
 | cN     | → v1 h-1 v-1    | Corridor North (Dead-End South)                  |
@@ -286,6 +287,13 @@ These features are intended to be used mostly as parts of compositions and rarel
 | cW◦NES | ◦N ◦E ◦S        | Corridor West, Secret Doors all sides            |
 |        |                 |                                                  |
 
+#+NAME: corridor-tiles-overlay
+| Tile | Overlay                                                                   |
+|------+---------------------------------------------------------------------------|
+| c4   | <text x=".35" y=".65" font-size=".5" stroke="red" fill="red">4</text>     |
+|      | <circle fill="none" stroke="red" stroke-width="1" cx=".5" cy=.5" r=".4"/> |
+|      |                                                                           |
+
 
 ** Area Tiles Table
    :PROPERTIES:
@@ -294,7 +302,7 @@ These features are intended to be used mostly as parts of compositions and rarel
      :ETL: tile
    :END:
 
-# #+NAME: area-features
+#+NAME: area-features
 | Tile | Overlay                                                                   | Documentation                       | Behavior |
 |------+---------------------------------------------------------------------------+-------------------------------------+----------|
 | A2   | <text x=".80" y="1.15" font-size=".5" stroke="red" fill="red">A</text>    | Mark 20x20 area with a text tag     |          |
@@ -387,9 +395,9 @@ These features are intended to be used mostly as parts of compositions and rarel
 |            |                                                                |                                   |                                                                                                         |   |
 | clapNS     | ‡W ‡N → → ‡N ‡E ↓ ‡E ↓ ‡E ‡S ← ← ‡S ‡W ↑ ‡W ↑                  | The Clappers oriented North-South | <path stroke="black" stroke-width="3" fill="none" d="m0,1.5 h.3 v1.3 v-2.6 m2.7,1.3 h-.3 v1.3 v-2.6" /> |   |
 |            |                                                                |                                   |                                                                                                         |   |
-| clapEW     | ‡W ‡N → ‡N → ‡N ‡E ↓ ↓ ‡E ‡S ← ‡S ← ‡S ‡W ↑ ↑                  | The Clappers oriented East-West   | <path stroke="black" stroke-width="3" fill="none"d="m150,0 v30 h130 h-260 m130,270 v-30 h130 h-260" /> |   |
+| clapEW     | ‡W ‡N → ‡N → ‡N ‡E ↓ ↓ ‡E ‡S ← ‡S ← ‡S ‡W ↑ ↑                  | The Clappers oriented East-West   | <path stroke="black" stroke-width="3" fill="none" d="m1.5,0 v.3 h1.3 h-2.6 m1.3,2.7 v-.3 h1.3 h-2.6" /> |   |
 |            |                                                                |                                   |                                                                                                         |   |
-
+| pillar     |                                                                |                                   |                                                                                                         |   |
 
 
 ** Level Change Tiles

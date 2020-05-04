@@ -7,7 +7,7 @@
  :END:
 
 * Beta Maze
-B-Maze is the second Map for Dungeon-Mode and the first original map designed in the software.  It is intended to be larger than A-Maze and use all of the tiles developed thus far, specifically including the larger water a tower.
+B-Maze is the second Map for Dungeon-Mode and the first original map designed in the software.  It is intended to be larger than A-Maze and use all of the tiles developed thus far, specifically including the larger water and tower.
 
 #+NAME:B-Maze-map-levels
 | Level | description                 | Level concept                                                         |
