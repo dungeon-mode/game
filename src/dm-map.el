@@ -956,6 +956,22 @@ SCALE-FUNCTION may be used to supply custom scaling."
 						      0 0 h-rule-len v-rule-len
 						      :fill "#fffdd0"
 						      :stroke-width  0)))
+			     			     no-border
+			     (border (unless no-border
+				       (svg-rectangle `(,svg '(()))
+						      (- x-nudge 2) (- y-nudge 2)
+						      (- (car size) (* 2 x-nudge) -5)
+						      (- (cdr size) (* 2 y-nudge) -5)
+						      :fill "none"
+						      :stroke "black"
+						      :stroke-width  5)
+				       (svg-rectangle `(,svg '(()))
+						      (1- x-nudge) (1- y-nudge)
+						      (- (car size) (* 2 x-nudge) -3)
+						      (- (cdr size) (* 2 y-nudge) -3)
+						      :fill "none"
+						      :stroke "white"
+						      :stroke-width  1)))
 			     no-graph
 			     (graph-attr '((fill . "none")
 					   (stroke . "blue")
@@ -963,6 +979,7 @@ SCALE-FUNCTION may be used to supply custom scaling."
   "Create a background SVG with SCALE and SIZE and NUDGE."
   ;; (dm-msg :file "dm-map" :fun "background" :args
   ;; 	  (list :scale scale :size size :nudge nudge :svg svg))
+
   (prog1 svg
     (unless no-graph
       (dom-append-child
