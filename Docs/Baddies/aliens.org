@@ -1,8 +1,9 @@
 #+TITLE: Baddies for chambers
 #+PROPERTIES:
- :Version: 0.01
- :Author: Erik C Elmshauser
+ :Version: 0.02
+ :Author: Erik C Elmshauser, Jon Lincicum
  :Created: 2020/01/11
+ :Modified: 2020/05/03
  :END:
 
 This file is a part of dungeon-mode.  It is not a part of GNU Emacs.
