@@ -229,7 +229,9 @@ Capture groups:
   3. Inversion/negation indicator, if any (e.g. \"!\").
   4. Tag, e.g. \"elf\" from \"secret-door:elf\".")
 
-(defvar dm-map--scale-props '((font-size 0) (x 0) (y 1))
+(defvar dm-map--scale-props '((font-size 0)
+			      (x 0) (y 1)
+			      (r 0) (cx 0) (cy 1))
   "SVG element properties and scale association.
 
 Scale association may be 0 to use x scaling factor, or 2 for y.")
@@ -410,9 +412,9 @@ Kick off a new batch for each \"feature\" or \"level\" table found."
   "Return DOM-NODE with attributes parsed as numbers.
 
 Only consider attributes listed in `dm-map--scale-props'"
-  ;;(message "[xml-to-num] arg:%s" dom-node)
+  (message "[xml-to-num] arg:%s" dom-node)
   (when (dm-svg-dom-node-p dom-node)
-    ;;(message "[xml-to-num] dom-node:%s" (prin1-to-string dom-node))
+    (message "[xml-to-num] dom-node:%s" (prin1-to-string dom-node))
     (dolist (attr (mapcar 'car dm-map--scale-props) dom-node)
       ;; (message "[xml-to-num] before %s -> %s"
       ;; 	       attr (dom-attr dom-node attr))
@@ -461,10 +463,20 @@ Only consider attributes listed in `dm-map--scale-props'"
 	       (list 'path (dm-map-parse-plan-part path)))))
 	 (result (eval `(list :load ,cform))))))
 
+;; (defmacro dm-map--when-tiles-message (message strings last-key tile)
+;;   "Display MESSAGE when LAST-KEY or TILE match one of STRINGS."
+;;   `(let ((search-tiles ,strings))
+;;      (when (or (and (boundp ',tile) (member ,tile search-tiles))
+;; 	       (member ,last-key (mapcar 'intern search-tiles)))
+;;        (message "%s tile:%s last-key:%s plist:%s"
+;; 		,message (and (boundp ',tile) ,tile)
+;; 		,last-key dm-map--last-plist))))
+
 ;; ZZZ consider functions returning lambda per column; lvalue for d-c-h cols?
 
 (defun dm-map-tiles-transform (table)
   "Transform a TABLE of strings into an hash-map."
+  (message "starting tile transform")
   (let* ((cols (or dm-map-tiles-cols (dm-map-header-to-cols (car table))))
 	 (last-key (gensym))
 	 (cform
@@ -473,13 +485,15 @@ Only consider attributes listed in `dm-map--scale-props'"
 	     :hash-symbol hash
 	     :key-symbol last-key
 	     (progn
+	       ;; (dm-map--when-tiles-message
+	       ;; 	"starting row" (list "cW◦NES" "c4" "foo") last-key tile)
 	       (when (and (boundp 'tile) (org-string-nw-p tile))
 		 ;; This row includes a new tile-name; process any saved up
 		 ;; XML strings before we overwrite last-key
-		 (dm-map--xml-parse)
-
+		 (dm-map--xml-parse);; TODO: add last-key tile; use when-tiles-msg
 		 (setq last-key (intern tile)
 		       dm-map--last-plist (dm-map-table-cell tile :table hash))
+		 ;;(dm-map--when-tiles-message "new tile" (list "cW◦NES" "c4" "foo") last-key tile)
 		 (when (string-match dm-map-tile-tag-re tile)
 		   ;; Tile name contains a tag i.e. "some-tile:some-tag".
 		   ;; Ingore inverted tags ("some-tile:!some-tag"). Add others
@@ -498,16 +512,19 @@ Only consider attributes listed in `dm-map--scale-props'"
 				    (list tag last-key
 					  (intern (concat (match-string 1 tile)
 							  ":!" (match-string 4 tile)))))))))))
+	       ;;(dm-map--when-tiles-message "pre-parser" (list "cW◦NES" "c4" "foo") last-key tile)
 	       (mapc (lambda (prop)
 		       (when  (boundp `,prop)
-			 (prog1
-			  (plist-put dm-map--last-plist `,prop
-				     (nconc (plist-get dm-map--last-plist `,prop)
-					    (dm-map-parse-plan-part (symbol-value `,prop)))))))
+			 (prog1 (plist-put dm-map--last-plist `,prop
+					   (nconc (plist-get dm-map--last-plist `,prop)
+						  (dm-map-parse-plan-part (symbol-value `,prop))))
+			   ;;(dm-map--when-tiles-message "pre-parser" (list "cW◦NES" "c4" "foo") last-key tile)
+			   )))
 		     (delq nil'(,dm-map-draw-prop ,@dm-map-draw-other-props)))
+	       ;;(dm-map--when-tiles-message "parsed" (list "cW◦NES" "c4" "foo") last-key tile)
 	       (when (and (boundp (quote ,dm-map-overlay-prop)) ,dm-map-overlay-prop)
 		 (push ,dm-map-overlay-prop dm-map--xml-strings))
-	       ;;(message "tile:%s plist:%s" last-key dm-map--last-plist)
+	       ;;(dm-map--when-tiles-message "end row" (list "cW◦NES" "c4" "foo") last-key tile)
 	       dm-map--last-plist)))
 	 (result
 	  (prog1 (eval `(list :load ,cform))
@@ -541,8 +558,10 @@ found."
 		(y-scale (if (car-safe (cdr scale))
 			     (cadr scale)
 			   (car scale)))
-		(x-orig (or (dom-attr dom-node 'x) 0))
-		(y-orig (or (dom-attr dom-node 'y) 0))
+		(x-prop (if (dom-attr dom-node 'cx) 'cx 'x))
+		(y-prop (if (dom-attr dom-node 'cy) 'cy 'y))
+		(x-orig (or (dom-attr dom-node x-prop) 0))
+		(y-orig (or (dom-attr dom-node y-prop) 0))
 		(x-new (+ (* x-scale (car nudge))
 			  (* x-scale (car pos))
 			  (* x-scale x-orig)))
@@ -554,6 +573,8 @@ found."
       ;; 	       y-scale y-orig y-scale (cdr pos) y-new)
       (when-let ((font-size (dom-attr dom-node 'font-size)))
 	(dom-set-attribute dom-node 'font-size (* x-scale font-size)))
+      (when-let ((r-orig (dom-attr dom-node 'r)))
+	(dom-set-attribute dom-node 'r (* x-scale r-orig)))
       (when-let ((path-data (dom-attr dom-node 'd)))
 	(dom-set-attribute
 	 dom-node 'd
@@ -568,8 +589,8 @@ found."
 		      (if (listp path-data) path-data
 			(dm-map-parse-plan-part path-data)))))
 	 ))
-      (dom-set-attribute dom-node 'x x-new)
-      (dom-set-attribute dom-node 'y y-new))
+      (dom-set-attribute dom-node x-prop x-new)
+      (dom-set-attribute dom-node y-prop y-new))
     ;; process child nodes
     (dolist (child (dom-children dom-node))
       (dm-map--dom-attr-nudge path-fun nudge scale pos child))
@@ -894,16 +915,18 @@ SCALE-FUNCTION may be used to supply custom scaling."
 			       (plist-get cell dm-map-overlay-prop))))
 		    draw-code))
 	 ;; fetch or build background if not disabled
+	 (canvas-size (cons (+ (* (car nudge) scale 2) (car size) dm-map-scale)
+			    (+ (* (cdr nudge) scale 2) (cdr size) dm-map-scale)))
 	 (background
 	  (cond ((equal background t)
 		 (list
-		  (dm-map-background :size size :scale (cons scale scale)
+		  (dm-map-background :size canvas-size :scale (cons scale scale)
 				     :x-nudge (* scale (car nudge))
 				     :y-nudge (* scale (cdr nudge)))))
 		(background)))
 	 (img (dm-svg :svg (append (apply 'svg-create
-					  (append (list (+ (* (car nudge) scale 2) (car size) dm-map-scale)
-							(+ (* (cdr nudge) scale 2) (cdr size) dm-map-scale))
+					  (append (list (car canvas-size)
+							(cdr canvas-size))
 						  svg-attributes))
 				   (append background paths overlays))
 		      :path-data (dm-svg-create-path
@@ -913,7 +936,7 @@ SCALE-FUNCTION may be used to supply custom scaling."
     ;;(message "[draw] path-props:%s" path-attributes)
     ;;(message "[draw] XML SVG overlays:%s" (prin1-to-string overlays))
     ;;(message "[draw] other paths:%s" (prin1-to-string paths))
-    (message "[draw] background:%s" (prin1-to-string background))
+    ;;(message "[draw] background:%s" (prin1-to-string background))
     ;;(when (boundp 'dm-dump) (setq dm-dump draw-code))
     img))
 
@@ -1163,7 +1186,7 @@ always use \"raidio\"."
 
 (defun dm-map-menus-toggle-file (file)
   "Toggle membership of FILE in `dm-map-files'."
-  (message "file toggle %s ⇒ %s" file dm-map-files)
+  ;;(message "file toggle %s ⇒ %s" file dm-map-files)
   (if (member file dm-map-files)
       (setq dm-map-files (seq-filter
 			  (lambda (cur-file)
@@ -1175,12 +1198,12 @@ always use \"raidio\"."
 (defun dm-map-menus-toggle-tag (files-select-tag file)
   "Make FILE the only member of FILES-SELECT-TAG in `dm-map-files'."
   (let ((fileset (dm-files-select files-select-tag)))
-    (message "file toggle %s ⇒ %s" file dm-map-files)
+    ;;(message "file toggle %s ⇒ %s" file dm-map-files)
     (setq dm-map-files
 	  (seq-uniq
 	   (seq-filter
 	    (lambda (cur-file)
-	      (message "file toggle %s ⇒ %s" file fileset)
+	      ;;(message "file toggle %s ⇒ %s" file fileset)
 	      (or (equal cur-file file)
 		  (not (member cur-file fileset))))
 	    (append (list file) dm-map-files)))))
@@ -1199,7 +1222,7 @@ always use \"raidio\"."
 	 :help ,map-file
 	 :style ,dm-map-menus-file-style
 	 :selected (member ,map-file dm-map-files)]))
-   (append (dm-files-select files-select-tag))))
+   (append (reverse (dm-files-select files-select-tag)))))
 
 (defun dm-map-menus-files (&rest _)
   "Create menu options for tile files."
