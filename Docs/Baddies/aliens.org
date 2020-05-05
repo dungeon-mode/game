@@ -1,9 +1,9 @@
-#+TITLE: Baddies for chambers
+#+TITLE: Alien Baddies for chambers
 #+PROPERTIES:
- :Version: 0.02
+ :Version: 0.03
  :Author: Erik C Elmshauser, Jon Lincicum
  :Created: 2020/01/11
- :Modified: 2020/05/03
+ :Modified: 2020/05/04
  :END:
 
 This file is a part of dungeon-mode.  It is not a part of GNU Emacs.
@@ -15,59 +15,73 @@ License.  For specific terms please see [[LICENSE]] at end-of-file.
 
 + This table contains all the members of the alien family
 
-| Tbl | Name            | Idx | attack               | special                                                          | sp | sw | ax | ma | hits | worth | Notes      |
-|-----+-----------------+-----+----------------------+------------------------------------------------------------------+----+----+----+----+------+-------+------------|
-|   / | >               |  <> | <                    | >                                                                |  < |    |    |  > |    < |     > | <>         |
-|   0 | Decapoidian     |   1 | 1 on 11 for 1        | Scuttle Away - flees                                             |  4 |  4 |  4 |  3 |    1 |     1 |            |
-|     |                 |     | 1 on Bx for special  |                                                                  |    |    |    |    |      |       |            |
-|   0 | Baby Yeti       |  17 | 1 on 7 for 1         | They may be cute, but they are nasty                             |  6 |  6 |  6 |  6 |    3 |     3 |            |
-|   0 | Cat (Person)    |   1 | 1 on 8 for 1         | Distracted by a shiny thing - flees                              |  7 |  7 |  7 |  8 |    2 |     2 |            |
-|     |                 |     | 1 on Bx for special  |                                                                  |    |    |    |    |      |       |            |
-|   0 | Cybermites      |  28 | 1 on 8 for 1         | 1 on 11 for upgrade, 2 upgrade rolls converts plyr 2 Cyberman    | 10 | 10 | 10 |  9 |    1 |     1 |            |
-|     |                 |     | 1 on dbl for special |                                                                  |    |    |    |    |      |       |            |
-|   0 | Polymorph       |   1 | 1 on 8 for 1         | consume one char emotion: 1)Fear 2)Ego 3)Kindness 4)Greed 5)Envy |  6 |  6 |  6 |  6 |    3 |     5 |            |
-|     |                 |     | 1 on dbl for special |                                                                  |    |    |    |    |      |       |            |
-|   0 | Zerglings       |  18 | 2 on 8 for 1         |                                                                  |  9 |  8 |  8 | 10 |    2 |     2 |            |
-|   0 | Brain Slug      |  28 | 1 on 9 for 1         | Brain slug incaps for 1d rounds, then makes player attack party  |  6 |  6 |  6 |  5 |    1 |     2 |            |
-|     |                 |     | 1 on 11 for special  | player will have slug knocked off upon receiving dbl attack      |    |    |    |    |      |       |            |
-|   0 | Face Hugger     |   1 | 1 on dbl for hug     | Hug: You become incapacitated for 1d rounds (or rest of battle). | 11 | 11 | 11 | 10 |    1 |    10 | *ACID*     |
-|   0 | Clockwork Robot |   7 | 1 on 8 for 1         | Teleport away - flees                                            | 10 |  9 |  8 |  7 |    2 |     4 |            |
-|     |                 |     | 1 on 11 for special  |                                                                  |    |    |    |    |      |       |            |
-|   0 | Dalek Mutant    |   1 | 2 on 7 for 1         | Dangerous even out of their shell                                | 10 | 10 | 10 |  9 |    4 |     8 |            |
-|   0 | Giant Brain     |   1 | 1 on dbl for special | Stupify ray gives brain control of character for 1D rounds       |  7 |  7 |  7 |  7 |    5 |    10 |            |
-|   0 | Baby Xenomorph  |   1 | 2 on 8 for 1         |                                                                  |  9 |  9 |  9 |  9 |    5 |     1 | *ACID*     |
-|     |                 |     | 1 on 10 for 2        |                                                                  |    |    |    |    |      |       |            |
-|   0 | Cybermat        |  19 | 1 on 8 for 2         | 2 upgrade rolls converts playr into Cyberman                     |  8 |  8 |  8 |  7 |    5 |     7 |            |
-|     |                 |     | 1 on Bx for special  |                                                                  |    |    |    |    |      |       |            |
-|   0 | Red-Eyed Ood    |  10 | 1 ON 9 for 1         | Translator ball attack - 1d damage to target                     |  7 |  7 |  7 |  8 |    2 |     7 |            |
-|     |                 |     | 1 on Bx for special  |                                                                  |    |    |    |    |      |       |            |
-|   0 | Red Lectroids   |  20 | 1 on 6 for 1         | Oscillation Overthruster! 1d damage to each party member         |  7 |  7 |  7 |  6 |    3 |     8 |            |
-|     |                 |     | 1 on BX for special  |                                                                  |    |    |    |    |      |       |            |
-|   0 | Cylon Skinjob   |  12 | 1 on 7 for 1         | 1 on 9 for summon 1d Cylon Centurions                            |  7 |  7 |  7 |  8 |    2 |    10 |            |
-|     |                 |     | 1 on dbl for special |                                                                  |    |    |    |    |      |       |            |
-|   0 | Zygons          |  13 | 1 on 7 for 2         |                                                                  |  8 |  8 |  8 |  9 |    6 |     7 |            |
-|   0 | Hydralisk       |  12 | 2 on 8 for 3         | use attack 1 or 2                                                |  9 |  9 |  9 |  9 |    8 |     8 |            |
-|     |                 |     | 1 on dbl for special |                                                                  |    |    |    |    |      |       |            |
-|   0 | Rogue Simulant  |  25 | 1 on 9 for 2         |                                                                  |  8 |  7 |  8 |  9 |    5 |    10 |            |
-|   0 | Yeti            |  19 | 1 on 7 for 2         |                                                                  |  8 |  8 |  8 | 10 |    8 |    20 |            |
-|   0 | Silurian        |  10 | 1 on 6 for 2         | Tongue Sting: Poison, apply 1d damage per turn for 3 turns       |  7 |  7 |  8 |  8 |    6 |    15 |            |
-|     |                 |     | 1 on 11 for Special  |                                                                  |    |    |    |    |      |       |            |
-|   0 | Judoon          |  15 | 1 on 7 for 2         |                                                                  |  8 |  8 |  8 |  9 |    8 |    17 |            |
-|   0 | Sontarans       |  20 | 2 on 7 for 3         | Probic Vent: If attacked from behind, are killed on 5 or higher  |  9 |  9 |  9 |  9 |   10 |    25 |            |
-|   0 | Cybermen        |  12 | 2 on 8 for 3         | implant cybermites (convert to cyberman)                         |  9 |  9 |  9 |  9 |   15 |    30 |            |
-|     |                 |     | 1 on dbl for special |                                                                  |    |    |    |    |      |       |            |
-|   0 | Cylon Centurion |  24 | 1 on 7 for 3         |                                                                  | 10 | 10 | 10 |  7 |    8 |    12 |            |
-|   0 | Mutalisk        |  15 | 1 on 6 for 3         | Flying - ranged attack can richochet to hit others on Bx for 1   |  9 | 10 | 10 | 11 |    3 |    20 |            |
-|   0 | Vogons          |  15 | 1 on 10 for special  | read poetry does 1D damage to whole party                        |  9 | 10 |  9 | 10 |   15 |    25 |            |
-|   0 | Weeping Angel   |  25 | 2 on 7 for 5         | send player back in time, can only hit or be hit when none looks |  4 |  4 |  4 |  6 |    1 |    35 | Invincible |
-|     |                 |     | 1 on dbl for special |                                                                  |    |    |    |    |      |       |            |
-|   0 | Ultralisk       |   1 | 1 on 10 for 5        |                                                                  | 10 | 10 | 10 | 11 |   20 |    40 |            |
-|   0 | Predator        |  12 | 2 on 8 for 3         | shoulder cannon does DoD                                         |  9 |  9 |  9 |  9 |   15 |    30 | Invisible  |
-|     |                 |     | 1 on dbl for special |                                                                  |    |    |    |    |      |       |            |
-|   0 | Xenomorph       |  12 | 2 on 8 for 3         | Tail does DoD                                                    | 11 | 11 | 10 | 11 |   10 |    50 | *ACID*     |
-|     |                 |     | 1 on dbl for special |                                                                  |    |    |    |    |      |       |            |
-|   0 | Daleks          |  12 | 1 on dbl for kill    |                                                                  | 11 | 11 | 11 | 11 |   20 |    50 |            |
-|   0 | Vashta Nerada   | 250 | 1 on 8 for kill      | You can't kill a shadow                                          | 12 | 12 | 12 | 12 |    1 |   100 |            |
+| Tbl | Name            | Idx | attack               | special                                                           | sp | sw | ax | ma | hits | worth | Notes      |
+|-----+-----------------+-----+----------------------+-------------------------------------------------------------------+----+----+----+----+------+-------+------------|
+|   / | >               |  <> | <                    | >                                                                 |  < |    |    |  > |    < |     > | <>         |
+|   0 | Decapoidian     |   1 | 1 on 11 for 1        | Scuttle Away - flees                                              |  4 |  4 |  4 |  3 |    1 |     1 |            |
+|     |                 |     | 1 on Bx for special  |                                                                   |    |    |    |    |      |       |            |
+|   0 | Baby Yeti       |  17 | 1 on 7 for 1         | They may be cute, but they are nasty                              |  6 |  6 |  6 |  6 |    3 |     3 |            |
+|   0 | Cat (Person)    |   1 | 1 on 8 for 1         | Distracted by a shiny thing - flees                               |  7 |  7 |  7 |  8 |    2 |     2 |            |
+|     |                 |     | 1 on Bx for special  |                                                                   |    |    |    |    |      |       |            |
+|   0 | Cybermites      |  28 | 1 on 8 for 1         | 1 on 11 for upgrade, 2 upgrade rolls converts plyr 2 Cyberman     | 10 | 10 | 10 |  9 |    1 |     1 |            |
+|     |                 |     | 1 on dbl for special |                                                                   |    |    |    |    |      |       |            |
+|   0 | Spaceballs      |  25 | 1 on 8 for 1         | Surrounded by Assholes: All Spaceballs cannot attack for 1d turns |  6 |  7 |  8 |  9 |    3 |     3 |            |
+|     |                 |     | 1 on dbl for special |                                                                   |    |    |    |    |      |       |            |
+|   0 | Polymorph       |   1 | 1 on 8 for 1         | consume one emotion: 1)Fear 2)Ego 3)Kindness 4)Greed 5)Envy       |  6 |  6 |  6 |  6 |    3 |     5 |            |
+|     |                 |     | 1 on dbl for special | 6) Compassion (Restored on end of combat if player lives)         |    |    |    |    |      |       |            |
+|   0 | Zerglings       |  18 | 2 on 8 for 1         |                                                                   |  9 |  8 |  8 | 10 |    2 |     2 |            |
+|   0 | Brain Slug      |  28 | 1 on 9 for 1         | Brain slug incaps for 1d rounds, then makes player attack party   |  6 |  6 |  6 |  5 |    1 |     2 |            |
+|     |                 |     | 1 on 11 for special  | player will have slug knocked off upon receiving dbl attack       |    |    |    |    |      |       |            |
+|   0 | Face Hugger     |   1 | 1 on dbl for hug     | Hug: You become incapacitated for 1d rounds (or rest of battle).  | 11 | 11 | 11 | 10 |    1 |    10 | *ACID*     |
+|   0 | Clockwork Robot |   7 | 1 on 8 for 1         | Teleport away - flees                                             | 10 |  9 |  8 |  7 |    2 |     4 |            |
+|     |                 |     | 1 on 11 for special  |                                                                   |    |    |    |    |      |       |            |
+|   0 | Dalek Mutant    |   1 | 2 on 7 for 1         | Dangerous even out of their shell                                 | 10 | 10 | 10 |  9 |    4 |     8 |            |
+|   0 | Giant Brain     |   1 | 1 on dbl for special | Stupify ray gives brain control of character for 1D rounds        |  7 |  7 |  7 |  7 |    5 |    10 |            |
+|   0 | Baby Xenomorph  |   1 | 2 on 8 for 1         |                                                                   |  9 |  9 |  9 |  9 |    5 |     1 | *ACID*     |
+|     |                 |     | 1 on 10 for 2        |                                                                   |    |    |    |    |      |       |            |
+|   0 | Cybermat        |  19 | 1 on 8 for 2         | 2 upgrade rolls converts playr into Cyberman                      |  8 |  8 |  8 |  7 |    5 |     7 |            |
+|     |                 |     | 1 on Bx for special  |                                                                   |    |    |    |    |      |       |            |
+|   0 | Red-Eyed Ood    |  10 | 1 ON 9 for 1         | Translator ball attack - 1d damage to target                      |  7 |  7 |  7 |  8 |    2 |     7 |            |
+|     |                 |     | 1 on Bx for special  |                                                                   |    |    |    |    |      |       |            |
+|   0 | Red Lectroids   |  20 | 1 on 6 for 1         | Oscillation Overthruster! 1d damage to each party member          |  7 |  7 |  7 |  6 |    3 |     8 |            |
+|     |                 |     | 1 on BX for special  |                                                                   |    |    |    |    |      |       |            |
+|   0 | Cylon Skinjob   |  12 | 1 on 7 for 1         | 1 on 9 for summon 1d Cylon Centurions                             |  7 |  7 |  7 |  8 |    2 |    10 |            |
+|     |                 |     | 1 on dbl for special |                                                                   |    |    |    |    |      |       |            |
+|   0 | Protoss Zealot  |  28 | 1 on 8 for 2         |                                                                   |  8 |  7 |  7 |  8 |    5 |    10 |            |
+|   0 | Kzinti          |  15 | 1 on 7 for 2         | Bare fangs! Bite attack for 1d damage                             |  6 |  6 |  8 |  8 |    5 |     8 |            |
+|     |                 |     | 1 on dbl for special |                                                                   |    |    |    |    |      |       |            |
+|   0 | Judoon          |  26 | 1 on 8 for 1         | Beyond Jurisdiction! All Judoon retreat                           |  9 |  9 |  9 | 10 |   15 |    20 |            |
+|     |                 |     | 1 on Bx for special  |                                                                   |    |    |    |    |      |       |            |
+|   0 | Protoss Dragoon |  15 | 1 on 7 for 2         |                                                                   |  8 |  8 |  7 |  7 |    5 |     8 |            |
+|   0 | Zygons          |  13 | 1 on 7 for 2         |                                                                   |  8 |  8 |  8 |  9 |    6 |     7 |            |
+|   0 | Hydralisk       |  12 | 2 on 8 for 3         | use attack 1 or 2                                                 |  9 |  9 |  9 |  9 |    8 |     8 |            |
+|     |                 |     | 1 on dbl for special |                                                                   |    |    |    |    |      |       |            |
+|   0 | Rogue Simulant  |  25 | 1 on 9 for 2         |                                                                   |  8 |  7 |  8 |  9 |    5 |    10 |            |
+|   0 | Yeti            |  19 | 1 on 7 for 2         |                                                                   |  8 |  8 |  8 | 10 |    8 |    20 |            |
+|   0 | Silurian        |  10 | 1 on 6 for 2         | Tongue Sting: Poison, apply 1d damage per turn for 3 turns        |  7 |  7 |  8 |  8 |    6 |    15 |            |
+|     |                 |     | 1 on 11 for Special  |                                                                   |    |    |    |    |      |       |            |
+|   0 | Judoon          |  15 | 1 on 7 for 2         |                                                                   |  8 |  8 |  8 |  9 |    8 |    17 |            |
+|   0 | Sontarans       |  20 | 2 on 7 for 3         | Probic Vent: If attacked from behind, are killed on 5 or higher   |  9 |  9 |  9 |  9 |   10 |    25 |            |
+|   0 | Dark Templar    |   7 | 1 on 5 for 2         |                                                                   |  8 |  8 | 10 | 10 |    8 |    25 |            |
+|   0 | Replicant       |  12 | 1 on 5 for 3         | The Light that Burns Twice as Bright                              | 10 | 10 |  8 |  7 |   10 |    25 |            |
+|     |                 |     | 1 on dbl for special | Loses half remaining life and deals as damage to last attacker    |    |    |    |    |      |       |            |
+|   0 | Cybermen        |  12 | 2 on 8 for 3         | implant cybermites (convert to cyberman)                          |  9 |  9 |  9 |  9 |   15 |    30 |            |
+|     |                 |     | 1 on dbl for special |                                                                   |    |    |    |    |      |       |            |
+|   0 | Cylon Centurion |  24 | 1 on 7 for 3         |                                                                   | 10 | 10 | 10 |  7 |    8 |    12 |            |
+|   0 | Mutalisk        |  15 | 1 on 6 for 3         | Flying - ranged attack can richochet to hit others on Bx for 1    |  9 | 10 | 10 | 11 |    3 |    20 |            |
+|   0 | Vogons          |  15 | 1 on 10 for special  | read poetry does 1D damage to whole party                         |  9 | 10 |  9 | 10 |   15 |    25 |            |
+|   0 | Weeping Angel   |  25 | 2 on 7 for 5         | send player back in time, can only hit or be hit when no one      |  4 |  4 |  4 |  6 |    1 |    35 | Invincible |
+|     |                 |     | 1 on dbl for special | is looking at Angel                                               |    |    |    |    |      |       |            |
+|   0 | Ultralisk       |   1 | 1 on 10 for 5        |                                                                   | 10 | 10 | 10 | 11 |   20 |    40 |            |
+|   0 | Predator        |  12 | 2 on 8 for 3         | shoulder cannon does DoD                                          |  9 |  9 |  9 |  9 |   15 |    30 | Invisible  |
+|     |                 |     | 1 on dbl for special |                                                                   |    |    |    |    |      |       |            |
+|   0 | Hypnotoad       |   1 | 1 on 10 for 1        | All Glory to the Hypnotoad: Player is hypnotized, deals 1d per    |  7 |  7 |  7 |  6 |    2 |    65 |            |
+|     |                 |     | 1 on 6 for special   | turn to self, player breaks free of hypnosis on 6                 |    |    |    |    |      |       |            |
+|   0 | Xenomorph       |  12 | 2 on 8 for 3         | Tail does DoD                                                     | 11 | 11 | 10 | 11 |   10 |    50 | *ACID*     |
+|     |                 |     | 1 on dbl for special |                                                                   |    |    |    |    |      |       |            |
+|   0 | Brutalisk       |   1 | 1 on 5 for 9         |                                                                   | 10 | 11 | 11 | 10 |   25 |    35 |            |
+|   0 | Daleks          |  12 | 1 on dbl for kill    |                                                                   | 11 | 11 | 11 | 11 |   20 |    50 |            |
+|   0 | Vashta Nerada   | 250 | 1 on 8 for kill      | You can't kill a shadow                                           | 12 | 12 | 12 | 12 |    1 |   100 |            |
 
 * LICENSE
 
