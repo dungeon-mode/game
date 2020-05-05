@@ -1,0 +1,58 @@
+#+TITLE: Critter Baddies for chambers
+#+PROPERTIES:
+ :Version: 0.01
+ :Author: Jon Lincicum
+ :Created: 2020/05/04
+ :Modified: 2020/05/04
+ :END:
+
+This file is a part of dungeon-mode.  It is not a part of GNU Emacs.
+This softare is released under the GNU Public Licence version three
+or, at your disgression, any newer version of the GNU Public
+License.  For specific terms please see [[LICENSE]] at end-of-file.
+
+* Critter Table
+
++ This table contains all the members of the undead family
+
+| Tbl | Name                | Idx | attack               | special                                       | sp | sw | ax | ma | hits | worth | Notes                             |
+|-----+---------------------+-----+----------------------+-----------------------------------------------+----+----+----+----+------+-------+-----------------------------------|
+|   / | >                   |  <> | <                    | >                                             |  < |    |    |  > |    < |     > | <>                                |
+|   0 | Prarie Dogs         |  25 | 1 on 9 for 1         | Flee on dbl                                   |  5 |  5 |  5 |  2 |    2 |     2 | Gains 2nd attack when in cubicles |
+|   0 | Mean Housecat       |   1 | 1 on 10 for 1        |                                               |  7 |  5 |  5 |  4 |    1 |     1 |                                   |
+|   0 | Salamanders         |  45 | 1 on 10 for 1        |                                               |  5 |  5 |  7 |  5 |    1 |     1 |                                   |
+|   0 | Wild Dogs           |  24 | 1 on 8 for 1         |                                               |  6 |  6 |  6 |  6 |    2 |     3 |                                   |
+|   0 | Irritated Parakeets |  35 | 1 on 9 for 1         | Flying                                        |  6 |  8 |  8 |  8 |    1 |     2 |                                   |
+|   0 | Upset Monkey        |  26 | 1 on 8 for 1         |                                               |  7 |  8 |  8 |  7 |    2 |     3 |                                   |
+|   0 | Iguana              |  34 | 1 on 7 for 1         |                                               |  7 |  7 |  7 |  6 |    2 |     3 |                                   |
+|   0 | Jackals             |  45 | 1 on 9 for 2         |                                               |  6 |  6 |  7 |  5 |    3 |     5 |                                   |
+|   0 | Buzzard             |  24 | 1 on 8 for 1         |                                               |  7 |  7 |  7 |  7 |    1 |     4 |                                   |
+|   0 | Evil Koala Bear     |  17 | 1 on 7 for 2         |                                               |  8 |  8 |  7 |  8 |    3 |     5 |                                   |
+|   0 | Horned Lizard       |  23 | 1 on 6 for 2         |                                               |  7 |  9 |  9 |  7 |    2 |     5 |                                   |
+|   0 | Hyeanas             |  45 | 1 on 5 for 1         |                                               |  6 |  7 |  7 |  7 |    2 |     5 |                                   |
+|   0 | Raven               |  23 | 1 on 4 for 1         | Flying - Bad News: last attaker skips nxt trn |  7 |  8 |  8 |  8 |    1 |     3 |                                   |
+|     |                     |     | 1 on dbl for special |                                               |    |    |    |    |      |       |                                   |
+|   0 | Tiger               |  17 | 1 on 7 for 2         | Bouncing is what Tigers do Best, 2nd attack   |  8 |  8 |  9 | 10 |    5 |     7 |                                   |
+|     |                     |     | 1 on dbl for special |                                               |    |    |    |    |      |       |                                   |
+|   0 | Hawk                |  25 | 1 on 5 for 2         | Flying                                        |  7 |  9 |  9 |  8 |    4 |     5 |                                   |
+|   0 | Wolves              |  35 | 1 on 6 for 2         |                                               |  8 |  8 |  8 |  7 |    5 |     7 |                                   |
+|   0 | Black Bears         |  12 | 1 on 6 for 3         |                                               |  7 |  8 |  7 |  9 |    7 |     7 |                                   |
+|   0 | Cobra               |  24 | 1 on 6 for 2         | Poison: 1d dmg applied 1 turn per point       |  8 |  5 |  5 |  7 |    2 |     6 |                                   |
+|     |                     |     | 1 on dbl for special |                                               |    |    |    |    |      |       |                                   |
+|   0 | Killer Monkey       |  15 | 1 on 5 for 2         |                                               |  7 |  7 |  6 |  7 |    4 |     6 |                                   |
+|   0 | Lion                |  26 | 1 on 7 for 3         |                                               |  6 |  8 |  7 |  8 |    7 |     8 |                                   |
+|     |                     |     |                      |                                               |    |    |    |    |      |       |                                   |
+* LICENSE
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
