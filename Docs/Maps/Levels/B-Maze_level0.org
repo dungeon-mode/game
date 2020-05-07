@@ -1,3 +1,4 @@
+
 #+TITLE: Beta Surface Map
 #+PROPERTIES:
  :Version: 0.01
@@ -814,7 +815,7 @@ B-Maze is the second Map for Dungeon-Mode and the first original map designed in
 | 10 | 16 |           |
 | 11 | 16 |           |
 | 12 | 16 |           |
-| 13 | 16 |           |
+| 13 | 16 | tree      |
 | 14 | 16 |           |
 | 15 | 16 |           |
 | 16 | 16 |           |
@@ -863,8 +864,8 @@ B-Maze is the second Map for Dungeon-Mode and the first original map designed in
 | 10 | 17 |           |
 | 11 | 17 |           |
 | 12 | 17 |           |
-| 13 | 17 |           |
-| 14 | 17 |           |
+| 13 | 17 | tree      |
+| 14 | 17 | tree      |
 | 15 | 17 |           |
 | 16 | 17 |           |
 | 17 | 17 |           |
@@ -912,7 +913,7 @@ B-Maze is the second Map for Dungeon-Mode and the first original map designed in
 | 10 | 18 |           |
 | 11 | 18 |           |
 | 12 | 18 |           |
-| 13 | 18 |           |
+| 13 | 18 | tree      |
 | 14 | 18 |           |
 | 15 | 18 |           |
 | 16 | 18 |           |
@@ -961,14 +962,14 @@ B-Maze is the second Map for Dungeon-Mode and the first original map designed in
 | 10 | 19 |           |
 | 11 | 19 |           |
 | 12 | 19 |           |
-| 13 | 19 |           |
+| 13 | 19 | tree      |
 | 14 | 19 |           |
 | 15 | 19 |           |
 | 16 | 19 |           |
 | 17 | 19 |           |
-| 18 | 19 |           |
+| 18 | 19 | tree      |
 | 19 | 19 |           |
-| 20 | 19 |           |
+| 20 | 19 | tree      |
 | 21 | 19 |           |
 | 22 | 19 |           |
 | 23 | 19 |           |
@@ -1010,14 +1011,14 @@ B-Maze is the second Map for Dungeon-Mode and the first original map designed in
 | 10 | 20 |           |
 | 11 | 20 |           |
 | 12 | 20 |           |
-| 13 | 20 |           |
+| 13 | 20 | tree      |
 | 14 | 20 |           |
 | 15 | 20 |           |
 | 16 | 20 |           |
 | 17 | 20 |           |
-| 18 | 20 |           |
+| 18 | 20 | tree      |
 | 19 | 20 |           |
-| 20 | 20 |           |
+| 20 | 20 | tree      |
 | 21 | 20 |           |
 | 22 | 20 |           |
 | 23 | 20 |           |
@@ -1026,7 +1027,7 @@ B-Maze is the second Map for Dungeon-Mode and the first original map designed in
 | 26 | 20 |           |
 | 27 | 20 |           |
 | 28 | 20 |           |
-| 29 | 20 |           |
+| 29 | 20 | tree      |
 | 30 | 20 | rivS      |
 | 31 | 20 |           |
 | 32 | 20 | █         |
@@ -1058,27 +1059,27 @@ B-Maze is the second Map for Dungeon-Mode and the first original map designed in
 |  9 | 21 |           |
 | 10 | 21 |           |
 | 11 | 21 |           |
-| 12 | 21 |           |
-| 13 | 21 |           |
+| 12 | 21 | tree      |
+| 13 | 21 | tree      |
 | 14 | 21 |           |
 | 15 | 21 |           |
 | 16 | 21 |           |
 | 17 | 21 |           |
-| 18 | 21 |           |
-| 19 | 21 | tree      |
-| 20 | 21 |           |
-| 21 | 21 |           |
+| 18 | 21 | tree      |
+| 19 | 21 |           |
+| 20 | 21 | tree      |
+| 21 | 21 | tree      |
 | 22 | 21 |           |
-| 23 | 21 |           |
+| 23 | 21 | tree      |
 | 24 | 21 |           |
-| 25 | 21 |           |
+| 25 | 21 | tree      |
 | 26 | 21 |           |
 | 27 | 21 |           |
-| 28 | 21 |           |
-| 29 | 21 |           |
+| 28 | 21 | tree      |
+| 29 | 21 | tree      |
 | 30 | 21 | rivS      |
 | 31 | 21 |           |
-| 32 | 21 |           |
+| 32 | 21 | tree      |
 | 33 | 21 |           |
 | 34 | 21 |           |
 | 35 | 21 |           |
@@ -1108,14 +1109,14 @@ B-Maze is the second Map for Dungeon-Mode and the first original map designed in
 | 10 | 22 |           |
 | 11 | 22 |           |
 | 12 | 22 |           |
-| 13 | 22 |           |
-| 14 | 22 |           |
-| 15 | 22 |           |
+| 13 | 22 | tree      |
+| 14 | 22 | tree      |
+| 15 | 22 | tree      |
 | 16 | 22 |           |
 | 17 | 22 |           |
 | 18 | 22 |           |
 | 19 | 22 |           |
-| 20 | 22 |           |
+| 20 | 22 | tree      |
 | 21 | 22 |           |
 | 22 | 22 |           |
 | 23 | 22 |           |
@@ -1124,10 +1125,10 @@ B-Maze is the second Map for Dungeon-Mode and the first original map designed in
 | 26 | 22 |           |
 | 27 | 22 |           |
 | 28 | 22 |           |
-| 29 | 22 |           |
+| 29 | 22 | tree      |
 | 30 | 22 | rivS      |
 | 31 | 22 |           |
-| 32 | 22 |           |
+| 32 | 22 | tree      |
 | 33 | 22 |           |
 | 34 | 22 |           |
 | 35 | 22 |           |
@@ -1173,10 +1174,10 @@ B-Maze is the second Map for Dungeon-Mode and the first original map designed in
 | 26 | 23 |           |
 | 27 | 23 |           |
 | 28 | 23 |           |
-| 29 | 23 |           |
+| 29 | 23 | tree      |
 | 30 | 23 | rivS      |
 | 31 | 23 |           |
-| 32 | 23 |           |
+| 32 | 23 | tree      |
 | 33 | 23 |           |
 | 34 | 23 |           |
 | 35 | 23 |           |
