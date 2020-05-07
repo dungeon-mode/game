@@ -135,9 +135,9 @@ These features are intended to be used mostly as parts of compositions and rarel
 #+NAME: Surface-Tiles
 | Tile | Water | Overlay                                                                             |
 |------+-------+-------------------------------------------------------------------------------------|
-| tree |       | <path fill="green" stroke="#0ba600" stroke-width=".3%" d="m.5,.5                    |
+| tree |       | <path fill="green" stroke="#0ba600" stroke-width=".2%" d="m.5,.5                 |
 |      |       | c-1.5,1,1.5,1,0,0 c1.5,-1,-1.5,-1,0,0 c1,-1.5,1,1.5,0,0 c-1,1.5,-1,-1.5,0,0"/>      |
-|      |       | <circle fill="green" stroke="#0ba600" stroke-width=".15%" cx=".5" cy=".5" r=".6" /> |
+|      |       | <circle fill="green" stroke="#0ba600" stroke-width=".1%" cx=".5" cy=".5" r=".6" /> |
 |      |       |                                                                                     |
 
 
