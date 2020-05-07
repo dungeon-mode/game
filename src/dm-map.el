@@ -437,7 +437,8 @@ Only consider attributes listed in `dm-map--scale-props'"
 			(insert "<g>"
 				(mapconcat
 				 'identity
-				 (reverse dm-map--xml-strings) "")
+				 (reverse dm-map--xml-strings)
+				 " ")
 				"</g>")
 			(libxml-parse-xml-region (point-min)
 						 (point-max))))))
