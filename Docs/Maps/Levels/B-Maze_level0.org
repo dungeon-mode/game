@@ -1065,7 +1065,7 @@ B-Maze is the second Map for Dungeon-Mode and the first original map designed in
 | 16 | 21 |           |
 | 17 | 21 |           |
 | 18 | 21 |           |
-| 19 | 21 |           |
+| 19 | 21 | tree      |
 | 20 | 21 |           |
 | 21 | 21 |           |
 | 22 | 21 |           |
