@@ -666,9 +666,6 @@ between 0 and 1 inclusive."
 	 ,x-axis-rotation ,large-arc-flag ,sweep-flag
 	 ,(and x (guard (numberp x)))
 	 ,(and y (guard (numberp y)))))
-      (warn "ARC path %s => %s (%s)"
-	    (type-of cell) (prin1-to-string cell t)
-	    (type-of (car-safe cell)))
       (setcdr cell (list (list (round (* rx (car scale)))
 			       (round (* ry (cdr scale)))
 			       x-axis-rotation large-arc-flag sweep-flag
