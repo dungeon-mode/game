@@ -333,7 +333,7 @@ TODO implement leading & as a quoting operator for tile refs"
 		      (mapcan 'dm-map-parse-plan-part
 			      (split-string word nil t "[ \t\n]+")))
 		     (;; TODO: RX ?M ?m ?V ?v ?H ?h ?S ?s ?A ?a ?L ?l
-		      (string-match-p "^[MmVvHhSsAaL][0-9.,+-]+$" word)
+		      (string-match-p "^[MmVvHhCcSsAaL][0-9.,+-]+$" word)
 		      (list (list (intern (substring word 0 1))
 				  (mapcar 'string-to-number
 					  (split-string (substring word 1) "[,]")))))
@@ -476,7 +476,7 @@ Only consider attributes listed in `dm-map--scale-props'"
 
 (defun dm-map-tiles-transform (table)
   "Transform a TABLE of strings into an hash-map."
-  (message "starting tile transform")
+  ;;(message "starting tile transform")
   (let* ((cols (or dm-map-tiles-cols (dm-map-header-to-cols (car table))))
 	 (last-key (gensym))
 	 (cform
@@ -622,52 +622,62 @@ between 0 and 1 inclusive."
   (dolist (cell cells cells)
    (pcase cell
      ;; capital letter means absolutely positioned; ignore
-     (`(,(or 'M 'L 'H 'V 'A) ,_) nil)
+     (`(M  ,_) nil)
      ;; move or line in the form (sym (h v)
-     (`(,(or 'm 'l)
+     (`(,(or 'm 'l 'L)
 	(,(and x (guard (numberp x)))
 	 ,(and y (guard (numberp y)))))
       (setcdr cell (list (list (round (* x (car scale)))
 			       (round (* y (cdr scale)))))))
      ;; h and v differ only in which part of scale applies
-     (`(h (,(and d (guard (numberp d)))))
+     (`(,(or 'h 'H)
+	(,(and d (guard (numberp d)))))
       (setcdr cell (list (round (* d (car scale))))))
-     (`(v (,(and d (guard (numberp d)))))
+     (`(,(or 'v 'V)
+	(,(and d (guard (numberp d)))))
       (setcdr cell (list (list (* d (cdr scale))))))
+     (`(,(or 's 'S)
+	(,(and x2 (guard (numberp x2)))
+	 ,(and y2 (guard (numberp y2)))
+	 ,(and x (guard (numberp x)))
+	 ,(and y (guard (numberp y)))))
+      (setcdr cell (list (list (round (* x2 (car scale)))
+			       (round (* y2 (cdr scale)))
+			       (round (* x (car scale)))
+			       (round (* y (cdr scale)))))))
      ;; curveto
-     (`(c (,(and x1 (guard (numberp x1)))
-	   ,(and y1 (guard (numberp y1)))
-	   ,(and x2 (guard (numberp x2)))
-	   ,(and y2 (guard (numberp y2)))
-	   ,(and x (guard (numberp x)))
-	   ,(and y (guard (numberp y)))))
+     (`(,(or 'c 'C)
+	(,(and x1 (guard (numberp x1)))
+	 ,(and y1 (guard (numberp y1)))
+	 ,(and x2 (guard (numberp x2)))
+	 ,(and y2 (guard (numberp y2)))
+	 ,(and x (guard (numberp x)))
+	 ,(and y (guard (numberp y)))))
       (setcdr cell (list (list (round (* x1 (car scale)))
 			       (round (* y1 (cdr scale)))
 			       (round (* x2 (car scale)))
 			       (round (* y2 (cdr scale)))
 			       (round (* x (car scale)))
 			       (round (* y (cdr scale)))))))
-     (`(s (,(and x2 (guard (numberp x2)))
-	   ,(and y2 (guard (numberp y2)))
-	   ,(and x (guard (numberp x)))
-	   ,(and y (guard (numberp y)))))
-      (setcdr cell (list (list (round (* x2 (car scale)))
-			       (round (* y2 (cdr scale)))
-			       (round (* x (car scale)))
-			       (round (* y (cdr scale)))))))
      ;; arc, scale x and y radii and pos, leave flags alone
-     (`(a (,(and rx (guard (numberp rx)))
-	   ,(and ry (guard (numberp ry)))
-	   ,x-axis-rotation ,large-arc-flag ,sweep-flag
-	   ,(and x (guard (numberp x)))
-	   ,(and y (guard (numberp y)))))
+     (`(,(or 'a 'A)
+	(,(and rx (guard (numberp rx)))
+	 ,(and ry (guard (numberp ry)))
+	 ,x-axis-rotation ,large-arc-flag ,sweep-flag
+	 ,(and x (guard (numberp x)))
+	 ,(and y (guard (numberp y)))))
+      (warn "ARC path %s => %s (%s)"
+	    (type-of cell) (prin1-to-string cell t)
+	    (type-of (car-safe cell)))
       (setcdr cell (list (list (round (* rx (car scale)))
 			       (round (* ry (cdr scale)))
 			       x-axis-rotation large-arc-flag sweep-flag
 			       (round (* x (car scale)))
 			       (round (* y (cdr scale)))))))
      ;; fall-back to a message
-     (_ (warn "Can't scale SVG path %s => %s " (type-of cell) (prin1-to-string cell t)))
+     (_ (warn "Can't scale SVG path %s => %s (%s)"
+	      (type-of cell) (prin1-to-string cell t)
+	      (type-of (car-safe cell))))
      )))
 
 ;;(dm-map-default-scale-function '(100 . 1000) (dom-node 'text '((font-size . .5)(x . .2))) '(h (.1)) '(v (.2))'(m (.3 .4)) '(l (.5 .6)) '(x (.7 .8)) '(a (0.05 0.05 0 1 1 -0.1 0.1)))
