@@ -721,15 +721,15 @@ B-Maze is the second Map for Dungeon-Mode and the first original map designed in
 | 14 | 14 |           |
 | 15 | 14 |           |
 | 16 | 14 |           |
-| 17 | 14 |           |
-| 18 | 14 |           |
-| 19 | 14 |           |
-| 20 | 14 |           |
-| 21 | 14 |           |
-| 22 | 14 |           |
-| 23 | 14 |           |
-| 24 | 14 |           |
-| 25 | 14 |           |
+| 17 | 14 | grass     |
+| 18 | 14 | grass     |
+| 19 | 14 | grass     |
+| 20 | 14 | grass     |
+| 21 | 14 | grass     |
+| 22 | 14 | grass     |
+| 23 | 14 | grass     |
+| 24 | 14 | grass     |
+| 25 | 14 | grass     |
 | 26 | 14 |           |
 | 27 | 14 |           |
 | 28 | 14 |           |
@@ -776,9 +776,9 @@ B-Maze is the second Map for Dungeon-Mode and the first original map designed in
 | 20 | 15 |           |
 | 21 | 15 |           |
 | 22 | 15 |           |
-| 23 | 15 |           |
-| 24 | 15 |           |
-| 25 | 15 |           |
+| 23 | 15 | grass     |
+| 24 | 15 | grass     |
+| 25 | 15 | grass     |
 | 26 | 15 |           |
 | 27 | 15 |           |
 | 28 | 15 |           |
@@ -825,11 +825,11 @@ B-Maze is the second Map for Dungeon-Mode and the first original map designed in
 | 20 | 16 |           |
 | 21 | 16 |           |
 | 22 | 16 |           |
-| 23 | 16 |           |
-| 24 | 16 |           |
-| 25 | 16 |           |
-| 26 | 16 |           |
-| 27 | 16 |           |
+| 23 | 16 | grass     |
+| 24 | 16 | grass     |
+| 25 | 16 | grass     |
+| 26 | 16 | grass     |
+| 27 | 16 | grass     |
 | 28 | 16 |           |
 | 29 | 16 |           |
 | 30 | 16 | rivS      |
@@ -861,23 +861,22 @@ B-Maze is the second Map for Dungeon-Mode and the first original map designed in
 |  7 | 17 |           |
 |  8 | 17 |           |
 |  9 | 17 |           |
-| 10 | 17 |           |
-| 11 | 17 |           |
-| 12 | 17 |           |
+| 10 | 17 | grass     |
+| 11 | 17 | grass     |
+| 12 | 17 | grass     |
 | 13 | 17 | tree      |
 | 14 | 17 | tree      |
-| 15 | 17 |           |
-| 16 | 17 |           |
-| 17 | 17 |           |
+| 15 | 17 | grass     |
+| 16 | 17 | grass     |
+| 17 | 17 | grass     |
 | 18 | 17 |           |
 | 19 | 17 |           |
 | 20 | 17 |           |
-| 21 | 17 |           |
 | 22 | 17 |           |
 | 23 | 17 |           |
-| 24 | 17 |           |
-| 25 | 17 |           |
-| 26 | 17 |           |
+| 24 | 17 | grass     |
+| 25 | 17 | grass     |
+| 26 | 17 | grass     |
 | 27 | 17 |           |
 | 28 | 17 |           |
 | 29 | 17 |           |
@@ -915,9 +914,9 @@ B-Maze is the second Map for Dungeon-Mode and the first original map designed in
 | 12 | 18 |           |
 | 13 | 18 | tree      |
 | 14 | 18 |           |
-| 15 | 18 |           |
-| 16 | 18 |           |
-| 17 | 18 |           |
+| 15 | 18 | grass     |
+| 16 | 18 | grass     |
+| 17 | 18 | grass     |
 | 18 | 18 |           |
 | 19 | 18 |           |
 | 20 | 18 |           |
