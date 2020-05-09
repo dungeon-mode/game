@@ -1075,7 +1075,7 @@ B-Maze is the second Map for Dungeon-Mode and the first original map designed in
 | 26 | 21 | cEW                                           |
 | 27 | 21 | cEW                                           |
 | 28 | 21 | cEW                                           |
-| 29 | 21 | c4                                            |
+| 29 | 21 | &c4                                           |
 | 30 | 21 | cSW                                           |
 | 31 | 21 | cNE                                           |
 | 32 | 21 | cEW◦S                                         |
