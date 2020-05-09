@@ -1,9 +1,9 @@
 #+TITLE: Critters Baddies for chambers
 #+PROPERTIES:
- :Version: 0.01
+ :Version: 0.02
  :Author: Jon Lincicum
  :Created: 2020/05/04
- :Modified: 2020/05/07
+ :Modified: 2020/05/09
  :END:
 
 This file is a part of dungeon-mode.  It is not a part of GNU Emacs.
