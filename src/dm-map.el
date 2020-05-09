@@ -167,6 +167,9 @@ See also: `dm-map-draw-other-props'")
 (defvar dm-map-draw-other-props '(stairs water beach neutronium decorations)
   "List of additional columns that may contain SVG path fragments.")
 
+(defvar dm-map-draw-uni-prop 'universal
+  "Name of the column that adds commands to all paths.")
+
 (defvar dm-map-underlay-prop 'underlay
   "Default column/property for SVG elements underlaying maps.")
 
@@ -220,6 +223,7 @@ Tags (e.g. \":elf\") allow conditional inclusion of draw code.")
 			       ,dm-map-tag-prop nil
 			       ,dm-map-overlay-prop nil
 			       ,dm-map-underlay-prop nil
+			       ,dm-map-draw-uni-prop nil
 			       ,@(mapcan (lambda (x) (list x nil))
 					 dm-map-draw-other-props))
   "Default attributes for cells or tiles as they are loaded.")
@@ -441,27 +445,37 @@ Only consider attributes listed in `dm-map--scale-props'"
     ;;(message "[xml-to-num] after ⇒ %s" (prin1-to-string dom-node))
     dom-node))
 
+(defvar dm-map--inhibit-clearing-xml-strings nil
+  "When t, do not remove XML strings once processed.
+
+This may result in duplicated tags when tiles are \"striped\"
+e.g, are defined more than once, but allows the unparsed XML to
+be viewed within `dm-map-tiles'.")
+
 (defun dm-map--xml-parse (prop)
   "Add parsed XML for PROP to PLIST."
   (let ((tmp (cdr-safe (assoc prop dm-map-prop-tmp-alist))))
     ;;(message "checking for XML in %s for %s" tmp prop)
     (when (and tmp dm-map--last-plist (plist-get dm-map--last-plist tmp))
       ;;(message "found XML strings %s" (plist-get dm-map--last-plist tmp))
-      (let ((xml-parts (dm-map--xml-attr-to-number
-			(with-temp-buffer
-			  (insert "<g>"
-				  (mapconcat
-				   'identity
-				   (plist-get dm-map--last-plist tmp)
-				   " ")
-				  "</g>")
-			  (libxml-parse-xml-region (point-min)
-						   (point-max))))))
-	;;(message "XML string:%s plist:" xml-parts dm-map--last-plist)
+      (when-let* ((xml-parts (dm-map--xml-attr-to-number
+			      (with-temp-buffer
+				(insert "<g>"
+					(mapconcat
+					 'identity
+					 (plist-get dm-map--last-plist tmp)
+					 " ")
+					"</g>")
+				(libxml-parse-xml-region (point-min)
+							 (point-max)))))
+		  (xml-parts (dom-children xml-parts)))
+	;; (message "[xml-parse] tmp:%s raw:%s parsed:%s"
+	;; 	 tmp (plist-get dm-map--last-plist tmp) xml-parts)
 	(prog1 (plist-put dm-map--last-plist prop
 			  (append (plist-get dm-map--last-plist prop)
-				  (list xml-parts)))
-	  (plist-put dm-map--xml-strings tmp nil))))))
+				  xml-parts))
+	  (unless dm-map--inhibit-clearing-xml-strings
+	    (plist-put dm-map--last-plist tmp nil)))))))
 
 (defun dm-map-level-transform (table)
   "Transform a TABLE of strings into an hash-map."
@@ -540,7 +554,7 @@ Only consider attributes listed in `dm-map--scale-props'"
 						  (dm-map-parse-plan-part (symbol-value `,prop))))
 			   ;;(dm-map--when-tiles-message "pre-parser" (list "cW◦NES" "c4" "foo") last-key tile)
 			   )))
-		     (delq nil'(,dm-map-draw-prop ,@dm-map-draw-other-props)))
+		     (delq nil'(,dm-map-draw-prop ,dm-map-draw-uni-prop ,@dm-map-draw-other-props)))
 	       (mapc (lambda (prop)
 		       (when (boundp `,prop)
 			 (let ((tmp (cdr (assoc prop dm-map-prop-tmp-alist))))
@@ -721,31 +735,41 @@ between 0 and 1 inclusive."
 (cl-defun dm-map-resolve (tile &optional &key
 			       (prop dm-map-draw-prop)
 			       inhibit-collection
-			       inhibit-tags)
+			       inhibit-tags
+			       inhibit-universal)
   "Get draw code for TILE.
 
 PROP is a symbol naming the proppery containing draw code.  When
 INHIBIT-COLLECTION is truthy, don't collect tiles resolved into
 'dm-map-resolve'.  When INHIBIT-TAGS is truthy do not add
-addional tiles based on tags."
+addional tiles based on tags.  Then INHIBIT-UNIVERSAL is truthy
+do not add additional commands to path props from the universial
+path command set."
   (when-let ((plist (gethash tile dm-map-tiles)))
     (unless (or inhibit-tags (member tile dm-map-current-tiles))
       (push tile dm-map-current-tiles))
-    (when-let (paths
-	       (delq
-		nil
-		(append (plist-get plist prop)
-			(unless inhibit-tags
-			  (dm-map-tile-tag-maybe-invert tile)))))
-      (mapcan (lambda (stroke)
-		(let ((stroke stroke))
-		  (if (symbolp stroke)
-		      (dm-map-resolve
-		       stroke
-		       :inhibit-collection inhibit-collection
-		       :inhibit-tags inhibit-tags)
-		    ;;(list stroke)
-		    (list (if (listp stroke) (copy-tree stroke) stroke))))) paths))))
+    (let ((svgp (member prop (list dm-map-overlay-prop
+				   dm-map-underlay-prop))))
+      (when-let (paths
+		 (delq
+		  nil
+		  (append (when (and dm-map-draw-uni-prop
+				     (not inhibit-universal)
+				     (not svgp))
+			    (plist-get plist dm-map-draw-uni-prop))
+			  (plist-get plist prop)
+			  (unless inhibit-tags
+			    (dm-map-tile-tag-maybe-invert tile)))))
+	(mapcan (lambda (stroke)
+		  (let ((stroke stroke))
+		    (if (symbolp stroke)
+			(dm-map-resolve
+			 stroke :prop prop
+			 :inhibit-collection inhibit-collection
+			 :inhibit-tags inhibit-tags)
+		      ;;(list stroke)
+		      (list (if (listp stroke) (copy-tree stroke) stroke)))))
+		paths)))))
 ;;(not (equal (dm-map-resolve '◦N) (let ((dm-map-tags nil)) (dm-map-resolve '◦N))))
 
 
@@ -767,14 +791,15 @@ INHIBIT-TAGS is truthy do not add addional tiles based on tags."
 	      (let ((stroke stroke))
 		(pcase stroke
 		  ;; ignore references when drawing a complete level
-		  (`(,(and x (guard (numberp x))). ,(and y (guard (numberp y))))
+		  (`(,(and x (guard (numberp x))) . ,(and y (guard (numberp y))))
 		   (unless no-follow
 		     (dm-map-resolve-cell
 		      stroke :prop prop
 		      :inhibit-collection inhibit-collection
 		      :inhibit-tags inhibit-tags)))
 		  ((pred stringp)
-		   (warn "XML found in paths from %s ignoring %s" cell stroke))
+		   (warn "XML found in paths from %s ignoring %s"
+			 cell stroke))
 		  ((pred symbolp)
 		   (dm-map-resolve
 		    stroke :prop prop
