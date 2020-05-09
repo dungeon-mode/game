@@ -30,18 +30,22 @@ See Design.org for details about the formatting of these tables.
 
 These features are intended to be used mostly as parts of compositions and rarely will be the right thing alone.
 
+# #+NAME: movement-map-tiles
+| Tile | Universal | Documentation                 |
+|------+-----------+-------------------------------|
+| →    | m1,0      | Move 1 DU Right               |
+| ←    | m-1,0     | Move 1 DU Left                |
+| ↑    | m0,-1     | Move 1 DU Up                  |
+| ↓    | m0,1      | Move 1 DU Down                |
+| ↖    | m-1,-1    | Move 1 DU Up and 1 DU Left    |
+| ↗    | m1,-1     | Move 1 DU Up and 1 DU Right   |
+| ↙    | m-1,1     | Move 1 DU Down and 1 DU Left  |
+| ↘    | m1,1      | Move 1 DU Down and 1 DU right |
+|      |           |                               |
+
 # #+NAME: private-map-tiles
 | Tile                    | Path                                                                        | Documentation                         |
 |-------------------------+-----------------------------------------------------------------------------+---------------------------------------|
-| →                       | m1,0                                                                        | Move 1 DU Right                       |
-| ←                       | m-1,0                                                                       | Move 1 DU Left                        |
-| ↑                       | m0,-1                                                                       | Move 1 DU Up                          |
-| ↓                       | m0,1                                                                        | Move 1 DU Down                        |
-| ↖                       | m-1,-1                                                                      | Move 1 DU Up and 1 DU Left            |
-| ↗                       | m1,-1                                                                       | Move 1 DU Up and 1 DU Right           |
-| ↙                       | m-1,1                                                                       | Move 1 DU Down and 1 DU Left          |
-| ↘                       | m1,1                                                                        | Move 1 DU Down and 1 DU right         |
-|                         |                                                                             |                                       |
 | .NE                     | m.98,0 h.02 v.02 m-1,-.02                                                   | Corner Dot - North/East corner        |
 | .ES                     | m1,.98 v.02 h-.02 m-.98,-1                                                  | Corner Dot - East/South corner        |
 | .SW                     | m.02,1 h-.02 v-.02 m-.98,0                                                  | Corner Dot - South/West corner        |
@@ -133,36 +137,37 @@ These features are intended to be used mostly as parts of compositions and rarel
   :END:
 
 #+NAME: Surface-Tiles
-| Tile  | Path | Overlay                                                                                         |
-|-------+------+-------------------------------------------------------------------------------------------------|
-| tree  |      | <path fill="green" stroke="#0ba600" stroke-width=".2%" d="m.5,.5                                |
-|       |      | c-1.5,1,1.5,1,0,0 c1.5,-1,-1.5,-1,0,0 c1,-1.5,1,1.5,0,0 c-1,1.5,-1,-1.5,0,0"/>                  |
-|       |      | <circle fill="green" stroke="#0ba600" stroke-width=".1%" cx=".5" cy=".5" r=".5" />              |
-|       |      |                                                                                                 |
-| grass |      | <path stroke="green" d="m.05,.4 l.1,-.4 m0,.4 l.2,-.5 m0,.5 l.1,-.3 m0,.3 l0,-.4                |
-|       |      | 			  m.1,.4 l-.1,-.5 m.2,.5 l0,-.3 m.1,.3 l.2,-.4 m0,.4 l.05,-.5 m-.95,.8  |
-|       |      | 			  l-.1,-.4 m.2,.4 l.15,-.4 m0,.4 l.15,-.3 m0,.3 l-.1,-.4                |
-|       |      | 			  m.2,.4 l.1,-.5 m.1,.5 l-.1,-.3 m.1,.3 l.2,-.4 m0,.4 l.05,-.5 m-.95,.8 |
-|       |      | 			  l.1,-.4 m0,.4 l.2,-.5 m0,.5 l.1,-.3 m0,.3 l0,-.4                      |
-|       |      | 			  m.1,.4 l-.1,-.5 m.2,.5 l0,-.3 m.1,.3 l.2,-.4 m0,.4 l-.05,-.5" />      |
-|       |      |                                                                                                 |
-| hills |      | <path stroke="#6e4f07" fill="#b38a2d" d="m.1,.8 c-.2,-1,1,-1,1.2,0                              |
-|       |      | m-.5,.5 c-.2,-1,1.4,-1,1.2,0 m-1.8,.5 c-.2,-1,1.4,-1,1.2,0" />                                  |
-|       |      |                                                                                                 |
-| pNE   |      | <path stroke="#bab9b8" fill="none" stroke-width=".3%" d="m.5,0 a.5,.5,0,0,0,.5,.5" />           |
-| pNS   |      | <path stroke="#bab9b8" stroke-width=".3%" d="m.5,0 v1" />                                       |
-| pNW   |      | <path stroke="#bab9b8" fill="none" stroke-width=".3%" d="m0,.5 a.5,.5,0,0,0,.5,-.5" />          |
-| pES   |      | <path stroke="#bab9b8" fill="none" stroke-width=".3%" d="m1,.5 a.5,.5,0,0,0,-.5,.5" />          |
-| pEW   |      | <path stroke="#bab9b8" stroke-width=".3%" d="m0,.5 h1" />                                       |
-| pSW   |      | <path stroke="#bab9b8" fill="none" stroke-width=".3%" d="m0,.5 a.5,.5,0,0,1,.5,.5" />           |
-|       |      |                                                                                                 |
-| pNES  |      | <path stroke="#bab9b8" stroke-width=".3%" d="m.5,0 v1 m0,-.5 h.5" />                            |
-| pNEW  |      | <path stroke="#bab9b8" stroke-width=".3%" d="m0,.5 h1 m-.5,0 v-.5" />                           |
-| pESW  |      | <path stroke="#bab9b8" stroke-width=".3%" d="m0,.5 h1 m-.5,0 v.5" />                            |
-| pNSW  |      | <path stroke="#bab9b8" stroke-width=".3%" d="m.5,0 v1 m0,-.5 h-.5" />                           |
-|       |      |                                                                                                 |
+| Tile  | Path                          | Overlay                                                                                |
+|-------+-------------------------------+----------------------------------------------------------------------------------------|
+| tree  |                               | <path fill="green" stroke="#0ba600" stroke-width=".2%" d="m.5,.5                       |
+|       |                               | c-1.5,1,1.5,1,0,0 c1.5,-1,-1.5,-1,0,0 c1,-1.5,1,1.5,0,0 c-1,1.5,-1,-1.5,0,0"/>         |
+|       |                               | <circle fill="green" stroke="#0ba600" stroke-width=".1%" cx=".5" cy=".5" r=".5" />     |
+|       |                               |                                                                                        |
+| hills | grass → grass ↓ grass ← grass | <path stroke="#6e4f07" fill="#b38a2d" d="m.1,.8 c-.2,-1,1,-1,1.2,0                     |
+|       |                               | m-.5,.5 c-.2,-1,1.4,-1,1.2,0 m-1.8,.5 c-.2,-1,1.4,-1,1.2,0" />                         |
+|       |                               |                                                                                        |
+| pNE   |                               | <path stroke="#bab9b8" fill="none" stroke-width=".3%" d="m.5,0 a.5,.5,0,0,0,.5,.5" />  |
+| pNS   |                               | <path stroke="#bab9b8" stroke-width=".3%" d="m.5,0 v1" />                              |
+| pNW   |                               | <path stroke="#bab9b8" fill="none" stroke-width=".3%" d="m0,.5 a.5,.5,0,0,0,.5,-.5" /> |
+| pES   |                               | <path stroke="#bab9b8" fill="none" stroke-width=".3%" d="m1,.5 a.5,.5,0,0,0,-.5,.5" /> |
+| pEW   |                               | <path stroke="#bab9b8" stroke-width=".3%" d="m0,.5 h1" />                              |
+| pSW   |                               | <path stroke="#bab9b8" fill="none" stroke-width=".3%" d="m0,.5 a.5,.5,0,0,1,.5,.5" />  |
+|       |                               |                                                                                        |
+| pNES  |                               | <path stroke="#bab9b8" stroke-width=".3%" d="m.5,0 v1 m0,-.5 h.5" />                   |
+| pNEW  |                               | <path stroke="#bab9b8" stroke-width=".3%" d="m0,.5 h1 m-.5,0 v-.5" />                  |
+| pESW  |                               | <path stroke="#bab9b8" stroke-width=".3%" d="m0,.5 h1 m-.5,0 v.5" />                   |
+| pNSW  |                               | <path stroke="#bab9b8" stroke-width=".3%" d="m.5,0 v1 m0,-.5 h-.5" />                  |
+|       |                               |                                                                                        |
 
-
+| Tile  | Underlay                                                                                        |
+|-------+-------------------------------------------------------------------------------------------------|
+| grass | <path stroke="green" d="m.05,.4 l.1,-.4 m0,.4 l.2,-.5 m0,.5 l.1,-.3 m0,.3 l0,-.4                |
+|       | 			  m.1,.4 l-.1,-.5 m.2,.5 l0,-.3 m.1,.3 l.2,-.4 m0,.4 l.05,-.5 m-.95,.8  |
+|       | 			  l-.1,-.4 m.2,.4 l.15,-.4 m0,.4 l.15,-.3 m0,.3 l-.1,-.4                |
+|       | 			  m.2,.4 l.1,-.5 m.1,.5 l-.1,-.3 m.1,.3 l.2,-.4 m0,.4 l.05,-.5 m-.95,.8 |
+|       | 			  l.1,-.4 m0,.4 l.2,-.5 m0,.5 l.1,-.3 m0,.3 l0,-.4                      |
+|       | 			  m.1,.4 l-.1,-.5 m.2,.5 l0,-.3 m.1,.3 l.2,-.4 m0,.4 l-.05,-.5" />      |
+|       |                                                                                                 |
 
 
 ** Water Tiles Tables
@@ -343,23 +348,23 @@ These features are intended to be used mostly as parts of compositions and rarel
    :END:
 
 #+NAME: area-features
-| Tile | Overlay                                                                   | Documentation                       | Behavior |
-|------+---------------------------------------------------------------------------+-------------------------------------+----------|
-| A2   | <text x=".80" y="1.15" font-size=".5" stroke="red" fill="red">A</text>    | Mark 20x20 area with a text tag     |          |
-|      |                                                                           |                                     |          |
-| A3   | <text x="1.3" y="1.65" font-size=".5" stroke="red" fill="red">A</text>    | Mark 30x30 area with a text tag     |          |
-|      |                                                                           |                                     |          |
-| F2   | <text x=".80" y="1.15" font-size=".5" stroke="red" fill="red">F</text>    | Mark 20x20 Fountain with a text tag |          |
-|      |                                                                           |                                     |          |
-| F3   | <text x="1.3" y="1.65" font-size=".5" stroke="red" fill="red">F</text>    | Mark 30x30 Fountain with a text tag |          |
-|      |                                                                           |                                     |          |
-| C2   | <text x="1.85" y="1.65" font-size=".5" stroke="blue" fill="blue">C</text> | Mark 30x40 Compulsion with C        |          |
-|      | <text x=".4" y=".25" font-size=".35" stroke="blue" fill="blue">1</text>   |                                     |          |
-|      | <text x="3.8" y="1.6" font-size=".35" stroke="blue" fill="blue">2</text>  |                                     |          |
-|      | <text x="2.45" y="2.9" font-size=".35" stroke="blue" fill="blue">3</text> |                                     |          |
-|      | <text x="1.35" y="2.9" font-size=".35" stroke="blue" fill="blue">4</text> |                                     |          |
-|      | <text x=".05" y="2.6" font-size=".35" stroke="blue" fill="blue">5</text>  |                                     |          |
-|      | <text x=".05" y=".6" font-size=".35" stroke="blue" fill="blue">6</text>   |                                     |          |
+| Tile | Overlay                                                                   |
+|------+---------------------------------------------------------------------------|
+| A2   | <text x=".80" y="1.15" font-size=".5" stroke="red" fill="red">A</text>    |
+|      |                                                                           |
+| A3   | <text x="1.3" y="1.65" font-size=".5" stroke="red" fill="red">A</text>    |
+|      |                                                                           |
+| F2   | <text x=".80" y="1.15" font-size=".5" stroke="red" fill="red">F</text>    |
+|      |                                                                           |
+| F3   | <text x="1.3" y="1.65" font-size=".5" stroke="red" fill="red">F</text>    |
+|      |                                                                           |
+| C2   | <text x="1.85" y="1.65" font-size=".5" stroke="blue" fill="blue">C</text> |
+|      | <text x=".4" y=".25" font-size=".35" stroke="blue" fill="blue">1</text>   |
+|      | <text x="3.8" y="1.6" font-size=".35" stroke="blue" fill="blue">2</text>  |
+|      | <text x="2.45" y="2.9" font-size=".35" stroke="blue" fill="blue">3</text> |
+|      | <text x="1.35" y="2.9" font-size=".35" stroke="blue" fill="blue">4</text> |
+|      | <text x=".05" y="2.6" font-size=".35" stroke="blue" fill="blue">5</text>  |
+|      | <text x=".05" y=".6" font-size=".35" stroke="blue" fill="blue">6</text>   |
 
 
 ** Chamber Tiles Table
