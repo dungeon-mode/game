@@ -167,8 +167,18 @@ See also: `dm-map-draw-other-props'")
 (defvar dm-map-draw-other-props '(stairs water beach neutronium decorations)
   "List of additional columns that may contain SVG path fragments.")
 
+(defvar dm-map-underlay-prop 'underlay
+  "Default column/property for SVG elements underlaying maps.")
+
 (defvar dm-map-overlay-prop 'overlay
   "Default column/property for SVG elements overlaying maps.")
+
+(defvar dm-map-prop-tmp-alist
+  `(,@(mapcar (lambda (prop)
+		(cons prop (intern (concat (symbol-name prop)
+					   "-xml-strings"))))
+	      (list dm-map-overlay-prop dm-map-underlay-prop)))
+  "Mapping properties to temporary storage when reading XML.")
 
 (defvar dm-map-tag-prop 'tag
   "Default attributes for cell tags as they are loaded.
@@ -209,12 +219,13 @@ Tags (e.g. \":elf\") allow conditional inclusion of draw code.")
 (defvar dm-map-cell-defaults `(,dm-map-draw-prop nil
 			       ,dm-map-tag-prop nil
 			       ,dm-map-overlay-prop nil
+			       ,dm-map-underlay-prop nil
 			       ,@(mapcan (lambda (x) (list x nil))
 					 dm-map-draw-other-props))
   "Default attributes for cells or tiles as they are loaded.")
 
-(defvar dm-map-extra-tiles '('Background 'Graphpaper)
-  "Extra tiles to include when rendering a level.")
+;; (defvar dm-map-extra-tiles '('Background 'Graphpaper)
+;;   "Extra tiles to include when rendering a level.")
 
 (defvar dm-map-tags '()
   "List of keyword symbols to include from tile paths.")
@@ -241,15 +252,16 @@ Scale association may be 0 to use x scaling factor, or 2 for y.")
 (defvar dm-map--last-plist nil
   "While transforming tile tables, the last plist created.")
 
-(defvar dm-map--xml-strings nil
+(defvar dm-map--xml-strings (list dm-map-underlay-prop nil
+				  dm-map-overlay-prop nil)
   "While transforming tile tables, unparsed XML strings.")
-
 
 (defmacro dm-map-cell-defaults ()
   "Return an empty map cell plist."
   `(list ',dm-map-draw-prop nil
 	 ',dm-map-tag-prop nil
 	 ',dm-map-overlay-prop nil
+	 ',dm-map-underlay-prop nil
 	 ,@(mapcan (lambda (x) (list `(quote ,x) nil))
 		   dm-map-draw-other-props)))
 
@@ -429,25 +441,27 @@ Only consider attributes listed in `dm-map--scale-props'"
     ;;(message "[xml-to-num] after ⇒ %s" (prin1-to-string dom-node))
     dom-node))
 
-(defun dm-map--xml-parse ()
-  "Add parsed XML to PLIST and clear `dm-map--xml-strings."
-  (when (and dm-map--last-plist dm-map--xml-strings)
-    (let ((xml-parts (dm-map--xml-attr-to-number
-		      (with-temp-buffer
-			(insert "<g>"
-				(mapconcat
-				 'identity
-				 (reverse dm-map--xml-strings)
-				 " ")
-				"</g>")
-			(libxml-parse-xml-region (point-min)
-						 (point-max))))))
-      ;;(message "XML string:%s plist:" xml-parts dm-map--last-plist)
-      (prog1 (plist-put dm-map--last-plist dm-map-overlay-prop
-			(append (plist-get dm-map--last-plist
-					   dm-map-overlay-prop)
-				(list xml-parts)))
-	(setq dm-map--xml-strings nil)))))
+(defun dm-map--xml-parse (prop)
+  "Add parsed XML for PROP to PLIST."
+  (let ((tmp (cdr-safe (assoc prop dm-map-prop-tmp-alist))))
+    ;;(message "checking for XML in %s for %s" tmp prop)
+    (when (and tmp dm-map--last-plist (plist-get dm-map--last-plist tmp))
+      ;;(message "found XML strings %s" (plist-get dm-map--last-plist tmp))
+      (let ((xml-parts (dm-map--xml-attr-to-number
+			(with-temp-buffer
+			  (insert "<g>"
+				  (mapconcat
+				   'identity
+				   (plist-get dm-map--last-plist tmp)
+				   " ")
+				  "</g>")
+			  (libxml-parse-xml-region (point-min)
+						   (point-max))))))
+	;;(message "XML string:%s plist:" xml-parts dm-map--last-plist)
+	(prog1 (plist-put dm-map--last-plist prop
+			  (append (plist-get dm-map--last-plist prop)
+				  (list xml-parts)))
+	  (plist-put dm-map--xml-strings tmp nil))))))
 
 (defun dm-map-level-transform (table)
   "Transform a TABLE of strings into an hash-map."
@@ -464,14 +478,18 @@ Only consider attributes listed in `dm-map--scale-props'"
 	       (list 'path (dm-map-parse-plan-part path)))))
 	 (result (eval `(list :load ,cform))))))
 
-;; (defmacro dm-map--when-tiles-message (message strings last-key tile)
-;;   "Display MESSAGE when LAST-KEY or TILE match one of STRINGS."
+;; (defmacro dm-map--when-tiles-message (message strings last-key tile &rest data)
+;;   "Display MESSAGE when LAST-KEY or TILE match one of STRINGS.
+
+;; Data is appended via `prin1-to-string'."
 ;;   `(let ((search-tiles ,strings))
 ;;      (when (or (and (boundp ',tile) (member ,tile search-tiles))
 ;; 	       (member ,last-key (mapcar 'intern search-tiles)))
-;;        (message "%s tile:%s last-key:%s plist:%s"
+;;        (message "%s tile:%s last-key:%s plist:%s%s"
 ;; 		,message (and (boundp ',tile) ,tile)
-;; 		,last-key dm-map--last-plist))))
+;; 		,last-key dm-map--last-plist
+;; 		,(if (null data) `""
+;; 		   `(prin1-to-string ,data t))))))
 
 ;; ZZZ consider functions returning lambda per column; lvalue for d-c-h cols?
 
@@ -491,7 +509,8 @@ Only consider attributes listed in `dm-map--scale-props'"
 	       (when (and (boundp 'tile) (org-string-nw-p tile))
 		 ;; This row includes a new tile-name; process any saved up
 		 ;; XML strings before we overwrite last-key
-		 (dm-map--xml-parse);; TODO: add last-key tile; use when-tiles-msg
+		 (dolist (prop (list dm-map-overlay-prop dm-map-underlay-prop))
+		   (dm-map--xml-parse prop));; TODO: add last-key tile; use when-tiles-msg
 		 (setq last-key (intern tile)
 		       dm-map--last-plist (dm-map-table-cell tile :table hash))
 		 ;;(dm-map--when-tiles-message "new tile" (list "cW◦NES" "c4" "foo") last-key tile)
@@ -522,15 +541,21 @@ Only consider attributes listed in `dm-map--scale-props'"
 			   ;;(dm-map--when-tiles-message "pre-parser" (list "cW◦NES" "c4" "foo") last-key tile)
 			   )))
 		     (delq nil'(,dm-map-draw-prop ,@dm-map-draw-other-props)))
-	       ;;(dm-map--when-tiles-message "parsed" (list "cW◦NES" "c4" "foo") last-key tile)
-	       (when (and (boundp (quote ,dm-map-overlay-prop)) ,dm-map-overlay-prop)
-		 (push ,dm-map-overlay-prop dm-map--xml-strings))
-	       ;;(dm-map--when-tiles-message "end row" (list "cW◦NES" "c4" "foo") last-key tile)
+	       (mapc (lambda (prop)
+		       (when (boundp `,prop)
+			 (let ((tmp (cdr (assoc prop dm-map-prop-tmp-alist))))
+			   (prog1 (plist-put dm-map--last-plist tmp
+					     (append (plist-get dm-map--last-plist tmp)
+						     (list (symbol-value `,prop))))))))
+		     (delq nil '(,dm-map-overlay-prop ,dm-map-underlay-prop)))
+	       ;;(dm-map--when-tiles-message "before overlays" (list "tree") last-key tile)
+	       ;;(dm-map--when-tiles-message "end row" (list "tree") last-key tile)
 	       dm-map--last-plist)))
 	 (result
 	  (prog1 (eval `(list :load ,cform))
 	    ;; process any overlay XML from last row
-	    (dm-map--xml-parse))))))
+	    (dolist (prop (list dm-map-overlay-prop dm-map-underlay-prop))
+	      (dm-map--xml-parse prop)))))))
 
 (dm-table-defstates 'map :extract #'dm-map-load)
 (dm-table-defstates 'tile :transform #'dm-map-tiles-transform)
@@ -786,14 +811,8 @@ instructions."
 	)
     (when-let ((val (dm-map-resolve-cell cell :no-follow (null follow))))
       (plist-put plist dm-map-draw-prop val))
-    (when-let ((val (seq-map
-		     (lambda (tile)
-		       (dm-map-resolve tile :prop dm-map-overlay-prop
-				       :inhibit-tags t
-				       :inhibit-collection t))
-		     dm-map-current-tiles)))
-      (plist-put plist dm-map-overlay-prop (delq nil val)))
-    (dolist (prop dm-map-draw-other-props)
+    (dolist (prop (append dm-map-draw-other-props (list dm-map-underlay-prop
+							dm-map-overlay-prop)))
       (when-let ((val (seq-map
 		       (lambda (tile)
 			 (dm-map-resolve tile :prop prop
@@ -943,6 +962,18 @@ SCALE-FUNCTION may be used to supply custom scaling."
 			       'append
 			       (plist-get cell dm-map-overlay-prop))))
 		    draw-code))
+	 ;; hack in a second SVG XML prop, continue to scale inline
+	 (underlays (mapcan
+		     (lambda (cell)
+		       (mapcar (apply-partially 'dm-map--dom-attr-nudge
+						scale-function
+						nudge
+						(list scale scale)
+						(plist-get cell :cell))
+			       (apply
+				'append
+				(plist-get cell dm-map-underlay-prop))))
+		     draw-code))
 	 ;; fetch or build background if not disabled
 	 (canvas-size (cons (+ (* (car nudge) scale 2) (car size) dm-map-scale)
 			    (+ (* (cdr nudge) scale 2) (cdr size) dm-map-scale)))
@@ -957,7 +988,7 @@ SCALE-FUNCTION may be used to supply custom scaling."
 					  (append (list (car canvas-size)
 							(cdr canvas-size))
 						  svg-attributes))
-				   (append background paths overlays))
+				   (append background underlays paths overlays))
 		      :path-data (dm-svg-create-path
 				  main-path (plist-get path-attributes
 						       dm-map-draw-prop)))))
