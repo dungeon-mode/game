@@ -1,0 +1,63 @@
+#+TITLE: Fantasy Baddies for chambers
+#+PROPERTIES:
+ :Version: 0.01
+ :Author: Jon Lincicum
+ :Created: 2020/05/09
+ :Modified: 2020/05/09
+ :END:
+
+This file is a part of dungeon-mode.  It is not a part of GNU Emacs.
+This softare is released under the GNU Public Licence version three
+or, at your disgression, any newer version of the GNU Public
+License.  For specific terms please see [[LICENSE]] at end-of-file.
+
+* Fantasy Creatures Table
+
++ This table contains all the members of the critters family
+
+| Tbl | Name         | Idx | attack                | special                                                | sp | sw | ax | ma | hits | worth | Notes |
+|-----+--------------+-----+-----------------------+--------------------------------------------------------+----+----+----+----+------+-------+-------|
+|   / | >            |  <> | <                     | >                                                      |  < |    |    |  > |    < |     > | <>    |
+|     |              |     |                       |                                                        |    |    |    |    |      |       |       |
+|   0 | Pixies       |  42 | 1 for 10 for 1        |                                                        |  6 |  7 |  6 |  9 |    1 |     1 |       |
+|   0 | Imps         |  38 | 1 for 9 for 1         |                                                        |  6 |  6 |  8 |  8 |    1 |     1 |       |
+|   0 | Sprites      |  45 | 1 for 9 for 1         |                                                        |  7 |  5 |  7 |  8 |    1 |     1 |       |
+|   0 | Kobolds      |  27 | 1 for 8 for 1         |                                                        |  7 |  6 |  5 |  9 |    1 |     1 |       |
+|   0 | Gnomes       |  23 | 1 for 8 for 1         |                                                        |  8 |  7 |  6 |  8 |    2 |     2 |       |
+|   0 | Teckla       |  45 | 1 for 7 for 1         |                                                        |  6 |  8 |  6 |  9 |    2 |     2 |       |
+|   0 | Gremlins     |  37 | 1 for 9 for 2         |                                                        |  6 |  6 |  8 |  7 |    2 |     2 |       |
+|   0 | Orcs         |  27 | 1 for 8 for 2         |                                                        |  7 |  8 |  8 |  9 |    3 |     3 |       |
+|   0 | Issola       |   9 | 1 for 7 for 2         | Flying - Strikes without warning 1d6 added damage      |  6 |  8 |  7 |  9 |    3 |     3 |       |
+|   0 | Lyorn        |  17 | 1 for 8 for 2         | Horn attack! 1d additional damage to target            |  8 |  7 |  7 |  9 |    3 |     3 |       |
+|   0 | Floating Eye |   5 | 1 for 8 for Special   | Flying - Hypnotize: target player frozen until healed  |  5 |  8 |  5 | 10 |    2 |     2 |       |
+|   0 | Jhereg       |  15 | 1 for 8 for 1         | Flying - Poison, target takes 1d damage over 3 turns   |  7 |  7 |  6 |  9 |    3 |     3 |       |
+|     |              |     | 1 for dbl for special |                                                        |    |    |    |    |      |       |       |
+|   0 | Harpies      |  27 | 1 for 9 for 2         | Flying                                                 |  8 |  7 |  5 | 10 |    3 |     3 |       |
+|   0 | Goblins      |  34 | 1 for 8 for 2         |                                                        |  7 |  8 |  8 |  9 |    4 |     4 |       |
+|   0 | Phoenix      |  17 | 1 for 8 for 2         | Flying - Immolate: sets self ablaze and respawns with  |    |    |    |    |      |       |       |
+|     |              |     | 1 for Bx for special  | 1d added health                                        |  7 |  7 |  6 | 12 |    4 |     4 |       |
+|   0 | Bilgesnipe   |  45 | 1 for 8 for 3         | Rampage: 2d extra damage spread equally to whole party |  6 |  7 |  6 | 10 |    5 |     5 |       |
+|   0 | Uruk'ai      |  34 | 1 for 7 for 2         |                                                        |  8 |  7 |  8 |  9 |    5 |     5 |       |
+|   0 | Dzur         |  24 | 1 for 8 for 3         | Gets +1 damage bonus when outnumbered                  |  8 |  8 |  9 | 10 |    7 |     7 |       |
+|   0 | Ogre         |   9 | 1 for 7 for 3         |                                                        |  7 |  9 |  8 | 10 |    6 |     6 |       |
+|   0 | Basilisk     |  12 | 1 for 9 for 2         | Petrify - Freezes target for 1d turns                  |  8 |  6 |  6 |  9 |    8 |     8 |       |
+|   0 | Manticore    |  23 | 1 for 8 for 5         | Poison Spines - Hits for 2d damage over 3 turns        |  7 |  8 |  9 | 10 |   12 |    12 |       |
+|     |              |     | 1 for dbl for special |                                                        |    |    |    |    |      |       |       |
+|   0 | Troll        |   7 | 1 for 7 for 4         |                                                        |  6 |  9 |  9 |  9 |   24 |    24 |       |
+|   0 | Cyclops      |  23 | 1 for 8 for 5         | A Problem with depth perception: Misses on all dbls    |  7 |  8 | 10 | 11 |   27 |    27 |       |
+|   0 | Giant        |  15 | 1 for 9 for 6         |                                                        |  8 |  9 |  8 | 10 |   30 |    30 |       |
+|   0 | Red Dragon   |   6 | 1 for 8 for 7         | Flying - Fire: DoD damage to party                     |  8 | 10 |  9 | 10 |   45 |    45 |       |
+* LICENSE
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
