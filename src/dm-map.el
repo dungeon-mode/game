@@ -492,18 +492,18 @@ be viewed within `dm-map-tiles'.")
 	       (list 'path (dm-map-parse-plan-part path)))))
 	 (result (eval `(list :load ,cform))))))
 
-;; (defmacro dm-map--when-tiles-message (message strings last-key tile &rest data)
-;;   "Display MESSAGE when LAST-KEY or TILE match one of STRINGS.
+(defmacro dm-map--when-tiles-message (message strings last-key tile &rest data)
+  "Display MESSAGE when LAST-KEY or TILE match one of STRINGS.
 
-;; Data is appended via `prin1-to-string'."
-;;   `(let ((search-tiles ,strings))
-;;      (when (or (and (boundp ',tile) (member ,tile search-tiles))
-;; 	       (member ,last-key (mapcar 'intern search-tiles)))
-;;        (message "%s tile:%s last-key:%s plist:%s%s"
-;; 		,message (and (boundp ',tile) ,tile)
-;; 		,last-key dm-map--last-plist
-;; 		,(if (null data) `""
-;; 		   `(prin1-to-string ,data t))))))
+Data is appended via `prin1-to-string'."
+  `(let ((search-tiles ,strings))
+     (when (or (and (boundp ',tile) (member ,tile search-tiles))
+	       (member ,last-key (mapcar 'intern search-tiles)))
+       (message "%s tile:%s last-key:%s plist:%s%s"
+		,message (and (boundp ',tile) ,tile)
+		,last-key dm-map--last-plist
+		,(if (null data) `""
+		   `(prin1-to-string ,data t))))))
 
 ;; ZZZ consider functions returning lambda per column; lvalue for d-c-h cols?
 
@@ -563,7 +563,7 @@ be viewed within `dm-map-tiles'.")
 						     (list (symbol-value `,prop))))))))
 		     (delq nil '(,dm-map-overlay-prop ,dm-map-underlay-prop)))
 	       ;;(dm-map--when-tiles-message "before overlays" (list "tree") last-key tile)
-	       ;;(dm-map--when-tiles-message "end row" (list "tree") last-key tile)
+	       (dm-map--when-tiles-message "end row" (list "tree") last-key tile)
 	       dm-map--last-plist)))
 	 (result
 	  (prog1 (eval `(list :load ,cform))
@@ -1400,10 +1400,102 @@ always use \"raidio\"."
   "Mode keymap for `dm-map-source-mode'.")
 
 (define-derived-mode dm-map-source-mode xml-mode "MAP (source)"
-  "Minor mode for `dungeon-mode' map source.")
+  "Major mode for `dungeon-mode' map source.")
 
 (define-derived-mode dm-map-mode image-mode "MAP"
   "Major mode for `dugeon-mode' maps.")
+
+(defun dm-map--string-nopoe (obj)
+  "Trim OBJ and remove text properties.
+
+If OBJ is not a string return the empty string."
+  (or (and (org-string-nw-p obj)
+	   (progn (set-text-properties 0 (length obj) nil obj)
+		  (org-trim obj)))
+      ""))
+
+(defun dm-map-row-load-and-draw (&optional inhibit-error)
+  "Load map draw instructions from the table row at point."
+  (interactive)
+  (if (not (org-at-table-p))
+      (unless inhibit-error (user-error "Not at a table"))
+    (org-table-analyze)
+    (let ((start-line (org-table-current-line))
+	  cur-line
+	  end-line
+	  tile)
+      (save-excursion
+	(setq end-line (setq cur-line start-line))
+	(org-table-goto-column 0)
+	(while (and (not (setq tile (org-string-nw-p (org-table-get-field))))
+		    (< 0 (cl-decf cur-line)))
+	  (org-table-goto-line cur-line))
+	(if (not tile)
+	    (unless inhibit-error
+	      (user-error "Can't find row identifier"))
+	  (while (and (< (point) (org-table-end))
+		      (not (equal tile
+				  (dm-map--string-nopoe
+				   (org-table-get-field)))))
+	    (forward-line)
+	    (cl-incf end-line)) ;; (org-table-goto-line)
+	  (setq tile (intern (org-trim tile)))
+	  (let* ((row-idx-list
+		  (append
+		   (list 0)
+		   (number-sequence cur-line end-line)))
+		 (rows
+		  (mapcar
+		   (lambda (idx)
+		     (org-table-goto-line idx)
+		     (mapcar
+		      (lambda (col-idx)
+			(dm-map--string-nopoe
+			 (org-table-get-field col-idx)))
+		      (number-sequence 1 org-table-current-ncol)))
+		   row-idx-list)))
+	    (puthash tile (seq-copy dm-map-cell-defaults) dm-map-tiles)
+	    ;; (when-let* ((plist (gethash tile dm-map-tiles)))
+	    ;;   (dolist (prop (number-sequence 2 org-table-current-ncol))
+	    ;; 	(plist-put plist prop nil)))
+	    (if (equal "X" (upcase (caar rows)))
+		(dm-map-level-transform rows)
+	      (dm-map-tiles-transform rows))
+	    (dm-map-draw)
+	    ;;(print (gethash 'tree dm-map-tiles)) (print rows)
+	    (message "Loaded \"%s\" (%s..%s)" tile cur-line start-line)))))))
+
+(defun dm-map-edit-mode-maybe ()
+  "Switch to `dm-map-edit-mode' when editing map files."
+  (interactive)
+  (when (not (derived-mode-p 'dm-map-edit-mode))
+    (when-let ((name (buffer-file-name)))
+      (when (or (member name (dm-files-select :map-tiles))
+		(member name (dm-files-select :map-cells)))
+	(dm-map-edit-mode)))))
+
+(defun dm-map-ctrl-c-ctrl-c (&optional _)
+  "Drop in replacement for the  `org-mode' version.
+
+Try only to changes the behaviour when in a table."
+  (interactive)
+  (unless (dm-map-row-load-and-draw t)
+    (call-interactively #'org-ctrl-c-ctrl-c)))
+
+(defvar dm-map-edit-mode-map
+  (let ((map (make-sparse-keymap)))
+    (define-key map "\C-c\C-c" #'dm-map-ctrl-c-ctrl-c)
+    map)
+  "Mode keymap for `dm-map-edit-mode'.")
+
+(define-derived-mode dm-map-edit-mode org-mode "MAP (edit)"
+  "Major mode dervied for editing `dungeon-mode' maps.
+
+This mode is dervied from from `org-mode', which see.
+
+Rebind only C-c C-c, revert to calling `org-ctrl-c-ctrl-c' when
+not within data row of a Map cell or tile table.")
+
 
 ;; (setq dm-map-files '("d:/projects/dungeon-mode/Docs/Maps/map-tiles.org"
 ;; 		     "d:/projects/dungeon-mode/Docs/Maps/Levels/A-Maze_level1.org"))
