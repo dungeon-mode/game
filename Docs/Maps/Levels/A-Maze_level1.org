@@ -217,7 +217,7 @@ Refer to design.org for more details.
 |    |    |                                                  |
 |  0 |  7 | 10◦E                                             |
 |  1 |  7 | cNES◦W                                           |
-|  2 |  7 | c4                                               |
+|  2 |  7 | &c4                                              |
 |  3 |  7 | cESW                                             |
 |  4 |  7 | cEW                                              |
 |  5 |  7 | cWN◦E                                            |

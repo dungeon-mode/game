@@ -764,7 +764,7 @@ path command set."
 		  (let ((stroke stroke))
 		    (if (symbolp stroke)
 			(dm-map-resolve
-			 stroke :prop prop
+			 stroke ;; :prop prop
 			 :inhibit-collection inhibit-collection
 			 :inhibit-tags inhibit-tags)
 		      ;;(list stroke)
