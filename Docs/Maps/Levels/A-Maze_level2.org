@@ -484,7 +484,7 @@ Refer to design.org for more details.
 | 16 | 17 | 10◦S                                              |
 | 17 | 17 | S▲S                                               |
 | 18 | 17 | cES                                               |
-| 19 | 17 | c4                                                |
+| 19 | 17 | &c4                                               |
 | 20 | 17 | cNEW                                              |
 | 21 | 17 | cEW                                               |
 | 22 | 17 | cEW                                               |

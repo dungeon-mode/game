@@ -217,7 +217,7 @@ Refer to design.org for more details.
 |    |    |                                                  |
 |  0 |  7 | 10◦E                                             |
 |  1 |  7 | cNES◦W                                           |
-|  2 |  7 | c4                                               |
+|  2 |  7 | &c4                                              |
 |  3 |  7 | cESW                                             |
 |  4 |  7 | cEW                                              |
 |  5 |  7 | cWN◦E                                            |
@@ -285,7 +285,7 @@ Refer to design.org for more details.
 | 17 |  9 | cNEW                                             |
 | 18 |  9 | cSW                                              |
 | 19 |  9 | cES◦N                                            |
-| 20 |  9 | c4                                               |
+| 20 |  9 | &c4                                              |
 | 21 |  9 | cEW◦NS                                           |
 | 22 |  9 | cEW◦NS                                           |
 | 23 |  9 | cW◦NS                                            |
@@ -457,7 +457,7 @@ Refer to design.org for more details.
 | 14 | 16 | cE◦N                                             |
 | 15 | 16 | cEW◦N                                            |
 | 16 | 16 | cESW◦N                                           |
-| 17 | 16 | c4                                               |
+| 17 | 16 | &c4                                              |
 | 18 | 16 | cNSE                                             |
 | 19 | 16 | cNS                                              |
 | 20 | 16 | cNS                                              |
