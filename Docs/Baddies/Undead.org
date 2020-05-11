@@ -1,9 +1,9 @@
 #+TITLE: Undead Baddies for chambers
 #+PROPERTIES:
- :Version: 0.01
+ :Version: 0.02
  :Author: Jon Lincicum
  :Created: 2020/05/04
- :Modified: 2020/05/04
+ :Modified: 2020/05/10
  :END:
 
 This file is a part of dungeon-mode.  It is not a part of GNU Emacs.
@@ -15,26 +15,42 @@ License.  For specific terms please see [[LICENSE]] at end-of-file.
 
 + This table contains all the members of the undead family
 
-| Tbl | Name          | Idx | attack               | special                                                | sp | sw | ax | ma | hits | worth | Notes                                 |
-|-----+---------------+-----+----------------------+--------------------------------------------------------+----+----+----+----+------+-------+---------------------------------------|
-|   / | >             |  <> | <                    | >                                                      |  < |    |    |  > |    < |     > | <>                                    |
-|   0 | Skeletons     |  29 | 1 on 8 for 1         | on Bx, revivee fallen companion                        |  8 |  7 |  7 |  6 |    2 |     2 |                                       |
-|   0 | Zombies       |  38 | 1 on 7 for 1         | Zombie Bite: infect target player                      |  6 |  6 |  5 |  8 |    2 |     2 |                                       |
-|     |               |     | 1 on dbl for special | 3 infections turns player to zombie                    |    |    |    |    |      |       |                                       |
-|   0 | Wraith        |  34 | 1 on 8 for 2         |                                                        |  9 |  9 |  8 |  9 |    3 |     5 | Fire attacks force them to flee       |
-|   0 | Mummies       |  35 | 1 on 7 for 2         |                                                        |  9 | 10 |  7 |  8 |    4 |     7 |                                       |
-|   0 | Ghost         |   1 | 1 on 6 for 1         | Flees on Bx or from Light attacks                      |  8 |  8 |  8 |  8 |    3 |     5 |                                       |
-|   0 | Vampire       |   1 | 1 on 6 for 3         | Destroyed by light or fire attacks                     |  6 | 10 | 10 | 10 |    6 |     8 | attacks for .5 dmg when cross present |
-|   0 | Wight         |  25 | 1 on 8 for 2         |                                                        |  7 |  7 | 10 | 10 |    5 |     7 |                                       |
-|   0 | White Walkers |  17 | 1 on 7 for 3         | Summon 1d Wights                                       |  8 |  8 |  9 |  9 |    7 |    15 | Obsidian weapons kill on hit          |
-|     |               |     | 1 on BX for Special  |                                                        |    |    |    |    |      |       |                                       |
-|   0 | Lich          |   1 | 2 on 7 for 2         | Lich will keep his soul in an object in a box close by |  8 |  8 | 10 | 10 |   10 |    20 | Destroying Soul-box object kills Lich |
-|   0 | Banshee       |   4 | 1 on 6 for 2         | Wail: Sonic attack does 1d damage to random player     |  9 |  9 |  6 | 11 |    4 |    17 |                                       |
-|     |               |     | 1 on dbl for special |                                                        |    |    |    |    |      |       |                                       |
-|   0 | Fell Beast    |   1 | 1 on 7 for 3         | Flying - Only appears when ridden by a Nazgul          |  6 |  8 | 11 | 11 |   20 |    35 |                                       |
-|   0 | Hellhound     |  15 | 2 on 7 for 5         |                                                        | 10 | 11 | 11 | 11 |   15 |    40 |                                       |
-|   0 | Nazgul        |  37 | 1 on 6 for 7         | Morgul Blade: infect target player turns to wraith in  | 11 |  9 | 11 | 10 |    8 |    45 | 1 on 3:  Appears riding a Fell Beast  |
-|     |               |     | 1 on Bx for special  | 2d turns unless healed out of combat                   |    |    |    |    |      |       |                                       |
+| Tbl | Name           | Idx | attack               | special                                                  | sp | sw | ax | ma | hits | worth | Notes                                 |
+|-----+----------------+-----+----------------------+----------------------------------------------------------+----+----+----+----+------+-------+---------------------------------------|
+|   / | >              |  <> | <                    | >                                                        |  < |    |    |  > |    < |     > | <>                                    |
+|   0 | Zombie Rats    |  45 | 1 on 9 for 1         |                                                          |  6 |  6 |  6 |  8 |    1 |     1 |                                       |
+|   0 | Spectral Hound |   1 | 1 on 8 for 1         |                                                          |  7 |  8 |  8 |  9 |    2 |     2 |                                       |
+|   0 | Skeletons      |  29 | 1 on 8 for 1         | on Bx, revivee fallen companion                          |  8 |  7 |  7 |  6 |    2 |     2 |                                       |
+|   0 | Zombies        |  38 | 1 on 7 for 1         | Zombie Bite: infect target player                        |  6 |  6 |  5 |  8 |    2 |     2 |                                       |
+|     |                |     | 1 on dbl for special | 3 infections turns player to zombie                      |    |    |    |    |      |       |                                       |
+|   0 | Wraith         |  34 | 1 on 8 for 2         |                                                          |  9 |  9 |  8 |  9 |    3 |     3 | Fire attacks force them to flee       |
+|   0 | Mummies        |  35 | 1 on 7 for 2         |                                                          |  9 | 10 |  7 |  8 |    4 |     4 |                                       |
+|   0 | Barrow-Wights  |  30 | 1 on 6 for 1         |                                                          |  7 |  8 |  8 |  9 |    4 |     4 |                                       |
+|   0 | Ghost          |  41 | 1 on 6 for 1         | Flees on Bx or from Light attacks                        |  8 |  8 |  8 |  8 |    3 |     3 |                                       |
+|   0 | Vampire        |   1 | 1 on 6 for 2         | Destroyed by light or fire attacks                       |  6 | 10 | 10 | 10 |    5 |     5 | attacks for .5 dmg when cross present |
+|   0 | Ghoul          |  45 | 1 on 8 for 3         |                                                          |  7 |  8 |  8 |  9 |    6 |     6 |                                       |
+|   0 | Deadites       |  27 | 1 on 5 for 2         |                                                          |  9 |  9 |  6 |  9 |    5 |     5 |                                       |
+|   0 | Wight          |  25 | 1 on 7 for 2         |                                                          |  7 |  7 | 10 | 10 |    5 |     5 |                                       |
+|   0 | White Walkers  |  17 | 1 on 7 for 3         | Summon 1d Wights                                         |  8 |  8 |  9 |  9 |    7 |     7 | Obsidian weapons kill on hit          |
+|     |                |     | 1 on BX for special  |                                                          |    |    |    |    |      |       |                                       |
+|   0 | Cauldron-Born  |  37 | 1 on 8 for 1         |                                                          | 10 | 10 |  9 | 11 |    7 |     7 |                                       |
+|   0 | Phantom        |   5 | 3 on 7 for 1         | Music of the Night - Sonic attack for 1d dmg             | 10 |  7 |  8 |  9 |    8 |     8 |                                       |
+|     |                |     | 1 on dbl for special |                                                          |    |    |    |    |      |       |                                       |
+|   0 | Lich           |   1 | 2 on 7 for 2         | Lich will keep his soul in an object in a box close by   |  8 |  8 | 10 | 10 |   10 |    10 | Destroying Soul-box object kills Lich |
+|   0 | Banshee        |   4 | 1 on 6 for 2         | Wail: Sonic attack does 1d damage to random player       |  9 |  9 |  6 | 11 |    9 |     9 |                                       |
+|     |                |     | 1 on dbl for special |                                                          |    |    |    |    |      |       |                                       |
+|   0 | Spectre        |  17 | 1 on 8 for 3         |                                                          |  7 |  8 |  9 | 10 |   12 |    12 |                                       |
+|   0 | Fell Beast     |   1 | 1 on 7 for 3         | Flying - Only appears when ridden by a Nazgul            |  6 |  8 | 11 | 11 |   20 |    20 |                                       |
+|   0 | Poltergeist    |  15 | 1 on 6 for 4         | They're Here! Teleport player away to random square on   |  8 |  8 |  9 | 10 |   23 |    23 |                                       |
+|     |                |     | 1 on Bx for special  | same map level                                           |    |    |    |    |      |       |                                       |
+|   0 | Draugar        |  35 | 1 on 8 for 5         |                                                          | 10 |  8 |  8 |  9 |   25 |    25 |                                       |
+|   0 | Fire Skeletons |  42 | 1 on 7 for 5         | Fire Attack! 1d fire damage to target                    |  8 |  7 |  9 |  8 |   20 |    20 |                                       |
+|     |                |     | 1 on dbl for special |                                                          |    |    |    |    |      |       |                                       |
+|   0 | Hellhound      |  15 | 2 on 7 for 5         |                                                          | 10 | 11 | 11 | 11 |   15 |    15 |                                       |
+|   0 | Nazgul         |  37 | 1 on 6 for 7         | Morgul Blade: infect target player turns to wraith in    | 11 |  9 | 11 | 10 |   30 |    40 | 1 on 3:  Appears riding a Fell Beast  |
+|     |                |     | 1 on Bx for special  | 2d turns unless healed out of combat                     |    |    |    |    |      |       |                                       |
+|   0 | Necromancer    |   1 | 2 on 7 for 8         | Animate Dead - summon 1 Wight for each dead party member | 10 |  9 |  9 |  8 |   45 |    45 |                                       |
+|     |                |     | 1 on dbl for special | and monster corpse within 3 map tiles                    |    |    |    |    |      |       |                                       |
 * LICENSE
 
 This program is free software; you can redistribute it and/or modify

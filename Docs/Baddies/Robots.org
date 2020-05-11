@@ -1,9 +1,9 @@
 #+TITLE: Robot Baddies for chambers
 #+PROPERTIES:
- :Version: 0.01
+ :Version: 0.02
  :Author: Jon Lincicum
  :Created: 2020/05/09
- :Modified: 2020/05/09
+ :Modified: 2020/05/10
  :END:
 
 This file is a part of dungeon-mode.  It is not a part of GNU Emacs.
@@ -15,33 +15,44 @@ License.  For specific terms please see [[LICENSE]] at end-of-file.
 
 + This table contains all the members of the robots family
 
-| Tbl | Name            | Idx | attack               | special                                 | sp | sw | ax | ma | hits | worth | Notes                                    |
-|-----+-----------------+-----+----------------------+-----------------------------------------+----+----+----+----+------+-------+------------------------------------------|
-|   / | >               |  <> | <                    | >                                       |  < |    |    |  > |    < |     > | <>                                       |
-|   0 | Twiki           |   5 | 1 on 9 for 1         |                                         |  6 |  7 |  6 |  8 |    4 |     4 |                                          |
-|   0 | Robbie          |   4 | 1 on 8 for 1         |                                         |  7 |  6 |  7 |  9 |    5 |     5 |                                          |
-|   0 | iZac            |   7 | 1 on 9 for 2         | Make me a stiff one 1d dmg              |  6 |  5 |  8 |  9 |    3 |     3 |                                          |
-|     |                 |     | 1 on dbl for special |                                         |    |    |    |    |      |       |                                          |
-|   0 | Clamps          |   1 | 1 on 8 for 1         | Use the Clamps! 1d damage               |  5 |  6 |  6 | 10 |    3 |     3 |                                          |
-|     |                 |     | 1 on dbl for special |                                         |    |    |    |    |      |       |                                          |
-|   0 | Evil Robot Bill |   1 | 1 on 9 for 2         | Hits for dbl damage when accompanied    |  7 |  6 |  7 |  9 |    4 |     4 |                                          |
-|     |                 |     |                      | by Evil Robot Ted                       |    |    |    |    |      |       |                                          |
-|   0 | Evil Robot Ted  |   1 | 1 on 9 for 2         | Air Guitar: 1d damg                     |  6 |  7 |  6 |  9 |    4 |     4 |                                          |
-|     |                 |     | 1 on dbl for special |                                         |    |    |    |    |      |       |                                          |
-|   0 | Flexo           |   1 | 1 on 8 for 2         | You Guys are Alright: Heals self for 1d |  5 |  6 |  6 |  8 |    6 |     6 |                                          |
-|     |                 |     | 1 on Bx for special  |                                         |    |    |    |    |      |       |                                          |
-|   0 | Evil K-9        |   1 | 1 on 8 for 3         | Nose Laser: 1d damage                   |  7 |  7 |  8 |  8 |    7 |     7 |                                          |
-|     |                 |     | 1 on 10 for special  |                                         |    |    |    |    |      |       |                                          |
-|   0 | Kaylons         |  25 | 1 on 7 for 3         |                                         |  9 |  9 |  7 | 10 |    9 |     9 |                                          |
-|   0 | Gort            |   1 | 1 on 8 for 3         |                                         |  8 |  9 |  8 | 10 |    9 |     9 | Klaatu Barada Nictuu disables for a turn |
-|   0 | Terminator      |   1 | 1 on 7 for 3         |                                         |  9 | 10 |  9 | 11 |   12 |    12 |                                          |
-|   0 | Sentinel Squids |  15 | 1 on 7 for 5         | Flying                                  |  9 |  8 | 10 | 11 |   15 |    15 | dies instantly to EMP                    |
-|   0 | Hunter-Killers  |  25 | 1 on 8 for 6         | Flying                                  |  8 | 10 | 10 | 11 |   20 |    20 |                                          |
-|   0 | Robot Santa     |   1 | 1 on 5 for 5         | Missle:TOE DoD damage                   |  8 | 10 |  8 | 10 |   20 |    20 | Has Paradox Absorbing crumple zones      |
-|     |                 |     | 1 on dbl for special |                                         |    |    |    |    |      |       |                                          |
-|   0 | The Destroyer   |   1 | 2 on 5 for 10        | Heat Beam: DoD damage to target         |  9 | 10 | 10 | 11 |   35 |    35 | Takes double damage to lightning attacks |
-|     |                 |     | 1 on 10 for special  |                                         |    |    |    |    |      |       |                                          |
-|     |                 |     |                      |                                         |    |    |    |    |      |       |                                          |
+| Tbl | Name             | Idx | attack               | special                                   | sp | sw | ax | ma | hits | worth | Notes                                    |
+|-----+------------------+-----+----------------------+-------------------------------------------+----+----+----+----+------+-------+------------------------------------------|
+|   / | >                |  <> | <                    | >                                         |  < |    |    |  > |    < |     > | <>                                       |
+|   0 | Wind-up Toy Tank |  40 | 1 on 11 for 1        |                                           |  4 |  5 |  5 |  7 |    1 |     1 |                                          |
+|   0 | Louie            |   1 | 1 on 10 for 1        |                                           |  5 |  5 |  6 |  7 |    1 |     1 |                                          |
+|   0 | Hewey            |   1 | 1 on 10 for 1        |                                           |  5 |  6 |  6 |  7 |    2 |     2 |                                          |
+|   0 | Duey             |   1 | 1 on 10 for 1        |                                           |  6 |  5 |  6 |  7 |    2 |     2 |                                          |
+|   0 | Twiki            |   5 | 1 on 9 for 1         |                                           |  6 |  7 |  6 |  8 |    4 |     4 |                                          |
+|   0 | Robbie           |   4 | 1 on 8 for 1         |                                           |  7 |  6 |  7 |  9 |    5 |     5 |                                          |
+|   0 | iZac             |   7 | 1 on 9 for 2         | Make me a stiff one 1d dmg                |  6 |  5 |  8 |  9 |    3 |     3 |                                          |
+|     |                  |     | 1 on dbl for special |                                           |    |    |    |    |      |       |                                          |
+|   0 | Clamps           |   1 | 1 on 8 for 1         | Use the Clamps! 1d damage                 |  5 |  6 |  6 | 10 |    3 |     3 |                                          |
+|     |                  |     | 1 on dbl for special |                                           |    |    |    |    |      |       |                                          |
+|   0 | Evil Robot Bill  |   1 | 1 on 9 for 2         | Hits for dbl damage when accompanied      |  7 |  6 |  7 |  9 |    4 |     4 |                                          |
+|     |                  |     |                      | by Evil Robot Ted                         |    |    |    |    |      |       |                                          |
+|   0 | Evil Robot Ted   |   1 | 1 on 9 for 2         | Air Guitar: 1d damg                       |  6 |  7 |  6 |  9 |    4 |     4 |                                          |
+|     |                  |     | 1 on dbl for special |                                           |    |    |    |    |      |       |                                          |
+|   0 | Crushinator      |   1 | 1 on 8 for 2         | But Paw I Love him! Heal party member     |  8 |  7 |  7 |  9 |    5 |     5 |                                          |
+|     |                  |     | 1 on dbl for special | for 1d health                             |    |    |    |    |      |       |                                          |
+|   0 | Flexo            |   1 | 1 on 8 for 2         | You Guys are Alright: Heals self for 1d   |  5 |  6 |  6 |  8 |    6 |     6 |                                          |
+|     |                  |     | 1 on Bx for special  |                                           |    |    |    |    |      |       |                                          |
+|   0 | Evil K-9         |   1 | 1 on 8 for 3         | Nose Laser: 1d damage                     |  7 |  7 |  8 |  8 |    7 |     7 |                                          |
+|     |                  |     | 1 on 10 for special  |                                           |    |    |    |    |      |       |                                          |
+|   0 | Kaylons          |  25 | 1 on 7 for 3         |                                           |  9 |  9 |  7 | 10 |    9 |     9 |                                          |
+|   0 | Replicators      |  47 | 1 on 6 for 2         |                                           |  7 |  8 |  7 | 10 |    7 |     7 |                                          |
+|   0 | MCP              |   1 | 1 on 7 for 3         |                                           |  8 |  8 |  9 |  8 |   10 |    10 |                                          |
+|   0 | Gort             |   1 | 1 on 8 for 3         |                                           |  8 |  9 |  8 | 10 |    9 |     9 | Klaatu Barada Nictuu disables for a turn |
+|   0 | Terminator       |   1 | 1 on 7 for 3         |                                           |  9 | 10 |  9 | 11 |   12 |    12 |                                          |
+|   0 | Sentinel Squids  |  15 | 1 on 7 for 5         | Flying                                    |  9 |  8 | 10 | 11 |   15 |    15 | dies instantly to EMP                    |
+|   0 | Hunter-Killers   |  25 | 1 on 8 for 6         | Flying                                    |  8 | 10 | 10 | 11 |   20 |    20 |                                          |
+|   0 | Maximillion      |   1 | 1 on 7 for 5         |                                           |  7 |  9 |  9 | 10 |   20 |    20 |                                          |
+|   0 | Robot Santa      |   1 | 1 on 5 for 5         | Missle:TOE DoD damage                     |  8 | 10 |  8 | 10 |   20 |    20 | Has Paradox Absorbing crumple zones      |
+|     |                  |     | 1 on dbl for special |                                           |    |    |    |    |      |       |                                          |
+|   0 | T-1000           |   1 | 1 on 6 for 8         |                                           | 10 |  9 | 10 | 10 |   30 |    30 |                                          |
+|   0 | The Destroyer    |   1 | 2 on 5 for 10        | Heat Beam: DoD damage to target           |  9 | 10 | 10 | 11 |   35 |    35 | Takes double damage to lightning attacks |
+|     |                  |     | 1 on 10 for special  |                                           |    |    |    |    |      |       |                                          |
+|   0 | Marvin           |   1 | 1 on 5 for 15        | Life. Don't talk to me about Life. Drains |  7 |  9 |  9 | 10 |   42 |    42 |                                          |
+|     |                  |     | 1 on dbl for special | 2d of life from party member              |    |    |    |    |      |       |                                          |
 * LICENSE
 
 This program is free software; you can redistribute it and/or modify
