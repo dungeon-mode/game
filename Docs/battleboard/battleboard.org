@@ -1,0 +1,177 @@
+#+TITLE: Battleboard interface
+:PROPERTIES:
+ :Version: 0.01
+ :Author: Erik Elmshauser
+ :Created: 2020/05/10
+ :Modified: 2020/05/10
+ :END:
+
+This file is a part of dungeon-mode.  It is not a part of GNU Emacs.
+This softare is released under the GNU Public Licence version three
+or, at your disgression, any newer version of the GNU Public
+License.  For specific terms please see [[LICENSE]] at end-of-file.
+
+
+* Battleboard Tiles
+  :PROPERTIES:
+    :name: Battleboard-Tiles
+    :ETL: tile
+  :END:
+
++NAME: Battleboard-Tiles
+| Tile    | Path          | overlay                                                                          |
+|---------+---------------+----------------------------------------------------------------------------------|
+| name    | m3,1 h4 m-7,0 | <text x=".1" y=".75" font-size=".6" stroke="black" fill="black">Name:</text>     |
+| player  | m3,1 h4 m-7,0 | <text x=".1" y="1.75" font-size=".6" stroke="black" fill="black">Player:</text>  |
+| rank    | m3,1 h4 m-7,0 | <text x=".1" y="2.75" font-size=".6" stroke="black" fill="black">Rank:</text>    |
+| class   | m3,1 h4 m-7,0 | <text x=".1" y="3.75" font-size=".6" stroke="black" fill="black">Class:</text>   |
+| weapon  | m3,1 h4 m-7,0 | <text x=".1" y="4.75" font-size=".6" stroke="black" fill="black">Weapon:</text>  |
+| bh      | m3,1 h4 m-7,0 | <text x=".1" y="5.75" font-size=".6" stroke="black" fill="black">Body:</text>    |
+| armor   | m3,1 h4 m-7,0 | <text x=".1" y="6.75" font-size=".6" stroke="black" fill="black">Armor:</text>   |
+| shield1 | m3,1 h4 m-7,0 | <text x=".1" y="7.75" font-size=".6" stroke="black" fill="black">Shield1:</text> |
+| shield2 | m3,1 h4 m-7,0 | <text x=".1" y="8.75" font-size=".6" stroke="black" fill="black">Shield2:</text> |
+|---------+---------------+----------------------------------------------------------------------------------|
+| v-div   | v1            |                                                                                  |
+| h-div   | h1            |                                                                                  |
+| box     | h1 v1 h-1 v-1 |                                                                                  |
+| box2    | h2 v2 h-2 v-2 |                                                                                  |
+|---------+---------------+----------------------------------------------------------------------------------|
+
+
+
+* Battleboard Layout
+  :PROPERTIES:
+    :NAME: Battleboard-Layout
+    :ETL: cell
+  :END:
+
++NAME: Battleboard-Layout
+| X | Y | Path  |
+|---+---+-------|
+| 0 | 0 |       |
+| 1 | 0 |       |
+| 2 | 0 |       |
+| 3 | 0 |       |
+| 4 | 0 |       |
+| 5 | 0 | v-div |
+| 6 | 0 |       |
+| 7 | 0 |       |
+| 8 | 0 |       |
+| 9 | 0 |       |
+|---+---+-------|
+| 0 | 1 |       |
+| 1 | 1 |       |
+| 2 | 1 |       |
+| 3 | 1 |       |
+| 4 | 1 |       |
+| 5 | 1 | v-div |
+| 6 | 1 |       |
+| 7 | 1 |       |
+| 8 | 1 |       |
+| 9 | 1 |       |
+|---+---+-------|
+| 0 | 2 |       |
+| 1 | 2 |       |
+| 2 | 2 |       |
+| 3 | 2 |       |
+| 4 | 2 |       |
+| 5 | 2 | v-div |
+| 6 | 2 |       |
+| 7 | 2 |       |
+| 8 | 2 |       |
+| 9 | 2 |       |
+|---+---+-------|
+| 0 | 3 |       |
+| 1 | 3 |       |
+| 2 | 3 |       |
+| 3 | 3 | box2  |
+| 4 | 3 |       |
+| 5 | 3 | box2  |
+| 6 | 3 |       |
+| 7 | 3 |       |
+| 8 | 3 |       |
+| 9 | 3 |       |
+|---+---+-------|
+| 0 | 4 |       |
+| 1 | 4 |       |
+| 2 | 4 |       |
+| 3 | 4 |       |
+| 4 | 4 |       |
+| 5 | 4 | v-div |
+| 6 | 4 |       |
+| 7 | 4 |       |
+| 8 | 4 |       |
+| 9 | 4 |       |
+|---+---+-------|
+| 0 | 5 | h-div |
+| 1 | 5 | h-div |
+| 2 | 5 | h-div |
+| 3 | 5 | box2  |
+| 4 | 5 |       |
+| 5 | 5 | box2  |
+| 6 | 5 | h-div |
+| 7 | 5 | h-div |
+| 8 | 5 | h-div |
+| 9 | 5 | h-div |
+|---+---+-------|
+| 0 | 6 |       |
+| 1 | 6 |       |
+| 2 | 6 |       |
+| 3 | 6 |       |
+| 4 | 6 |       |
+| 5 | 6 | v-div |
+| 6 | 6 |       |
+| 7 | 6 |       |
+| 8 | 6 |       |
+| 9 | 6 |       |
+|---+---+-------|
+| 0 | 7 |       |
+| 1 | 7 |       |
+| 2 | 7 |       |
+| 3 | 7 |       |
+| 4 | 7 |       |
+| 5 | 7 | v-div |
+| 6 | 7 |       |
+| 7 | 7 |       |
+| 8 | 7 |       |
+| 9 | 7 |       |
+|---+---+-------|
+| 0 | 8 |       |
+| 1 | 8 |       |
+| 2 | 8 |       |
+| 3 | 8 |       |
+| 4 | 8 |       |
+| 5 | 8 | v-div |
+| 6 | 8 |       |
+| 7 | 8 |       |
+| 8 | 8 |       |
+| 9 | 8 |       |
+|---+---+-------|
+| 0 | 9 |       |
+| 1 | 9 |       |
+| 2 | 9 |       |
+| 3 | 9 |       |
+| 4 | 9 |       |
+| 5 | 9 | v-div |
+| 6 | 9 |       |
+| 7 | 9 |       |
+| 8 | 9 |       |
+| 9 | 9 |       |
+|---+---+-------|
+
+
+* LICENSE
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
