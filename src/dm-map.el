@@ -763,10 +763,14 @@ path command set."
 	(mapcan (lambda (stroke)
 		  (let ((stroke stroke))
 		    (if (symbolp stroke)
-			(dm-map-resolve
-			 stroke ;; :prop prop
-			 :inhibit-collection inhibit-collection
-			 :inhibit-tags inhibit-tags)
+			(or (dm-map-resolve
+			     stroke :prop prop
+			     :inhibit-collection inhibit-collection
+			     :inhibit-tags inhibit-tags)
+			    (dm-map-resolve
+			     stroke ;;:prop prop
+			     :inhibit-collection inhibit-collection
+			     :inhibit-tags inhibit-tags))
 		      ;;(list stroke)
 		      (list (if (listp stroke) (copy-tree stroke) stroke)))))
 		paths)))))
@@ -1124,6 +1128,7 @@ SCALE-FUNCTION may be used to supply custom scaling."
     (prog1 svg
       (dm-map-with-map-erased (render-and-insert-string svg))
       (with-current-buffer dm-map-preview-buffer-name
+	(image-mode-setup-winprops)
 	(let ((inhibit-read-only t)
 	      (start (point-min))
 	      (end (point-max)))
