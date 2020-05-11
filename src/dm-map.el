@@ -1390,12 +1390,10 @@ always use \"raidio\"."
 (defun dm-map-source-toggle (&rest _)
   "Toggle map between graphical and source views."
   (interactive)
-  (with-current-buffer (get-buffer dm-map-preview-buffer-name)
-    (if (image-get-display-property)
-	(image-mode-as-text)
-      (if (eq major-mode 'hexl-mode)
-	  (image-mode-as-text)
-	(dm-map-mode)))))
+  (if (derived-mode-p 'dm-map-mode)
+      (dm-map-view-source)
+    (with-current-buffer (get-buffer dm-map-preview-buffer-name)
+      (dm-map-mode))))
 
 ;; based on share/emacs/27.0.90_2/lisp/image-mode.el
 (defvar dm-map-source-mode-map
