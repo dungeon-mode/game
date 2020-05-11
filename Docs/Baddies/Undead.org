@@ -26,7 +26,7 @@ License.  For specific terms please see [[LICENSE]] at end-of-file.
 |   0 | Wraith         |  34 | 1 on 8 for 2         |                                                          |  9 |  9 |  8 |  9 |    3 |     3 | Fire attacks force them to flee       |
 |   0 | Mummies        |  35 | 1 on 7 for 2         |                                                          |  9 | 10 |  7 |  8 |    4 |     4 |                                       |
 |   0 | Barrow-Wights  |  30 | 1 on 6 for 1         |                                                          |  7 |  8 |  8 |  9 |    4 |     4 |                                       |
-|   0 | Ghost          |   1 | 1 on 6 for 1         | Flees on Bx or from Light attacks                        |  8 |  8 |  8 |  8 |    3 |     3 |                                       |
+|   0 | Ghost          |  41 | 1 on 6 for 1         | Flees on Bx or from Light attacks                        |  8 |  8 |  8 |  8 |    3 |     3 |                                       |
 |   0 | Vampire        |   1 | 1 on 6 for 2         | Destroyed by light or fire attacks                       |  6 | 10 | 10 | 10 |    5 |     5 | attacks for .5 dmg when cross present |
 |   0 | Ghoul          |  45 | 1 on 8 for 3         |                                                          |  7 |  8 |  8 |  9 |    6 |     6 |                                       |
 |   0 | Deadites       |  27 | 1 on 5 for 2         |                                                          |  9 |  9 |  6 |  9 |    5 |     5 |                                       |

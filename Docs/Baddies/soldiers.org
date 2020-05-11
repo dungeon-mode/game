@@ -1,9 +1,9 @@
 #+TITLE: Soldier Baddies for chambers
 #+PROPERTIES:
- :Version: 0.01
+ :Version: 0.02
  :Author: Jon Lincicum
  :Created: 2020/05/09
- :Modified: 2020/05/09
+ :Modified: 2020/05/10
  :END:
 
 This file is a part of dungeon-mode.  It is not a part of GNU Emacs.
@@ -13,7 +13,7 @@ License.  For specific terms please see [[LICENSE]] at end-of-file.
 
 * Soldiers Table
 
-+ This table contains all the members of the robots family
++ This table contains all the members of the soldiers family
 
 | Tbl | Name                | Idx | attack               | special                                  | sp | sw | ax | ma | hits | worth | Notes |
 |-----+---------------------+-----+----------------------+------------------------------------------+----+----+----+----+------+-------+-------|
@@ -25,9 +25,11 @@ License.  For specific terms please see [[LICENSE]] at end-of-file.
 |   0 | Grizzled Beat Cops  |  15 | 1 on 6 for 1         |                                          |  8 |  8 |  9 | 10 |    2 |     2 |       |
 |   0 | Detective Inspector |  10 | 1 on 9 for 2         |                                          |  6 |  9 |  7 |  9 |    2 |     2 |       |
 |   0 | Phoenix Guard       |  34 | 1 on 8 for 2         | Flashstone: 1d damage to target          |  7 |  8 |  7 |  9 |    2 |     2 |       |
+|   0 | Confused Corporals  |  22 | 1 on 8 for 2         |                                          |  8 |  7 |  8 |  8 |    2 |     2 |       |
 |   0 | SWAT Team           |  45 | 1 on 7 for 2         |                                          |  8 |  7 |  6 |  9 |    2 |     2 |       |
 |   0 | FBI Agents          |  12 | 1 on 6 for 2         | Call The Lone Gunmen: regen 1d health    |  9 |  8 |  7 |  9 |    3 |     3 |       |
 |     |                     |     | 1 on dbl for special |                                          |    |    |    |    |      |       |       |
+|   0 | Surly Sergeants     |  15 | 1 on 8 for 3         |                                          |  8 |  7 |  7 |  8 |    4 |     4 |       |
 |   0 | Military Unit       |   1 | 1 on 6 for 3         |                                          |  8 |  9 |  8 |  9 |    5 |     5 |       |
 |   0 | Army Rangers        |  15 | 1 on 5 for 3         |                                          |  9 |  7 |  8 | 10 |    5 |     5 |       |
 |   0 | ATF Elite SWAT Team |  35 | 1 on 8 for 4         |                                          |  8 |  9 |  8 | 11 |    6 |     6 |       |
@@ -38,12 +40,12 @@ License.  For specific terms please see [[LICENSE]] at end-of-file.
 |   0 | SEAL Team Five      |  34 | 1 on 7 for 5         |                                          |  7 |  7 | 10 | 11 |    8 |     8 |       |
 |   0 | MI5 Agent           |   1 | 1 on 6 for 5         |                                          |  9 |  6 | 10 | 10 |    8 |     8 |       |
 |   0 | Space Marines       |  27 | 1 on 9 for 6         |                                          | 10 |  8 |  8 |  7 |    9 |     9 |       |
-|   0 | Spider Marines      |  34 | 1 on 8 for 6         | Flee at the sight of Lemon Merange       | 10 | 10 | 10 | 11 |   10 |    10 |       |
+|   0 | Spider Marines      |  34 | 1 on 8 for 6         | Flees at the sight of Lemon Merange      | 10 | 10 | 10 | 11 |   10 |    10 |       |
 |   0 | DEA Special Unit    |  12 | 1 on 7 for 6         |                                          |  9 |  7 |  9 | 10 |   10 |    10 |       |
 |   0 | Special Forces Unit |  25 | 1 on 6 for 6         |                                          |  8 |  9 |  8 |  9 |   10 |    10 |       |
 |   0 | U.N.I.T. Squad      |  38 | 1 on 9 for 7         | Greyhound Trap One: DoD dmg              |  7 |  8 |  8 |  9 |   12 |    12 |       |
 |     |                     |     | 1 on dbl for special |                                          |    |    |    |    |      |       |       |
-|   0 | MI6                 |   1 | 1 on 8 for 7         | License to Kill: instant kill to target  |  8 |  7 |  8 | 10 |   12 |    12 |       |
+|   0 | MI6                 |   1 | 1 on 8 for 7         | License to Kill: 2d dmg to target        |  8 |  7 |  8 | 10 |   12 |    12 |       |
 |     |                     |     | 1 on BX for special  |                                          |    |    |    |    |      |       |       |
 |   0 | Mobile Infantry     |   8 | 1 on 7 for 7         |                                          |  9 |  9 |  9 | 10 |   15 |    15 |       |
 |   0 | Torchwood           |  15 | 1 on 9 for 7         | Use Alien tech: DoD damage               |  8 | 10 |  8 | 10 |   17 |    17 |       |
