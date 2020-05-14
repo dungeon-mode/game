@@ -1,4 +1,7 @@
 * Water Tiles
+
+# Copyright (C) 2020 Corwin Brust, Erik C. Elmshauser, Jon Lincicum, Hope Christiansen
+
   :PROPERTIES:
    :name: 10-water-tiles
    :MAP-FEATURES: t 

@@ -1,4 +1,7 @@
 #+TITLE: Gaming in org-mode
+
+# Copyright (C) 2020 Corwin Brust, Erik C. Elmshauser, Jon Lincicum, Hope Christiansen
+
 # #+OPTIONS: toc:nil
 
 Most game sources (e.g. maps, treasure tables, etc) as well as some game play information (character sheets, the battle board giving the party's order of battle, and so forth) are written as ~[[https://org-mode.org][org-mode]]~ files to one or more users' file-system.  While these files are "hand-editable" ~dungeon-mode~ provides additional domain specific tools to supplement those of ~org-mode~ and other components of GNU Emacs.  The rest of this file describes those tools and chronicles their development.

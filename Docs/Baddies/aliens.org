@@ -1,4 +1,7 @@
 #+TITLE: Alien Baddies for chambers
+
+# Copyright (C) 2020 Corwin Brust, Erik C. Elmshauser, Jon Lincicum, Hope Christiansen
+
 #+PROPERTIES:
  :Version: 0.03
  :Author: Erik C Elmshauser, Jon Lincicum

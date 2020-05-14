@@ -1,4 +1,7 @@
 * BigWater Test Map
+
+# Copyright (C) 2020 Corwin Brust, Erik C. Elmshauser, Jon Lincicum, Hope Christiansen
+
 :PROPERTIES:
 :NAME: bigwater-test-map-level
 :ETL: cell
