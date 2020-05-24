@@ -102,6 +102,16 @@ These settings control display of game maps."
   :group 'dm-map
   :type 'string)
 
+(defcustom dm-map-current-level-cells nil
+  "List of visible map cells."
+  :type '(repeat :tag "Cell Positions"
+		 (cons :tag "Cell Position"
+		       (number :tag "X") (number :tag "Y"))))
+
+(defcustom dm-map-menus-level-cells-draw-all t
+  "When t, draw all cells."
+  :type 'boolean)
+
 (defcustom dm-map-property "ETL"
   "Property to insepect when finding tables." :type 'string)
 
@@ -830,15 +840,14 @@ property containing draw instructions."
   (apply 'append (delq nil paths)))
 
 ;; TODO overlay, etc are for tiles only; add support from map-cells
-(defun dm-map-cell (cell &optional follow)
-  "Return plist of draw code for CELL.
-
-When FOLLOW is truthy, follow to the first cell with drawing
-instructions."
+(defun dm-map-cell (cell)
+  "Return plist of draw code for CELL."
   (let ((plist (dm-map-cell-defaults))
 	dm-map-current-tiles
 	)
-    (when-let ((val (dm-map-resolve-cell cell :no-follow (null follow))))
+    (when-let ((val (dm-map-resolve-cell
+		     cell
+		     :no-follow t)))
       (plist-put plist dm-map-draw-prop val))
     (dolist (prop (append dm-map-draw-other-props (list dm-map-underlay-prop
 							dm-map-overlay-prop)))
@@ -886,7 +895,10 @@ absolute movement to cell's origin as the first instruction."
 			    (plist-get plist prop)))))
 
 (cl-defun dm-map-quick-draw (&optional
-			     (cells (when dm-map-level (hash-table-keys dm-map-level)))
+			     (cells (when dm-map-level
+				      (if dm-map-menus-level-cells-draw-all
+					  (hash-table-keys dm-map-level)
+					dm-map-current-level-cells)))
 			     &key
 			     (path-attributes dm-map-draw-attributes)
 			     (scale dm-map-scale)
@@ -1242,12 +1254,49 @@ ARG is the factor for applying 'dm-map-scale-nudge' to `dm-map-scale'."
     (cons (+ du-X du-scroll-X) (+ du-Y du-scroll-Y))))
 
 (defun dm-map--pos-impl (&rest _)
-  "Return map cell under mouse as a string."
+  "Return map cell under mouse as a cons (X . Y)."
   (let* ((mpos (mouse-pixel-position))
 	 (wpos (caddr
 		(posn-at-x-y (cadr mpos) (cddr mpos)
 			     (selected-frame)))))
-    (format "%s" (dm-map--pos-pixels-to-cell (car wpos) (cdr wpos)))))
+    (dm-map--pos-pixels-to-cell (car wpos) (cdr wpos))))
+
+(defun dm-map-add-cell (x y &optional arg)
+  "Add the cell at X Y to and redraw the map.
+
+When ARG is non nil reload level and tile tables."
+  (interactive "nx:\nny:\np")
+  (add-to-list 'dm-map-current-level-cells (cons x y))
+  (dm-map-draw arg))
+
+(defun dm-map-remove-cell (x y &optional arg)
+  "Remove the cell at X Y to and redraw the map.
+
+When ARG is non nil reload level and tile tables."
+  (interactive "nx:\nny:\np")
+  (setq dm-map-current-level-cells
+	(remove (cons x y)
+		dm-map-current-level-cells))
+  (dm-map-draw arg))
+
+(defun dm-map-toggle-cell
+    (x y &optional arg)
+  "Toggle visibility of the cell at X Y to and redraw the map.
+
+When ARG is non nil reload level and tile tables."
+  (interactive "nx:\nny:\np")
+  (let ((cell (cons x y)))
+    (funcall (if (member cell dm-map-current-level-cells)
+		 'dm-map-remove-cell
+	       'dm-map-add-cell)
+	     x y arg)))
+
+(defun dm-map-mouse-toggle-cell ()
+  "Toggle display of the map cell under mouse."
+  (interactive "@")
+  (let ((cell (dm-map--pos-impl)))
+    (dm-map-toggle-cell (car cell) (cdr cell)
+			current-prefix-arg)))
 
 (defun dm-map-pos ()
   "Display the map cell under mouse."
@@ -1331,6 +1380,18 @@ always use \"raidio\"."
 	 :selected (member ,map-file dm-map-files)]))
    (append (reverse (dm-files-select files-select-tag)))))
 
+(defun dm-map-menus-toggle-draw-all (&optional arg)
+  "Enable or disable drawing all cells of the current map..
+
+When prefix ARG is positive always enable, when negitive always
+disable."
+  (interactive "p")
+  (setq dm-map-menus-level-cells-draw-all
+	(if (or (and arg (< 0 arg))      ;; force disable?
+		dm-map-menus-level-cells-draw-all) ;; currently enabled?
+	    nil ;; disable
+	  t)))  ;; enable
+
 (defun dm-map-menus-files (&rest _)
   "Create menu options for tile files."
   (append (append (list "Tile-sets"
@@ -1339,6 +1400,12 @@ always use \"raidio\"."
 			(append (list "Dungeon Levels")
 				(dm-map-menus-files-impl :map-cells))))
 	  (list "-" "Settings")
+	  (list '["Draw complete levels"
+		  (setq dm-map-menus-level-cells-draw-all
+			(not dm-map-menus-level-cells-draw-all))
+		  :style toggle
+		  :selected dm-map-menus-level-cells-draw-all
+		  :help "When selected draw the complete map level each time."])
 	  (list '["Exclusive selections"
 		  (setq dm-map-menus-file-style
 			(if (equal 'toggle dm-map-menus-file-style)
@@ -1372,8 +1439,8 @@ always use \"raidio\"."
     (define-key map (kbd ".") 'dm-map-pos)
     (define-key map (kbd ",") 'dm-map-pos-pixels)
     (define-key map (kbd ";") 'dm-map-view-source)
-    (define-key map [mouse-1] 'dm-map-pos)
-    (define-key map [mouse-2] 'dm-map-pos-pixels)
+    (define-key map [mouse-1] 'dm-map-mouse-toggle-cell)
+    (define-key map [mouse-2] 'dm-map-pos)
     (define-key map "\C-c\C-c" 'dm-map-source-toggle)
     (define-key map "\C-c\C-x" 'ignore)
     map)
