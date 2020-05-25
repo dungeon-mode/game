@@ -102,12 +102,6 @@ These settings control display of game maps."
   :group 'dm-map
   :type 'string)
 
-(defcustom dm-map-current-level-cells nil
-  "List of visible map cells."
-  :type '(repeat :tag "Cell Positions"
-		 (cons :tag "Cell Position"
-		       (number :tag "X") (number :tag "Y"))))
-
 (defcustom dm-map-menus-level-cells-draw-all t
   "When t, draw all cells."
   :type 'boolean)
@@ -142,6 +136,31 @@ Controls amount by which func `dm-map-scale' adjusts var
 
 Set to nil to suppress adding any background elements."
   :type 'list)
+
+;;;
+;; "seen" cells history
+
+(define-widget 'dm-custom-cons-x-y 'lazy
+  "A number or cons cell in the form (X . Y)."
+  :tag "Pos (X . Y)"
+  :type '(cons (number :tag "X")
+	       (number :tag "Y")))
+
+(defcustom dm-map-current-level-cells nil
+  "List of visible map cells."
+  :type '(repeat :tag "Cell Positions"
+		 dm-custom-cons-x-y))
+
+(defcustom dm-map-level-cells nil
+  "The displayable cells for each map level, as a plist."
+  :type '(plist :value-type
+		'(repeat :tag "Cell Positions"
+			 dm-custom-cons-x-y)))
+
+(defvar dm-map-current-level nil
+  "The current map level being displayed.")
+;; end "seen" cells history
+;;;
 
 (defvar dm-map-table-var-alist '((cell dm-map-level)
 				 (tile dm-map-tiles))
@@ -240,6 +259,9 @@ Tags (e.g. \":elf\") allow conditional inclusion of draw code.")
 
 ;; (defvar dm-map-extra-tiles '('Background 'Graphpaper)
 ;;   "Extra tiles to include when rendering a level.")
+
+;; tagging stuff
+
 
 (defvar dm-map-tags '()
   "List of keyword symbols to include from tile paths.")
@@ -573,7 +595,7 @@ Data is appended via `prin1-to-string'."
 						     (list (symbol-value `,prop))))))))
 		     (delq nil '(,dm-map-overlay-prop ,dm-map-underlay-prop)))
 	       ;;(dm-map--when-tiles-message "before overlays" (list "tree") last-key tile)
-	       (dm-map--when-tiles-message "end row" (list "tree") last-key tile)
+	       ;;(dm-map--when-tiles-message "end row" (list "tree") last-key tile)
 	       dm-map--last-plist)))
 	 (result
 	  (prog1 (eval `(list :load ,cform))
@@ -1363,7 +1385,25 @@ always use \"raidio\"."
 	      (or (equal cur-file file)
 		  (not (member cur-file fileset))))
 	    (append (list file) dm-map-files)))))
+  (when (equal :map-cells files-select-tag)
+    (dm-map-switch-level file))
   (when dm-map-menus-file-redraw (dm-map-draw 1)))
+
+(defun dm-map-switch-level (file)
+  "Display FILE, a dungeon-mode map."
+  ;; save the visible cell list for the prior level
+  (message "OLD %s %s" dm-map-current-level dm-map-level-cells)
+  (setq dm-map-level-cells
+	(plist-put dm-map-level-cells
+		   dm-map-current-level
+		   dm-map-current-level-cells))
+  ;; change to the new level
+  (setq dm-map-current-level file)
+  ;; load any saved cells for the new level
+  (setq dm-map-current-level-cells
+	(plist-get dm-map-level-cells  dm-map-current-level))
+  (message "NEW %s %s" dm-map-current-level dm-map-level-cells)
+  )
 
 (defun dm-map-menus-files-impl (files-select-tag)
   "Create menu options for FILES-SELECT-TAG."
