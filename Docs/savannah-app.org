@@ -1,5 +1,7 @@
 #+TITLE: Application for Savannah
 
+# Copyright (C) 2020 Corwin Brust, Erik C. Elmshauser, Jon Lincicum, Hope Christiansen
+
 Savannah is the project hosting solution provided by the Free Software foundation.
 
 This document represents our (dungeon-mode, the project and product

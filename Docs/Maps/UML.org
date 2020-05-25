@@ -1,4 +1,7 @@
 #+TITLE: Dungeon Mode Rendering Design in Unified Modeling Language
+
+# Copyright (C) 2020 Corwin Brust, Erik C. Elmshauser, Jon Lincicum, Hope Christiansen
+
 #+SETUPFILE: https://raw.githubusercontent.com/fniessen/org-html-themes/master/setup/theme-bigblow.setup
 
 This document provides a Unified Modeling Language version of the

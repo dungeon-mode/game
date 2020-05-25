@@ -1,4 +1,7 @@
 #+TITLE Test: Map Cells with Paths
+
+# Copyright (C) 2020 Corwin Brust, Erik C. Elmshauser, Jon Lincicum, Hope Christiansen
+
 # d:/projects/dungeon-mode/t/org/maps-01_cell-path.org
 
 This tests map rendering using a single table and column.

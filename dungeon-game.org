@@ -1,6 +1,9 @@
 #+TITLE: dungeon-game.el
 #+OPTIONS: broken-links:t num:nil H:8
 
+# Copyright (C) 2020 Corwin Brust, Erik C. Elmshauser, Jon Lincicum, Hope Christiansen
+
+
 # logo image just floats left.  Github does a nicer job than htmlize
 # so don't work about imaage overlapping first two text blocks in the
 # HTML output; it is just for preview purposes.  Travis-ci makes the

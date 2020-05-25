@@ -1,5 +1,7 @@
 #+TITLE: Table Design
 
+# Copyright (C) 2020 Corwin Brust, Erik C. Elmshauser, Jon Lincicum, Hope Christiansen
+
 This file describes parsing rules for tables.
 
 This file is a part of dungeon-mode.  It is not a part of GNU Emacs.

@@ -1,5 +1,8 @@
 #+TITLE Test: Missing overlay for some tiles; other paths for all #4
 
+# Copyright (C) 2020 Corwin Brust, Erik C. Elmshauser, Jon Lincicum, Hope Christiansen
+
+
 * Tiles
 :PROPERTIES:
 :ETL: tile

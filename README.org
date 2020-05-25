@@ -1,5 +1,8 @@
 dungeon-mode - synchronous and asynchronous world sharing and change resolution
 
+# Copyright (C) 2020 Corwin Brust, Erik C. Elmshauser, Jon Lincicum, Hope Christiansen
+
+
 #+CATEGORY: Dungeon
 
 * SYNOPSYS

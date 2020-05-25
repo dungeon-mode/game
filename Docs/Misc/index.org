@@ -1,4 +1,7 @@
 #+TITLE: Index
+
+# Copyright (C) 2020 Corwin Brust, Erik C. Elmshauser, Jon Lincicum, Hope Christiansen
+
 #+PROPERTIES:
  :Version: 0.01
  :Author: Erik C Elmshauser

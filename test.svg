@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+
+<!-- Copyright (C) 2020 Corwin Brust, Erik C. Elmshauser, Jon Lincicum, Hope Christiansen -->
+
 <svg width="2400" height="2400" xmlns="http://www.w3.org/2000/svg">
   <!-- Graph paper Vertical lines -->
   <path d="M 0 0 L 0 2400 M 100 100 L 100 2400 M 200 100 L 200 2400 M 300 100 L 300 2400 M 400 100 L 400 2400 M 500 100 L 500 2400 M 600 100 L 600 2400
