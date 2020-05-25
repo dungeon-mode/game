@@ -13,7 +13,7 @@ License.  For specific terms please see [[LICENSE]] at end-of-file.
 
 * Fantasy Creatures Table
 
-+ This table contains all the members of the critters family
++ This table contains all the members of the fantasy family
 
 | Tbl | Name         | Idx | attack                | special                                                | sp | sw | ax | ma | hits | worth | Notes |
 |-----+--------------+-----+-----------------------+--------------------------------------------------------+----+----+----+----+------+-------+-------|
