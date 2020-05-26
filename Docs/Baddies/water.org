@@ -1,0 +1,65 @@
+#+TITLE: Water Baddies for chambers
+
+# Copyright (C) 2020 Corwin Brust, Erik C. Elmshauser, Jon Lincicum, Hope Christiansen
+
+#+PROPERTIES:
+ :Version: 0.01
+ :Author:  Jon Lincicum
+ :Created: 2020/05/25
+ :Modified: 2020/05/25
+ :END:
+
+This file is a part of dungeon-mode.  It is not a part of GNU Emacs.
+This softare is released under the GNU Public Licence version three
+or, at your disgression, any newer version of the GNU Public
+License.  For specific terms please see [[LICENSE]] at end-of-file.
+
+* Water Creatures Table
+
+
++ This table contains all the members of the Water family
+
+| Tbl | Name                    | Idx | attack               | special                                            | sp | sw | ax | ma | hits | worth | Notes                                  |
+|-----+-------------------------+-----+----------------------+----------------------------------------------------+----+----+----+----+------+-------+----------------------------------------|
+|   / | >                       |  <> | <                    | >                                                  |  < |    |    |  > |    < |     > | <>                                     |
+|   0 | Water Sprites           |  25 | 1 on 9 for 1         |                                                    |  7 |  7 |  7 |  8 |    1 |     1 |                                        |
+|   0 | Water Nymph             |  35 | 1 on 9 for 1         | Forgetfulness - Make random party member miss turn |  6 |  6 |  8 |  9 |    3 |     3 |                                        |
+|     |                         |     | 1 on dbl for special |                                                    |    |    |    |    |      |       |                                        |
+|   0 | Plankton                | 131 | 1 on 10 for 1        | attack 16 abreast (4 x character)                  |  3 |  3 |  3 |  4 |    1 |     1 | Chlorine kills, plastic bag removes 25 |
+|   0 | Minnows                 |  94 | 1 on 10 for 1        | attack 8 abreast (2 x character)                   |  5 |  5 |  5 |  6 |    1 |     1 | 1 Bait will distract 1 dozen  minnows  |
+|   0 | Nemo                    |   1 | 1 on 8 for 1         |                                                    |  7 |  7 |  8 |  9 |    4 |     4 |                                        |
+|   0 | Leeches                 |  45 | 1 on 8 for 1         | Bloodsucker: deal 4 damage 1 per turn for 4 turns  |  7 |  7 |  7 |  8 |    3 |     3 |                                        |
+|     |                         |     | 1 on dbl for special |                                                    |    |    |    |    |      |       |                                        |
+|   0 | Spearfish               |  34 | 1 on 7 for 1         |                                                    |  6 |  9 |  9 |  9 |    9 |     9 |                                        |
+|   0 | Swordfish               |  36 | 1 on 7 for 1         |                                                    |  9 |  6 |  9 |  9 |    9 |     9 |                                        |
+|   0 | Sirens                  |  27 | 1 on 8 for 2         | Lure Men to their Doom - target Male character is  |    |    |    |    |      |       |                                        |
+|     |                         |     | 1 on dbl for special | enchanted, incapacitated for 2d combat rounds      |  8 |  9 |  9 | 10 |   16 |    16 |                                        |
+|   0 | Tiger Shark             |  31 | 2 on 8 for 2         | Hit for .400 - Next three attacks hit automaticaly |  9 |  7 |  7 |  9 |   28 |    28 |                                        |
+|     |                         |     | 1 on dbl for special |                                                    |    |    |    |    |      |       |                                        |
+|   0 | Great White North Shark |  18 | 1 on 7 for 2         | Brewski Bros - Beer fueled frenzy, does 2d dmg     |  8 |  7 |  7 |  9 |   29 |    29 |                                        |
+|     |                         |     | 1 on dbl for special |                                                    |    |    |    |    |      |       |                                        |
+|   0 | Sharks w/ Frickn Lasers |  25 | 2 on 8 for 2         | Laser attack! Does 1d damage                       |  8 |  8 |  7 |  9 |   31 |    31 |                                        |
+|     |                         |     | 1 on dbl for special |                                                    |    |    |    |    |      |       |                                        |
+|   0 | Sea Serpent             |   1 | 2 on 6 for 3         | Strangle! does 1d additional damage                |  7 |  9 |  9 | 10 |   35 |    35 |                                        |
+|     |                         |     | 1 on 9 for specia1   |                                                    |    |    |    |    |      |       |                                        |
+|   0 | Exxon Valdez            |   1 | 1 on 6 for 8         | Oil Slick! does 1d damage to each party member     |  9 |  9 |  9 |  9 |   75 |    75 | Boozed Up Captain: Will chase any      |
+|     |                         |     | 1 on Bx for special  |                                                    |    |    |    |    |      |       | thrown booze bottle and leave combat.  |
+|   0 | Leviathan               |   1 | 3 on 5 for 10        | World Ender: does DoD damage spread to whole party | 10 | 10 | 10 | 11 |  150 |   200 |                                        |
+|     |                         |     | 1 on Bx for Special  |                                                    |    |    |    |    |      |       |                                        |
+|     |                         |     |                      |                                                    |    |    |    |    |      |       |                                        |
+
+
+* LICENSE
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
