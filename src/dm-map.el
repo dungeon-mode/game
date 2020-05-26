@@ -326,21 +326,6 @@ TODO: this can be greatly simplified. macro/inline/remove?"
   (and (string-match dm-map-tile-tag-re tile)
        (match-string 1)))
 
-(defun dm-map-tile-tag-seen-p (tag)
-  "Return t when TAG includes a satasfied seen predicate.
-
-Seen predicates look like:
-  tile:tag:seen(:dir n)
-
-Where tile:tag represents the tile's basename, :dir is a
-direction of travel and n is a number of cells to travel."
-  (let ((str (symbol-name tag)))
-    (when (string-match "seen([ ]*:?\\([^ ]+\\)[ ]*\\([0-9]*\\)[ ]*)" str)
-      (dm-map-seen-cell-p dm-map--last-cell
-			  (intern (match-string 1 str))
-			  (string-to-number (or (match-string 0 str) "0"))
-			  ))))
-
 ;; check if we've seen a given map-cell
 (defsubst dm-map-seen-cell-p (cell-pos dir &optional dist)
   "Return t when the referenced cell has been revealed.
@@ -365,6 +350,23 @@ The referenced cell is decribed in terms of:
 	     (`(,(and x (guard (numberp x))) . ,(and y (guard (numberp y))))
 	      (setq target-cell (gethash (cons x y) dm-map-level)))))
     (member target-pos dm-map-current-level-cells)))
+
+
+(defun dm-map-tile-tag-seen-p (tag)
+  "Return t when TAG includes a satasfied seen predicate.
+
+Seen predicates look like:
+  tile:tag:seen(:dir n)
+
+Where tile:tag represents the tile's basename, :dir is a
+direction of travel and n is a number of cells to travel."
+  (let ((str (if (stringp tag) tag (symbol-name tag))))
+    ;;(message "SEEN: last-cell:%s tag:%s  RESULT:%s" dm-map--last-cell tag result)
+    (when (string-match "seen([ ]*:?\\([^) ]+\\)[ ]*\\([0-9]*\\)[ ]*)" str)
+      (dm-map-seen-cell-p dm-map--last-cell
+			  (intern (match-string 1 str))
+			  (string-to-number (or (match-string 2 str) "1"))
+			  ))))
 
 ;; TODO write dm-map-tile-tag-maybe-invert ?
 (defun dm-map-tile-tag-maybe-invert (tile)
