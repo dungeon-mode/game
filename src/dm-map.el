@@ -262,9 +262,11 @@ Tags (e.g. \":elf\") allow conditional inclusion of draw code.")
 
 ;; tagging stuff
 
-
 (defvar dm-map-tags '()
   "List of keyword symbols to include from tile paths.")
+
+(defvar dm-map-menus-tags-list nil
+  "List of tags to display on the menu.")
 
 (defvar dm-map-tile-tag-re "^\\(.*\\)\\([:]\\([!]\\)?\\(.*?\\)\\)$"
                         ;;     1 base  2 lit 3 invt-p  4 TAG
@@ -324,6 +326,46 @@ TODO: this can be greatly simplified. macro/inline/remove?"
   (and (string-match dm-map-tile-tag-re tile)
        (match-string 1)))
 
+(defun dm-map-tile-tag-seen-p (tag)
+  "Return t when TAG includes a satasfied seen predicate.
+
+Seen predicates look like:
+  tile:tag:seen(:dir n)
+
+Where tile:tag represents the tile's basename, :dir is a
+direction of travel and n is a number of cells to travel."
+  (let ((str (symbol-name tag)))
+    (when (string-match "seen([ ]*:?\\([^ ]+\\)[ ]*\\([0-9]*\\)[ ]*)" str)
+      (dm-map-seen-cell-p dm-map--last-cell
+			  (intern (match-string 1 str))
+			  (string-to-number (or (match-string 0 str) "0"))
+			  ))))
+
+;; check if we've seen a given map-cell
+(defsubst dm-map-seen-cell-p (cell-pos dir &optional dist)
+  "Return t when the referenced cell has been revealed.
+
+The referenced cell is decribed in terms of:
+  CELL-POS, cons (X . Y) given a start position
+  DIST, number of dungeon-units to travel, 1 by default.
+  DIR, direction of travel, as a symbol, one of:
+  'north
+  'east
+  'south
+  'west"
+  (let* ((dist (or dist 1))
+	 (target-pos
+	  (pcase dir
+	    ('north (cons (car cell-pos) (- dist (cdr cell-pos))))
+	    ('east (cons (+ (car cell-pos) dist) (cdr cell-pos)))
+	    ('south (cons (car cell-pos) (+ dist (cdr cell-pos))))
+	    ('west (cons (- (car cell-pos) dist) (cdr cell-pos)))))
+	 (target-cell (gethash target-pos dm-map-level)))
+    (while (pcase (car-safe (plist-get target-cell dm-map-draw-prop))
+	     (`(,(and x (guard (numberp x))) . ,(and y (guard (numberp y))))
+	      (setq target-cell (gethash (cons x y) dm-map-level)))))
+    (member target-pos dm-map-current-level-cells)))
+
 ;; TODO write dm-map-tile-tag-maybe-invert ?
 (defun dm-map-tile-tag-maybe-invert (tile)
   "Return tags for TILE.
@@ -332,7 +374,8 @@ Select each amung normal and inverted based on `dm-map-tags'."
   (delq nil (mapcan
 	     (lambda (tag)
 	       (list (if (or (eq t dm-map-tags)
-			     (member (car tag) dm-map-tags))
+			     (member (car tag) dm-map-tags)
+			     (dm-map-tile-tag-seen-p (car tag)))
 			 (and (< 1 (length tag)) (nth 1 tag))
 		       (and (< 2 (length tag)) (nth 2 tag)))))
 	     (plist-get (gethash tile dm-map-tiles) dm-map-tag-prop))))
@@ -434,6 +477,7 @@ TILE is an hash-table key, PROP is a property (default: \"path\"."
 Kick off a new batch for each \"feature\" or \"level\" table found."
   (dolist (var dm-map-table-var-alist)
     (set (cadr var) (dm-make-hashtable)))
+  (setq dm-map-menus-tags-list nil)
   (list nil
 	(seq-map
 	 (lambda (this-file)
@@ -571,6 +615,10 @@ Data is appended via `prin1-to-string'."
 			       (referent (gethash ref-sym hash)))
 		     (unless (or (match-string 3 tile)
 				 (assoc tag (plist-get referent ',dm-map-tag-prop)))
+		       ;; add new keywords to the menu unless they include a predicate
+		       (unless (string-match-p "seen(" kw)
+			 (add-to-list 'dm-map-menus-tags-list tag))
+
 		       (plist-put referent ',dm-map-tag-prop
 				  (append
 				   (plist-get referent ',dm-map-tag-prop)
@@ -1420,6 +1468,23 @@ always use \"raidio\"."
 	 :selected (member ,map-file dm-map-files)]))
    (append (reverse (dm-files-select files-select-tag)))))
 
+(defun dm-map-menus-tags-toggle (tag)
+  "If TAG is on `dm-map-menus-tags-list' remove it, otherwise add it."
+  (unless (equal t dm-map-menus-tags-list)
+    (if (member tag dm-map-tags)
+	(setq dm-map-tags (delete tag dm-map-tags))
+      (add-to-list 'dm-map-menus-tags-list tag))))
+
+(defun dm-map-menus-tags-impl ()
+  "Display a menu of the available map tags."
+  (mapcar
+   (lambda (tag)
+     `[tag map-menus-tags-toggle
+	   :help "Toggle visability"
+	   :style toggle
+	   :selected (member ,tag dm-map-tags)])
+   dm-map-menus-tags-list))
+
 (defun dm-map-menus-toggle-draw-all (&optional arg)
   "Enable or disable drawing all cells of the current map..
 
@@ -1432,6 +1497,10 @@ disable."
 	    nil ;; disable
 	  t)))  ;; enable
 
+(defun dm-map-predicated-drawing-p ()
+  "Return t when predicated drawing is enabled."
+  (not (equal t dm-map-tags)))
+
 (defun dm-map-menus-files (&rest _)
   "Create menu options for tile files."
   (append (append (list "Tile-sets"
@@ -1439,6 +1508,9 @@ disable."
 				(dm-map-menus-files-impl :map-tiles))
 			(append (list "Dungeon Levels")
 				(dm-map-menus-files-impl :map-cells))))
+	  (when (not (equal t dm-map-tags))
+	    (list (list "Drawing Predicates")
+		  (dm-map-menus-tags-impl)))
 	  (list "-" "Settings")
 	  (list '["Draw complete levels"
 		  (setq dm-map-menus-level-cells-draw-all
@@ -1446,6 +1518,10 @@ disable."
 		  :style toggle
 		  :selected dm-map-menus-level-cells-draw-all
 		  :help "When selected draw the complete map level each time."])
+	  (list '["Predicated drawing"
+		  (setq dm-map-tags (if (equal t dm-map-tags) nil t))
+		  :style 'toggle
+		  :selected dm-map-predicated-drawing-p])
 	  (list '["Exclusive selections"
 		  (setq dm-map-menus-file-style
 			(if (equal 'toggle dm-map-menus-file-style)
