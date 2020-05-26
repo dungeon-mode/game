@@ -1440,7 +1440,6 @@ always use \"raidio\"."
 (defun dm-map-switch-level (file)
   "Display FILE, a dungeon-mode map."
   ;; save the visible cell list for the prior level
-  (message "OLD %s %s" dm-map-current-level dm-map-level-cells)
   (setq dm-map-level-cells
 	(plist-put dm-map-level-cells
 		   dm-map-current-level
@@ -1449,9 +1448,7 @@ always use \"raidio\"."
   (setq dm-map-current-level file)
   ;; load any saved cells for the new level
   (setq dm-map-current-level-cells
-	(plist-get dm-map-level-cells  dm-map-current-level))
-  (message "NEW %s %s" dm-map-current-level dm-map-level-cells)
-  )
+	(plist-get dm-map-level-cells  dm-map-current-level)))
 
 (defun dm-map-menus-files-impl (files-select-tag)
   "Create menu options for FILES-SELECT-TAG."
@@ -1469,20 +1466,28 @@ always use \"raidio\"."
    (append (reverse (dm-files-select files-select-tag)))))
 
 (defun dm-map-menus-tags-toggle (tag)
-  "If TAG is on `dm-map-menus-tags-list' remove it, otherwise add it."
-  (unless (equal t dm-map-menus-tags-list)
-    (if (member tag dm-map-tags)
-	(setq dm-map-tags (delete tag dm-map-tags))
-      (add-to-list 'dm-map-menus-tags-list tag))))
+  "Toggle membership of TAG in `dm-map-menus-tags-list'."
+  (interactive "sTag:")
+  (when tag
+    (unless (symbolp tag)
+      (setq tag (intern tag)))
+    (unless (equal t dm-map-tags)
+      (if (member tag dm-map-tags)
+	  (progn (message "remove")
+		 (setq dm-map-tags (delete tag dm-map-tags)))
+	(add-to-list 'dm-map-tags tag))
+      (when dm-map-menus-file-redraw
+	(dm-map-draw current-prefix-arg)))))
 
 (defun dm-map-menus-tags-impl ()
   "Display a menu of the available map tags."
   (mapcar
    (lambda (tag)
-     `[tag map-menus-tags-toggle
-	   :help "Toggle visability"
-	   :style toggle
-	   :selected (member ,tag dm-map-tags)])
+     `[,(symbol-name tag)
+       (dm-map-menus-tags-toggle ',tag)
+       :help "Toggle visability"
+       :style toggle
+       :selected (member ',tag dm-map-tags)])
    dm-map-menus-tags-list))
 
 (defun dm-map-menus-toggle-draw-all (&optional arg)
@@ -1509,8 +1514,7 @@ disable."
 			(append (list "Dungeon Levels")
 				(dm-map-menus-files-impl :map-cells))))
 	  (when (not (equal t dm-map-tags))
-	    (list (list "Drawing Predicates")
-		  (dm-map-menus-tags-impl)))
+	    `(("Drawing Predicates" ,@(dm-map-menus-tags-impl))))
 	  (list "-" "Settings")
 	  (list '["Draw complete levels"
 		  (setq dm-map-menus-level-cells-draw-all
@@ -1520,7 +1524,7 @@ disable."
 		  :help "When selected draw the complete map level each time."])
 	  (list '["Predicated drawing"
 		  (setq dm-map-tags (if (equal t dm-map-tags) nil t))
-		  :style 'toggle
+		  :style toggle
 		  :selected dm-map-predicated-drawing-p])
 	  (list '["Exclusive selections"
 		  (setq dm-map-menus-file-style
