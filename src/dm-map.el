@@ -138,13 +138,28 @@ Set to nil to suppress adding any background elements."
   :type 'list)
 
 ;;;
-;; "seen" cells history
+;; position "seen" cells history
 
 (define-widget 'dm-custom-cons-x-y 'lazy
   "A number or cons cell in the form (X . Y)."
   :tag "Pos (X . Y)"
   :type '(cons (number :tag "X")
 	       (number :tag "Y")))
+
+(defcustom dm-map-pos nil
+  "When playing, the position of the party on the map."
+  :type 'dm-custom-cons-x-y)
+
+(defcustom dm-map-pos-decoration-id "pos-decoration"
+  "Value for the ID attribute for the SVG element used to identity's position."
+  :type 'string)
+
+(defcustom dm-map-pos-decoration `(circle ((id . ,dm-map-pos-decoration-id)
+					   (cx . .5) (cy . .5) (r . .4)
+					   (stroke . "purple")
+					   (stroke-width . .2)))
+  "SVG ELement used to indicate the position of the party."
+  :type 'sexp)
 
 (defcustom dm-map-current-level-cells nil
   "List of visible map cells."
@@ -156,6 +171,9 @@ Set to nil to suppress adding any background elements."
   :type '(plist :value-type
 		'(repeat :tag "Cell Positions"
 			 dm-custom-cons-x-y)))
+
+(defvar dm-map-svg nil
+  "The current map display as an SVG.")
 
 (defvar dm-map-current-level nil
   "The current map level being displayed.")
@@ -966,6 +984,15 @@ absolute movement to cell's origin as the first instruction."
 			       paths))
 			    (plist-get plist prop)))))
 
+(cl-defun dm-map-level-find-cells (&optional (target dm-map-pos))
+  "Return all cells in the group of which TARGET is a part."
+  (seq-filter
+   (lambda (cell)
+     (or (equal target cell)
+	 (equal target (car-safe (plist-get (gethash cell dm-map-level)
+					    dm-map-draw-prop)))))
+   (hash-table-keys dm-map-level)))
+
 (cl-defun dm-map-quick-draw (&optional
 			     (cells (when dm-map-level
 				      (if dm-map-menus-level-cells-draw-all
@@ -1097,21 +1124,70 @@ SCALE-FUNCTION may be used to supply custom scaling."
 				     :x-nudge (* scale (car nudge))
 				     :y-nudge (* scale (cdr nudge)))))
 		(background)))
+	 (pos-decoration
+	  (when (and dm-map-menus-play-mode dm-map-pos)
+	    (delq
+	     nil
+	     (mapcar
+	      (lambda (cell)
+		`(rect ((fill . "purple") (fill-opacity . .5)
+			(stroke . "none") (stoke-width . 0)
+			(x . ,(+ (* scale (car nudge)) (* scale (car cell))))
+			(y . ,(+ (* scale (cdr nudge)) (* scale (cdr cell))))
+			(width . ,scale)
+			(height . ,scale))))
+	      (dm-map-level-find-cells dm-map-pos)))
+	    ;; (list ;; '(path ((fill . "purple") (fill-opacity . .5)
+	    ;; 	  ;; 	  ;;(stoke . "purple") (stroke-width . 1)
+	    ;; 	  ;; 	  (d . "M10 10 H100 V100 H-100 V-100")))
+	    ;; 	  '(rect ((x . 100) (y . 100) (width . 100) (height . 100))))
+	    ;; (list
+	    ;;  (dm-map--dom-attr-nudge scale-function
+	    ;; 			     nudge
+	    ;; 			     (list scale scale)
+	    ;; 			     (copy-tree dm-map-pos)
+	    ;; 			     (list 'rect (list  (cons 'stroke "red")
+	    ;; 					       (cons 'fill "red")
+	    ;; 					       (cons 'width 250)
+	    ;; 					       (cons 'heigth 250)))
+	    ;; 			     ))
+	    ))
+	 (been-dots
+	  (when dm-map-menus-play-mode
+	    (mapcar
+	     (lambda (cell)
+	       `(circle ((r . 2)
+			 (cx . ,(+ (* (+ .4 (* .01 (random 20))) scale)
+				   (* scale (car nudge)) (* scale (car cell))))
+			 (cy . ,(+ (* (+ .4 (* .01 (random 20))) scale)
+				   (* scale (cdr nudge)) (* scale (cdr cell))))
+			 (fill . "#0f0f0f") (stroke . "none") (stroke-width . 0)
+			 )))
+	     cells)))
 	 (img (dm-svg :svg (append (apply 'svg-create
 					  (append (list (car canvas-size)
 							(cdr canvas-size))
 						  svg-attributes))
-				   (append background underlays paths overlays))
-		      :path-data (dm-svg-create-path
-				  main-path (plist-get path-attributes
-						       dm-map-draw-prop)))))
+				   (append background underlays
+					   been-dots pos-decoration)
+				   (append (list (dm-svg-create-path
+						  main-path
+						  (plist-get path-attributes
+							     dm-map-draw-prop))))
+				   (append  paths overlays))
+		      ;;:overlays (append paths overlays pos-decoration)
+		      ;; :path-data (dm-svg-create-path
+		      ;; 		  main-path (plist-get path-attributes
+		      ;; 				       dm-map-draw-prop))
+		      )))
+    ;;(message "[draw] svg:%s" been-dots)
     ;;(message "[draw] draw-code:%s" (prin1-to-string draw-code))
     ;;(message "[draw] path-props:%s" path-attributes)
     ;;(message "[draw] XML SVG overlays:%s" (prin1-to-string overlays))
     ;;(message "[draw] other paths:%s" (prin1-to-string paths))
     ;;(message "[draw] background:%s" (prin1-to-string background))
     ;;(when (boundp 'dm-dump) (setq dm-dump draw-code))
-    img))
+    (setq dm-map-svg img)))
 
 (cl-defun dm-map-background (&optional
 			     &key
@@ -1210,13 +1286,41 @@ SCALE-FUNCTION may be used to supply custom scaling."
     (dm-map-load)) ;; any prefix arg causes reload from files
   (let ((svg (dm-map-quick-draw)))
     (prog1 svg
-      (dm-map-with-map-erased (render-and-insert-string svg))
+      (if dm-map-menus-play-mode
+	  (dm-map-with-map-erased (render-and-insert svg))
+	(dm-map-with-map-erased (render-and-insert-string svg)))
       (with-current-buffer dm-map-preview-buffer-name
 	(image-mode-setup-winprops)
 	(let ((inhibit-read-only t)
 	      (start (point-min))
 	      (end (point-max)))
-	  (put-text-property start end 'help-echo #'dm-map--pos-impl))))))
+	  (put-text-property start end 'pointer 'hand)
+	  (put-text-property
+	   start end 'help-echo
+	   (if dm-map-menus-play-mode
+	       (lambda (&rest _)
+		 (let ((pos (dm-map--pos-impl)))
+		   (with-slots (svg) dm-map-svg
+		     (when dm-map--pos-mouse-overlay
+		       (svg-remove svg "dm-map--pos-mouse-overlay"))
+		     (setq
+		      dm-map--pos-mouse-overlay
+		      (svg-rectangle svg
+				     (+ (* dm-map-scale (car dm-map-nudge))
+					(* dm-map-scale (car pos)))
+				     (+ (* dm-map-scale (cdr dm-map-nudge))
+					(* dm-map-scale (cdr pos)))
+				     dm-map-scale
+				     dm-map-scale
+				     :id "dm-map--pos-mouse-overlay"
+				     :fill "red" :fill-opacity .5
+				     :stroke "none" :stoke-width 0)))
+		   (format "%s" pos)))
+	     (lambda (&rest _)
+	       (let ((pos (dm-map--pos-impl)))
+		 (format "%s" pos))))))))))
+
+(defvar dm-map--pos-mouse-overlay nil)
 
 ;; (defun dm-map-center (&optional x y)
 ;;   "Center map buffer, on POS when given.
@@ -1312,8 +1416,8 @@ ARG is the factor for applying 'dm-map-scale-nudge' to `dm-map-scale'."
 (defun dm-map--pos-pixels-to-cell (x y)
   "Return map cell under the given X Y position in pixels."
   (let* ((win (selected-window))
-	 (nudge-X (ceiling (* dm-map-scale (car dm-map-nudge))))
-	 (nudge-Y (ceiling (* dm-map-scale (cdr dm-map-nudge))))
+	 (nudge-X (* dm-map-scale (car dm-map-nudge)))
+	 (nudge-Y (* dm-map-scale (cdr dm-map-nudge)))
 	 (du-X (/ (- x nudge-X) dm-map-scale))
 	 (du-Y  (/ (- y nudge-Y) dm-map-scale))
 	 ;; account for any cells scrolled out of window
@@ -1358,6 +1462,7 @@ When ARG is non nil reload level and tile tables."
 When ARG is non nil reload level and tile tables."
   (interactive "nx:\nny:\np")
   (let ((cell (cons x y)))
+    (setq dm-map-pos cell)
     (funcall (if (member cell dm-map-current-level-cells)
 		 'dm-map-remove-cell
 	       'dm-map-add-cell)
@@ -1508,6 +1613,10 @@ disable."
   "Return t when predicated drawing is enabled."
   (not (equal t dm-map-tags)))
 
+(defcustom dm-map-menus-play-mode nil
+  "When t display for game-play instead of editing."
+  :type 'boolean)
+
 (defun dm-map-menus-files (&rest _)
   "Create menu options for tile files."
   (append (append (list "Tile-sets"
@@ -1524,10 +1633,14 @@ disable."
 		  :style toggle
 		  :selected dm-map-menus-level-cells-draw-all
 		  :help "When selected draw the complete map level each time."])
+	  (list `["Play-mode (overlays)"
+		  (setq dm-map-menus-play-mode (not dm-map-menus-play-mode))
+		  :style toggle
+		  :selected dm-map-menus-play-mode])
 	  (list '["Predicated drawing"
 		  (setq dm-map-tags (if (equal t dm-map-tags) nil t))
 		  :style toggle
-		  :selected dm-map-predicated-drawing-p])
+		  :selected (dm-map-predicated-drawing-p)])
 	  (list '["Exclusive selections"
 		  (setq dm-map-menus-file-style
 			(if (equal 'toggle dm-map-menus-file-style)

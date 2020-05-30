@@ -71,6 +71,12 @@ When TAG is non-nill (car OBJECT) must also `equal' TAG."
        (or (null tag)
 	   (equal tag (car object)))))
 
+(defun dm-svg-dom-nodes-or-nil-p (obj)
+  "Return t when OBJ is a list of `dom-0nopde' or nil."
+  (or (null obj)
+      (and (listp obj)
+	   (seq-every-p #'dm-svg-dom-node-p obj))))
+
 (defun dm-svg-or-nil-p (obj)
   "True if OBJ is nil or an SVG `dom'."
   (or (null obj)
@@ -96,7 +102,8 @@ by, e.g. `dom-node' which see."
   ((svg :type dm-svg-or-nil :initarg :svg :initform nil)
    (path-data :type dm-svg-path-or-path-data
 	      :initarg :path-data
-	      :initform nil))
+	      :initform nil)
+   (overlays :type dm-svg-dom-nodes-or-nil-p :initarg :overlays :initform nil))
   :documentation
   "Wrap `svg' as an 'eieio' object.
 
@@ -137,18 +144,25 @@ the \"d\" attribute.")
 
 Image is inserted to `current-buffer' at `point' after appending
 a path element using path-data of DM-SVG. See `add-path-data'."
-  (with-slots (svg path-data) object
-      (dom-append-child svg path-data)
-      ;;(with-temp-file "out.svg" (set-buffer-multibyte nil) (svg-print svg))
-      (svg-insert-image svg)))
+  (with-slots (svg path-data overlays) object
+    (when path-data (dom-append-child svg path-data))
+    (mapc (lambda (elem)
+	     (dom-append-child svg elem))
+	   overlays)
+    ;;(with-temp-file "out.svg" (set-buffer-multibyte nil) (svg-print svg))
+    (svg-insert-image svg)))
 
 (cl-defmethod render-and-insert-string ((object dm-svg))
   "Render and insert `svg' from a DM-SVG.
 
 Image is inserted to `current-buffer' at `point' after appending
 a path element using path-data of DM-SVG. See `add-path-data'."
-  (with-slots (svg path-data) object
-      (dom-append-child svg path-data)
+  (with-slots (svg path-data overlays) object
+    (when path-data (dom-append-child svg path-data))
+    (when overlays
+      (mapc (lambda (elem)
+	      (dom-append-child svg elem))
+	   overlays))
       ;;(with-temp-file "out.svg" (set-buffer-multibyte nil) (svg-print svg))
       ;;(svg-insert-image svg)
       (svg-print svg)))
