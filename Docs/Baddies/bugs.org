@@ -1,0 +1,60 @@
+#+TITLE: Bug Baddies for chambers
+
+# Copyright (C) 2020 Corwin Brust, Erik C. Elmshauser, Jon Lincicum, Hope Christiansen
+
+#+PROPERTIES:
+ :Version: 0.01
+ :Author:  Jon Lincicum
+ :Created: 2020/05/28
+ :Modified: 2020/05/28
+ :END:
+
+This file is a part of dungeon-mode.  It is not a part of GNU Emacs.
+This softare is released under the GNU Public Licence version three
+or, at your disgression, any newer version of the GNU Public
+License.  For specific terms please see [[LICENSE]] at end-of-file.
+
+* Bug Creatures Table
+
+
++ This table contains all the members of the Bugs family
+
+| Tbl | Name              | Idx | attack               | special                                           | sp | sw | ax | ma | hits | worth | Notes                            |
+|-----+-------------------+-----+----------------------+---------------------------------------------------+----+----+----+----+------+-------+----------------------------------|
+|   / | >                 |  <> | <                    | >                                                 |  < |    |    |  > |    < |     > | <>                               |
+|   0 | Ants              | 127 | 1 on 9 for 1         |                                                   |  4 |  4 |  4 |  5 |    1 |     1 | Attack 16 abreast                |
+|   0 | Bees              | 117 | 1 on 8 for 1         | Stinger: Bee does DD but bee dies                 |  4 |  4 |  5 |  5 |    1 |     1 | Flying. Attack 25 at a time      |
+|     |                   |     | 1 on dbl for special |                                                   |    |    |    |    |      |       |                                  |
+|   0 | Bed Bugs          |  50 | 1 on 8 for 1         | Bed Bugs Bite: Puts target to sleep for 1 round   |  5 |  5 |  5 |  6 |    2 |     2 | Attack 8 abreast                 |
+|     |                   |     | 1 on dbl for special |                                                   |    |    |    |    |      |       |                                  |
+|   0 | Spiders           |  35 | 1 on 8 for 1         | Webbed Up: Incapacitates tgt for 1d turns         |  6 |  6 |  6 |  6 |    2 |     2 |                                  |
+|     |                   |     | 1 on BX for special  |                                                   |    |    |    |    |      |       |                                  |
+|   0 | Moths             |  30 | 1 on 8 for 1         |                                                   |  7 |  6 |  6 |  7 |    2 |     2 | Flying  Attacks anything on fire |
+|   0 | Wasps             |  87 | 1 on 7 for 1         |                                                   |  6 |  7 |  7 |  6 |    3 |     3 | Flying  Attack 10 at a time      |
+|   0 | Rabid Butterflies |  72 | 1 on 7 for 1         | Infect: place counter on tgt, 3 counters gives    |  8 |  6 |  6 |  8 |    3 |     3 | Flying Attack 8 at a time        |
+|     |                   |     |                      | that player rabies until cured                    |    |    |    |    |      |       |                                  |
+|   0 | Crickets          |  41 | 1 on 6 for 1         | Big Bopper: A plane randomly crashes into party;  |  6 |  9 |  7 |  8 |    4 |     4 |                                  |
+|     |                   |     | 1 on Bx for special  | deal 1d dmg to each player                        |    |    |    |    |      |       |                                  |
+|   0 | Fire Ants         |  65 | 1 on 8 for 2         | Fire Attack: Deal Double Damage                   |  9 |  6 |  8 |  6 |    4 |     4 |                                  |
+|     |                   |     | 1 on dbl for special |                                                   |    |    |    |    |      |       |                                  |
+|   0 | Beetles           |  51 | 1 on 5 for 1         |                                                   |  7 |  7 |  6 |  8 |    5 |     5 |                                  |
+|   0 | Beatles           |  35 | 1 on 4 for 1         | Fab Four: Deal 1d damage to 4 random targets      |  8 |  8 |  8 |  8 |    4 |     4 |                                  |
+|     |                   |     | 1 on dbl for special |                                                   |    |    |    |    |      |       |                                  |
+|   0 | Carpenter Ants    |  19 | 1 on 9 for 2         | We've only just begun: Ants heal back to full hlt |  7 |  7 |  8 |  9 |    6 |     6 |                                  |
+|     |                   |     | 1 on dbl for special |                                                   |    |    |    |    |      |       |                                  |
+|     |                   |     |                      |                                                   |    |    |    |    |      |       |                                  |
+
+* LICENSE
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
