@@ -473,7 +473,8 @@ TILE is an hash-table key, PROP is a property (default: \"path\"."
 	   ;;     (image-mode-as-text)))
 	   (erase-buffer)
 	   ,@body
-	   (unless (derived-mode-p 'dm-map-mode) (dm-map-mode))
+	   (unless (derived-mode-p dm-map-image-mode)
+	     (funcall (symbol-function dm-map-image-mode)))
 	   (unless (image-get-display-property) (image-toggle-display-image))
 	   (beginning-of-buffer))))))
 
@@ -733,7 +734,20 @@ found."
       (dom-set-attribute dom-node y-prop y-new))
     ;; process child nodes
     (dolist (child (dom-children dom-node))
-      (dm-map--dom-attr-nudge path-fun nudge scale pos child))
+      (if (not (stringp child))
+	  ;; (string-match "[$]\\([^][(),.$]\\)+" child)
+	  (dm-map--dom-attr-nudge path-fun nudge scale pos child)
+	  (dom-remove-node dom-node child)
+	  (dom-append-child dom-node
+			    (replace-regexp-in-string
+			     "[$][^][(),^$ ]+"
+			     (lambda (str)
+			       (let* ((plist (gethash pos dm-map-level))
+				      (var (intern (substring str 1 (length str))))
+				      (val (plist-get plist var)))
+				 ;;(message "var:%s val:%s pos:%s plist:%s" var val pos plist)
+				 (format "%s" (or val ""))))
+			     child))))
     dom-node))
 
 ;;(dm-map--dom-attr-nudge dm-map-default-scale-function '(1 . 2) '(4 8) '(0 . 0) (dom-node 'text '((x . 16)(y . 32))))
@@ -1093,6 +1107,7 @@ SCALE-FUNCTION may be used to supply custom scaling."
 	 ;; hack in a single SVG XML prop, for now scale inline
 	 (overlays (mapcan
 		    (lambda (cell)
+		      ;;(mapcar (lambda (elem) (dom-remove-node)))
 		      (mapcar (apply-partially 'dm-map--dom-attr-nudge
 					       scale-function
 					       nudge
@@ -1164,17 +1179,18 @@ SCALE-FUNCTION may be used to supply custom scaling."
 			 (fill . "#0f0f0f") (stroke . "none") (stroke-width . 0)
 			 )))
 	     cells)))
-	 (img (dm-svg :svg (append (apply 'svg-create
-					  (append (list (car canvas-size)
-							(cdr canvas-size))
-						  svg-attributes))
-				   (append background underlays
-					   been-dots pos-decoration)
-				   (append (list (dm-svg-create-path
-						  main-path
-						  (plist-get path-attributes
-							     dm-map-draw-prop))))
-				   (append  paths overlays))
+	 (img (dm-svg :svg
+		      (append (apply 'svg-create
+				     (append (list (car canvas-size)
+						   (cdr canvas-size))
+					     svg-attributes))
+			      (append background underlays
+				      been-dots pos-decoration)
+			      (append (list (dm-svg-create-path
+					     main-path
+					     (plist-get path-attributes
+							dm-map-draw-prop))))
+			      (append  paths overlays))
 		      ;;:overlays (append paths overlays pos-decoration)
 		      ;; :path-data (dm-svg-create-path
 		      ;; 		  main-path (plist-get path-attributes
@@ -1295,32 +1311,45 @@ SCALE-FUNCTION may be used to supply custom scaling."
 	      (start (point-min))
 	      (end (point-max)))
 	  (put-text-property start end 'pointer 'hand)
-	  (put-text-property
-	   start end 'help-echo
-	   (if dm-map-menus-play-mode
+	  (when dm-map-image-map
+	      (put-text-property start end :map dm-map-image-map))
+	  (unless dm-map-draw-inhibit-help-echo
+	    (put-text-property
+	     start end 'help-echo
+	     (if dm-map-menus-play-mode
+		 (lambda (&rest _)
+		   (let ((pos (dm-map--pos-impl)))
+		     (with-slots (svg) dm-map-svg
+		       (when dm-map--pos-mouse-overlay
+			 (svg-remove svg "dm-map--pos-mouse-overlay"))
+		       (setq
+			dm-map--pos-mouse-overlay
+			(svg-rectangle svg
+				       (+ (* dm-map-scale (car dm-map-nudge))
+					  (* dm-map-scale (car pos)))
+				       (+ (* dm-map-scale (cdr dm-map-nudge))
+					  (* dm-map-scale (cdr pos)))
+				       dm-map-scale
+				       dm-map-scale
+				       :id "dm-map--pos-mouse-overlay"
+				       :fill "red" :fill-opacity .5
+				       :stroke "none" :stoke-width 0)))
+		     (format "%s" pos)))
 	       (lambda (&rest _)
 		 (let ((pos (dm-map--pos-impl)))
-		   (with-slots (svg) dm-map-svg
-		     (when dm-map--pos-mouse-overlay
-		       (svg-remove svg "dm-map--pos-mouse-overlay"))
-		     (setq
-		      dm-map--pos-mouse-overlay
-		      (svg-rectangle svg
-				     (+ (* dm-map-scale (car dm-map-nudge))
-					(* dm-map-scale (car pos)))
-				     (+ (* dm-map-scale (cdr dm-map-nudge))
-					(* dm-map-scale (cdr pos)))
-				     dm-map-scale
-				     dm-map-scale
-				     :id "dm-map--pos-mouse-overlay"
-				     :fill "red" :fill-opacity .5
-				     :stroke "none" :stoke-width 0)))
-		   (format "%s" pos)))
-	     (lambda (&rest _)
-	       (let ((pos (dm-map--pos-impl)))
-		 (format "%s" pos))))))))))
+		   (format "%s" pos)))))))))))
 
-(defvar dm-map--pos-mouse-overlay nil)
+(defvar dm-map-image-map nil
+  "List of mouse hit regions for image view.")
+
+(defvar dm-map-image-mode 'dm-map-mode
+  "Major mode used when displaying the map as an image.")
+
+(defvar dm-map-draw-inhibit-help-echo nil
+  "When t do not add an help-echo property to the map image.")
+
+(defvar dm-map--pos-mouse-overlay nil
+  "When displaying map in map-mode, the svg element indicating mouse position.")
 
 ;; (defun dm-map-center (&optional x y)
 ;;   "Center map buffer, on POS when given.
@@ -1580,7 +1609,7 @@ always use \"raidio\"."
       (setq tag (intern tag)))
     (unless (equal t dm-map-tags)
       (if (member tag dm-map-tags)
-	  (progn (message "remove")
+	  (progn ;;(message "remove")
 		 (setq dm-map-tags (delete tag dm-map-tags)))
 	(add-to-list 'dm-map-tags tag))
       (when dm-map-menus-file-redraw
