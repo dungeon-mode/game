@@ -218,7 +218,7 @@ Set FIELD to VALUE for character in SLOT/ROW."
 				      (cons 'fill "blue")
 				      (cons 'text-anchor "middle")
 				      (cons 'dominant-baseline "central")
-				      (cons 'font-size 1.7)
+				      (cons 'font-size 1.6)
 				      (cons 'x 4)
 				      (cons 'y -.4))
 				"$name")
