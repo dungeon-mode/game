@@ -1288,7 +1288,7 @@ SCALE-FUNCTION may be used to supply custom scaling."
 (defun dm-map-draw (&optional arg)
   "Draw all from `dm-map-level'.  With prefix ARG, reload first."
   (interactive "P")
-  (when arg ;; prompt if no files or neg prefix arg
+  (when (or arg (not (hash-table-p dm-map-tiles))) ;; prompt if no files or neg prefix arg
     (if (or (not dm-map-files) (equal '- arg))
 	(setq dm-map-files (completing-read-multiple
 			    "Files:"

@@ -86,7 +86,7 @@ Set FIELD to VALUE for character in SLOT/ROW."
 				       field))))
     (save-window-excursion
       (with-temp-buffer
-	(find-file (car-safe dm-bb-file))
+	(find-file (car-safe (dm-files-select :bb-party)))
 	(org-with-wide-buffer
 	 (beginning-of-buffer)
 	 (while (not (or (eobp) (org-at-table-p)))
@@ -171,7 +171,7 @@ Set FIELD to VALUE for character in SLOT/ROW."
   "Draw the battleboard."
   (interactive)
   ;;(let ((party (list (list 'war01 'warrior 3 15 6 6)))))
-  (let ((dm-map-files dm-bb-file)
+  (let (;;(dm-map-files dm-bb-file)
 	(dm-map-scale 20)
 	(dm-map-menus-level-cells-draw-all t)
 	(dm-map-preview-buffer-name "**battle board**")
@@ -195,7 +195,7 @@ Set FIELD to VALUE for character in SLOT/ROW."
 	;;dm-bb-party
 	)
     (setq dm-bb-slot-to-pos nil)
-    (dm-map-load)
+    (dm-map-load (car-safe (dm-files-select :bb-party)))
     (puthash 'bb-char-box
 	     (list dm-map-draw-prop
 		   (list (list 'm (list 4 0))
