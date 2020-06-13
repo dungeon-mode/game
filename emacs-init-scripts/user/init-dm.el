@@ -35,7 +35,8 @@
   (setq dm-files (list my-path))
   (setq dm-map-tags t)
   (require 'dungeon-mode)
-  (require 'dm-map))
+  (require 'dm-map)
+  (require 'dm-battleboard))
 
 (provide 'init-dm)
 ;;; init-dm.el ends here
