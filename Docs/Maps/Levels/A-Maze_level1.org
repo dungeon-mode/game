@@ -171,12 +171,12 @@ Refer to design.org for more details.
 |  0 |  5 | 10◦E                                             |
 |  1 |  5 | cNS◦W                                            |
 |  2 |  5 | cNS                                              |
-|  3 |  5 | 20◦NW dot20                                      |
+|  3 |  5 | 20◦NW                                            |
 |  4 |  5 | (3 . 5)                                          |
 |  5 |  5 | cNES                                             |
 |  6 |  5 | cNSW◦E                                           |
-|  7 |  5 | cE◦W                                             |
-|  8 |  5 | cW                                               |
+|  7 |  5 | cE◦W → cW                                           |
+|  8 |  5 | (7 . 5)                                       |
 |  9 |  5 | GS                                               |
 | 10 |  5 | (9 . 5)                                          |
 | 11 |  5 | cN                                               |
@@ -407,7 +407,7 @@ Refer to design.org for more details.
 | 11 | 14 | (10 . 12)                                        |
 | 12 | 14 | (10 . 12)                                        |
 | 13 | 14 | (10 . 12)                                        |
-| 14 | 14 | cS                                               |
+| 14 | 14 | cS ↓ cN◦S                                        |
 | 15 | 14 | cS                                               |
 | 16 | 14 | cS                                               |
 | 17 | 14 | cNS                                              |
@@ -432,7 +432,7 @@ Refer to design.org for more details.
 | 11 | 15 | cNS                                              |
 | 12 | 15 | E◦N                                              |
 | 13 | 15 | cS                                               |
-| 14 | 15 | cN◦S                                             |
+| 14 | 15 | ( 14 . 14)                                       |
 | 15 | 15 | cN◦S                                             |
 | 16 | 15 | cN◦S                                             |
 | 17 | 15 | cNS                                              |
