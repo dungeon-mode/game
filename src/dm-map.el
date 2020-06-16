@@ -1185,12 +1185,13 @@ SCALE-FUNCTION may be used to supply custom scaling."
 						   (cdr canvas-size))
 					     svg-attributes))
 			      (append background underlays
-				      been-dots pos-decoration)
+				      been-dots pos-decoration
+				      paths) ;; the non-primary paths, beach, etc.
 			      (append (list (dm-svg-create-path
 					     main-path
 					     (plist-get path-attributes
 							dm-map-draw-prop))))
-			      (append  paths overlays))
+			      (append overlays))
 		      ;;:overlays (append paths overlays pos-decoration)
 		      ;; :path-data (dm-svg-create-path
 		      ;; 		  main-path (plist-get path-attributes
