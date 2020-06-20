@@ -1,0 +1,88 @@
+#+TITLE: Minimum Play-Testable Product TODO List for Dungeon-mode
+
+# Copyright (C) 2020 Corwin Brust, Erik C. Elmshauser, Jon Lincicum, Hope Christiansen, Frank Runyon
+
+This document lists items we think necessary to the minimum
+play-testable version of dungeon-mode. For more information on the
+project visit our listing on the [[https://directory.fsf.org/wiki/Dungeon-mode][Free Software Directory]] or browse the
+sources, including this file, on [[https://github.com/dungeon-mode/game ][GitHub]].
+
+This file is a part of dungeon-mode.  It is not a part of GNU Emacs.
+This softare is released under the GNU Public Licence version three
+or, at your disgression, any newer version of the GNU Public
+License.  For specific terms please see [[LICENSE]] at end-of-file.
+
+* Game Tasks
+** L2 alignment and lower right corner                                  :BUG:
+** Double check all 10x20                                          :JON::BUG:
+   A fixed example can be found at (A3 0 . 22)
+** Add abrest ("ab") column for baddies
+** Baddie review/adjustments
+*** Baby Alien
+*** Zerglings
+** Review economics (e.g. treasure worth values, etc.)
+** DONE Verify beach walls are coded
+   CLOSED: [2020-06-20 Sat 02:29]
+**
+* Coding Tasks
+** Network stack
+** Battleboard
+*** Move characters position
+*** Handle armor/shield destruction
+*** Handle character death
+*** Handle character incapacitation
+*** Automate hit distribution
+*** Clear damage/clear-all
+*** off-by-one error in position tracking?                              :BUG:
+*** Display addition character stats/status
+**** race
+**** class
+**** chastity
+**** weapon
+**** modifiers
+*** Turn counters and transient effect tracking
+**** sleep
+**** race-control
+**** berzerk
+**** frenzy
+*** Quick-pick "Buttons"
+**** set
+**** increment base damage
+**** decrement base damage
+**** clear damage
+**** clear-all damage
+*** Handle a-typical formations
+** Mapping
+*** Buffer per map level
+*** Display current dungeon level
+*** Set/clear party location
+*** one-way secret doors                                                :BUG:
+*** Track position per dungeon level
+*** Save and restore                                                 :OPTION:
+**** Save current dungeon-level
+**** Save seen-cells (all levels)
+** More
+*** Graphical dice-roller
+*** Handle half-square reveal                                        :DESIGN:
+*** HEROify logo, spiff up website
+*** Implement "style file"
+*** Track party treasure scores
+*** Table mapping features
+**** baddies
+**** treasure
+*** Character sheet
+
+* LICENSE
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
