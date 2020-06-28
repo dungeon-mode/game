@@ -13,65 +13,65 @@ or, at your disgression, any newer version of the GNU Public
 License.  For specific terms please see [[LICENSE]] at end-of-file.
 
 * Game Tasks
-** L2 alignment and lower right corner                                  :BUG:
-** Double check all 10x20                                           :JON:BUG:
+** TODO L2 alignment and lower right corner                             :BUG:
+** TODO Double check all 10x20                                      :JON:BUG:
    A fixed example can be found at (A3 0 . 22)
-** Add abrest ("ab") column for baddies
-** Baddie review/adjustments
+** TODO Add abrest ("ab") column for baddies
+** TODO Baddie review/adjustments
 *** Baby Alien
 *** Zerglings
-** Review economics (e.g. treasure worth values, etc.)
+** TODO Review economics (e.g. treasure worth values, etc.)
 ** DONE Verify beach walls are coded
    CLOSED: [2020-06-20 Sat 02:29]
 * Coding Tasks
-** Network stack
+** TODO Network stack
 ** Battleboard
-*** Move characters position
-*** Handle armor/shield destruction
-*** Handle character death
-*** Handle character incapacitation
-*** Automate hit distribution
-*** Clear damage/clear-all
-*** off-by-one error in position tracking?                              :BUG:
+*** TODO Move characters position                                        :P1:
+*** TODO Handle armor/shield destruction
+*** TODO Handle character death
+*** TODO Handle character incapacitation
+*** TODO Automate hit distribution
+*** TODO Clear damage/clear-all
+*** INPROGRESS off-by-one error in position tracking?                :BUG:P1:
 *** Display addition character stats/status
-**** race
-**** class
-**** chastity
-**** weapon
-**** modifiers
+**** TODO race
+**** TODO class
+**** TODO chastity
+**** TODO weapon
+**** TODO modifiers
 *** Turn counters and transient effect tracking
-**** sleep
-**** race-control
-**** berzerk
-**** frenzy
+**** TODO sleep
+**** TODO race-control
+**** TODO berzerk
+**** TODO frenzy
 *** Quick-pick "Buttons"
-**** set
-**** increment base damage
-**** decrement base damage
-**** clear damage
-**** clear-all damage
-*** Handle a-typical formations
-*** Save changes to memory; push to file when idle
+**** TODO set
+**** TODO increment base damage
+**** TODO decrement base damage
+**** TODO clear damage
+**** TODO clear-all damage
+*** TODO Handle a-typical formations
+*** TODO Save changes to memory; push to file when idle
 ** Mapping
-*** Buffer per map level
-*** Display current dungeon level
-*** Set/clear party location
-*** one-way secret doors                                                :BUG:
-*** Track position per dungeon level
+*** TODO Buffer per map level
+*** TODO Display current dungeon level
+*** TODO Set/clear party location
+*** TODO one-way secret doors                                           :BUG:
+*** TODO Track position per dungeon level
 *** Save and restore                                                 :OPTION:
-**** Save current dungeon-level
-**** Save seen-cells (all levels)
+**** TODO Save current dungeon-level                                     :P1:
+**** TODO Save seen-cells (all levels)                                   :P2:
 *** Redrew ("r") binding seems to have broken                           :BUG:
 ** More
-*** Graphical dice-roller
-*** Handle half-square reveal                                        :DESIGN:
-*** HEROify logo, spiff up website
-*** Implement "style file"
-*** Track party treasure scores
+*** TODO Graphical dice-roller
+*** TODO Handle half-square reveal                                   :DESIGN:
+*** TODO HEROify logo, spiff up website
+*** TODO Implement "style file"
+*** TODO Track party treasure scores
 *** Table mapping features
-**** baddies
-**** treasure
-*** Character sheet
+**** TODO baddies
+**** TODO treasure
+*** TODO Character sheet
 
 * LICENSE
 
