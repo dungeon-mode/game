@@ -14,7 +14,7 @@ License.  For specific terms please see [[LICENSE]] at end-of-file.
 
 * Game Tasks
 ** L2 alignment and lower right corner                                  :BUG:
-** Double check all 10x20                                          :JON::BUG:
+** Double check all 10x20                                           :JON:BUG:
    A fixed example can be found at (A3 0 . 22)
 ** Add abrest ("ab") column for baddies
 ** Baddie review/adjustments
@@ -23,7 +23,6 @@ License.  For specific terms please see [[LICENSE]] at end-of-file.
 ** Review economics (e.g. treasure worth values, etc.)
 ** DONE Verify beach walls are coded
    CLOSED: [2020-06-20 Sat 02:29]
-**
 * Coding Tasks
 ** Network stack
 ** Battleboard
@@ -52,6 +51,7 @@ License.  For specific terms please see [[LICENSE]] at end-of-file.
 **** clear damage
 **** clear-all damage
 *** Handle a-typical formations
+*** Save changes to memory; push to file when idle
 ** Mapping
 *** Buffer per map level
 *** Display current dungeon level
@@ -61,6 +61,7 @@ License.  For specific terms please see [[LICENSE]] at end-of-file.
 *** Save and restore                                                 :OPTION:
 **** Save current dungeon-level
 **** Save seen-cells (all levels)
+*** Redrew ("r") binding seems to have broken                           :BUG:
 ** More
 *** Graphical dice-roller
 *** Handle half-square reveal                                        :DESIGN:
