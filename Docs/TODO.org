@@ -21,7 +21,7 @@ License.  For specific terms please see [[LICENSE]] at end-of-file.
 *** Baby Alien
 *** Zerglings
 ** TODO Review economics (e.g. treasure worth values, etc.)
-** DONE Verify beach walls are coded
+** DONE Verify beach wall coding
    CLOSED: [2020-06-20 Sat 02:29]
 * Coding Tasks
 ** TODO Network stack
@@ -58,6 +58,7 @@ License.  For specific terms please see [[LICENSE]] at end-of-file.
 *** TODO Set/clear party location
 *** TODO one-way secret doors                                           :BUG:
 *** TODO Track position per dungeon level
+*** TODO follow revealed squares to source when references
 *** Save and restore                                                 :OPTION:
 **** TODO Save current dungeon-level                                     :P1:
 **** TODO Save seen-cells (all levels)                                   :P2:

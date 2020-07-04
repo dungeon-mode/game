@@ -1493,7 +1493,7 @@ When ARG is non nil reload level and tile tables."
   (interactive "nx:\nny:\np")
   (let ((cell (cons x y)))
     (setq dm-map-pos cell)
-    (funcall (if (member cell dm-map-current-level-cells)
+    (funcall (if (member cell dm-map-current-level-cellgrs)
 		 'dm-map-remove-cell
 	       'dm-map-add-cell)
 	     x y arg)))
@@ -1501,7 +1501,17 @@ When ARG is non nil reload level and tile tables."
 (defun dm-map-mouse-toggle-cell ()
   "Toggle display of the map cell under mouse."
   (interactive "@")
-  (let ((cell (dm-map--pos-impl)))
+  (let* ((cell (dm-map--pos-impl))
+	 (ref-cell-maybe (car-safe (plist-get (gethash cell dm-map-level)
+					      dm-map-draw-prop)))
+	 (cell (pcase ref-cell-maybe
+		 ;; follow references when we didn't click the origin cell
+		 (`(,(and x (guard (numberp x))) . ,(and y (guard (numberp y))))
+		  (message "got ref-cell:%s,%s" x y)
+		  ref-cell-maybe)
+		 (_ cell))
+	       ))
+    (message "cell:%s ref-maybe:%s" cell ref-cell-maybe)
     (dm-map-toggle-cell (car cell) (cdr cell)
 			current-prefix-arg)))
 
@@ -1750,7 +1760,10 @@ If OBJ is not a string return the empty string."
       ""))
 
 (defun dm-map-row-load-and-draw (&optional inhibit-error)
-  "Load map draw instructions from the table row at point."
+  "Load map draw instructions from the table row at point.
+
+When INHIBIT-ERROR is non-nil suppress error when point is not at
+an org table."
   (interactive)
   (if (not (org-at-table-p))
       (unless inhibit-error (user-error "Not at a table"))
