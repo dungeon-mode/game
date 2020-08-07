@@ -13,8 +13,9 @@ or, at your disgression, any newer version of the GNU Public
 License.  For specific terms please see [[LICENSE]] at end-of-file.
 
 * Game Tasks
-** TODO L2 alignment and lower right corner                             :BUG:
-** TODO Double check all 10x20                                      :JON:BUG:
+** DONE L2 alignment and lower right corner                             :BUG:
+   CLOSED: [2020-08-07 Fri 14:56]
+** INPROGRESS Double check all 10x20                                :JON:BUG:
    A fixed example can be found at (A3 0 . 22)
 ** TODO Add abrest ("ab") column for baddies
 ** TODO Baddie review/adjustments
@@ -39,6 +40,7 @@ License.  For specific terms please see [[LICENSE]] at end-of-file.
 **** TODO chastity
 **** TODO weapon
 **** TODO modifiers
+**** TODO Level-Up indicator
 *** Turn counters and transient effect tracking
 **** TODO sleep
 **** TODO race-control
@@ -58,22 +60,24 @@ License.  For specific terms please see [[LICENSE]] at end-of-file.
 *** TODO Set/clear party location
 *** TODO one-way secret doors                                           :BUG:
 *** TODO Track position per dungeon level
-*** TODO follow revealed squares to source when references
+*** DONE follow revealed squares to source when references
+    CLOSED: [2020-07-04 Sat 15:32]
 *** Save and restore                                                 :OPTION:
 **** TODO Save current dungeon-level                                     :P1:
 **** TODO Save seen-cells (all levels)                                   :P2:
 *** Redrew ("r") binding seems to have broken                           :BUG:
 ** More
-*** TODO Graphical dice-roller
-*** TODO Handle half-square reveal                                   :DESIGN:
-*** TODO HEROify logo, spiff up website
-*** TODO Implement "style file"
+*** TODO Character sheet
+*** TODO Spell-ball and other perishable single-click to use
 *** TODO Track party treasure scores
 *** Table mapping features
 **** TODO baddies
 **** TODO treasure
-*** TODO Character sheet
-
+*** TODO Queue click events with map pos before processing
+*** TODO Implement "style file"
+*** TODO Graphical dice-roller
+*** TODO Handle half-square reveal                                   :DESIGN:
+*** TODO HEROify logo, spiff up website
 * LICENSE
 
 This program is free software; you can redistribute it and/or modify
