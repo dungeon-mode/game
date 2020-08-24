@@ -1,0 +1,124 @@
+#+TITLE: Character Sample Detail Sheet
+
+# Copyright (C) 2020 Corwin Brust, Erik C. Elmshauser, Jon Lincicum, Hope Christiansen, Frank Runyon
+#+PROPERTIES:
+ :Version: 0.01
+ :Author: Corwin Brust
+ :Created: 2020/08/10
+ :ETL: tile
+ :END:
+
+This file is a part of dungeon-mode.  It is not a part of GNU Emacs.
+This softare is released under the GNU Public Licence version three
+or, at your disgression, any newer version of the GNU Public
+License.  For specific terms please see [[LICENSE]] at end-of-file.
+
+* ABSTRACT
+
+The Character detail sheet (this file) provides all of the data needed
+to edit or otherwise "play" a character but may group or otherwise
+present things differently from the graphical character sheet layout.
+
+* Intrinsics
+   :PROPERTIES:
+   :ETL: character
+   :END:
+
+#+TBLNAME: cs-intrinsics
+| Intrinsic  | Value                    | Notes                                         |
+|------------+--------------------------+-----------------------------------------------|
+| name       | Dragonfaughter the First | Sample 1st Rank Warrior                       |
+| shortname  | DF01                     |                                               |
+| class      | Warrior                  |                                               |
+| race       | Human                    |                                               |
+| rank       | 1                        |                                               |
+| special    |                          | Maybe his power is to have no special powers? |
+| experience | 0                        |                                               |
+| gold       | 0                        |                                               |
+
+* Skills and Prohibitions
+   :PROPERTIES:
+   :ETL: character
+   :END:
+
+#+TBLNAME: cs-skills
+| Attribute   | Count | Value   | Treatment   | Documentation               |
+|-------------+-------+---------+-------------+-----------------------------|
+| swing       |     1 | +0x1    | to-hit      |                             |
+| nomtpatkwpn |       | t       | skills      | No multiple-attack weapons. |
+| noinstkills |       | t       | skills      | No instant kills.           |
+| level-goal  |       | 40      | rank        | 40 experience               |
+| level-cost  |       | 20      | rank        | 20 gold                     |
+| position    |       | (1 . 1) | battleboard |                             |
+
+* Possessions
+   :PROPERTIES:
+   :ETL: character
+   :END:
+
+#+TBLNAME: cs-posessions
+| Possession  | Count | Value | Treatment       |
+|-------------+-------+-------+-----------------|
+| body-hits   |       |     3 | hit-points      |
+| plate-armor |       |    15 | armor(worn ah)  |
+| shield      |       |     6 | armor(worn s1)  |
+| shield      |       |     6 | armor(worn s2)  |
+| spear       |     2 |  +0x1 | weapon          |
+| sword       |       |  +0x1 | weapon(in-hand) |
+| ax          |       |  +0x1 | weapon          |
+| mace        |       |  +0x1 | weapon          |
+| mouth-guard |       |       | talisman        |
+| rope        |       |    25 | use-counter     |
+
+** Use Counters
+   :PROPERTIES:
+   :ETL: character
+   :END:
+
+#+TBLNAME: cs-counters
+| Counter     | Basis        | Remaining | Documentation      |
+|-------------+--------------+-----------+--------------------|
+| swing       | combat-round |         1 |                    |
+| body-hits   | descent      |         3 | 3 Body Hits        |
+| plate-armor | descent      |        15 | 15 Hit Plate Armor |
+| shield      |              |         6 | 6 Hit Shield       |
+| shield      |              |         6 | 6 Hit Shield       |
+| rope        | descent      |        25 | 25' of rope        |
+
+* Settings
+   :PROPERTIES:
+   :ETL: character:settings
+   :END:
+
+#+TBLNAME: cs-settings
+| Setting            | Value        | Treatment      |
+|--------------------+--------------+----------------|
+| battleboard        | show-only-me | player-setting |
+| header-treatment   | fancy-header | player-setting |
+| settings-treatment | hamburger    | player-setting |
+| foo                | bar          | player-setting |
+
+* History
+   :PROPERTIES:
+   :ETL: history
+   :END:
+
+#+TBLNAME: cs-history
+| Property  | Origin                | Delta            |
+|-----------+-----------------------+------------------|
+| body-hits | dm-defch(12345@alpha) | (nil 3 :created) |
+
+* LICENSE
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.

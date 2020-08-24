@@ -42,11 +42,15 @@
 ;;   (require 'dm-table)
 ;;   (require 'dm-map))
 
+
+
+;; below settings &ct to dm-control?
+
 (defgroup dungeon-mode nil
   "Settings for RPG Gameplay and Authoring.
 
 Settings in this group control `dungeon-mode', an Emacs Lisp and
-org-mode extention for RPG developing and playing turn-based
+org-mode extention for developing and playing turn-based
 role-playing syle games in Emacs, and for publishing such games
 for binding for traditional or semi-computer assisted play.
 
@@ -121,6 +125,12 @@ Where KEYWORD is a symbol representing types of information
 function which receives and returns a list of files and
 folders, or a list of such functions."
   :type 'alist)
+
+(defun dm-files-defilters (type &optional &rest filters)
+  "Define file FILTERS, a list of functions for TYPE, a symbol."
+  (if (assoc type dm-files-alist)
+      (setcdr (assoc type dm-files-alist) filters)
+    (push (cons type filters) dm-files-alist)))
 
 (defvar dm-files-select-hook nil
   "Default hooks for `dm-files-select', if any.

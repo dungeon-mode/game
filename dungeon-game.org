@@ -39,7 +39,7 @@ Turn-based gaming with GNU Emacs
 #+BEGIN_SRC elisp padline:no :exports none
 ;;; dungeon-game.el --- build and play a dungeon game -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2020  Corwin Brust
+;; Copyright (C) 2020  Corwin Brust, Erik Elmshauser, Frank Runyon, Hope Christensen, Jon Lincicum
 
 ;; Author: Corwin Brust <corwin@bru.st>
 ;; Keywords: games
@@ -113,7 +113,170 @@ As noted in the package source:
 ;;; Code:
 #+END_SRC
 
-** TODO Customization
+** INPROGRESS Customization
+   :PROPERTIES:
+   :ETL: cells
+   :END:
+
+   This section controls dungeon-mode key-bindings and menus and
+   otherwise defines and stores current settings.
+
+*** General Settings
+
+#+TBLNAME: dungeon-mode
+| Setting     | Value                     | Audit |
+|-------------+---------------------------+-------|
+| player-info | ingamename                |       |
+| docs-folder | ~/dungeon-mode            |       |
+| game-folder | $docs-folder/current-game |       |
+| host-folder | $docs-folder/dm           |       |
+| edit-folder | $host                     |       |
+|-------------+---------------------------+-------|
+
+*** Current Session
+
+| Setting | Value | Audit |
+|---------+-------+-------|
+| turn    | 0     |       |
+| action  | gs    |       |
+| mode    | edit  |       |
+|---------+-------+-------|
+
+*** Drawing
+
+| Setting         | Value     | Audit |
+|-----------------+-----------+-------|
+| draw-scale      | (20 . 20) |       |
+| draw-nudge      | (1 . 1)   |       |
+| draw-predicates | t         |       |
+|-----------------+-----------+-------|
+
+*** Mapping
+
+| Setting   | Value                    | Audit |
+|-----------+--------------------------+-------|
+| map-level | alpha/01_first-level.org |       |
+| map-pos   | (9 . 5)                  |       |
+|-----------+--------------------------+-------|
+
+*** Battleboard
+
+| Setting      | Value | Basis | Treatment | Audit |
+|--------------+-------+-------+-----------+-------|
+| bb-increment |     1 | party | integer   |       |
+|--------------+-------+-------+-----------+-------|
+
+*** Game Setup
+
+**** Core Conceptual Entities
+
+     These are symbol lists specified in-line or individual mappings
+     of a foundational concept to a disk folder or file.
+
+| Setting   | Value                              | Treatment      | Audit |
+|-----------+------------------------------------+----------------+-------|
+| documents | game character map baddie treasure | symbol-list    |       |
+| game      | Game                               | folder-or-file |       |
+| character | Characters                         | folder-or-file |       |
+| map       | Maps                               | folder-or-file |       |
+| baddie    | Baddies                            | folder-or-file |       |
+| treasure  | Treasure                           | folder-or-file |       |
+| modes     | edit host play                     | symbol-list    |       |
+
+**** Basic Input and Output Mappings
+
+| Treatment   | Extract | Transform | Load | Control | Audit |
+|-------------+---------+-----------+------+---------+-------|
+| integer     |         |           |      |         |       |
+| symbol-list |         |           |      |         |       |
+| hash-table  |         |           |      |         |       |
+| org-table   |         |           |      |         |       |
+| setting     |         |           |      |         |       |
+|-------------+---------+-----------+------+---------+-------|
+
+**** Primary In-memory Caches
+
+| Setting   | Treatment  | Audit |
+|-----------+------------+-------|
+| map-cells | hash-table |       |
+| map-tiles | hash-table |       |
+| descent   | hash-table |       |
+| party     | hash-table |       |
+
+**** Action Sequences
+
+| Sequence | Action                 | Description                                    | Audit |
+|----------+------------------------+------------------------------------------------+-------|
+| gs       | :descend               | Start a descent.                               |       |
+| descent  | :start-battle          | End descent by returning the general store     |       |
+|          | :heal                  | The party may heal.                            |       |
+|          | :loot                  | Collect treasure.                              |       |
+|          | :clappers              | You must run though the clappers.              |       |
+|          | :compulsion            | You must leave a specific way.                 |       |
+|          | :elevator              | The doors close. There are three buttons.      |       |
+|          | :abandon               | Leave the party and set-out on your own.       |       |
+|          | :move                  | $direction                                     |       |
+|          | :know-chamber          | You can try to learn what's inside.            |       |
+|          | :return-to-gs          |                                                |       |
+| battle   | :summoning             | finding out what is waiting here to eat you... |       |
+|          | :initiative            | Will party or baddies go first?                |       |
+|          | :lore                  | What does the party know about $baddie?        |       |
+|          | :spell-before-battle   | You may cast a spell before the battle begins. |       |
+|          | :baddie-turn           | It's the baddies' turn.                        |       |
+|          | :party-turn            | It's the party's turn.                         |       |
+|          | :end-battle            | The battle is over.                            |       |
+| turn     | :dead                  | $name is dead.                                 |       |
+|          | :incapacitated         | $name is incapacitated.                        |       |
+|          | :controlled            | $name is under the control of $controled-by.   |       |
+|          | :power-loan            | $name is power-loaning $powerloan-target       |       |
+|          | :changing-places       | $name is moving to the $line line.             |       |
+|          | :flee                  | They party can try to leave the battle.        |       |
+|          | :swing                 |                                                |       |
+| save     | :divine-protection     | You experience a sensation of gratitude.       |       |
+|          | :magical-protection    | You feel protected.                            |       |
+|          | :mundane-protection    | You feel protected.                            |       |
+|          | :ghod-call-before-save | Try for divine intervention?                   |       |
+|          | :roll-save             |                                                |       |
+|          | :collateral-damage     |                                                |       |
+| death    | :ubik-autorigged       | Your ubik goes off.                            |       |
+|          | :dying-wish            | Make a wish.                                   |       |
+|          | :dying-curse           | You may curse now.                             |       |
+|          | :death-chop            | You may take a final swing.                    |       |
+| counter  | :counter-start         |                                                |       |
+|          | :counter-set           |                                                |       |
+|          | :counter-tick          |                                                |       |
+|          | :counter-expire        |                                                |       |
+
+# not sure about these next couple
+
+| Control | Basis     | Treatment  |
+|---------+-----------+------------|
+| setting | immutable | hash-table |
+|         |           |            |
+
+| Actor     | Extract              | Transform          | Load                        | Context        | Audit |
+|-----------+----------------------+--------------------+-----------------------------+----------------+-------|
+| game      | dm-game-extract      |                    |                             |                |       |
+| :setting  |                      | dm-game-xform      | dm-game-load-org-table      |                |       |
+| :apply    |                      |                    | dm-game-apply               | turn           |       |
+| map       | dm-map-extract       |                    |                             |                |       |
+| :tile     |                      | dm-map-xform-tiles |                             |                |       |
+| :cell     |                      | dm-map-xform-cells |                             |                |       |
+| :level    |                      |                    | dm-map-draw                 |                |       |
+|           |                      |                    | dm-map-move                 | map-pos turn   |       |
+|           |                      |                    | dm-map-info                 | map-pos        |       |
+|-----------+----------------------+--------------------+-----------------------------+----------------+-------|
+| baddie    | dm-baddie-extract    | dm-baddie-xform    |                             |                |       |
+| :select   |                      |                    | dm-baddie-select            |                |       |
+| :apply    |                      |                    | dm-baddie-apply             | turn           |       |
+|-----------+----------------------+--------------------+-----------------------------+----------------+-------|
+| character | dm-character-extract | dm-character-xform |                             |                |       |
+| :apply    |                      |                    | dm-character-apply          | turn           |       |
+|-----------+----------------------+--------------------+-----------------------------+----------------+-------|
+| treasure  | dm-treasure-extract  | dm-treasure-xform  |                             |                |       |
+| :apply    |                      |                    | dm-treasure-apply-baddie    | baddie turn    |       |
+|           |                      |                    | dm-treasure-apply-character | character turn |       |
+
 
 #+BEGIN_SRC elisp :noweb yes
   ;;; customize
@@ -250,7 +413,7 @@ As noted in the package source:
 #+END_SRC
 
 **** TODO don't hard-code :LINES, see: https://orgmode.org/manual/Advanced-configuration.html
-# #+header: :exports code 
+# #+header: :exports code
 # +INCLUDE: "src/classes.el" src elisp :LINES "26-88" :tangle dungeon-game.org append
 # #+INCLUDE: "src/classes.el" export :LINES "26-88"
 

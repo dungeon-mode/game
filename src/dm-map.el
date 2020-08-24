@@ -1493,7 +1493,7 @@ When ARG is non nil reload level and tile tables."
   (interactive "nx:\nny:\np")
   (let ((cell (cons x y)))
     (setq dm-map-pos cell)
-    (funcall (if (member cell dm-map-current-level-cellgrs)
+    (funcall (if (member cell dm-map-current-level-cells)
 		 'dm-map-remove-cell
 	       'dm-map-add-cell)
 	     x y arg)))
