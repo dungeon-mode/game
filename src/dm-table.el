@@ -436,7 +436,7 @@ being carried forward, if any."
 	(if (and settings-scope (boundp 'dm-settings-current-scope))
 	    (let ((dm-settings-current-scope settings-scope))
 	      (while (and (car-safe result) step-func)
-		(message "[batch] scope:%s step:%s settings:%s"
+		(message "[batch] scope:%s step%s settings:%s"
 			 scope (car-safe result) dm-settings-current-scope)
 		(setq result (apply step-func (cdr result)))
 		;;(message "[batch] result:%s" result)
@@ -445,7 +445,10 @@ being carried forward, if any."
 		  ;;(message "[batch] newfunc:%s" step-func)
 		  step-func)))
 	  (while (and (car-safe result) step-func)
-	    (message "[batch] scope:%s settings:%s" scope dm-settings-current-scope)
+	    (message "[batch] scope:%s step%s settings:%s" scope (car-safe result)
+		     (if (boundp 'dm-settings-current-scope)
+			 dm-settings-current-scope
+		       'undefined))
 	    (setq result (apply step-func (cdr result)))
 	    ;;(message "[batch] result:%s" result)
 	    (when (car-safe result)
