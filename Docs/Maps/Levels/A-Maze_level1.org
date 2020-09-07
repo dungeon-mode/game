@@ -1,6 +1,6 @@
 #+TITLE: Alpha Map Level 1
 
-# Copyright (C) 2020 Corwin Brust, Erik C. Elmshauser, Jon Lincicum, Hope Christiansen
+# Copyright (C) 2020 Corwin Brust, Erik C. Elmshauser, Jon Lincicum, Hope Christiansen, Frank Runyon
 
 #+PROPERTIES:
  :Version: 0.06
