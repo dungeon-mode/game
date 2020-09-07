@@ -36,7 +36,8 @@
   (setq dm-map-tags t)
   (require 'dungeon-mode)
   (require 'dm-map)
-  (require 'dm-battleboard))
+  (require 'dm-battleboard)
+  (require 'dm-character))
 
 (provide 'init-dm)
 ;;; init-dm.el ends here

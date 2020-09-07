@@ -28,6 +28,8 @@
 
 ;;; Code:
 
+(require 'subr-x)
+
 (defgroup dm-util nil "Localizable internals.
 
 These settings are generally intended to be changed lexically
@@ -47,6 +49,50 @@ See `dm-coalesce-hash."
 (defsubst dm-make-hashtable (&rest args)
   "Create an empty hash table using ARGS, if any."
   (apply 'make-hash-table (append (list :test 'equal) args)))
+
+(defmacro dm-add-to-list (list item)
+  "Add ITEM to LIST unless it is already present."
+  `(unless (member ,item ,list)
+     (push ,item ,list)))
+;;(equal '(c a b) (let ((x (list 'a 'b)))(dm-add-to-list x 'c)))
+
+(cl-defun dm-alist-to-hash (alist &optional (hash (dm-make-hashtable)))
+  "Insert ALIST members into HASH or a new hash-table."
+  (dolist (item alist hash)
+    (puthash (car item) (cdr item) hash)))
+
+(defun dm-merge-plists (&rest plists)
+  "Return the result of combining PLISTS."
+  (let (next plist)
+    (while (setq next (pop plists))
+      (dolist (item (seq-partition next 2))
+	(setq plist
+	      (plist-put plist (car item)
+			 (or (car-safe (cdr item))
+			     (cdr item))))))
+    plist))
+;;(dm-merge-plists '(a 1 b 2) '(b 1 c 2))
+
+(defun dm-merge-alists (&rest alists)
+  "Return the result of combining ALISTS."
+  (let (next plist)
+    (while (setq next (pop alists))
+      (dolist (item next)
+	(setq plist (plist-put plist
+			       (car item)
+			       (or (car-safe (cdr item))
+				   (cdr item))))))
+    (seq-partition plist 2)))
+;; (dm-merge-alists '((a 1)(b 2)) '((b 1)(c 2)))
+
+(defun dm-ensure-dom-attr (alist)
+  "Ensure the entries in ALIST are `cons' cells."
+  (mapcar (lambda (item)
+	    (if (proper-list-p item)
+		(cons (car item) (cadr item))
+	      (when (consp item) item))) alist))
+;;(dm-ensure-dom-attr '((a 1) (b . 2) (c 3)))
+;;(dm-ensure-dom-attr (dm-merge-alists '((a 1)(b 2)) '((b 1)(c 2))))
 
 (defun dm--remove-keywords (form)
   "Return FORM with any :keyword and following args removed."

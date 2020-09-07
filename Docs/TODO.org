@@ -61,6 +61,13 @@ License.  For specific terms please see [[LICENSE]] at end-of-file.
 *** TODO Set/clear party location
 *** TODO one-way secret doors                                           :BUG:
 *** TODO Track position per dungeon level
+*** Changes to "play-mode"
+**** TODO Turning on Play mode should
+     * Turn on predicated-drawing
+     * Turn off draw-complete-level
+     * Load seen cells for current level, if any
+     * Set current position to general store if not otherwise known
+**** TODO Enable play-mode when loading map from global interactive
 *** DONE follow revealed squares to source when references
     CLOSED: [2020-07-04 Sat 15:32]
 *** Save and restore                                                 :OPTION:

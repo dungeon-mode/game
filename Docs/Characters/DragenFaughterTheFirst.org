@@ -62,7 +62,7 @@ present things differently from the graphical character sheet layout.
 | body-hits   |       |     3 | hit-points      |
 | plate-armor |       |    15 | armor(worn ah)  |
 | shield      |       |     6 | armor(worn s1)  |
-| shield      |       |     6 | armor(worn s2)  |
+| shield#2    |       |     6 | armor(worn s2)  |
 | spear       |     2 |  +0x1 | weapon          |
 | sword       |       |  +0x1 | weapon(in-hand) |
 | ax          |       |  +0x1 | weapon          |
@@ -82,7 +82,7 @@ present things differently from the graphical character sheet layout.
 | body-hits   | descent      |         3 | 3 Body Hits        |
 | plate-armor | descent      |        15 | 15 Hit Plate Armor |
 | shield      |              |         6 | 6 Hit Shield       |
-| shield      |              |         6 | 6 Hit Shield       |
+| shield#2    |              |         6 | 6 Hit Shield       |
 | rope        | descent      |        25 | 25' of rope        |
 
 * Settings
@@ -97,6 +97,17 @@ present things differently from the graphical character sheet layout.
 | header-treatment   | fancy-header | player-setting |
 | settings-treatment | hamburger    | player-setting |
 | foo                | bar          | player-setting |
+
+* Settings
+   :PROPERTIES:
+   :ETL: map:settings
+   :END:
+
+#+TBLNAME: cs-settings
+| Setting | Value       | Treatment      |
+|---------+-------------+----------------|
+| scale   | (100 . 100) | player-setting |
+| foo     | qwx         | player-setting |
 
 * History
    :PROPERTIES:

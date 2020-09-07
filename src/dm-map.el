@@ -22,18 +22,11 @@
 ;; * Implementation
 
 ;; This file implements SVG rendering of maps for, e.g.
-;; [[https://github.com/mplsCorwin/dungeon-mode][dungeon-mode]]
+;; [[https://github.com/dungeon-mode/game][dungeon-mode]]
 ;; a multi-player dungeon-crawl style RPG for
 ;; [[https://www.fsf.org/software/emacs][GNU Emacs]]
 ;; See [[Docs/Maps][Docs/Maps]] for example map definations from the
 ;; sample dungeon.
-;; ** Overview
-
-;;  * Implement ~dm-map~ as an EIEIO class having two slots:
-;;    * an [[https://www.gnu.org/software/emacs/manual/html_node/elisp/SVG-Images.html][~svg~]] object containing all graphic elements except the
-;;      main path element
-;;    * path-data for the main path element as a list of strings
-;; ** Cursor Drawing using the [[https://developer.mozilla.org/en-US/docs/Web/SVG/Tutorial/Paths][SVG path element]]
 
 ;; Dungeon uses Scalable Vector Graphic (SVG)
 ;; [[https://www.w3.org/TR/SVG/paths.html][path element]] to show maps
@@ -49,7 +42,7 @@
 ;; This imposes limitations in terms, for example, of individually
 ;; styling elements such as secret doors (drawn in-line, currently) but
 ;; seems a good starting point in terms of establishing a baseline for
-;; the performance rendering SVG maps on-demand within Emacs.cl-defsubst
+;; the performance of rendering SVG maps on-demand within Emacs.
 
 ;;; Requirements:
 
@@ -151,11 +144,11 @@ Set to nil to suppress adding any background elements."
   :type 'dm-custom-cons-x-y)
 
 (defcustom dm-map-pos-decoration-id "pos-decoration"
-  "Value for the ID attribute for the SVG element used to identity's position."
+  "ID of an SVG element overlaying the party's position."
   :type 'string)
 
 (defcustom dm-map-pos-decoration `(circle ((id . ,dm-map-pos-decoration-id)
-					   (cx . .5) (cy . .5) (r . .4)
+					   (cx . .5) (cy . .5) (r . .35)
 					   (stroke . "purple")
 					   (stroke-width . .2)))
   "SVG ELement used to indicate the position of the party."
@@ -444,7 +437,7 @@ TODO implement leading & as a quoting operator for tile refs"
 		      (mapcan 'dm-map-parse-plan-part
 			      (split-string word nil t "[ \t\n]+")))
 		     (;; TODO: RX ?M ?m ?V ?v ?H ?h ?S ?s ?A ?a ?L ?l
-		      (string-match-p "^[MmVvHhCcSsAaL][0-9.,+-]+$" word)
+		      (string-match-p "^[MmVvHhCcSsAaLl][0-9.,+-]+$" word)
 		      (list (list (intern (substring word 0 1))
 				  (mapcar 'string-to-number
 					  (split-string (substring word 1) "[,]")))))
@@ -460,27 +453,46 @@ TODO implement leading & as a quoting operator for tile refs"
 TILE is an hash-table key, PROP is a property (default: \"path\"."
   `(dm-map-path ,tile :table dm-map-tiles :prop ',prop))
 
+(defcustom dm-map-pop-to-buffer-func 'pop-to-buffer
+  "Function used to find or create a display buffer."
+  :type 'function) ;; TODO: add additional sensible defaults
+
+(defmacro dm-map-pop-to-buffer (&rest body)
+  "Evaluate BODY with display buffer current.
+
+Display buffer named by `dm-map-preview-buffer-name' is created
+using 'dm-map-pop-to-buffer-func'."
+  (declare (indent 0))
+  `(with-current-buffer (funcall #',dm-map-pop-to-buffer-func dm-map-preview-buffer-name)
+    ;; ZZZ improve test, use an alist, setting something mumble
+    (unless (local-variable-p 'dm-map-scale)
+      (make-local-variable 'dm-map-scale)
+      (make-local-variable 'dm-map-level-size)
+      (make-local-variable 'dm-map-nudge)
+      (make-local-variable 'dm-map-preview-buffer-name))
+    ,@body))
+
 (defmacro dm-map-with-map-erased (&rest body)
-  "Erase the map buffer evaluate BODY the restore the image."
-  `(with-current-buffer (pop-to-buffer dm-map-preview-buffer-name)
-     (let ((image-transform-resize 1))
-       (cl-letf (((symbol-function 'message) #'format))
-	 (unless (derived-mode-p 'dm-map-mode) (dm-map-mode))
-	 (let ((inhibit-read-only t))
-	   ;; (if (image-get-display-property)
-	   ;;     (image-mode-as-text)
-	   ;;   (when (eq major-mode 'hexl-mode)
-	   ;;     (image-mode-as-text)))
-	   (erase-buffer)
-	   ,@body
-	   (unless (derived-mode-p dm-map-image-mode)
-	     (funcall (symbol-function dm-map-image-mode)))
-	   (unless (image-get-display-property) (image-toggle-display-image))
-	   (beginning-of-buffer))))))
+  "Erase the map buffer evaluate BODY then restore the image."
+  `(dm-map-pop-to-buffer
+    (let ((image-transform-resize 1))
+      (cl-letf (((symbol-function 'message) #'format))
+	(unless (derived-mode-p 'dm-map-mode) (dm-map-mode))
+	(let ((inhibit-read-only t))
+	  ;; (if (image-get-display-property)
+	  ;;     (image-mode-as-text)
+	  ;;   (when (eq major-mode 'hexl-mode)
+	  ;;     (image-mode-as-text)))
+	  (erase-buffer)
+	  ,@body
+	  (unless (derived-mode-p dm-map-image-mode)
+	    (funcall (symbol-function dm-map-image-mode)))
+	  (unless (image-get-display-property) (image-toggle-display-image))
+	  (beginning-of-buffer))))))
 
 (defmacro dm-map-with-map-source (&rest body)
   "With the map source buffer current, evaluate BODY."
-  `(with-current-buffer (pop-to-buffer dm-map-preview-buffer-name)
+  `(dm-map-pop-to-buffer
      (let ((image-transform-resize 1))
        (cl-letf (((symbol-function 'message) #'format))
 	 (unless (derived-mode-p 'dm-map-mode) (dm-map-mode))
@@ -574,6 +586,9 @@ be viewed within `dm-map-tiles'.")
 	  (unless dm-map--inhibit-clearing-xml-strings
 	    (plist-put dm-map--last-plist tmp nil)))))))
 
+(defvar dm-map-level-transform-detect-size t
+  "When nil `dm-map-level-transform' doesn't set 'dm-map-level-size'.")
+
 (defun dm-map-level-transform (table)
   "Transform a TABLE of strings into an hash-map."
   (let* ((cols (or dm-map-level-cols
@@ -584,7 +599,8 @@ be viewed within `dm-map-tiles'.")
 	  `(dm-coalesce-hash ,(cdr table) ,cols
 	     ,@(when dm-map-level-key `(:key-symbol ,dm-map-level-key))
 	     :hash-table dm-map-level
-	     (when (and (boundp 'path) path)
+	     (when (and dm-map-level-transform-detect-size
+			(boundp 'path) path)
 	       (setq dm-map-level-size ,dm-map-level-key)
 	       (list 'path (dm-map-parse-plan-part path)))))
 	 (result (eval `(list :load ,cform))))))

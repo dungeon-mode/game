@@ -68,7 +68,7 @@ This is an irregular alist with items taking the form:
 
 Where SCOPE is a symbol representing the intrinsic (e.g. source
 category, or frame of reference), and each :STATE FUN pair
-represent a supported set pairing one of :extract :transform or
+represents a supported set pairing one of :extract :transform or
 :load with a function, called with the parsed element (or with
 point at the start of the unparsed element, in the case of
 :extract with no prior state) followed by any prior state
@@ -123,11 +123,6 @@ Capture groups:
 (defvar dm-table-property-last-value nil
   "The last property value read, if any.")
 
-(defun dm-table-known-state-p (state)
-  "Return t when STATE has associated behavior."
-  (or (assoc state dm-table-states)
-      (let ((str (if (stringp state)))))))
-
 (defun dm-table-scope (value)
   "Return inital scope (sequence) for VALUE, if any."
   (let ((sym (if (stringp value) (intern value) value))
@@ -138,7 +133,8 @@ Capture groups:
 	      (setq str (org-string-nw-p
 			 (if (stringp value) value
 			   (prin1-to-string value t)))))
-	     (when-let ((tag (org-string-nw-p (match-string 4 str))))
+	     (when-let ((tag (or (org-string-nw-p (match-string 4 str))
+				 (org-string-nw-p (match-string 1 str)))))
 	       (assoc (intern tag) dm-table-states))))))
 
 (defun dm-table-settings-scope (value)
@@ -154,12 +150,14 @@ Capture groups:
 
 (defun dm-table-property (&optional table prop)
   "Read PROP from TABLE using `org-entry-get'."
-  (when-let ((type (org-string-nw-p
-		    (org-entry-get
-		     (dm-table-start-pos table)
-		     (or prop dm-table-property-name)
-		     t))))
-    (intern type)))
+  (when-let ((type ;; cache raw value from lookup
+	      (setq dm-table-property-last-value
+		    (org-string-nw-p
+		     (org-entry-get
+		      (dm-table-start-pos table)
+		      (or prop dm-table-property-name)
+		      t)))))
+    (if (stringp type) (intern type) type)))
 
 (defun dm-table-property-old (&optional table prop)
   "Read PROP from TABLE using `org-entry-get'."
@@ -456,7 +454,7 @@ being carried forward, if any."
 	      ;;(message "[batch] newfunc:%s" step-func)
 	      step-func))))))
   ;;(message "var:%s eval:%s" dm-table-load-table-var (eval dm-table-load-table-var))
-  dm-table-load-table-var)
+  (symbol-value dm-table-load-table-var))
 ;; ^-- redo as when-let?
 
 (provide 'dm-table)
