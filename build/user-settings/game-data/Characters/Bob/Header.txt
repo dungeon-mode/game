@@ -1,6 +1,0 @@
-Player:		Erik Elmshauser
-Name:		Bob the builder
-Race:		Human
-Class:		Warrior
-Gender:		Male
-Power:		"Can we build it? yes we can, once each decent on doubles"

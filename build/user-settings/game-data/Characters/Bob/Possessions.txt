@@ -1,9 +1,0 @@
-Bob the builder's things:
-0   Gold
-0   Experience
-1   Spear
-1   Sword
-1   Axe
-1   Mace
-1   15 Hit Plate armor
-2   6 hit shields
