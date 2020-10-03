@@ -1,0 +1,75 @@
+#+TITLE Test: Map Cells with Paths
+
+# Copyright (C) 2020 Corwin Brust, Erik C. Elmshauser, Jon Lincicum, Hope Christiansen
+
+# d:/projects/dungeon-mode/t/org/maps-01_tile-path.org
+
+This tests map rendering using a tile and cell containing a only path commands..
+
+This file is a part of dungeon-mode.  It is not a part of GNU Emacs.
+This softare is released under the GNU Public Licence version three
+or, at your disgression, any newer version of the GNU Public
+License.  For specific terms please see [[LICENSE]] at end-of-file.
+
+* Tiles
+:PROPERTIES:
+:ETL: tile
+:END:
+
+| tile | path                                                        |
+|------+-------------------------------------------------------------|
+| aaa  | v.43 a.07,.07,0,0,1,0,.14 a.07,.07,0,1,1,0,-.14             |
+|      | m0,.14 v.43 h1 v-1 m-.3,0 h-.7                              |
+| ddd  | h.43 a.07,.07,0,1,1,.14,0 a.07,.07,0,1,1,-.14,0 m.14,0 h.43 |
+| ccc  | GS v1 h-1 v-1                                               |
+
+* Cells
+:PROPERTIES:
+:ETL: cell
+:END:
+
+| x | y | path                                                                     |
+| 1 | 1 | aaa |
+| 3 | 3 | bbb |
+| 2 | 2 | ccc |
+
+* Test
+
+#+BEGIN_SRC emacs-lisp
+  (let ((dm-draw-size (cons 5 5))
+        (dm-draw-scale 100)
+        (dm-map-tiles (dm-make-hashtable))
+        (dm-map-level (dm-make-hashtable))
+        squares svg)
+    (dm-table-extract-current-buffer)
+    (setq squares (mapcar #'dm-map-cell2
+		    (hash-table-keys dm-map-level)))
+    (setq svg (dm-draw squares))
+    (with-current-buffer (pop-to-buffer " *draw test*")
+      (erase-buffer)
+      (svg-insert-image svg))
+    (prin1-to-string (list 'image svg
+                           'tiles dm-map-tiles
+			   'level dm-map-level)))
+#+END_SRC
+
+#+RESULTS:
+: (image (svg ((width . 700) (height . 700) (version . "1.1") (xmlns . "http://www.w3.org/2000/svg") (troke-width . "1") (troke . "black") (ill . "none") (:image . #<marker at 1 in  *draw test*>)) (svg ((width . 20700) (height . 20700) (version . "1.1") (xmlns . "http://www.w3.org/2000/svg")) (rect ((width . 20700) (height . 20700) (x . 0) (y . 0) (fill . "#fffdd0") (stroke-width . 0))) (rect ((width . 505) (height . 505) (x . 98) (y . 98) (stroke . "black") (fill . "none") (stroke-width . 5))) (rect ((width . 503) (height . 503) (x . 99) (y . 99) (stroke . "white") (fill . "none") (stroke-width . 1))) (path ((d . "M0,100 h20700 M0,200 h20700 M0,300 h20700 M0,400 h20700 M0,500 h20700 M0,600 h20700 M0,700 h20700 M0,800 h20700 M100,0 v20700 M200,0 v20700 M300,0 v20700 M400,0 v20700 M500,0 v20700 M600,0 v20700 M700,0 v20700 M800,0 v20700") (fill . "none") (stroke . "blue") (stroke-width . ".25")))) (g ((id . "path") (fill . "none") (stroke . "black") (stroke-width . "1")) (path ((d . "M 200 200 v 43.0 a 7 7 0 0 1 0 14 a 7 7 0 1 1 0 -14 m 0 14 v 43.0 h 100 v -100 m -30 0 h -70 M 400 400 h 43 a 7 7 0 1 1 14 0 a 7 7 0 1 1 -14 0 m 14 0 h 43 M 300 300 h 43 a 7 7 0 1 1 14 0 a 7 7 0 1 1 -14 0 m 14 0 h 43 v 100 h -100 v -100"))))) tiles #s(hash-table size 65 test equal rehash-size 1.5 rehash-threshold 0.8125 data (aaa (path ((v (0.43)) (a (0.07 0.07 0 0 1 0 0.14)) (a (0.07 0.07 0 1 1 0 -0.14)) (m (0 0.14)) (v (0.43)) (h (1)) (v (-1)) (m (-0.3 0)) (h (-0.7))) tag nil overlay nil underlay nil stairs nil water nil beach nil neutronium nil decorations nil) bbb (path ((h (0.43)) (a (0.07 0.07 0 1 1 0.14 0)) (a (0.07 0.07 0 1 1 -0.14 0)) (m (0.14 0)) (h (0.43))) tag nil overlay nil underlay nil stairs nil water nil beach nil neutronium nil decorations nil) ccc (path (bbb (v (1)) (h (-1)) (v (-1))) tag nil overlay nil underlay nil stairs nil water nil beach nil neutronium nil decorations nil))) level #s(hash-table size 65 test equal rehash-size 1.5 rehash-threshold 0.8125 data ((1 . 1) (path (aaa)) (3 . 3) (path (bbb)) (2 . 2) (path (ccc)))))
+
+
+
+* LICENSE
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
+: (image #s(dm-svg (svg ((width . 311) (height . 311) (version . "1.1") (xmlns . "http://www.w3.org/2000/svg") (stroke . white) (stroke-width . 1) (:image . #<marker at 49 in **dungeon map**>)) nil (path ((d . "M 137 137 v 15.91 a 0.07 0.07 0 0 1 0 5 a 0.07 0.07 0 1 1 0 -5 m 0 5 v 15.91 h 37 v -37 h -26") (fill . "none") (stroke . "#0f0") (stroke-width . "1")))) (path ((d . "M 137 137 v 15.91 a 0.07 0.07 0 0 1 0 5 a 0.07 0.07 0 1 1 0 -5 m 0 5 v 15.91 h 37 v -37 h -26") (fill . "none") (stroke . "#0f0") (stroke-width . "1")))) tiles #s(hash-table size 65 test equal rehash-size 1.5 rehash-threshold 0.8125 data (aaa (path ((v (0.43)) (a (0.07 0.07 0 0 1 0 0.14)) (a (0.07 0.07 0 1 1 0 -0.14)) (m (0 0.14)) (v (0.43)) (h (1)) (v (-1)) m -\.3\,0 (h (-0.7))) tag nil overlay nil stairs nil water nil beach nil neutronium nil decorations nil))) level #s(hash-table size 65 test equal rehash-size 1.5 rehash-threshold 0.8125 data ((1 . 1) (path (aaa)))))

@@ -123,6 +123,13 @@ Capture groups:
 (defvar dm-table-property-last-value nil
   "The last property value read, if any.")
 
+(defun dm-table-column-names ()
+  "Return the list of column names for table at point."
+  (or (mapcar 'org-no-properties
+	      (progn (org-table-analyze)
+		     (mapcar 'car org-table-column-names)))
+      (car (delq 'hline (org-table-to-lisp)))))
+
 (defun dm-table-scope (value)
   "Return inital scope (sequence) for VALUE, if any."
   (let ((sym (if (stringp value) (intern value) value))
@@ -213,6 +220,79 @@ When SEEN-P is given a truthy value also clear tag cache."
   (if table
       (save-excursion (org-element-property :begin table))
     (org-table-begin)))
+
+(defun dm-table-row-bounds (&optional no-error)
+  "Return start and end rows for the current entry.
+
+Result is a cons in the form (START END) identifying row indexes
+in the org-table under-point excluding TBLFM formatting and hline
+rows.  When NO-ERROR is truthy return nil instead of emiting an
+error when `point' is not at a data row within an org-table."
+  (if (not (org-at-table-p))
+      (unless no-error (user-error "Not at a table"))
+    (save-excursion
+      (org-table-analyze)
+      (let ((pos-row (org-table-current-dline)))
+	(if (or (not pos-row)
+		(> 2 pos-row)) ;; on the header line
+	    (unless no-error (user-error "At table header"))
+	  ;; for now we'll just lazily assume the identifier is
+	  ;; is in the first column, so this will work for tile
+	  ;; but not layout table rows ~C
+	  (let (start end (first-col-val (org-table-get-field 1)))
+	    (save-excursion
+	      (while (and (org-at-table-p)
+			  (< 1 (org-table-current-dline))
+			  (not (org-string-nw-p (org-table-get-field 1))))
+		(forward-line -1))
+	      (setq start (org-table-current-dline)))
+	    (save-excursion
+	      (setq end pos-row)
+	      (while (progn (forward-line 1)
+			    (and (org-at-table-p)
+				 (not (org-string-nw-p (org-table-get-field 1)))))
+		(setq end (org-table-current-dline))))
+	    (when (and start end)
+	      (if (= 1 start)
+		  (unless no-error (user-error "No identifer in first col"))
+		(cons start end)))))))))
+
+(defun dm-table-clean (&rest strings)
+  "Return non-empty STRINGS trimed without properties."
+  (seq-filter 'org-string-nw-p
+	      (mapcar (lambda (s) (org-trim (org-no-properties s)))
+		      strings)))
+
+(defun dm-table-row (&optional field no-error)
+  "Return the current table row.
+
+When field is non-nil return only given FIELD, an index,
+otherwise return all columns.  When NO-ERROR is t return nil
+rather than signaling an error when not within a table, etc."
+  (when-let ((row (dm-table-row-bounds no-error)))
+    (append (list (save-excursion
+		    (org-table-goto-line (car row))
+		    (intern
+		     (car
+		      (dm-table-clean
+		       (org-table-get-field 1))))))
+	    (mapcar (lambda (field)
+		      (list (save-excursion
+			      (org-table-goto-line 1)
+			      (intern
+			       (downcase
+				(car (dm-table-clean
+				      (org-table-get-field field))))))
+			    (mapconcat
+			     (lambda (cell)
+			       (save-excursion
+				 (org-table-goto-line cell)
+				 (car (dm-table-clean
+				       (org-table-get-field field)))))
+			     (number-sequence (car row) (cdr row))
+			     " ")))
+		    (if field (list field)
+		      (number-sequence 2 org-table-current-ncol))))))
 
 (defun dm-table-property-has-tag (&optional tag seen-p)
   "Return t when TAG is/was available.

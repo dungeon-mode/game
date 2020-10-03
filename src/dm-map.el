@@ -104,7 +104,7 @@ These settings control display of game maps."
 
 (defcustom dm-map-scale 100
   "Number of pixes per \"Dungeon Unit\" when mapping.
-
+7
 This setting controls the number of actual screen pixes
 assigned (in both dimensions) while drwaing the map."
   :type 'number)
@@ -463,14 +463,11 @@ TILE is an hash-table key, PROP is a property (default: \"path\"."
 Display buffer named by `dm-map-preview-buffer-name' is created
 using 'dm-map-pop-to-buffer-func'."
   (declare (indent 0))
-  `(with-current-buffer (funcall #',dm-map-pop-to-buffer-func dm-map-preview-buffer-name)
-    ;; ZZZ improve test, use an alist, setting something mumble
-    (unless (local-variable-p 'dm-map-scale)
-      (make-local-variable 'dm-map-scale)
-      (make-local-variable 'dm-map-level-size)
-      (make-local-variable 'dm-map-nudge)
-      (make-local-variable 'dm-map-preview-buffer-name))
-    ,@body))
+  `(with-current-buffer
+       (funcall #',dm-map-pop-to-buffer-func dm-map-preview-buffer-name)
+     (run-hooks dm-map-buffer-created-maybe-hook)
+     ;;(make-local-variable 'dm-map-preview-buffer-name)
+     ,@body))
 
 (defmacro dm-map-with-map-erased (&rest body)
   "Erase the map buffer evaluate BODY then restore the image."
@@ -983,8 +980,34 @@ property containing draw instructions."
     ;;   (message "cell:%s" (list :cell (copy-tree cell) :plist plist)))
     (append (list :cell (copy-tree cell)) plist)))
 
+(defun dm-map-cell2 (cell)
+  "Return plist of draw code for CELL."
+  (let ((plist (dm-map-cell-defaults))
+	dm-map-current-tiles
+	)
+    (when-let ((val (dm-map-resolve-cell
+		     cell
+		     :no-follow t)))
+      (plist-put plist dm-map-draw-prop val))
+    (dolist (prop (append dm-map-draw-other-props (list dm-map-underlay-prop
+							dm-map-overlay-prop)))
+      (when-let ((val (apply
+		       'append
+		       (seq-map
+			(lambda (tile)
+			  (dm-map-resolve tile :prop prop
+					  ;; FIXME: commenting crashes render
+					  :inhibit-tags t
+					  :inhibit-collection t))
+			dm-map-current-tiles))))
+	(plist-put plist prop (delq nil val))))
+    ;; (when (equal (cons 10 11) cell)
+    ;;   (message "cell:%s" (list :cell (copy-tree cell) :plist plist)))
+    (append (list :cell (copy-tree cell)) plist)))
+
 (defun dm-map-path-string (paths)
   "Return a list of svg drawing PATHS as a string."
+  (declare (indent 0))
   (mapconcat
    'concat
    (delq nil (mapcar
@@ -1238,7 +1261,7 @@ SCALE-FUNCTION may be used to supply custom scaling."
 						      0 0 h-rule-len v-rule-len
 						      :fill "#fffdd0"
 						      :stroke-width  0)))
-			     			     no-border
+			     no-border
 			     (border (unless no-border
 				       (svg-rectangle `(,svg '(()))
 						      (- x-nudge 2) (- y-nudge 2)
@@ -1261,7 +1284,6 @@ SCALE-FUNCTION may be used to supply custom scaling."
   "Create a background SVG with SCALE and SIZE and NUDGE."
   ;; (dm-msg :file "dm-map" :fun "background" :args
   ;; 	  (list :scale scale :size size :nudge nudge :svg svg))
-
   (prog1 svg
     (unless no-graph
       (dom-append-child
@@ -1302,6 +1324,9 @@ SCALE-FUNCTION may be used to supply custom scaling."
     (when (buffer-live-p buf)
       (with-current-buffer buf (quit-restore-window (get-buffer-window buf t) 'kill)))))
 
+(defvar dm-map-buffer-created-maybe-hook nil
+  "Regular hook called when a buffer may have been created.")
+
 (defun dm-map-draw (&optional arg)
   "Draw all from `dm-map-level'.  With prefix ARG, reload first."
   (interactive "P")
@@ -1324,6 +1349,7 @@ SCALE-FUNCTION may be used to supply custom scaling."
 	(dm-map-with-map-erased (render-and-insert-string svg)))
       (with-current-buffer dm-map-preview-buffer-name
 	(image-mode-setup-winprops)
+	(run-hooks dm-map-buffer-created-maybe-hook)
 	(let ((inhibit-read-only t)
 	      (start (point-min))
 	      (end (point-max)))

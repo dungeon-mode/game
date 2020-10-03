@@ -57,18 +57,18 @@ present things differently from the graphical character sheet layout.
    :END:
 
 #+TBLNAME: cs-posessions
-| Possession  | Count | Value | Treatment       |
-|-------------+-------+-------+-----------------|
-| body-hits   |       |     3 | hit-points      |
-| plate-armor |       |    15 | armor(worn ah)  |
-| shield      |       |     6 | armor(worn s1)  |
-| shield#2    |       |     6 | armor(worn s2)  |
-| spear       |     2 |  +0x1 | weapon          |
-| sword       |       |  +0x1 | weapon(in-hand) |
-| ax          |       |  +0x1 | weapon          |
-| mace        |       |  +0x1 | weapon          |
-| mouth-guard |       |       | talisman        |
-| rope        |       |    25 | use-counter     |
+| Possession  | Count |  Value | Treatment       |
+|-------------+-------+--------+-----------------|
+| body-hits   |       |      3 | hit-points      |
+| plate-armor |       |     15 | armor(worn ah)  |
+| shield      |       |      6 | armor(worn s1)  |
+| shield#2    |       |      6 | armor(worn s2)  |
+| spear       |     2 |   +0x1 | weapon          |
+| sword       |       |   +0x1 | weapon          |
+| axe         |       | 2@+1x2 | weapon(in-hand) |
+| mace        |       |   +0x1 | weapon          |
+| mouth-guard |       |        | talisman        |
+| rope        |       |     25 | use-counter     |
 
 ** Use Counters
    :PROPERTIES:

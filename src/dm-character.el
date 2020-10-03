@@ -214,18 +214,44 @@
 		   (error "No character for dm-character-buffer-name"))
 	  "**"))
 
+(defmacro dm-character-local-set-maybe (var val)
+  "Make VAR buffer local and maybe set to VAL.
+
+VAR is only assigned to if not already local."
+  `(unless (local-variable-p ,var)
+     (set (make-local-variable ,var) ,val)))
+
 (defun dm-character-draw (&optional arg)
   "Draw character sheet for CHARACTER-NAME or `dm-character-name'.
 
 With prefix ARG, reload first."
   (interactive "P")
   (let* ((dm-table-type 'character)
-	 (dm-map-level (or dm-character-grid (dm-make-hashtable)))
-	 (dm-map-tiles (or dm-character-tiles (dm-make-hashtable)))
+	 (dm-map-level dm-character-grid)
+	 (dm-map-tiles dm-character-tiles)
 	 (dm-map-tags t)
 	 (dm-map-menus-level-cells-draw-all t)
 	 dm-map-level-transform-detect-size
-	 ;;dm-map-preview-buffer-name
+	 (dm-map-image-mode 'dm-character-mode)
+	 (dm-character-mode-hook
+	  (append
+	   (if (listp dm-map-buffer-created-maybe-hook)
+	       dm-map-buffer-created-maybe-hook
+	     (and dm-map-buffer-created-maybe-hook
+		  (list dm-map-buffer-created-maybe-hook)))
+	   (list
+	    (lambda (&rest _)
+	      (dm-character-local-set-maybe 'dm-env-scope-function nil)
+	      (dm-character-local-set-maybe 'dm-env-current-scope
+					    'character)
+	      (dm-character-local-set-maybe 'dm-map-scale
+					    dm-character-grid-scale)
+	      (dm-character-local-set-maybe 'dm-map-level-size
+					    dm-character-grid-size)
+	      (dm-character-local-set-maybe 'dm-map-nudge
+					    dm-character-grid-nudge)
+	      (dm-character-local-set-maybe 'dm-map-preview-buffer-name
+					    (dm-character-buffer-name))))))
 	 dm-map-menus-play-mode)
     ;; prompt if no files or neg prefix arg
     (when (or arg (not (hash-table-p dm-character-tiles)))
@@ -250,15 +276,9 @@ With prefix ARG, reload first."
     (when (null dm-character-name) (error "No character selected"))
 
     ;; try not to clober already localized settings
-    (unless (local-variable-p 'dm-map-scale)
-      (setq dm-map-preview-buffer-name (dm-character-buffer-name))
-      (dm-map-pop-to-buffer
-	(setq dm-map-scale dm-character-grid-scale)
-	(setq dm-map-nudge dm-character-grid-nudge)
-	(setq dm-map-level-size dm-character-grid-size)))
 
-    (cl-psetq dm-character-grid dm-map-level
-	      dm-character-tiles dm-map-tiles)
+    (setq dm-character-grid dm-map-level
+	  dm-character-tiles dm-map-tiles)
 
     (dm-map-draw)))
 
@@ -498,11 +518,6 @@ Searches PROPSET of CHARACTER-NAME."
 				(cdr cols)))))))
      (cdr table))))
 
-(defun dm-character-tiles-make ()
-  "Create tiles from propsets."
-  (let ((hash (dm-make-hashtable)))
-    (mapc)))
-
 ;; DEVEL: give us a global key binding precious
 (global-set-key (kbd "<f7>") 'dm-character-draw)
 
@@ -510,6 +525,32 @@ Searches PROPSET of CHARACTER-NAME."
 (let (dm-table-load-function) ;; no Load function
   (dm-table-defstates 'character :transform #'dm-character-transform))
 
+(defvar dm-character-mode-map
+  (let ((map (make-sparse-keymap)))
+    (define-key map (kbd "+") 'dm-map-scale-nudge)
+    (define-key map (kbd "-") 'dm-map-scale-nudge-invert)
+    ;; (define-key map (kbd "<up>") 'dm-map-scroll)
+    ;; (define-key map (kbd "<down>") 'dm-map-scroll-invert)
+    ;; (define-key map (kbd "<right>") 'dm-map-hscroll)
+    ;; (define-key map (kbd "<left>") 'dm-map-hscroll-invert)
+    (define-key map (kbd "d") 'dm-map-draw)
+    (define-key map (kbd "g") 'dm-map-draw)
+    (define-key map (kbd "k") 'dm-map-kill-buffer)
+    (define-key map (kbd "q") 'dm-map-quit)
+    (define-key map (kbd "r") 'dm-map-draw)
+    (define-key map (kbd "s") 'dm-map-scale)
+    (define-key map (kbd ".") 'dm-map-pos)
+    (define-key map (kbd ",") 'dm-map-pos-pixels)
+    (define-key map (kbd ";") 'dm-map-view-source)
+    (define-key map [mouse-1] 'ignore)
+    (define-key map [mouse-2] 'dm-map-pos)
+    (define-key map "\C-c\C-c" 'dm-map-source-toggle)
+    (define-key map "\C-c\C-x" 'ignore)
+    map)
+  "Mode keymap for `dm-character-mode'.")
+
+(define-derived-mode dm-character-mode dm-map-mode "Character"
+  "Major mode for `dugeon-mode' maps.")
 
 ;; test case
 ;; (let ((dm-table-type 'character))

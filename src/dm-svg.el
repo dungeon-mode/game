@@ -58,7 +58,266 @@
 (require 'eieio)
 (require 'svg)
 
+(eval-when-compile (require 'cl-lib))
+
 ;;; Code:
+
+(defvar dm-draw-scale 60 "Pixels per dungeon unit.")
+(defvar dm-draw-nudge (cons 1 1) "Frame padding in dungeon units.")
+(defvar dm-draw-size (cons 6 6) "Drawing size in dungeon units.")
+
+(defvar dm-draw-svg-attr-alist nil "SVG attributes as an alist.")
+
+(defvar dm-draw-layer-attr-alist
+  '(t (fill . "none")
+      (stroke . "black")
+      (stroke-width . "1")
+    (water ((fill . "blue")
+	    (stroke . "none")
+	    (stroke-width . "1")))
+    (beach ((fill . "yellow")
+	    (stroke . "none")
+	    (stroke-width . "1")))
+    (stairs ((fill . "#FF69B4") ;; pink
+	     (stroke . "none")
+	     (stroke-width . "1")))
+    (neutronium ((fill . "orange")
+		 (stroke . "orange")
+		 (stroke-width . "1")))
+    (decorations ((fill . "cyan")
+		  (stroke . "cyan")
+		  (stroke-width . "1"))))
+  "Default attributes for SVG and path layers.")
+
+(defvar dm-draw-layer-alist '((background svg)
+			      (underlay svg)
+			      (water)
+			      (beach)
+			      (stairs)
+			      (neutronium)
+			      (path)
+			      (overlay svg)
+			      (decorations))
+  "Alist of layers and expected data format.")
+
+(defmacro dm-draw--M (scale nudge pos paths)
+  "Return absolute move to POS at NUDGE and SCALE, then PATHS."
+  `(when ,paths
+    (append
+     (list (list 'M (list
+		     (+ (* (car ,scale) (car ,nudge)) (* (car ,scale) (car ,pos)))
+		     (+ (* (cdr ,scale) (cdr ,nudge)) (* (cdr ,scale) (cdr ,pos))))))
+     ,paths)))
+
+(cl-defun dm-draw (squares
+		   &optional &key
+		   (layers dm-draw-layer-alist)
+		   (scale (if (consp dm-draw-scale) dm-draw-scale
+			    (cons dm-draw-scale dm-draw-scale)))
+		   (size (cons (* scale (car dm-draw-size))
+			       (* scale (cdr dm-draw-size))))
+		   (nudge dm-draw-nudge)
+		   (canvas-size (cons (+ (* (car scale) (car nudge) 2)
+					 (* (car scale) (car size)))
+				      (+ (* (cdr scale) (cdr nudge) 2)
+					 (* (cdr scale) (cdr size)))))
+		   ;; fetch or build background if not disabled
+		   no-background
+		   (background
+		    (or no-background
+			(list
+			 (dm-map-background :size canvas-size :scale scale
+					    :x-nudge (* (car scale) (car nudge))
+					    :y-nudge (* (cdr scale) (cdr nudge))))))
+		   scale-background
+		   (scaled (or scale-background (list 'background background)))
+		   (svg-attr (cdr (or dm-draw-svg-attr-alist
+				      (assoc t dm-draw-layer-attr-alist))))
+		   (svg (append (apply 'svg-create
+				       (append (list (car canvas-size)
+						     (cdr canvas-size))
+					       svg-attr))))
+		   (scale-function #'dm-map-default-scale-function)
+		   &allow-other-keys)
+  "No-frills draw routine."
+  (setq dm-map-current-tiles nil)
+  (let* ((maybe-add-abs
+	  (lambda (pos paths)
+	    (when paths (append
+			 (list (list 'M (list
+					 (+ (* scale (car nudge)) (* scale (car pos)))
+					 (+ (* scale (cdr nudge)) (* scale (cdr pos))))))
+			 paths))))
+	 (draw-code (delq nil (mapcar 'dm-map-cell squares)))
+	  ;; handle main path seperately
+	 (main-path (apply
+		     'append
+		     (mapcar
+		      (lambda (cell)
+			(funcall maybe-add-abs
+				 (plist-get cell :cell)
+				 (plist-get cell dm-map-draw-prop)))
+		      draw-code)))
+	 ;; now the rest of the path properties
+	 (paths (mapcar
+		 (lambda(prop)
+		   (mapcan
+		    (lambda (cell)
+		      (when-let ((strokes (plist-get cell prop))
+				 (pos (plist-get cell :cell)))
+			(append
+			 (list
+			  (list 'M (list
+				    (+ (* scale (car nudge)) (* scale (car pos)))
+				    (+ (* scale (cdr nudge)) (* scale (cdr pos))))))
+			 (apply 'append strokes))))
+		    draw-code))
+		 dm-map-draw-other-props))
+	 ;; scale the main path
+	 (main-path (progn
+		      (dm-map-path-string
+		       (apply
+			(apply-partially scale-function (cons scale scale))
+			main-path))))
+	 ;; scale remaining paths
+	 (paths
+	  (mapcar
+	   (lambda(o-path)
+	     (dm-map-path-string
+	      (apply
+	       (apply-partially scale-function (cons scale scale))
+	       o-path)))
+	   paths))
+	 ;; make svg path elements
+	 (paths (delq nil (seq-map-indexed
+			   (lambda(path ix)
+			     (when (org-string-nw-p path)
+			       (dm-svg-create-path path
+						   (plist-get
+						    path-attributes
+						    (nth ix dm-map-draw-other-props)))))
+			   paths)))
+	 ;; hack in a single SVG XML prop, for now scale inline
+	 (overlays (mapcan
+		    (lambda (cell)
+		      ;;(mapcar (lambda (elem) (dom-remove-node)))
+		      (mapcar (apply-partially 'dm-map--dom-attr-nudge
+					       scale-function
+					       nudge
+					       (list scale scale)
+					       (plist-get cell :cell))
+			      (apply
+			       'append
+			       (plist-get cell dm-map-overlay-prop))))
+		    draw-code))
+	 ;; hack in a second SVG XML prop, continue to scale inline
+	 (underlays (mapcan
+		     (lambda (cell)
+		       (mapcar (apply-partially 'dm-map--dom-attr-nudge
+						scale-function
+						nudge
+						(list scale scale)
+						(plist-get cell :cell))
+			       (apply
+				'append
+				(plist-get cell dm-map-underlay-prop))))
+		     draw-code))
+
+	 (img (dm-svg :svg
+		      (append (apply 'svg-create
+				     (append (list (car canvas-size)
+						   (cdr canvas-size))
+					     svg-attributes))
+			      (append background underlays
+				      been-dots pos-decoration
+				      paths) ;; the non-primary paths, beach, etc.
+			      (append (list (dm-svg-create-path
+					     main-path
+					     (plist-get path-attributes
+							dm-map-draw-prop))))
+			      (append overlays))
+		      )))))
+
+(cl-defun dm-draw-place-dom (path-fun nudge scale pos dom-node)
+  "Position and scale DOM-NODE.
+
+Accept any DOM node, consider only X, Y and font-size properties.
+NUDGE, SCALE and POS are cons cells in the form (X . Y).  NUDGE
+gives the canvas padding in pixes while SCALE gives the number of
+pixels per dungeon unit and POS gives the location of the origin
+of the current cell in dungeon units.
+
+For \"text\" elements, also scale \"font-size\".  For \"path\"
+elements prepend an absolute movement command to path-data.  Call
+PATH-FUN to scale the parsed command data of any path elements
+found."
+  ;; (message "[nudge] DOMp:%s scale:%s pos:%s node:%s"
+  ;; 	   (dm-svg-dom-node-p dom-node) scale pos dom-node)
+  (when (dm-svg-dom-node-p dom-node)
+    (when-let* ((x-scale (car scale))
+		(y-scale (if (car-safe (cdr scale))
+			     (cadr scale)
+			   (car scale)))
+		(x-prop (if (dom-attr dom-node 'cx) 'cx 'x))
+		(y-prop (if (dom-attr dom-node 'cy) 'cy 'y))
+		(x-orig (or (dom-attr dom-node x-prop) 0))
+		(y-orig (or (dom-attr dom-node y-prop) 0))
+		(x-new (+ (* x-scale (car nudge))
+			  (* x-scale (car pos))
+			  (* x-scale x-orig)))
+		(y-new (+ (* y-scale (cdr nudge))
+			  (* y-scale (cdr pos))
+			  (* y-scale y-orig))))
+      ;; (message "[nudge] x=(%s*%s)+(%s*%s)=%s, y=(%s*%s)+(%s*%s)=%s"
+      ;; 	       x-scale x-orig x-scale (car pos) x-new
+      ;; 	       y-scale y-orig y-scale (cdr pos) y-new)
+      (when-let ((font-size (dom-attr dom-node 'font-size)))
+	(dom-set-attribute dom-node 'font-size (* x-scale font-size)))
+      (when-let ((r-orig (dom-attr dom-node 'r)))
+	(dom-set-attribute dom-node 'r (* x-scale r-orig)))
+      (when-let ((path-data (dom-attr dom-node 'd)))
+	(dom-set-attribute
+	 dom-node 'd
+	 (concat
+	  "M" (number-to-string (+ (* x-scale (car nudge))
+				   (* x-scale (car pos))))
+	  "," (number-to-string (+ (* y-scale (cdr nudge))
+				   (* y-scale (cdr pos))))
+	  " " (dm-map-path-string
+	       (apply (apply-partially path-fun
+				       (cons x-scale y-scale))
+		      (if (listp path-data) path-data
+			(dm-map-parse-plan-part path-data)))))
+	 ))
+      (dom-set-attribute dom-node x-prop x-new)
+      (dom-set-attribute dom-node y-prop y-new))
+    ;; process child nodes
+    (dolist (child (dom-children dom-node))
+      (if (not (stringp child))
+	  (dm-map--dom-attr-nudge path-fun nudge scale pos child)
+	(dom-remove-node dom-node child)
+	(dom-append-child dom-node
+			  (replace-regexp-in-string
+			   "[$][^][(),^$ ]+"
+			   (if dm-draw-dom-interpolate-function
+			       (lambda (str)
+				 (funcall dm-draw-dom-interpolate-function
+					  (intern (substring str 1 (length str)))))
+			       "")
+			     child))))
+    dom-node))
+
+(defvar dm-draw-square nil
+  "The current square when drawing.")
+
+(defvar dm-draw-dom-interpolate-function #'dm-draw-dom-interpolate-default
+  "Function to call to replace vars (\"$foo\") in Text nodes.")
+
+(defun dm-draw-dom-interpolate-default (var)
+  "Replace VAR with property value from the current square."
+  (format "%s" (or (plist-get square var) "")))
+
+;; Predicates
 
 (defun dm-svg-dom-node-p (object &optional tag)
   "Return t when OBJECT is a dom-node.
@@ -87,6 +346,8 @@ When TAG is non-nill (car OBJECT) must also `equal' TAG."
   (or (null obj)
       (stringp obj)
       (dm-svg-dom-node-p obj 'path)))
+
+;; eieio
 
 (defun dm-svg-create-path (&optional path-data properties children)
   "Create a 'path `dom-node'.
