@@ -333,6 +333,7 @@ When INHIBIT-DEFAULT is non-nil return nil instead of (0 . 0) when plan is empty
 (defun dm-sketch-stencil:path-init ()
   "Called when selecting the \"path\" tool."
   (interactive)
+  (dm-sketch-set-tool 'place)
   (setq dm-sketch-stencil-data (list :command 'L :cmd-args nil :plan nil))
   (dm-sketch-stencil:path-set (dm-sketch-canvas)))
 
