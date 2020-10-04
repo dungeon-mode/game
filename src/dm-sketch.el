@@ -28,7 +28,8 @@
 
 ;;; Code:
 
-(eval-when-compile (require 'cl-lib))
+(require 'cl-lib)
+(require 'cl-extra)
 (require 'subr-x)
 
 (let ((load-path (append '(".") load-path)))
@@ -331,7 +332,9 @@ When INHIBIT-DEFAULT is non-nil return nil instead of (0 . 0) when plan is empty
 
 (defun dm-sketch-stencil:path-init ()
   "Called when selecting the \"path\" tool."
-  (setq dm-sketch-stencil-data (list :command 'L :cmd-args nil :plan nil)))
+  (interactive)
+  (setq dm-sketch-stencil-data (list :command 'L :cmd-args nil :plan nil))
+  (dm-sketch-stencil:path-set (dm-sketch-canvas)))
 
 (defun dm-sketch-stencil:path-add (pos)
   "Add a line-to POS to path stencil."
@@ -460,9 +463,16 @@ Focus SVG buffer unless NO-FOCUS is non-nil. GROUP-NAME is the
 base name for both buffers.  BUFFER-NAMES is a list in the
 form (SVG-BUF-NAME ORG-BUF-NAME)."
   (interactive)
+
+  ;; hack to sync scale until we things up..
+  (let ((scale (car (cdr (assoc 'dm-draw-scale dm-env-vars)))))
+    (setq dm-map-scale scale dm-draw-scale scale))
+
   (dm-sketch-create (car buffer-names))
   (dm-sketch-create-org (cadr buffer-names))
-  (unless no-focus (pop-to-buffer (car buffer-names))))
+  (unless no-focus (pop-to-buffer (car buffer-names)))
+  ;; force the drawing to start in "stencil"/line-drawing mode
+  (dm-sketch-stencil:path-init))
 
 (defun dm-sketch-mouse-remove-last (&rest _)
   "Handle click on sketch buffer."
@@ -475,8 +485,8 @@ form (SVG-BUF-NAME ORG-BUF-NAME)."
   (interactive "@")
   (dm-sketch-stencil:path-add (dm-draw-pos (dm-draw-mouse-position))))
 
-(defun dm-sketch-mouse2 (&rest _)
-  "Handle click on sketch buffer."
+(defun dm-sketch-move-to (&rest _)
+  "Handle secondary click on sketch buffer."
   (interactive "@")
   (let* ((pos (dm-draw-mouse-position))
 	 (old (plist-get dm-sketch-stencil-data :command)))
@@ -496,9 +506,11 @@ form (SVG-BUF-NAME ORG-BUF-NAME)."
     ;; (define-key map (kbd "<right>") 'dm-map-hscroll)
     ;; (define-key map (kbd "<left>") 'dm-map-hscroll-invert)
     ;;(define-key map (kbd "s") 'dm-map-scale)
+    (define-key map (kbd "<C-delete>") 'dm-sketch-stencil:path-init)
     (define-key map (kbd "q") 'dm-scratch-quit)
     (define-key map [mouse-1] 'dm-sketch-mouse1)
-    (define-key map [mouse-2] 'dm-sketch-mouse2)
+    (define-key map [mouse-2] 'dm-sketch-move-to)
+    (define-key map [mouse-4] 'dm-sketch-move-to)
     (define-key map (kbd "<delete>") 'dm-sketch-mouse-remove-last)
     (define-key map "\C-c\C-x" 'ignore)
     ;;(define-key map "\C-c\C-c" 'dm-map-source-toggle)

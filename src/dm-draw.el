@@ -26,12 +26,15 @@
 
 ;;; Requirements:
 
-(eval-when-compile (require 'cl-lib))
+(require 'cl-lib)
+(require 'cl-extra)
 
 (let ((load-path (append '(".") load-path)))
   (require 'dungeon-mode)
   (require 'dm-util)
-  (require 'dm-env))
+  (require 'dm-env)
+  ;; TODO: needed for path derferencing
+  (require 'dm-map))
 
 ;;; Code:
 
@@ -107,7 +110,7 @@
 
 SYM is the loop iterator as BODY processes each list item."
   (declare (indent 2))
-  `(delq nil (mapcon (lambda (,sym) ,@body) ,list)))
+  `(delq nil (cl-mapcon (lambda (,sym) ,@body) ,list)))
 
 (defmacro dm-draw--adqnmap (list var expr &rest body)
   "Evaluate BODY with EXPR result bound to VAR and append to LIST."
