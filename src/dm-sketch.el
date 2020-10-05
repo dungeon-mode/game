@@ -297,7 +297,7 @@ When NO-FILL is non-nill set fill to \"none\"."
 
 (defmacro dm-sketch-has-plan ()
   "Return non-nil when there is plan data for the sketch."
-  (< 0 (length (dm-sketch-stencil:plan))))
+  `(< 0 (length (dm-sketch-stencil:plan))))
 
 (defmacro dm-sketch-stencil:path-make-plan (svg plan)
   "Draw PLAN in SVG."
@@ -333,7 +333,6 @@ When INHIBIT-DEFAULT is non-nil return nil instead of (0 . 0) when plan is empty
 (defun dm-sketch-stencil:path-init ()
   "Called when selecting the \"path\" tool."
   (interactive)
-  (dm-sketch-set-tool 'place)
   (setq dm-sketch-stencil-data (list :command 'L :cmd-args nil :plan nil))
   (dm-sketch-stencil:path-set (dm-sketch-canvas)))
 
@@ -425,8 +424,10 @@ When RELITIVE is non-nil move by (instead of to) POS."
 (defun dm-sketch-set-tool (tool)
   "Set TOOL (a symbol) as the selected tool."
   (pcase (setq dm-sketch-tool-selected tool)
-    ('place (dm-sketch-set-props
-	     (list 'pointer (plist-get dm-sketch-tools 'place))))
+    ('place (progn
+	      (dm-sketch-set-props
+	       (list 'pointer (plist-get dm-sketch-tools 'place)))
+	      (dm-sketch-stencil:path-init)))
     (_ ;; no tool seleected
      (dm-sketch-set-props (list 'pointer (plist-get dm-sketch-tools nil))))))
 
@@ -473,7 +474,7 @@ form (SVG-BUF-NAME ORG-BUF-NAME)."
   (dm-sketch-create-org (cadr buffer-names))
   (unless no-focus (pop-to-buffer (car buffer-names)))
   ;; force the drawing to start in "stencil"/line-drawing mode
-  (dm-sketch-stencil:path-init))
+  (dm-sketch-set-tool 'place))
 
 (defun dm-sketch-mouse-remove-last (&rest _)
   "Handle click on sketch buffer."
