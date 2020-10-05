@@ -270,7 +270,7 @@ When NO-FILL is non-nill set fill to \"none\"."
 	    (from (cons (car from) (if (proper-list-p (cdr from))
 				       (cadr from)
 				     (cdr from)))))
-       (message "to:%s,%s from:%s,%s"
+       (message "from:%s,%s to:%s,%s"
 		(car from) (cdr from)
 		(car ,to) (cdr ,to))
        (svg-node ,svg 'path
@@ -333,6 +333,7 @@ When INHIBIT-DEFAULT is non-nil return nil instead of (0 . 0) when plan is empty
 (defun dm-sketch-stencil:path-init ()
   "Called when selecting the \"path\" tool."
   (interactive)
+  (setq dm-sketch-stencil-end-pos (cons 1 1))
   (setq dm-sketch-stencil-data (list :command 'L :cmd-args nil :plan nil))
   (dm-sketch-stencil:path-set (dm-sketch-canvas)))
 
@@ -370,10 +371,13 @@ When RELITIVE is non-nil move by (instead of to) POS."
 
 (defun dm-sketch-stencil:path-remove (&optional path-part)
   "Remove PATH-PART or the last part of :plan."
-  (if-let ((plan (dm-sketch-stencil:plan)))
-      (dm-sketch-stencil:plan-set
-	(remove (or path-part (dm-sketch-stencil:path-last-part plan)) plan))
-    (setq dm-sketch-stencil-end-pos (cdar (dm-sketch-stencil:plan))))
+  (if (not (dm-sketch-has-plan))
+      (setq dm-sketch-stencil-end-pos (dm-draw-pos (cons 1 1)))
+    (dm-sketch-stencil:plan-set
+      (remove (or path-part
+		  (dm-sketch-stencil:path-last-part(dm-sketch-stencil:plan)))
+	      (dm-sketch-stencil:plan))))
+  (setq dm-sketch-stencil-end-pos (cadar (dm-sketch-stencil:plan)))
   (dm-sketch-stencil:path-set (dm-sketch-canvas)))
 
 (defun dm-sketch-stencil:path-set (svg &optional pos)
@@ -395,8 +399,9 @@ When RELITIVE is non-nil move by (instead of to) POS."
 		   (dm-sketch-stencil:path-last-pos nil t))
 	  (dm-sketch-stencil:path-make-end-point svg
 	      pos
-	    (not (null (dm-sketch-stencil:plan))))
-	  (when (dm-sketch-has-plan)
+	    (not (null (dm-sketch-has-plan))))
+	  (if (not (dm-sketch-has-plan))
+	      (svg-remove svg "dm-sketch-segment")
 	    (dm-sketch-stencil:path-make-segment svg
 		(dm-sketch-stencil:path-last-pos nil t)
 	      pos))
@@ -447,7 +452,9 @@ When RELITIVE is non-nil move by (instead of to) POS."
 	   (funcall (plist-member plist 'mouseover) mpos))
       (when dm-sketch-stencil
 	(dm-sketch-stencil-timer-reset (buffer-name) mpos)
-	(format (plist-get plist 'help-echo-fmt) mpos)))))
+	;;(format (plist-get plist 'help-echo-fmt) mpos)
+	nil
+	))))
 
 ;; other interactive commands
 
