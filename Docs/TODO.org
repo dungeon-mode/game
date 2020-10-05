@@ -9,7 +9,7 @@ sources, including this file, on [[https://git.savannah.nongnu.org/cgit/dungeon.
 
 This file is a part of dungeon-mode.  It is not a part of GNU Emacs.
 This softare is released under the GNU Public Licence version three
-or, at your disgression, any newer version of the GNU Public
+or, at your discretion, any newer version of the GNU Public
 License.  For specific terms please see [[LICENSE]] at end-of-file.
 
 * Game Tasks
