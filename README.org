@@ -483,7 +483,7 @@ own discord/irc channel for that please.
 
 * LICENSE
 
-This is the main "README" document for the dungeon-mode project.  This license statement applies to this file as well as any and all other files included in the authoritative source repository (HTTPS://github.org/dungeon-mode/game) which do not contain their own license.
+This is the main "README" document for the dungeon-mode project.  This license statement applies to this file as well as any and all other files included in the authoritative source repository https://git.savannah.nongnu.org/cgit/dungeon.git) which do not contain their own license.
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by

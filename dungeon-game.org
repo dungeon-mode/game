@@ -10,7 +10,7 @@
 # real .el and github creates the key documentation for review prior
 # to download and install at which point prefer the help system.
 .
-#+HTML: <a href=https://github.com/mplscorwin/dungeon-mode/><img src="https://github.com/mplscorwin/dungeon-mode/raw/master/M-Dungeon-Logo-final.png" align="right"></a>
+#+HTML: <a href=https://git.savannah.nongnu.org/cgit/dungeon.git><img src="https://github.com/mplscorwin/dungeon-mode/raw/master/M-Dungeon-Logo-final.png" align="right"></a>
 
 # print a description at the top for GitHub
 # CEZB <pre /> looks cool here.

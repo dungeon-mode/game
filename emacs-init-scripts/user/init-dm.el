@@ -25,7 +25,7 @@
 ;; You should change the value of `my-path' to wherever you have
 ;; install or clone path.
 
-;; FFI: https://github.com/dungeon-mode/game
+;; FFI: https://git.savannah.nongnu.org/cgit/dungeon.git
 
 ;; .el
 

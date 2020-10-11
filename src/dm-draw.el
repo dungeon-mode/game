@@ -22,7 +22,7 @@
 ;; * Implementation
 
 ;; This file implements SVG rendering of maps for, e.g.
-;; [[https://github.com/mplsCorwin/dungeon-mode][dungeon-mode]]
+;; [https://git.savannah.nongnu.org/cgit/dungeon.git]
 
 ;;; Requirements:
 

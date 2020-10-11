@@ -5,7 +5,7 @@
 This document lists items we think necessary to the minimum
 play-testable version of dungeon-mode. For more information on the
 project visit our listing on the [[https://directory.fsf.org/wiki/Dungeon-mode][Free Software Directory]] or browse the
-sources, including this file, on [[https://github.com/dungeon-mode/game ][GitHub]].
+sources, including this file, on [[https://git.savannah.nongnu.org/cgit/dungeon.git][Savannah]].
 
 This file is a part of dungeon-mode.  It is not a part of GNU Emacs.
 This softare is released under the GNU Public Licence version three

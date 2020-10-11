@@ -22,7 +22,7 @@
 ;; * Implementation
 
 ;; This file implements SVG rendering of maps for, e.g.
-;; [[https://github.com/dungeon-mode/game][dungeon-mode]]
+;; [https://git.savannah.nongnu.org/cgit/dungeon.git][dungeon-mode]]
 ;; a multi-player dungeon-crawl style RPG for
 ;; [[https://www.fsf.org/software/emacs][GNU Emacs]]
 ;; See [[Docs/Maps][Docs/Maps]] for example map definations from the

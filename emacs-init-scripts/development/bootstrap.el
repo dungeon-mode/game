@@ -10,7 +10,7 @@
 ;; the Free Software Foundation, either version 3 of the License, or
 ;; (at your option) any later version.
 
-;; This program is distributed in the hope that it will be useful,
+  ;; This program is distributed in the hope that it will be useful,
 ;; but WITHOUT ANY WARRANTY; without even the implied warranty of
 ;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 ;; GNU General Public License for more details.
@@ -21,8 +21,7 @@
 ;;; Commentary:
 
 ;; Automatically install packages used in deveopment of dungeon-mode
-;; URL: https://github.com/mplsCorwin/dungeon-mode
-
+;; URL: https://git.savannah.nongnu.org/cgit/dungeon.git
 ;; Packages are installed alongside the default install path, in
 ;;   ~/.emacs.d/dm-elpa
 

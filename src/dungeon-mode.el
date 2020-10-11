@@ -24,10 +24,10 @@
 ;; providing RPG gaming features including turn-based play within
 ;; Emacs and enhancements to `org-mode' for campaign game development.
 
-;; The project is currently homed on GitHub; we welcome your
+;; The project is currently homed on Savannah; we welcome your
 ;; contributions especially including issue reports and pull requests.
 
-;; http://github.com/mplsCorwin/dungeon-mode
+;; https://git.savannah.nongnu.org/cgit/dungeon.git
 
 ;;; Code:
 
