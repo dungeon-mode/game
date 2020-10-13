@@ -204,7 +204,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 (defun dm-sketch-create (name)
   "Create (but do not select or display) image buffer NAME."
   (dm-with-env name (org-buffer sketch-buffer)
-    (dm-env-put name :canvas (dm-draw nil :no-border t))
+    (dm-env-put name :canvas (dm-draw nil :no-border t :id-prefix "dm-sketch-"))
     (with-current-buffer (get-buffer-create name)
       (with-silent-modifications
 	(unless (derived-mode-p 'image-mode) (dm-sketch-mode))
@@ -232,6 +232,63 @@ Buffer is filled via TEMPLATE-FUNCTION or, when not provided, by
 
 
 
+;; mung
+
+(defvar dm-sketch-map-file nil "File containing a dungeon map..")
+
+(defvar dm-sketch-map-table "cell" "ETL property for the map table.")
+
+(defmacro dm-sketch-with-map-file (&rest body)
+  "Execute BODY with `dm-sketch-map-file' as the current buffer."
+  (declare (indent 0))
+  `(if (null dm-sketch-map-file)
+       (user-error "No map file selected")
+     (with-current-buffer (get-buffer-create dm-sketch-map-file)
+       (message "current-buffer:%s" (buffer-name))
+       ,@body)))
+
+(defmacro dm-sketch-field-to-number (num)
+  "Get field NUM of map table."
+  `(string-to-number
+    (or (org-string-nw-p (org-no-properties (org-table-get-field ,num)))
+        "-1")))
+
+(defun dm-sketch-get-map-cell (pos)
+  "Get map cell at POS."
+  (when dm-sketch-map-file
+    (with-current-buffer (or (find-buffer-visiting dm-sketch-map-file)
+                             (get-buffer-create dm-sketch-map-file))
+      (when-let ((tpos (seq-first
+                        (org-element-map (org-element-parse-buffer) 'table
+                          (lambda (table)
+                            (when (string= (dm-table-property table)
+                                           dm-sketch-map-table)
+                              (dm-table-start-pos table)))))))
+        (goto-char tpos)
+        (while (and (org-at-table-p)
+                    (not (equal (dm-sketch-field-to-number 2)
+                                (cdr pos))))
+          (forward-line))
+        (while (and (org-at-table-p)
+                    (not (equal (dm-sketch-field-to-number 1)
+                                (car pos))))
+          (forward-line))
+        (if (not (and (equal (dm-sketch-field-to-number 2)
+                             (cdr pos))
+                      (equal (dm-sketch-field-to-number 1)
+                             (car pos))))
+            (user-error "Cannot find pos in map table" pos)
+          (org-trim (org-no-properties (org-table-get-field 3)))))
+      )))
+
+(defun dm-sketch-set-map-cell (pos plan)
+  "Set map cell at POS to PLAN."
+  (when-let ((old-value (dm-sketch-get-map-cell pos)))
+    (org-table-get-field 3 (prin1-to-string plan)))
+  (org-table-align))
+
+
+
 ;; user activity and action state handling
 
 ;; interactive drawing tools
@@ -250,6 +307,18 @@ Buffer is filled via TEMPLATE-FUNCTION or, when not provided, by
 (defvar dm-sketch-stencil-svg nil  "Unscaled draw-code for stencil.")
 (defvar dm-sketch-stencil-data nil "Data used by the current stencil.")
 (defvar dm-sketch-stencil-end-pos nil "Last position in stencil.")
+(defvar dm-sketch-stencil-cpt-selected nil
+  "Currently seelected control-point in stencil.")
+(defvar dm-sketch-stencil-cpt-selected-index nil
+  "Index into stencil path sequence of the currently selected control-point.")
+
+(defmacro dm-sketch-cpt ()
+  "Return position of the currently selected control point, if any."
+  `(if dm-sketch-stencil-cpt-selected-index
+       (cadr (nth dm-sketch-stencil-cpt-selected-index
+		   (dm-sketch-stencil:plan)))
+     (and (dm-sketch-has-plan)
+	  dm-sketch-stencil-end-pos)))
 
 (defmacro dm-sketch-stencil:path-make-end-point (svg pos &optional no-fill)
   "Create an end-point for a path stencil in SVG at POS.
@@ -282,9 +351,45 @@ When NO-FILL is non-nill set fill to \"none\"."
 		 ;;,@(unless no-fill `(:fill "red"))
 		 ))))
 
+(defvar dm-sketch-tile-node nil "SVG node for the selcted tile.")
+
+(defmacro dm-sketch-stencil:make-tile (svg pos)
+  "Place the selected tile at POS in SVG."
+  `(progn
+     (when dm-sketch-tile-node (dom-remove-node ,svg dm-sketch-tile-node))
+     (when (setq dm-sketch-tile-node
+		 (when (and dm-sketch-tile-selected dm-sketch-stencil-svg)
+		   (plist-put dm-sketch-stencil-svg :cell ,pos)
+		   (let ((node (dm-draw (list dm-sketch-stencil-svg)
+					:no-background t
+					;;:svg (dm-env-get (buffer-name) :canvas)
+					:no-append t)))
+		     (dom-set-attribute node 'id "dm-sketch-tile")
+		     node)))
+       (dom-append-child ,svg dm-sketch-tile-node))
+     (svg-possibly-update-image ,svg)
+     dm-sketch-tile-node))
+
+;; `(prog1
+;;        (setq dm-sketch-tile-node
+;; 	     (if (null dm-sketch-tile-selected)
+;; 		 (progn (dom-remove-node svg (dom-by-id ,svg "dm-sketch-tile")) nil)
+;; 	       (let ((node (dm-draw (list (dm-draw-resolve-tile
+;; 					   dm-sketch-tile-selected
+;; 					   ,pos))
+;; 				    :no-background t
+;; 				    :id-prefix "dm-sketch-tile-"
+;; 				    :no-append t
+;; 				    ;;:svg ,svg ;; :layer-attr dm-draw-layer-attr-alist
+;; 				    ;;:nudge (cons 0 0)
+;; 				    )))
+;; 		 (dom-set-attribute node 'id "dm-sketch-tile")
+;; 		 node)))
+;;      (svg-possibly-update-image ,svg))
+
 (defmacro dm-sketch-canvas (&optional svg)
   "Return SVG or via `dm-env-get'."
-  `(or ,svg (dm-sketch-stencil:path-set (dm-env-get (buffer-name) :canvas))))
+  `(or ,svg (dm-sketch-stencil:path-preview (dm-env-get (buffer-name) :canvas))))
 
 (defmacro dm-sketch-stencil:plan (&optional plan)
   "Return the PLAN for the stencil.."
@@ -299,16 +404,51 @@ When NO-FILL is non-nill set fill to \"none\"."
   "Return non-nil when there is plan data for the sketch."
   `(< 0 (length (dm-sketch-stencil:plan))))
 
+(defmacro dm-sketch-stencil:path-make-cpt
+    (svg counter x y size &rest args)
+  "Add a control-point to SVG.
+
+X, Y, SIZE, and ARGS control presentation.  COUNTER trackes the
+control points created."
+  `(svg-circle ,svg  (caadr stroke) (cadadr stroke) 8
+	       :id (format "dm-sketch-cpt-%d" (cl-incf ,counter))
+	       :class "dm-sketch-cpt"
+	       :fill "none" :stroke-color "green" :stroke-opacity .6
+	       ))
+
 (defmacro dm-sketch-stencil:path-make-plan (svg plan)
   "Draw PLAN in SVG."
-  `(svg-node ,svg 'path
-	     :id "dm-sketch-plan"
-	     :fill "none" :stroke-color "green" :stroke-opacity .8
-	     :stroke-width 10 :stroke-linejoin "bevel" :stroke-linecap "round"
-	     :d (dm-map-path-string
-		  (dm-draw--M (dm-draw-scale) (dm-draw-nudge nil nil t)
-			      (cons 0 0)
-		    (reverse ,plan)))))
+  (let ((counter (gensym "dm-sketch-cpt-"))
+	(pos (gensym "dm-sketch-start-point-")))
+    `(let ((,counter 0)
+	   (,pos (dm-draw-pos)))
+       (svg-node ,svg 'path
+		 :id "dm-sketch-plan"
+		 :fill "none" :stroke-color "green" :stroke-opacity .4
+		 :stroke-width 4 :stroke-linejoin "bevel" :stroke-linecap "round"
+		 :d (dm-map-path-string
+		      (dm-draw--M (dm-draw-scale) (dm-draw-nudge nil nil t)
+				  (cons 0 0)
+			(reverse ,plan))))
+       (svg-circle ,svg  (car ,pos) (cdr ,pos) 8
+		   :id (format "dm-sketch-cpt-%d" (cl-incf ,counter))
+		   :class "dm-sketch-cpt"
+		   :fill "none" :stroke-color "blue" :stroke-opacity .6
+			      )
+       (mapc (lambda (stroke)
+	       (pcase (car stroke)
+		 ('M
+		  (svg-circle ,svg  (caadr stroke) (cadadr stroke) 8
+			      :id (format "dm-sketch-cpt-%d" (cl-incf ,counter))
+			      :class "dm-sketch-cpt"
+			      :fill "none" :stroke-color "green" :stroke-opacity .6
+			      ))
+		 (_ (svg-circle ,svg  (caadr stroke) (cadadr stroke) 6
+				:id (format "dm-sketch-cpt-%d" (cl-incf ,counter))
+				:class "dm-sketch-cpt"
+				:fill "green" :fill-opacity .4 :stroke-color "none"
+				))))
+	     ,plan))))
 
 (defmacro dm-sketch-stencil:path-last-part (&optional plan)
   "Return the last of PLAN."
@@ -330,12 +470,36 @@ When INHIBIT-DEFAULT is non-nil return nil instead of (0 . 0) when plan is empty
   )
 
 
+(defun dm-sketch-stencil:tile-move (pos &optional relitive node)
+  "Move the selected tile to POS.
+
+POS is absolute dungeon-units unless RELITIVE is non-nil."
+  (when-let* ((svg (dm-env-get (buffer-name) :canvas t t))
+	      (node (dm-sketch-stencil:make-tile svg pos))
+	      ;; (pos (if (null relitive) pos
+	      ;; 	     (cons (+ (string-to-number (dom-attr node 'x))
+	      ;; 		      (car pos))
+	      ;; 		   (+ (string-to-number (dom-attr node 'y))
+	      ;; 		      (if (proper-list-p pos) (cadr pos)
+	      ;; 			(cdr pos))))))
+	      )
+    ;;(message "moved tile to: %s" pos)
+    (setq dm-sketch-stencil-end-pos pos)
+    (svg-possibly-update-image svg)
+    node))
+
 (defun dm-sketch-stencil:path-init ()
   "Called when selecting the \"path\" tool."
   (interactive)
   (setq dm-sketch-stencil-end-pos (cons 1 1))
-  (setq dm-sketch-stencil-data (list :command 'L :cmd-args nil :plan nil))
-  (dm-sketch-stencil:path-set (dm-sketch-canvas)))
+  (setq dm-sketch-stencil-data (list :command 'L :cmd-args nil
+				     :plan nil
+				     ;; :plan
+				     ;; `((M (,@(let ((v (dm-draw-pos)))
+				     ;; 	       (list (car v) (cdr v))))))
+				     ))
+  (setq dm-sketch-stencil-cpt-selected-index 0)
+  (dm-sketch-stencil:path-preview (dm-sketch-canvas)))
 
 (defun dm-sketch-stencil:path-add (pos)
   "Add a line-to POS to path stencil."
@@ -350,9 +514,38 @@ When INHIBIT-DEFAULT is non-nil return nil instead of (0 . 0) when plan is empty
 				   (cadr pos)
 				 (cdr pos)))))
 	   plan)))
-  (dm-sketch-stencil:path-set
-   (dm-sketch-canvas)
-   (dm-draw-unpos pos)))
+  (dm-sketch-stencil:path-draw))
+
+(defun dm-sketch-stencil:path-draw ()
+  "Display the stencil path."
+  (if-let ((svg (dm-env-get (buffer-name) :canvas t t)))
+      (if-let ((plan (dm-sketch-stencil:plan)))
+	  (dm-sketch-stencil:path-make-plan svg plan)
+	;; no plan, remove the control points and stencil
+	(mapc (apply-partially #'dom-remove-node svg)
+	      (dom-by-class svg "dm-sketch-cpt"))
+	(svg-remove svg "dm-sketch-plan"))
+    (warn "Missing svg or not a sketch buffer (%s,%s)" svg (buffer-name))))
+
+(defun dm-sketch-stencil:path-preview (svg &optional pos)
+  "Add stencil to SVG at POS."
+  ;;(setq dm-sketch-stencil)
+  (let ((pos (dm-draw-pos pos)))
+    ;; TODO: scale and place/replace the stencil svg if any
+    ;;
+    ;;(dm-sketch-stencil:path-preview svg pos)
+    (message "path-preview->pos:%s plan-p:%s last:%s"
+	     pos (dm-sketch-has-plan)
+	     (dm-sketch-stencil:path-last-pos nil t))
+    (dm-sketch-stencil:path-make-end-point svg
+	pos
+      (not (null (dm-sketch-has-plan))))
+    (if (not (dm-sketch-has-plan))
+	(svg-remove svg "dm-sketch-segment")
+      (dm-sketch-stencil:path-make-segment svg
+	  (dm-sketch-stencil:path-last-pos nil t)
+	pos))))
+
 
 (defun dm-sketch-stencil:path-move (pos &optional relitive path-part)
   "Move PATH-PART or last of :plan to POS.
@@ -367,7 +560,7 @@ When RELITIVE is non-nil move by (instead of to) POS."
     (setq dm-sketch-stencil-end-pos pos)
     (setcar (cadr part) (car pos))
     (setcdr (cadr part) (list (cdr pos))))
-  (dm-sketch-stencil:path-set (dm-sketch-canvas)))
+  (dm-sketch-stencil:path-preview (dm-sketch-canvas)))
 
 (defun dm-sketch-stencil:path-remove (&optional path-part)
   "Remove PATH-PART or the last part of :plan."
@@ -378,41 +571,23 @@ When RELITIVE is non-nil move by (instead of to) POS."
 		  (dm-sketch-stencil:path-last-part(dm-sketch-stencil:plan)))
 	      (dm-sketch-stencil:plan))))
   (setq dm-sketch-stencil-end-pos (cadar (dm-sketch-stencil:plan)))
-  (dm-sketch-stencil:path-set (dm-sketch-canvas)))
+  (dm-sketch-stencil:path-preview (dm-sketch-canvas)))
 
-(defun dm-sketch-stencil:path-set (svg &optional pos)
-  "Sketch path to POS in SVG."
-  (let* ((plan (dm-sketch-stencil:plan)))
-    (if plan (dm-sketch-stencil:path-make-plan svg plan)
-      (svg-remove svg "dm-sketch-plan")))
-  (dm-sketch-stencil-place (buffer-name) pos))
-
-(defun dm-sketch-stencil-set (svg &optional pos)
-  "Add stencil to SVG at POS."
-  (setq dm-sketch-stencil
-	(let ((pos (dm-draw-pos pos)))
-	  ;; TODO: scale and place/replace the stencil svg if any
-	  ;;
-	  ;;(dm-sketch-stencil:path-set svg pos)
-	  (message "path-preview->pos:%s plan-p:%s last:%s"
-		   pos (dm-sketch-has-plan)
-		   (dm-sketch-stencil:path-last-pos nil t))
-	  (dm-sketch-stencil:path-make-end-point svg
-	      pos
-	    (not (null (dm-sketch-has-plan))))
-	  (if (not (dm-sketch-has-plan))
-	      (svg-remove svg "dm-sketch-segment")
-	    (dm-sketch-stencil:path-make-segment svg
-		(dm-sketch-stencil:path-last-pos nil t)
-	      pos))
-	  (dom-by-id svg "dm-sketch-mousepos")))) ;; return element at point
 
 (defun dm-sketch-stencil-place (buffer &optional pos &rest _)
-  "Move BUFFER stencil to POS."
+  "Place stencil at POS in BUFFER."
+  ;; (setq dm-sketch-stencil-end-pos
+  ;; 	(or pos dm-sketch-stencil-end-pos
+  ;; 	    (cons 1 1)))
   (when-let ((svg (dm-env-get buffer :canvas)))
     (with-current-buffer buffer
       (dm-with-env buffer (image-buffer org-buffer)
-	(dm-sketch-stencil-set svg pos)))))
+	(pcase dm-sketch-tool-selected
+	  ('place
+	   (progn (dm-sketch-set-tool 'place t)
+		  (dm-sketch-stencil:make-tile svg (dm-draw--ensure-cons pos (cons 1 1)))))
+	  ('line
+	   (dm-sketch-stencil:path-preview svg (dm-draw--ensure-cons pos (cons 1 1)))))))))
 
 (defsubst dm-sketch-stencil-timer-cancel ()
   "Stop the stencil position update timer."
@@ -426,34 +601,93 @@ When RELITIVE is non-nil move by (instead of to) POS."
   (setq dm-sketch-stencil-timer
 	(run-at-time .1 nil #'dm-sketch-stencil-place buffer pos)))
 
-(defun dm-sketch-set-tool (tool)
-  "Set TOOL (a symbol) as the selected tool."
-  (pcase (setq dm-sketch-tool-selected tool)
-    ('place (progn
-	      (dm-sketch-set-props
-	       (list 'pointer (plist-get dm-sketch-tools 'place)))
-	      (dm-sketch-stencil:path-init)))
-    (_ ;; no tool seleected
-     (dm-sketch-set-props (list 'pointer (plist-get dm-sketch-tools nil))))))
+(defun dm-sketch-set-tool (tool &optional inhibit-update)
+  "Set TOOL (a symbol) as the selected tool.
+
+When INHIBIT-UPDATE is non-nil set `dm-sketch-tool-selected' only."
+  (when-let ((svg (dm-env-get (buffer-name) :canvas)))
+    (setq dm-sketch-tool-selected tool)
+    (unless inhibit-update
+      (pcase dm-sketch-tool-selected
+	('place (when dm-sketch-tile-selected
+		  (dm-sketch-stencil:make-tile svg (or dm-sketch-stencil-end-pos
+						       (cons 0 0)))))
+	('line (progn
+		 (dm-sketch-set-props
+		  (list 'pointer (plist-get dm-sketch-tools 'place)))
+		 (dm-sketch-stencil:path-init)))
+	(_ ;; no tool seleected
+	 (dm-sketch-set-props (list 'pointer (plist-get dm-sketch-tools nil))))))))
+
+(defvar dm-sketch-select-tool-hist nil "Tile selection istory.
+
+Used by 'dm-sketch-select-tool', which see.")
+
+(defun dm-sketch-select-tool (&optional tool)
+  "Select the TOOL used to manipulate the sketch.
+
+When called interactively without, prompt for TOOL, otherwise TOOL
+may be a string or a symbol."
+  (interactive
+   (list
+    (intern
+     (let ((tool-list (list 'place 'line)))
+       (completing-read (format "Tool%s: " (if dm-sketch-tool-selected
+					       (format "[%s]" dm-sketch-tool-selected)
+					     ""))
+			tool-list
+			nil
+			t
+			nil
+			dm-sketch-select-tool-hist)))))
+  (dm-sketch-set-tool tool)
+  (message "Selected the %s tool." tool))
+
+(defvar dm-sketch-select-tile-hist nil "Tile selection istory.
+
+Used by 'dm-sketch-select-tool', which see.")
+
+(defun dm-sketch-select-tile (&optional tile)
+  "Select a TILE to place into the sketch.
+
+Tiles are named, pre-preparred multi-layer sub-images.  When
+called interactively without, prompt for TILE, otherwise TITLE
+may be a string or a symbol."
+  (interactive
+   (list
+    (intern
+     (completing-read (format "Tile%s: " (if dm-sketch-tile-selected
+					     (format "(currently: %s)" dm-sketch-tile-selected)
+					   ""))
+		      (mapcar 'prin1-to-string (hash-table-keys dm-map-tiles))
+		      (lambda (text) (not (null (gethash (intern text) dm-map-tiles))))
+		      t
+		      (prin1-to-string dm-sketch-tile-selected)
+		      dm-sketch-select-tile-hist
+		      (prin1-to-string dm-sketch-tile-selected)))))
+  (dm-sketch-set-tile tile)
+  (message "Set tile: %s" tile))
 
 (defun dm-sketch-set-tile (tile)
   "Set TILE (a symbol) as the selected tile."
   (if (null (setq dm-sketch-tile-selected tile))
       (setq dm-sketch-stencil-svg nil)
-    (setq dm-sketch-stencil-svg
-	  (dm-draw-resolve-tile tile))))
+    (let ((svg (dm-env-get (buffer-name) :canvas t t))
+	  (pos (or dm-sketch-stencil-end-pos (cons 1 1))))
+      (setq dm-sketch-stencil-svg
+	    (dm-draw-resolve-tile tile pos))
+      (when svg (dm-sketch-stencil:make-tile svg pos)))))
 
 (defun dm-sketch-mouseover (&rest _)
   "Update image based on mouse movement."
-  (when dm-sketch-tool-selected
+  (when (and (dm-env-has (buffer-name)) dm-sketch-tool-selected)
     (let ((mpos (dm-draw-mouse-position))
 	  (plist (plist-get dm-sketch-tools dm-sketch-tool-selected)))
       (and (plist-member plist 'mouseover)
 	   (funcall (plist-member plist 'mouseover) mpos))
-      (when dm-sketch-stencil
+      (when dm-sketch-tool-selected
 	(dm-sketch-stencil-timer-reset (buffer-name) mpos)
 	;;(format (plist-get plist 'help-echo-fmt) mpos)
-	nil
 	))))
 
 ;; other interactive commands
@@ -468,7 +702,7 @@ When RELITIVE is non-nil move by (instead of to) POS."
      (buffer-names (dm-sketch-name group-name)))
   "Create a new set of sketch buffers.
 
-Focus SVG buffer unless NO-FOCUS is non-nil. GROUP-NAME is the
+Focus SVG buffer unless NO-FOCUS is non-nil.  GROUP-NAME is the
 base name for both buffers.  BUFFER-NAMES is a list in the
 form (SVG-BUF-NAME ORG-BUF-NAME)."
   (interactive)
@@ -481,7 +715,33 @@ form (SVG-BUF-NAME ORG-BUF-NAME)."
   (dm-sketch-create-org (cadr buffer-names))
   (unless no-focus (pop-to-buffer (car buffer-names)))
   ;; force the drawing to start in "stencil"/line-drawing mode
-  (dm-sketch-set-tool 'place))
+  (dm-sketch-set-tool 'line))
+
+(defun dm-sketch-ctp-select-next (&optional arg)
+  "Select the next prior control point.
+
+When given the negitive prefix ARG, clear the selected control
+point.  When ARG is numeric when ARG is numeric move ARG distance
+toward the beginning or (when negitive), toward the end,
+otherwise move by one along the list of control points ending in
+`dm-sketch-stencil-end-pos'.  When arg is out of bound, use the
+pos at the nearest boundry.  When no stencil path do nothing."
+  (interactive "p")
+  (message "arg:%s" arg)
+  (when (dm-sketch-has-plan)
+    (if (equal '- arg)
+	(setq dm-sketch-stencil-cpt-selected-index 0)
+      (setq dm-sketch-stencil-cpt-selected-index
+	    (if dm-sketch-stencil-cpt-selected-index
+		(+ dm-sketch-stencil-cpt-selected-index
+		   (or arg 1))
+	      (or arg 1))))
+    (if (> 0 dm-sketch-stencil-cpt-selected-index)
+	(setq dm-sketch-stencil-cpt-selected-index 0)
+      (when (> dm-sketch-stencil-cpt-selected-index
+	       (1- (length (dm-sketch-stencil:plan))))
+	(setq dm-sketch-stencil-cpt-selected-index
+	      (1- (length (dm-sketch-stencil:plan))))))))
 
 (defun dm-sketch-mouse-remove-last (&rest _)
   "Handle click on sketch buffer."
@@ -515,6 +775,8 @@ form (SVG-BUF-NAME ORG-BUF-NAME)."
     ;; (define-key map (kbd "<right>") 'dm-map-hscroll)
     ;; (define-key map (kbd "<left>") 'dm-map-hscroll-invert)
     ;;(define-key map (kbd "s") 'dm-map-scale)
+    (define-key map (kbd "t") 'dm-sketch-select-tile)
+    (define-key map (kbd "T") 'dm-sketch-select-tool)
     (define-key map (kbd "<C-delete>") 'dm-sketch-stencil:path-init)
     (define-key map (kbd "q") 'dm-scratch-quit)
     (define-key map [mouse-1] 'dm-sketch-mouse1)

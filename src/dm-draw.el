@@ -39,20 +39,20 @@
 ;;; Code:
 
 ;; testcase
-(when nil
-  (with-current-buffer (pop-to-buffer " *draw test*")
-    (erase-buffer)
-    (let (i (dm-draw-size (cons 48 24))
-	    (dm-draw-scale 17)
-	    svg)
-      (setq svg (dm-draw (mapcar 'dm-map-cell2
-				 (hash-table-keys dm-map-level))
-			 ;;:layers '((background scaled)(path path) (overlay svg))
-			 ))
-      (setq i (svg-insert-image svg))
-      (sit-for 3)
-      ;;(dm-draw '((:cell (3 . 3) path ((h (2))(v (2))(h (-2))(v (-2))))) :svg svg)
-      (svg-possibly-update-image svg))))
+;; (when nil
+;;   (with-current-buffer (pop-to-buffer " *draw test*")
+;;     (erase-buffer)
+;;     (let (i (dm-draw-size (cons 48 24))
+;; 	    (dm-draw-scale 17)
+;; 	    svg)
+;;       (setq svg (dm-draw (mapcar 'dm-map-cell2
+;; 				 (hash-table-keys dm-map-level))
+;; 			 ;;:layers '((background scaled)(path path) (overlay svg))
+;; 			 ))
+;;       (setq i (svg-insert-image svg))
+;;       (sit-for 3)
+;;       ;;(dm-draw '((:cell (3 . 3) path ((h (2))(v (2))(h (-2))(v (-2))))) :svg svg)
+;;       (svg-possibly-update-image svg))))
 
 (defvar dm-draw-scale 60 "Pixels per dungeon unit.")
 (defvar dm-draw-nudge (cons 1 1) "Frame padding in dungeon units.")
@@ -61,24 +61,24 @@
 (defvar dm-draw-svg-attr-alist nil "SVG attributes as an alist.")
 
 (defvar dm-draw-layer-attr-alist
-  '((t ((fill . "none")
-	(stroke . "black")
-	(stroke-width . "1")))
-    (water ((fill . "blue")
-	    (stroke . "none")
-	    (stroke-width . "1")))
-    (beach ((fill . "yellow")
-	    (stroke . "none")
-	    (stroke-width . "1")))
-    (stairs ((fill . "#FF69B4") ;; pink
-	     (stroke . "none")
-	     (stroke-width . "1")))
-    (neutronium ((fill . "orange")
-		 (stroke . "orange")
-		 (stroke-width . "1")))
-    (decorations ((fill . "cyan")
-		  (stroke . "cyan")
-		  (stroke-width . "1"))))
+  (list (cons t (list (cons 'fill "none")
+		      (cons 'stroke "black")
+		      (cons 'stroke-width  "1")))
+	(cons 'water (list (cons 'fill "blue")
+			   (cons 'stroke "none")
+			   (cons 'stroke-width  "1")))
+	(cons 'beach (list (cons 'fill "yellow")
+			   (cons 'stroke "none")
+			   (cons 'stroke-width  "1")))
+	(cons 'stairs (list (cons 'fill "#FF69B4") ;; pink
+			    (cons 'stroke "none")
+			    (cons 'stroke-width  "1")))
+	(cons 'neutronium (list (cons 'fill "orange")
+				(cons 'stroke "orange")
+				(cons 'stroke-width  "1")))
+	(cons 'decorations (list (cons 'fill "cyan")
+				 (cons 'stroke "cyan")
+				 (cons 'stroke-width "1"))))
   "Default attributes for SVG and path layers.")
 
 (defvar dm-draw-layer-alist '((background scaled)
@@ -100,6 +100,24 @@
 (defvar dm-draw-dom-interpolate-function #'dm-draw-dom-interpolate-default
   "Function to call to replace vars (\"$foo\") in Text nodes.")
 
+(defvar dm-draw-style-alist "<style type=\"text/css\"><![CDATA[
+    .Border { fill:none; stroke:blue; stroke-width:1 }
+    .Connect { fill:none; stroke:#888888; stroke-width:2 }
+    .SamplePath { fill:none; stroke:red; stroke-width:5 }
+    .EndPoint { fill:none; stroke:#888888; stroke-width:2 }
+    .CtlPoint { fill:#888888; stroke:none }
+    .AutoCtlPoint { fill:none; stroke:blue; stroke-width:4 }
+    .Label { font-size:22; font-family:Verdana }
+  ]]></style>"
+  "Alist of CSS styles.")
+
+(defmacro dm-draw-layer-attributes (&optional layer alist)
+  "Return DOM attributes for LAYER from ALIST."
+  (copy-tree`
+   (cdr-safe
+    (or (assoc ,layer (or ,alist dm-draw-layer-attr-alist))
+	(assoc t (or ,alist dm-draw-layer-attr-alist))))))
+
 (defmacro dm-draw--dqnconc (&rest lists)
   "Return LISTS joined by `nconc' after removing nil."
   (declare (indent 0))
@@ -112,10 +130,14 @@ SYM is the loop iterator as BODY processes each list item."
   (declare (indent 2))
   `(delq nil (cl-mapcon (lambda (,sym) ,@body) ,list)))
 
-(defmacro dm-draw--adqnmap (list var expr &rest body)
-  "Evaluate BODY with EXPR result bound to VAR and append to LIST."
+(defmacro dm-draw--adqnmap (replace list var expr &rest body)
+  "Evaluate BODY with EXPR bound to VAR and return non-nil results.
+
+When REPLACE is non-nill ignore LIST, otherwise modify LIST."
   (declare (indent 3))
-  `(append ,list (delq nil (mapcar (lambda (,var) ,@body) ,expr))))
+  `(if ,replace
+       (append (list 'g nil) (delq nil (mapcar (lambda (,var) ,@body) ,expr)))
+     (setq list (append ,list (delq nil (mapcar (lambda (,var) ,@body) ,expr))))))
 ;; (dm-draw--adqnmap '(a b c) x '(d e) x)
 
 (defmacro dm-draw--M (scale nudge pos paths)
@@ -453,32 +475,34 @@ CELL supplies a position for the tile, if any."
 
 (cl-defun dm-draw (squares
 		   &optional &key
+		   (id-prefix "")
 		   (layers dm-draw-layer-alist)
 		   (layer-attr dm-draw-layer-attr-alist)
 		   (scale (dm-draw-scale))
 		   (size (dm-draw-size))
-		   (nudge (dm-draw-nudge nil nil t))
+		   (nudge (dm-draw-nudge nil scale t))
 		   (canvas-size (cons (+ (* (car scale) (car nudge) 2)
 					 (* (car scale) (car size)))
 				      (+ (* (cdr scale) (cdr nudge) 2)
 					 (* (cdr scale) (cdr size)))))
-		   (svg-attr (cdr (or (and layer-attr (assoc t layer-attr))
-				      (assoc t dm-draw-layer-attr-alist))))
+		   (svg-attr (dm-draw-layer-attributes nil layer-attr))
 		   (svg (append (apply 'svg-create
 				       (append (list (car canvas-size)
 						     (cdr canvas-size))
 					       (mapcan
 						(lambda (attr)
 						  (list (car attr) (cdr attr)))
-						(apply 'append svg-attr))
+						svg-attr)
 					       )))
 			own-svg-p)
+		   no-append
 		   ;; fetch or build background if not disabled
 		   no-border
 		   no-background
 		   (background
 		    (or no-background
-			(dm-draw-background :svg svg :size canvas-size :scale scale
+			(dom-by-id svg "background")
+			(dm-draw-background :size canvas-size :scale scale
 					   :nudge nudge :no-border no-border)))
 		   scale-background
 		   (scaled (or scale-background no-background
@@ -489,44 +513,43 @@ CELL supplies a position for the tile, if any."
   "No-frills draw routine."
   ;;(dm-svg :svg)
   (if (null own-svg-p)
-      (progn
-	(message "add: %s"
-		 (list (list (list :cell (cons 2 2) 'path
-				   '((h (1))(v (1))(h (-1))(v (-1)))))
-		       '(path) (dm-draw-scale)
-		       (dm-draw-nudge nil nil t)
-		       layer-attr scaled #'dm-draw-path-scale #'dm-draw-dom-scale))
-	(setq svg (dm-draw--adqnmap svg prop layers
-		    (dm-draw-compose-layer squares prop
-					   (dm-draw-scale scale)
-					   (dm-draw-nudge nudge nil t)
-					   layer-attr scaled
-					   path-scale-fun dom-scale-fun))))
+      (dm-draw--adqnmap no-append svg prop layers
+        (dm-draw-compose-layer squares prop id-prefix
+			       (dm-draw-scale scale)
+			       (dm-draw-nudge nudge nil t)
+			       layer-attr scaled
+			       path-scale-fun dom-scale-fun))
     (let ((layer-ix -1) (layers-last-ix (length layers)))
       (dolist (prop layers svg)
 	(setq layer-ix (1+ layer-ix))
 	(when-let ((new-group
-		    (dm-draw-compose-layer squares prop scale nudge
+		    (dm-draw-compose-layer squares prop id-prefix
+					   scale nudge
 					   layer-attr scaled
 					   path-scale-fun dom-scale-fun)))
 	  (if-let ((old-group
-		    (dom-elements  svg 'id (format "^%s$" (car prop)))))
-	      (mapc (apply-partially #'dom-append-child old-group)
-		    (dom-children new-group))
+		    (dom-elements  svg 'id (format "^%s%s$" id-prefix (car prop)))))
+	      (progn
+		;; (when no-append
+		;;   (mapc (apply-partially #'dom-remove-node old-group)
+		;; 	(dom-children old-group)))
+		(mapc (apply-partially #'dom-append-child old-group)
+		      (dom-children new-group)))
 	    (let (next-sib (next-sib-ix layer-ix))
 	      (while (and (null next-sib)
 			  (> layers-last-ix (cl-incf next-sib-ix)))
 		(setq next-sib
 		      (car
 		       (dom-elements svg 'id
-				     (format "^%s$"
+				     (format "^%s%s$" id-prefix
 					     (car (nth next-sib-ix
 						       layers)))))))
 	      (if next-sib (dom-add-child-before svg new-group next-sib)
-		(dom-append-child svg new-group))))))))
-  svg)
+		(dom-append-child svg new-group)))
+	    svg))))))
 
 (defun dm-draw-compose-layer (squares prop
+				      id-prefix
 				      scale nudge
 				      layer-attr scaled
 				      path-scale-fun dom-scale-fun)
@@ -540,6 +563,10 @@ the image.  LAYER-ATTR is a plist of SVG attributes by layer.
 SCALED supplies a cache of pre-rendered and scaled SVG data.
 PATH-SCALE-FUN and DOM-SCALE-FUN are functions responsible for
 element scaling and placement."
+  ;; (message "compose %s<%s> %s [%s]" (cadr prop) prop squares
+  ;; 	   (append ;; layer properties
+  ;; 	    (list (cons 'id (format "%s%s" id-prefix (car prop))))
+  ;; 	    (dm-draw-layer-attributes (car prop))))
   (pcase (cadr prop)
     ('scaled (plist-get scaled (car prop)))
     ('dom
@@ -550,10 +577,10 @@ element scaling and placement."
 				(copy-tree (plist-get (car cell) :cell)))
 	       (copy-tree (plist-get (car cell) (car prop)))))))
        (when (and dom (proper-list-p dom) (< 0 (length dom)))
-	 (append (list 'g (list (cons 'id (format "%s" (car prop))))) dom))))
+	 (append (list 'g (list (cons 'id (format "%s%s" id-prefix (car prop))))) dom))))
     (_ (let ((path-string
 	      (dm-map-path-string
-	       (dm-draw--dqnmap squares cell
+	        (dm-draw--dqnmap squares cell
 		 (when-let ((strokes (plist-get (car cell) (car prop)))
 			    (pos (copy-tree (plist-get (car cell) :cell))))
 		   (dm-draw--M scale (dm-draw-nudge nudge nil t) pos
@@ -561,11 +588,9 @@ element scaling and placement."
 		      (apply-partially path-scale-fun scale)
 		      (copy-tree strokes))))))))
 	 (when (org-string-nw-p path-string)
-	   (list 'g (apply
-		     'append
-		     (list (cons 'id (prin1-to-string (car prop))))
-		     (copy-tree (cdr (or (assoc (car prop) layer-attr)
-					 (assoc t layer-attr)))))
+	   (list 'g (append
+		     (list (cons 'id (format "%s%s" id-prefix (car prop))))
+		     (dm-draw-layer-attributes (car prop)))
 		 (dm-svg-create-path
 		  path-string)))))))
 
@@ -596,12 +621,13 @@ element scaling and placement."
      (h-rule-len (+ (* x-nudge 2) x-size))
      (v-rule-len (+ (* y-nudge 2) y-size))
 
-     (svg (svg-create h-rule-len v-rule-len))
+     (svg (svg-create h-rule-len v-rule-len :id "background"))
 
      no-canvas
      (canvas (unless no-canvas
 	       (svg-rectangle svg
 			      0 0 h-rule-len v-rule-len
+			      :id "dm-draw-background-canvas"
 			      :fill "#fffdd0"
 			      :stroke-width  0)))
 
@@ -612,6 +638,7 @@ element scaling and placement."
 			      (- y-nudge 2)
 			      (- x-size (* 2 x-nudge) -5)
 			      (- y-size (* 2 y-nudge) -5)
+			      :id "dm-draw-background-outer-line"
 			      :fill "none"
 			      :stroke "black"
 			      :stroke-width  5)
@@ -620,6 +647,7 @@ element scaling and placement."
 			      (1- y-nudge)
 			      (- x-size (* 2 x-nudge) -3)
 			      (- y-size (* 2 y-nudge) -3)
+			      :id "dm-draw-background-inner-line"
 			      :fill "none"
 			      :stroke "white"
 			      :stroke-width  1)))
@@ -649,7 +677,8 @@ element scaling and placement."
 			  y-scale)
 	 (make-list (1+ (ceiling (/ x-size x-scale))) v-rule-len)))
        " ")
-      graph-attr)))
+      (append (list (cons 'id "dm-draw-background-graph"))
+	      graph-attr))))
   ;;`(g nil ,(dom-children svg))
   svg
   )

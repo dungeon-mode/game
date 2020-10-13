@@ -89,14 +89,14 @@
 		  (stroke-width . "1"))))
   "Default attributes for SVG and path layers.")
 
-(defvar dm-draw-layer-alist '((background svg)
-			      (underlay svg)
+(defvar dm-draw-layer-alist '((background dom)
+			      (underlay dom)
 			      (water)
 			      (beach)
 			      (stairs)
 			      (neutronium)
 			      (path)
-			      (overlay svg)
+			      (overlay dom)
 			      (decorations))
   "Alist of layers and expected data format.")
 
