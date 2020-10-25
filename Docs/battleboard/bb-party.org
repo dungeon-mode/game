@@ -24,9 +24,9 @@ License.  For specific terms please see [[LICENSE]] at end-of-file.
 | Name           | Pos | Line | Slot | Rank | Class   | Race  | Weapon | bh | bd | ah | ad | sh | sd | s2h | s2d | Notes  |
 |----------------+-----+------+------+------+---------+-------+--------+----+----+----+----+----+----+-----+-----+--------|
 | Shortstar      |   1 |    0 |    0 |    3 | warrior | dwarf | spear  | 15 | | 51 | |  6 |    |   6 |     | +1x4r  |
-| Station        |   2 |    0 |    1 |    4 | warrior | dwarf | sword  | 13 |    | 35 | |  6 |    |   6 |     | +2x2*  |
-| Scooby         |   3 |    0 |    2 |    5 | warrior | human | ax     | 19 |    | 38 |    |  6 |    |   6 |     | +3x4@4 |
-| Paul Bunyon    |   4 |    0 |    3 |    3 | warrior | human | sword  | 12 |    | 11 |    | 36 |    |   6 |     | R      |
+| Station        |   2 |    0 |    1 |    4 | warrior | dwarf | sword  | 13 | | 35 | |  6 |    |   6 |     | +2x2*  |
+| Scooby         |   3 |    0 |    2 |    5 | warrior | human | ax     | 19 | | 38 |    |  6 |    |   6 |     | +3x4@4 |
+| Paul Bunyon    |   4 |    0 |    3 |    3 | warrior | human | sword  | 12 | | 11 |    | 36 |    |   6 |     | R      |
 | Mr. Mysterio   |   5 |    1 |    0 |   10 | wizard  | elf   |        | 27 |    | 10 |  5 | 11 |    |     | | +1x2   |
 | Kool-Aid Kid   |   6 |    1 |    1 |    3 | priest  | elf   | mace   |  4 |    | 56 |    |  6 |    |   6 |     |        |
 | Mario Greymist |   7 |    1 |    2 |    4 | priest  | elf   | mace   | 14 |    | 32 |    |  6 |    |   6 |     |        |

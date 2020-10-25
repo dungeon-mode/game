@@ -370,6 +370,10 @@ When NO-FILL is non-nill set fill to \"none\"."
      (svg-possibly-update-image ,svg)
      dm-sketch-tile-node))
 
+(defmacro dm-sketch-stencil:place-tile (svg pos)
+  "Place stencil into SVG at POS."
+  (dm-map-s))
+
 ;; `(prog1
 ;;        (setq dm-sketch-tile-node
 ;; 	     (if (null dm-sketch-tile-selected)
@@ -752,7 +756,11 @@ pos at the nearest boundry.  When no stencil path do nothing."
 (defun dm-sketch-mouse1 (&rest _)
   "Handle click on sketch buffer."
   (interactive "@")
-  (dm-sketch-stencil:path-add (dm-draw-pos (dm-draw-mouse-position))))
+  (pcase dm-sketch-tool-selected
+    ('line
+     (dm-sketch-stencil:path-add (dm-draw-pos (dm-draw-mouse-position))))
+    ('place
+     (dm-sketch-stencil:make-tile ))))
 
 (defun dm-sketch-move-to (&rest _)
   "Handle secondary click on sketch buffer."

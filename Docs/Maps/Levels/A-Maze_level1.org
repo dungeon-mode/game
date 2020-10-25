@@ -175,8 +175,8 @@ Refer to design.org for more details.
 |  4 |  5 | (3 . 5)                                          |
 |  5 |  5 | cNES                                             |
 |  6 |  5 | cNSW◦E                                           |
-|  7 |  5 | cE◦W → cW                                           |
-|  8 |  5 | (7 . 5)                                       |
+|  7 |  5 | cE◦W → cW                                        |
+|  8 |  5 | (7 . 5)                                          |
 |  9 |  5 | GS                                               |
 | 10 |  5 | (9 . 5)                                          |
 | 11 |  5 | cN                                               |
