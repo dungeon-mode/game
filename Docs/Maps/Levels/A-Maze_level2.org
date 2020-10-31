@@ -584,7 +584,7 @@ Refer to design.org for more details.
 | 13 | 21 | cEW                                               |
 | 14 | 21 | cW◦E                                              |
 | 15 | 21 | 20◦WN                                             |
-| 16 | 21 | (14 . 21)                                         |
+| 16 | 21 | (15 . 21)                                         |
 | 17 | 21 | cNS                                               |
 | 18 | 21 | cNS                                               |
 | 19 | 21 | 20◦EN                                             |
