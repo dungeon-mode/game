@@ -1,0 +1,7 @@
+#+TITLE: FREENODE IRC NETWORK CONACTS
+
+The following contacts are approved to act as representatives of the project to Freenode.net
+
+| IRC Name     |
+| mplsCorwin  |
+| trixiehorror    |
