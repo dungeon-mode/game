@@ -509,7 +509,7 @@ interested in learning Emacs Lisp and C who share our love of abstract
 self-made semi-disposable hack-and-slash dungeon-crawl and RPG games.
 
 As Corwin is the only elisp dev currently involved (We both know C),
-this is the area where we could use the most help.  Find us on [[https://discord.gg/gar8ns][Discord]]
+this is the area where we could use the most help.  Find us on [[https://discord.gg/sCNZx7M][Discord]]
 or join #dungeon-mode on Freenet.net IRC. Additional input, including
 general interest such as kibitzing the design, planned features, etc.,
 are also welcomed. We draw the line and point and jeering.  Get your
