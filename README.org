@@ -2,17 +2,7 @@ dungeon-mode - synchronous and asynchronous world sharing and change resolution
 
 # Copyright (C) 2020 Corwin Brust, Erik C. Elmshauser, Jon Lincicum, Hope Christiansen, Frank Runyon
 
-We'll be at [[https://emacsconf.org][EmacsConf]] Nov 28th and 29th!
-
-Watch for Corwin and Erik as the schedule changes :)
-
-  https://emacsconf.org/2020/schedule/
-
-We're presenting:
- * Trivial init kits: taking emacs at different speeds while moving together
- * Pathing of Least Resistance - what is driving the cool gifs?
- * Welcome to the Dungeon - product introduction and introspection, Q&A
- * OMG Macros - a look into some due cleverless
+Videos from [[https://emacsconf.org/2020/talks/][EmacsConf 2020 talks]] are now available!
 
 #+CATEGORY: Dungeon
 
@@ -42,6 +32,12 @@ License.  For specific terms please see [[LICENSE]] at end-of-file.
 
 *** Currently:
 
+ 1. Recovering from EmacsConf ;)
+ 2. Completing "sketch" POC (graphical svg editor)
+ 3. Various bug fixes, see TODO.org for hints and tia!
+
+*** Recently
+
  1. Prepping for EmacsConf
 
 We've more recently been working with SVGs, seeing how much would be
@@ -52,7 +48,7 @@ and, ultimately, to an emacs-lisp like REPL is the not money.  But we
 want it to do ludicrous things with SVG in Emacs too, if it can. That
 will probably be fun, later.
 
-*** Recently
+***  Not long ago:
 Other stuff that works on our machines now may include:
 
  1. made multi-layer maps render from the org-mode tables
@@ -63,7 +59,7 @@ Other stuff that works on our machines now may include:
  6. tile-previews when hovering svg code in org-mode tables
  7. a POC for point-and-click map "sketching"
 
-***  Not long ago:
+***  Longer ago:
 
  1. Rendering levels of dungeon maze as SVG graphics
     * Erik (Tigersbite) is hand authoring sample maps in SVG and
@@ -533,3 +529,11 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+--[[
+ (eepitch-lua51)
+ (eepitch-kill)
+ (eepitch-lua51)
+dofile "README.org"
+
+--]]
