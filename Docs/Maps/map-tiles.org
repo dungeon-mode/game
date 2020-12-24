@@ -77,48 +77,51 @@ These features are intended to be used mostly as parts of compositions and rarel
 |                         |                                                                             |                                       |
 | ◑NI                     |                                                                             | One-Way secret door in from the north |
 | ◑NI:!elf                | ‡N                                                                          |                                       |
-| ◑NI:elf:!seen(:north 1) | ◦N                                                                          |                                       |
-| ◑NI:elf:seen(:north 1)  | h.43 a.07,.07,0,0,1,.14,0 m-.14,0 h.57 ←                                    |                                       |
+| ◑NI:elf                |                                                                           |                                       |
+| ◑NI:elf:!seen(north 1) | ◦N                                                                          |                                       |
+| ◑NI:elf:seen(north 1)  | h.43 a.07,.07,0,0,1,.14,0 m-.14,0 h.57 ←                                    |                                       |
 |                         |                                                                             |                                       |
 | ◑NO                     |                                                                             | One-Way secret door out to the north  |
 | ◑NO:!elf                | ‡N                                                                          |                                       |
-| ◑NO:elf:!seen(:north 1) | ◦N                                                                          |                                       |
-| ◑NO:elf:seen(:north 1)  | h.43 a.07,.07,0,0,0,.14,0 m-.14,0 h.57 ←                                    |                                       |
+| ◑NO:elf                |                                                                           |                                       |
+| ◑NO:elf:!seen(north 1) | ◦N                                                                          |                                       |
+| ◑NO:elf:seen(north 1)  | h.43 a.07,.07,0,0,0,.14,0 m-.14,0 h.57 ←                                    |                                       |
 |                         |                                                                             |                                       |
 | ◑EI                     |                                                                             | One-Way secret door In from the East  |
 | ◑EI:!elf                | ‡E                                                                          |                                       |
-| ◑EI:elf:!seen(:west 1)  | ‡E                                                                          |                                       |
-| ◑EI:elf:seen(:west 1)   | → v.43 a.07,.07,0,0,1,0,.14 m0,-.14 v.57 ↖                                  |                                       |
+| ◑EI:elf                |                                                                           |                                       |
+| ◑EI:elf:!seen(west 1)  | ◦E                                                                          |                                       |
+| ◑EI:elf:seen(west 1)   | → v.43 a.07,.07,0,0,1,0,.14 m0,-.14 v.57 ↖                                  |                                       |
 |                         |                                                                             |                                       |
 | ◑EO                     |                                                                             | One-Way secret door Out to the East   |
 | ◑EO:!elf                | ‡E                                                                          |                                       |
 | ◑EO:elf                 |                                                                             |                                       |
-| ◑EO:elf:!seen(:east 1)  | ◦E                                                                          |                                       |
-| ◑EO:elf:seen(:east 1)   | → v.43 a.07,.07,0,0,0,0,.14 m0,-.14 v.57 ↖                                  |                                       |
+| ◑EO:elf:!seen(east 1) | ◦E                                                                          |                                       |
+| ◑EO:elf:seen(east 1)   | → v.43 a.07,.07,0,0,0,0,.14 m0,-.14 v.57 ↖                                  |                                       |
 |                         |                                                                             |                                       |
 | ◑SI                     |                                                                             | One-Way secret door In from the South |
 | ◑SI:!elf                | ‡S                                                                          |                                       |
 | ◑SI:elf                 |                                                                             |                                       |
-| ◑SI:elf:!seen(:south 1) | ‡S                                                                          |                                       |
-| ◑SI:elf:seen(:south 1)  | ↓ h.43 a.07,.07,0,0,0,.14,0 m-.14,0 h.57 ↖                                  |                                       |
+| ◑SI:elf:!seen(south 1) | ‡S                                                                          |                                       |
+| ◑SI:elf:seen(south 1)  | ↓ h.43 a.07,.07,0,0,0,.14,0 m-.14,0 h.57 ↖                                  |                                       |
 |                         |                                                                             |                                       |
 | ◑SO                     |                                                                             | One-Way secret door Out to the South  |
 | ◑SO:!elf                | ‡S                                                                          |                                       |
 | ◑SO:elf                 |                                                                             |                                       |
-| ◑SO:elf:!seen(:north 1) | ◦S                                                                          |                                       |
-| ◑SO:elf:seen(:north 1)  | ↓ h.43 a.07,.07,0,0,1,.14,0 m-.14,0 h.57 ↖                                  |                                       |
+| ◑SO:elf:!seen(north 1) | ◦S                                                                          |                                       |
+| ◑SO:elf:seen(north 1)  | ↓ h.43 a.07,.07,0,0,1,.14,0 m-.14,0 h.57 ↖                                  |                                       |
 |                         |                                                                             |                                       |
 | ◑WI                     |                                                                             | One-Way secret door In from the West  |
 | ◑WI:!elf                | ‡W                                                                          |                                       |
 | ◑WI:elf                 |                                                                             |                                       |
-| ◑WI:elf:!seen(:east 1)  | ‡W                                                                          |                                       |
-| ◑WI:elf:seen(:east 1)   | v.43 a.07,.07,0,0,0,0,.14 m0,-.14 v.57 ↑                                    |                                       |
+| ◑WI:elf:!seen(east 1)  | ‡W                                                                          |                                       |
+| ◑WI:elf:seen(east 1)   | v.43 a.07,.07,0,0,0,0,.14 m0,-.14 v.57 ↑                                    |                                       |
 |                         |                                                                             |                                       |
 | ◑WO                     |                                                                             | One-Way secret door Out to the West   |
 | ◑WO:!elf                | ‡W                                                                          |                                       |
 | ◑WO:elf                 |                                                                             |                                       |
-| ◑WO:elf:!seen(:west 1)  | ◦W                                                                          |                                       |
-| ◑WO:elf:seen(:west 1)   | v.43 a.07,.07,0,0,1,0,.14 m0,-.14 v.57 ←                                    |                                       |
+| ◑WO:elf:!seen(west 1)  | ◦W                                                                          |                                       |
+| ◑WO:elf:seen(west 1)   | v.43 a.07,.07,0,0,1,0,.14 m0,-.14 v.57 ←                                    |                                       |
 |                         |                                                                             |                                       |
 | ◤                       | → l-1,1 ↑                                                                   | Half square NW/SE                     |
 | ◥                       | l1,1 ↖                                                                      | Half square NE/SW                     |
