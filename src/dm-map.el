@@ -1364,10 +1364,13 @@ SCALE-FUNCTION may be used to supply custom scaling."
 	  (unless dm-map-draw-inhibit-help-echo
 	    (put-text-property
 	     start end 'help-echo
-	     (if dm-map-menus-play-mode
+	     ;; overlay "feature flag" via "Granular settings" submenu
+	     (if (and dm-map-menus-play-mode
+		      dm-map-menus-play-mode-overlays)
 		 (lambda (&rest _)
 		   (let ((pos (dm-map--pos-impl)))
 		     (with-slots (svg) dm-map-svg
+		       ;; ZZZ: try just updating the pos attributes here
 		       (when dm-map--pos-mouse-overlay
 			 (svg-remove svg "dm-map--pos-mouse-overlay"))
 		       (setq
