@@ -1715,18 +1715,28 @@ disable."
 (defun dm-map-toggle-play-mode (&rest _)
   "Toggle \"play-mode\" overlays.
 
-This commnad combins calls t")
+Changes the following variables:
+  t    nil Variable
+  t    nil `dm-map-menus-play-mode'
+  nil  t   `dm-map-menus-level-cells-draw-all'
+  *    t   `dm-map-tags'
+
+When `dm-map-menus-file-redraw' is truthy, also redraw.  The
+value for `dm-map-tags' when dm-map-play-mode is toggled to t is
+taken from `dm-map-menus-tags-list'."
+  (interactive)
+  (let ((new-value (null dm-map-menus-play-mode)))
+    (setq dm-map-menus-level-cells-draw-all (null new-value)
+	  dm-map-tags (if (null new-value) t     ;; TODO: always starts with
+			dm-map-menus-tags-list)  ;; static predicates active
+	  dm-map-menus-play-mode new-value)
+    (if dm-map-menus-file-redraw (dm-map-draw 1))))
 
 (defun dm-map-menus-files (&rest _)
   "Create menu options for tile files."
   (append (list "Dungeon Map" "-"
 		'["Toggle Play Mode"
-		  (let ((new-value (null dm-map-menus-play-mode)))
-		    (setq dm-map-menus-level-cells-draw-all (null new-value)
-			  dm-map-tags (if (null new-value) t     ;; TODO: always starts with
-					dm-map-menus-tags-list)  ;; static predicates active
-			  dm-map-menus-play-mode new-value)
-		    (if dm-map-menus-file-redraw (dm-map-draw 1)))
+		  (dm-map-toggle-play-mode)
 		  :style toggle
 		  :selected dm-map-menus-play-mode])
 	  (when (not (equal t dm-map-tags)) `(("Drawing Predicates" ,@(dm-map-menus-tags-impl))))
@@ -1743,7 +1753,7 @@ This commnad combins calls t")
 			:selected dm-map-menus-level-cells-draw-all
 			:help "When selected draw the complete map level each time."]
 		      `["Play-mode Overlays"
-			       (setq dm-map-menus-play-mode-overlays (not dm-map-menus-play-mode-overplays))
+			       (setq dm-map-menus-play-mode-overlays (not dm-map-menus-play-mode-overlays))
 			       :style toggle
 			       :selected dm-map-menus-play-mode-overlays]
 		      '["Predicated drawing"
