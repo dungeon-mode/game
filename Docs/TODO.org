@@ -59,14 +59,15 @@ License.  For specific terms please see [[LICENSE]] at end-of-file.
 *** TODO Buffer per map level
 *** TODO Display current dungeon level
 *** TODO Set/clear party location
-*** TODO one-way secret doors                                           :BUG:
+*** DONE one-way secret doors                                           :BUG:
+    CLOSED: [2020-12-24 Thu 05:35]
 *** TODO Track position per dungeon level
 *** Changes to "play-mode"
-**** TODO Turning on Play mode should
-     * Turn on predicated-drawing
-     * Turn off draw-complete-level
-     * Load seen cells for current level, if any
-     * Set current position to general store if not otherwise known
+**** INPROGRESS Turning on Play mode should
+     * DONE Turn on predicated-drawing
+     * DOME Turn off draw-complete-level
+     * TODO Load seen cells for current level, if any
+     * TODO Set current position to general store if not otherwise known
 **** TODO Enable play-mode when loading map from global interactive
 *** DONE follow revealed squares to source when references
     CLOSED: [2020-07-04 Sat 15:32]
