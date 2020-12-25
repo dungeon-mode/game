@@ -325,10 +325,11 @@ TODO: this can be greatly simplified. macro/inline/remove?"
 	      (tag (intern kw))
 	      (ref-sym (intern ref))
 	      (referent (gethash ref-sym dm-map-tiles)))
-    ;;(message "[tile-xform] tag %s ⇒ %s (target: %s)" tag ref-sym referent)
+    (message "[tile-xform] tag %s ⇒ %s (target: %s)" tag ref-sym referent)
     (when ;;(and (< 1 (length kw)) (string= "!" (substring kw 1 2)))
 	(match-string 3 tile)
       t)))
+;;(equal '(t nil) (seq-map (lambda(x) (dm-map-tile-tag-inverted-p x)) '("◦N:!elf" "◦N:elf")))
 ;;(equal '(t nil) (seq-map (lambda(x) (dm-map-tile-tag-inverted-p x)) '("◦N:!elf" "◦N:elf")))
 
 ;; ZZZ are this and the above really needed? corwin
@@ -372,7 +373,7 @@ Seen predicates look like:
 Where tile:tag represents the tile's basename, :dir is a
 direction of travel and n is a number of cells to travel."
   (let ((str (if (stringp tag) tag (symbol-name tag))))
-    ;;(message "SEEN: last-cell:%s tag:%s  RESULT:%s" dm-map--last-cell tag result)
+    (message "SEEN: last-cell:%s tag:%s  RESULT:%s" dm-map--last-cell tag str)
     (when (string-match "seen([ ]*:?\\([^) ]+\\)[ ]*\\([0-9]*\\)[ ]*)" str)
       (dm-map-seen-cell-p dm-map--last-cell
 			  (intern (match-string 1 str))
@@ -386,9 +387,10 @@ direction of travel and n is a number of cells to travel."
 Select each amung normal and inverted based on `dm-map-tags'."
   (delq nil (mapcan
 	     (lambda (tag)
-	       (list (if (or (eq t dm-map-tags)
+	       (list (if (or (dm-map-tile-tag-seen-p (car tag))
+			     (eq t dm-map-tags)
 			     (member (car tag) dm-map-tags)
-			     (dm-map-tile-tag-seen-p (car tag)))
+			     )
 			 (and (< 1 (length tag)) (nth 1 tag))
 		       (and (< 2 (length tag)) (nth 2 tag)))))
 	     (plist-get (gethash tile dm-map-tiles) dm-map-tag-prop))))
@@ -647,6 +649,9 @@ Data is appended via `prin1-to-string'."
 			       (tag (intern kw))
 			       (ref-sym (intern ref))
 			       (referent (gethash ref-sym hash)))
+		     (when (string-match-p "◑" tile)
+		       (message "LOAD tagged time ref:%s kw:%s tag:%s ref-sym:%s referent:%s"
+				ref kw tag ref-sym referent))
 		     (unless (or (match-string 3 tile)
 				 (assoc tag (plist-get referent ',dm-map-tag-prop)))
 		       ;; add new keywords to the menu unless they include a predicate
@@ -1699,44 +1704,63 @@ disable."
   "When t display for game-play instead of editing."
   :type 'boolean)
 
+(defcustom dm-map-menus-play-mode-overlays t
+  "When t display the \"play-mode\" overlays."
+  :type 'boolean)
+
+
+(defun dm-map-toggle-play-mode (&rest _)
+  "Toggle \"play-mode\" overlays.
+
+This commnad combins calls t")
+
 (defun dm-map-menus-files (&rest _)
   "Create menu options for tile files."
-  (append (append (list "Tile-sets"
-			(append (list "Mapping Documents")
-				(dm-map-menus-files-impl :map-tiles))
-			(append (list "Dungeon Levels")
-				(dm-map-menus-files-impl :map-cells))))
-	  (when (not (equal t dm-map-tags))
-	    `(("Drawing Predicates" ,@(dm-map-menus-tags-impl))))
-	  (list "-" "Settings")
-	  (list '["Draw complete levels"
-		  (setq dm-map-menus-level-cells-draw-all
-			(not dm-map-menus-level-cells-draw-all))
-		  :style toggle
-		  :selected dm-map-menus-level-cells-draw-all
-		  :help "When selected draw the complete map level each time."])
-	  (list `["Play-mode (overlays)"
-		  (setq dm-map-menus-play-mode (not dm-map-menus-play-mode))
+  (append (list "Dungeon Map" "-"
+		'["Toggle Play Mode"
+		  (let ((new-value (null dm-map-menus-play-mode)))
+		    (setq dm-map-menus-level-cells-draw-all (null new-value)
+			  dm-map-tags (if (null new-value) t     ;; TODO: always starts with
+					dm-map-menus-tags-list)  ;; static predicates active
+			  dm-map-menus-play-mode new-value)
+		    (if dm-map-menus-file-redraw (dm-map-draw 1)))
 		  :style toggle
 		  :selected dm-map-menus-play-mode])
-	  (list '["Predicated drawing"
-		  (setq dm-map-tags (if (equal t dm-map-tags) nil t))
-		  :style toggle
-		  :selected (dm-map-predicated-drawing-p)])
-	  (list '["Exclusive selections"
-		  (setq dm-map-menus-file-style
-			(if (equal 'toggle dm-map-menus-file-style)
-			    'radio
-			  'toggle))
-		  :style toggle
-		  :selected (equal 'radio dm-map-menus-file-style)
-		  :help "Select one or several files from each category."])
-	  (list '["Redraw when selecting"
-		  (when (setq dm-map-menus-file-redraw
-			      (not dm-map-menus-file-redraw))
-		    (dm-map-draw 1))
-		  :style toggle :selected dm-map-menus-file-redraw
-		  :help "Control whether selecting files will redraw the map."])))
+	  (when (not (equal t dm-map-tags)) `(("Drawing Predicates" ,@(dm-map-menus-tags-impl))))
+	  (list "-")
+	  (append (list (append (list "Tiles")
+				(dm-map-menus-files-impl :map-tiles))
+			(append (list "Levels")
+				(dm-map-menus-files-impl :map-cells))))
+	  (list (list "Granular Settings"
+		      '["Draw complete levels"
+			(setq dm-map-menus-level-cells-draw-all
+			      (not dm-map-menus-level-cells-draw-all))
+			:style toggle
+			:selected dm-map-menus-level-cells-draw-all
+			:help "When selected draw the complete map level each time."]
+		      `["Play-mode Overlays"
+			       (setq dm-map-menus-play-mode-overlays (not dm-map-menus-play-mode-overplays))
+			       :style toggle
+			       :selected dm-map-menus-play-mode-overlays]
+		      '["Predicated drawing"
+			(setq dm-map-tags (if (equal t dm-map-tags) nil t))
+			:style toggle
+			:selected (dm-map-predicated-drawing-p)]
+		      '["Exclusive selections"
+			(setq dm-map-menus-file-style
+			      (if (equal 'toggle dm-map-menus-file-style)
+				  'radio
+				'toggle))
+			:style toggle
+			:selected (equal 'radio dm-map-menus-file-style)
+			:help "Select one or several files from each category."]
+		      '["Redraw when selecting"
+			(when (setq dm-map-menus-file-redraw
+				    (not dm-map-menus-file-redraw))
+			  (dm-map-draw 1))
+			:style toggle :selected dm-map-menus-file-redraw
+			:help "Control whether selecting files will redraw the map."]))))
 
 ;; basic major mode for viewing maps
 (defvar dm-map-mode-map
