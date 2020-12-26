@@ -1214,7 +1214,8 @@ SCALE-FUNCTION may be used to supply custom scaling."
 	    ;; 			     ))
 	    ))
 	 (been-dots
-	  (when dm-map-menus-play-mode
+	  (when (and dm-map-menus-play-mode
+		     dm-map-menus-play-mode-overlays)
 	    (mapcar
 	     (lambda (cell)
 	       `(circle ((r . 2)
