@@ -1184,7 +1184,9 @@ SCALE-FUNCTION may be used to supply custom scaling."
 				     :y-nudge (* scale (cdr nudge)))))
 		(background)))
 	 (pos-decoration
-	  (when (and dm-map-menus-play-mode dm-map-pos)
+	  (when (and dm-map-menus-play-mode
+		     dm-map-menus-play-mode-overlays
+		     dm-map-pos)
 	    (delq
 	     nil
 	     (mapcar
