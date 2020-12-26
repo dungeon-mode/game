@@ -28,6 +28,7 @@ License.  For specific terms please see [[LICENSE]] at end-of-file.
 * Coding Tasks
 ** TODO Network stack
 ** Battleboard
+*** TODO Reimplement using dm-draw/
 *** TODO Move characters position                                        :P1:
 *** TODO Handle armor/shield destruction
 *** TODO Handle character death
@@ -63,11 +64,11 @@ License.  For specific terms please see [[LICENSE]] at end-of-file.
     CLOSED: [2020-12-24 Thu 05:35]
 *** TODO Track position per dungeon level
 *** Changes to "play-mode"
-**** INPROGRESS Turning on Play mode should
-     * DONE Turn on predicated-drawing
-     * DOME Turn off draw-complete-level
-     * TODO Load seen cells for current level, if any
-     * TODO Set current position to general store if not otherwise known
+**** INPROGRESS Rework "Play-mode"
+***** DONE Play-mode: Turn on predicated-drawing
+***** DONE Play-mode: Turn off draw-complete-level
+***** TODO Play-mode: Load seen cells for current level, if any
+***** TODO Play-mode: Initialize pos/seen cells to general store
 **** TODO Enable play-mode when loading map from global interactive
 *** DONE follow revealed squares to source when references
     CLOSED: [2020-07-04 Sat 15:32]
@@ -76,7 +77,7 @@ License.  For specific terms please see [[LICENSE]] at end-of-file.
 **** TODO Save seen-cells (all levels)                                   :P2:
 *** Redrew ("r") binding seems to have broken                           :BUG:
 ** More
-*** TODO Character sheet
+*** INPROGRESS Character sheet
 *** TODO Spell-ball and other perishable single-click to use
 *** TODO Track party treasure scores
 *** Table mapping features
