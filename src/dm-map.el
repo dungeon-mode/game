@@ -1347,7 +1347,9 @@ SCALE-FUNCTION may be used to supply custom scaling."
       ;;(user-error "Draw failed.  No files in `dm-map-files'")
       nil)
     (dm-map-load)) ;; any prefix arg causes reload from files
-  (let ((svg (dm-map-quick-draw)))
+  (let ((svg (if (consp dm-map-scale);; don't break if scale was set to a cons
+		 (let ((dm-map-scale (car dm-map-scale))) (dm-map-quick-draw))
+	       (dm-map-quick-draw))))
     (prog1 svg
       (if dm-map-menus-play-mode
 	  (dm-map-with-map-erased (render-and-insert svg))
