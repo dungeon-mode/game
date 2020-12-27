@@ -1,0 +1,109 @@
+#+TITLE dungeon-arcade - network, share and syncronize worlds
+#+CATEGORY: Dungeon
+# Copyright (C) 2020 Corwin Brust, Erik C. Elmshauser, Jon Lincicum, Hope Christiansen, Frank Runyon
+
+#+BEGIN_QUOTE
+This file is a part of dungeon-mode.  It is not a part of GNU Emacs.
+This softare is released under the GNU Public Licence version three
+or, at your discretion, any newer version of the GNU Public
+License.  For specific terms please see [[LICENSE]] at end-of-file.
+#+END_QUOTE
+
+* SYNOPSIS
+
+  Networking facilities for dungeon-mode, FFI:
+    https://directory.fsf.org/wiki/dungeon-mode
+  For developers:
+    https://savannah.nongnu.org/projects/dungeon/
+
+  This program is a simple wrapping of crdt.el by Qiantan Hong.
+    https://code.librehq.com/qhong/crdt.el
+
+* About
+** Dungeon
+
+  Dungeon is an hack-and-slash style mult-player dungeon crawl
+  blending the heuristics of NetHack with a combat engine inspired by
+  Minnesota Dungeon (Minneapolis Dungeon, Larry's Maze, et. al.).
+
+  Requires GNU Emacs 26.3 or later, available here for most platforms:
+  http://gnu.org/software/emacs
+
+  For more information please visit:
+    https://directory.fsf.org/wiki/dungeon-mode
+
+  Or get Source code and even more information from:
+    https://savannah.nongnu.org/projects/dungeon/
+
+** Arcade
+
+    This file will help you create a "Dungeon Arcade", a multi-user
+    environment for dungeon-mode.  For our initial "alpha" (minimum
+    play-testable) programs we have not provided features that
+    automatically manipulate this file, please edit it by hand.
+
+    The following section define the users and permitted actions,
+    controlling who may connect and what content to send and accept.
+
+* Users
+  :PROPERTIES:
+  :ETL: arcade-user
+  :END:
+
+#+TBLNAME: arcade-user
+| Full Name       | Email                   | Short Name | Roles | Password |
+|-----------------+-------------------------+------------+-------+----------|
+| Corwin Brust    | arcade@dungeon-mode.net | corwin     | op    | *        |
+| Erik Elmshauser | arcade@dungeon-mode.net | tigersbite | op    | *        |
+
+* Roles
+  :PROPERTIES:
+  :ETL: arcade-role
+  :END:
+
+#+TBLNAME: arcade-role
+| Role | Mask | Description                         |
+|------+------+-------------------------------------|
+| op   |    7 | Aracde operator; full permissions   |
+| dm   |    4 | Dungeon Master; no "create-dungeon" |
+| pl   |    2 | Party Leader, usually same as pc    |
+| pc   |    1 | Player/Character; no "create-*"     |
+
+* Roles
+  :PROPERTIES:
+  :ETL: arcade-flag
+  :END:
+
+#+TBLNAME: arcade-flag
+| Flag             | Roles | Description                          |
+|------------------+-------+--------------------------------------|
+| create-dungeon   | op    | Create or overwrite files, risky.    |
+| create-table     | dm    | Update a dungeon's files.            |
+| create-character | dm    | Creates a new file from a template.  |
+| create-event     | dm    | Updates character and dungeon files. |
+| propose-event    | pl    | Changes require approval.            |
+| whisper-pc       | pc    | Restrict private messages            |
+| whisper-pl       | pc    | Restrict message to the Party Leader |
+| whisper-op       | pc    | To arcade operators.                 |
+| whisper-dm       | pc    | To a DM                              |
+| whisper-dm-all   | op    | To all DMs                           |
+| whisper          | pc    | Restrict all messages                |
+
+* LICENSE
+
+This is the main "README" document for the dungeon-mode project.  This license statement applies to this file as well as any and all other files included in the authoritative source repository https://git.savannah.nongnu.org/cgit/dungeon.git) which do not contain their own license.
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+#  LocalWords:  MPTP POC EOF Org svg tigersbite mplsCorwin
