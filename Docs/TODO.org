@@ -57,6 +57,7 @@ License.  For specific terms please see [[LICENSE]] at end-of-file.
 *** TODO Handle a-typical formations
 *** TODO Save changes to memory; push to file when idle
 ** Mapping
+*** TODO write "seen cells" out to org
 *** TODO Buffer per map level
 *** TODO Display current dungeon level
 *** TODO Set/clear party location
@@ -71,11 +72,15 @@ License.  For specific terms please see [[LICENSE]] at end-of-file.
 ***** TODO Play-mode: Initialize pos/seen cells to general store
 **** TODO Enable play-mode when loading map from global interactive
 *** DONE follow revealed squares to source when references
-    CLOSED: [2020-07-04 Sat 15:32]
+    CLOSED: [2020-12-27 Sun 00:10]
 *** Save and restore                                                 :OPTION:
 **** TODO Save current dungeon-level                                     :P1:
 **** TODO Save seen-cells (all levels)                                   :P2:
-*** Redrew ("r") binding seems to have broken                           :BUG:
+*** TODO change redrew ("r") binding to C-r or C-d or ¯\_(ツ)_/¯        :BUG:
+** Sketch/Draw (Visual SVG Editor for Maps and Tile)
+*** TODO compose levels into levels :DRAW:
+*** TODO keep pairs of markers to sources for each cell and tile
+*** TODO palate and/or tool-bars for mode, tool, level, tile, etc
 ** More
 *** INPROGRESS Character sheet
 *** TODO Spell-ball and other perishable single-click to use
@@ -89,6 +94,7 @@ License.  For specific terms please see [[LICENSE]] at end-of-file.
 *** TODO Handle half-square reveal                                   :DESIGN:
 *** TODO HEROify logo, spiff up website
 *** TODO wiki.dungeon-mode.net
+*** TODO experiment with crdt.el e.g. for syncing character sheet
 
 * LICENSE
 
