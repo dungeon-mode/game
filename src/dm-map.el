@@ -1500,19 +1500,20 @@ ARG is the factor for applying 'dm-map-scale-nudge' to `dm-map-scale'."
 
 (defun dm-map--pos-pixels-to-cell (x y)
   "Return map cell under the given X Y position in pixels."
-  (let* ((dm-map-scale (if (consp dm-map-scale) (car dm-map-scale) dm-map-scale))
+  (let* ((x-scale (or (car-safe dm-map-scale) dm-map-scale))
+	 (y-scale (or (cdr-safe dm-map-scale) x-scale))
 	 (win (selected-window))
-	 (nudge-X (* dm-map-scale (car dm-map-nudge)))
-	 (nudge-Y (* dm-map-scale (cdr dm-map-nudge)))
-	 (du-X (/ (- x nudge-X) dm-map-scale))
-	 (du-Y  (/ (- y nudge-Y) dm-map-scale))
+	 (nudge-X (* x-scale (car dm-map-nudge)))
+	 (nudge-Y (* y-scale (cdr dm-map-nudge)))
+	 (du-X (/ (- x nudge-X) x-scale))
+	 (du-Y  (/ (- y nudge-Y) y-scale))
 	 ;; account for any cells scrolled out of window
 	 ;; hscroll is in characters; calc using frame char width
 	 (char-width (frame-char-width (window-frame win)))
 	 (scroll-X (* (window-hscroll win) char-width))
 	 (scroll-Y (window-vscroll win t))
-	 (du-scroll-X  (/ scroll-X dm-map-scale))
-	 (du-scroll-Y  (/ scroll-Y dm-map-scale)))
+	 (du-scroll-X  (/ scroll-X x-scale))
+	 (du-scroll-Y  (/ scroll-Y y-scale)))
     (cons (+ du-X du-scroll-X) (+ du-Y du-scroll-Y))))
 
 (defun dm-map--pos-impl (&rest _)
