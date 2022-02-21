@@ -1500,7 +1500,8 @@ ARG is the factor for applying 'dm-map-scale-nudge' to `dm-map-scale'."
 
 (defun dm-map--pos-pixels-to-cell (x y)
   "Return map cell under the given X Y position in pixels."
-  (let* ((win (selected-window))
+  (let* ((dm-map-scale (if (consp dm-map-scale) (car dm-map-scale) dm-map-scale))
+	 (win (selected-window))
 	 (nudge-X (* dm-map-scale (car dm-map-nudge)))
 	 (nudge-Y (* dm-map-scale (cdr dm-map-nudge)))
 	 (du-X (/ (- x nudge-X) dm-map-scale))
