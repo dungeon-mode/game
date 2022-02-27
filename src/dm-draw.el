@@ -413,6 +413,7 @@ POSITION indicates the location of the text hovered."
 
 (defun dm-draw-tile-fontify-add ()
   "Add font locking keywords for each known tile."
+  (interactive)
   (font-lock-add-keywords
    nil
    `((,(dm-draw-tile-fontify-re) 0

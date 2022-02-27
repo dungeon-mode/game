@@ -387,8 +387,8 @@ direction of travel and n is a number of cells to travel."
 Select each amung normal and inverted based on `dm-map-tags'."
   (delq nil (mapcan
 	     (lambda (tag)
-	       (list (if (or (dm-map-tile-tag-seen-p (car tag))
-			     (eq t dm-map-tags)
+	       (list (if (or (eq t dm-map-tags)
+			     (dm-map-tile-tag-seen-p (car tag))
 			     (member (car tag) dm-map-tags)
 			     )
 			 (and (< 1 (length tag)) (nth 1 tag))
