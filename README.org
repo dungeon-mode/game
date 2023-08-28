@@ -2,7 +2,12 @@ dungeon-mode - synchronous and asynchronous world sharing and change resolution
 
 # Copyright (C) 2020 Corwin Brust, Erik C. Elmshauser, Jon Lincicum, Hope Christiansen, Frank Runyon
 
-Videos from [[https://emacsconf.org/2020/talks/][EmacsConf 2020 talks]] are now available!
+#+BEGIN_QUOTE
+
+The authoritative upstream is Non-GNU Savannah:
+  https://git.savannah.nongnu.org/cgit/dungeon.git
+
+#+END_QUOTE
 
 #+CATEGORY: Dungeon
 
@@ -15,6 +20,8 @@ Dungeon (Minneapolis Dungeon, Larry's Maze, et. al.).
 Requires GNU Emacs 26.3 or later, available here for most platforms:
   http://gnu.org/software/emacs
 
+There are some demos and video from the [[https://emacsconf.org/2020/talks/][EmacsConf 2020 talks]].
+
 #+BEGIN_QUOTE
 This file is a part of dungeon-mode.  It is not a part of GNU Emacs.
 This softare is released under the GNU Public Licence version three
@@ -23,6 +30,14 @@ License.  For specific terms please see [[LICENSE]] at end-of-file.
 #+END_QUOTE
 
 * STATUS
+
+** Map and Tile Editor
+
+Erik is getting frustrated drawing tiles, layer by layer, by hand, so getting dm-sketch flushed out (or maybe replaced?) has become a priority.
+
+In theory, we have some working POC code, that just needs a bit of love to cobble together enough work-flow to get Erik going again.  Ideally, we'd like to yank the sketch program out and make it a stand-alone tile editor.
+
+If it's not clear: we'd love help in this area, anything from reviewing and discussing what we have, to running off in your own direction with it.  Please open up an [[https://savannah.nongnu.org/bugs/?group=dungeon&func=additem][issue on Savannah]] if you're interested!
 
 ** The MTPT
 
